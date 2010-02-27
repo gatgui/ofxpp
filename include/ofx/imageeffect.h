@@ -55,15 +55,12 @@ namespace ofx {
   class Image {
     public:
       
-      //friend class ImageEffect;
-      
       Image();
       Image(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception);
       Image(const Image &rhs);
       ~Image();
       
       Image& operator=(const Image &rhs);
-      //Image& operator=(OfxPropertySetHandle hdl);
       
       inline OfxPropertySetHandle handle() {
         return mProps.handle();
@@ -71,6 +68,39 @@ namespace ofx {
       
       inline void* data() {
         return mData;
+      }
+      
+      inline BitDepth pixelDepth() const {
+        return mBitDepth;
+      }
+      
+      inline ImageComponent components() const {
+        return mComponents;
+      }
+      
+      inline ImagePreMult preMultiplication() const {
+        return mPreMult;
+      }
+      
+      inline void renderScale(double &sx, double &sy) const {
+        sx = mRenderScaleX;
+        sy = mRenderScaleY;
+      }
+      
+      inline double pixelAspectRatio() const {
+        return mPixelAspectRatio;
+      }
+      
+      const Rect<int>& regionOfDefinition() const {
+        return mRoD;
+      }
+      
+      inline ImageField field() const {
+        return mField;
+      }
+      
+      inline const std::string& uniqueIdentifier() const {
+        return mUID;
       }
       
       inline int componentBytes() const {
@@ -89,7 +119,7 @@ namespace ofx {
         return mRowBytes;
       }
       
-      inline Rect<int> bounds() {
+      inline const Rect<int>& bounds() {
         return mBounds;
       }
       
@@ -102,14 +132,17 @@ namespace ofx {
       
       template <typename ComponentType>
       inline bool pixelAddress(int x, int y, RGBAColour<ComponentType> *&adr) {
-        if (x < mBounds.x1 || x >= mBounds.x2 || y < mBounds.y1 || y >= mBounds.y2) {
-          adr = 0;
-          return false;
-        }
-        adr = (RGBAColour<ComponentType>*)((char*)mData + ((y - mBounds.y1) * mRowBytes) + ((x - mBounds.x1) * mPixelBytes));
-        return true;
+        //if (x < mBounds.x1 || x >= mBounds.x2 || y < mBounds.y1 || y >= mBounds.y2) {
+        //  adr = 0;
+        //  return false;
+        //}
+        //adr = (RGBAColour<ComponentType>*)((char*)mData + ((y - mBounds.y1) * mRowBytes) + ((x - mBounds.x1) * mPixelBytes));
+        //return true;
+        adr = (RGBAColour<ComponentType>*) pixelAddress(x, y);
+        return (adr != 0);
       }
       
+      /*
       template <typename ComponentType>
       inline bool getPixelAt(int x, int y, RGBAColour<ComponentType> &dst) {
         if (sizeof(ComponentType) != mCompBytes) {
@@ -135,39 +168,26 @@ namespace ofx {
         memcpy(dst, &(src.r), mPixelBytes);
         return true;
       }
+      */
       
       // suite
       
       void release() throw(Exception);
       
-      // properties
-      
-      BitDepth pixelDepth() throw(Exception);
-      
-      ImageComponent components() throw(Exception);
-      
-      ImagePreMult preMultiplication() throw(Exception);
-      
-      void renderScale(double &sx, double &sy) throw(Exception);
-      
-      double pixelAspectRatio() throw(Exception);
-      
-      //void* data() throw(Exception);
-      
-      //Rect<int> bounds() throw(Exception);
-      
-      Rect<int> regionOfDefinition() throw(Exception);
-      
-      //int rowBytes() throw(Exception);
-      
-      ImageField field() throw(Exception);
-      
-      std::string uniqueIdentifier() throw(Exception);
-      
     protected:
       
       PropertySet mProps;
       OfxImageEffectSuiteV1 *mSuite;
+      
+      BitDepth mBitDepth;
+      ImageComponent mComponents;
+      ImagePreMult mPreMult;
+      double mRenderScaleX;
+      double mRenderScaleY;
+      double mPixelAspectRatio;
+      Rect<int> mRoD;
+      ImageField mField;
+      std::string mUID;
       
       int mCompBytes;
       int mNumComps;
@@ -175,7 +195,6 @@ namespace ofx {
       int mRowBytes;
       Rect<int> mBounds;
       void *mData;
-      //static OfxImageEffectSuiteV1 * msSuiteV1;
   };
   
   class ClipDescriptor {

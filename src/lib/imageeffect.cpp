@@ -26,10 +26,19 @@ USA.
 
 namespace ofx {
 
-//OfxImageEffectSuiteV1 * Image::msSuiteV1 = 0;
-
 Image::Image()
-  : mSuite(0), mPixelBytes(0), mRowBytes(0), mData(0) {
+  : mSuite(0)
+  , mBitDepth(BitDepthNone)
+  , mComponents(ImageComponentNone)
+  , mPreMult(ImageOpaque)
+  , mRenderScaleX(1.0)
+  , mRenderScaleY(1.0)
+  , mPixelAspectRatio(1.0)
+  , mField(ImageFieldNone)
+  , mUID("")
+  , mPixelBytes(0)
+  , mRowBytes(0)
+  , mData(0) {
 }
 
 Image::Image(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception)
@@ -42,19 +51,42 @@ Image::Image(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception)
   
   static size_t byteSize[] = {0, 1, 2, 4};
   static size_t compCount[] = {0, 4, 1};
-  
-  mCompBytes = byteSize[pixelDepth()];
-  mNumComps = compCount[components()];
+
+  mBitDepth = StringToBitDepth(mProps.getString(kOfxImageEffectPropPixelDepth, 0));
+  mComponents = StringToImageComponent(mProps.getString(kOfxImageEffectPropComponents, 0));
+  mPreMult = StringToImagePreMult(mProps.getString(kOfxImageEffectPropPreMultiplication, 0));
+  mRenderScaleX = mProps.getDouble(kOfxImageEffectPropRenderScale, 0);
+  mRenderScaleY = mProps.getDouble(kOfxImageEffectPropRenderScale, 1);
+  mPixelAspectRatio = mProps.getDouble(kOfxImagePropPixelAspectRatio, 0);
+  mProps.getInts(kOfxImagePropRegionOfDefinition, 4, &(mRoD.x1));
+  mField = StringToImageField(mProps.getString(kOfxImagePropField, 0));
+  mUID = mProps.getString(kOfxImagePropUniqueIdentifier, 0);
   mData = mProps.getPointer(kOfxImagePropData, 0);
   mRowBytes = mProps.getInt(kOfxImagePropRowBytes, 0);
   mProps.getInts(kOfxImagePropBounds, 4, &(mBounds.x1));
+  
+  mCompBytes = byteSize[pixelDepth()];
+  mNumComps = compCount[components()];
   mPixelBytes = mNumComps * mCompBytes;
 }
 
 Image::Image(const Image &rhs)
-  : mProps(rhs.mProps), mSuite(rhs.mSuite), mCompBytes(rhs.mCompBytes),
-    mNumComps(rhs.mNumComps), mPixelBytes(rhs.mPixelBytes),
-    mRowBytes(rhs.mRowBytes), mBounds(rhs.mBounds) {
+  : mProps(rhs.mProps)
+  , mSuite(rhs.mSuite)
+  , mBitDepth(rhs.mBitDepth)
+  , mComponents(rhs.mComponents)
+  , mPreMult(rhs.mPreMult)
+  , mRenderScaleX(rhs.mRenderScaleX)
+  , mRenderScaleY(rhs.mRenderScaleY)
+  , mPixelAspectRatio(rhs.mPixelAspectRatio)
+  , mRoD(rhs.mRoD)
+  , mField(rhs.mField)
+  , mUID(rhs.mUID)
+  , mCompBytes(rhs.mCompBytes)
+  , mNumComps(rhs.mNumComps)
+  , mPixelBytes(rhs.mPixelBytes)
+  , mRowBytes(rhs.mRowBytes)
+  , mBounds(rhs.mBounds) {
 }
 
 Image::~Image() {
@@ -69,13 +101,17 @@ Image& Image::operator=(const Image &rhs) {
   mRowBytes = rhs.mRowBytes;
   mBounds = rhs.mBounds;
   mData = rhs.mData;
+  mBitDepth = rhs.mBitDepth;
+  mComponents = rhs.mComponents;
+  mPreMult = rhs.mPreMult;
+  mRenderScaleX = rhs.mRenderScaleX;
+  mRenderScaleY = rhs.mRenderScaleY;
+  mPixelAspectRatio = rhs.mPixelAspectRatio;
+  mRoD = rhs.mRoD;
+  mField = rhs.mField;
+  mUID = rhs.mUID;
   return *this;
 }
-
-//Image& Image::operator=(OfxPropertySetHandle hdl) {
-//  mProps = hdl;
-//  return *this;
-//}
 
 void Image::release() throw(Exception) {
   mSuite->clipReleaseImage(mProps.handle());
@@ -86,58 +122,7 @@ void Image::release() throw(Exception) {
   mRowBytes = 0;
 }
 
-BitDepth Image::pixelDepth() throw(Exception) {
-  return StringToBitDepth(mProps.getString(kOfxImageEffectPropPixelDepth, 0));
-}
-      
-ImageComponent Image::components() throw(Exception) {
-  return StringToImageComponent(mProps.getString(kOfxImageEffectPropComponents, 0));
-}
-
-ImagePreMult Image::preMultiplication() throw(Exception) {
-  return StringToImagePreMult(mProps.getString(kOfxImageEffectPropPreMultiplication, 0));
-}
-
-void Image::renderScale(double &sx, double &sy) throw(Exception) {
-  sx = mProps.getDouble(kOfxImageEffectPropRenderScale, 0);
-  sy = mProps.getDouble(kOfxImageEffectPropRenderScale, 1);
-}
-
-double Image::pixelAspectRatio() throw(Exception) {
-  return mProps.getDouble(kOfxImagePropPixelAspectRatio, 0);
-}
-
-//void* Image::data() throw(Exception) {
-//  return mProps.getPointer(kOfxImagePropData, 0);
-//}
-
-//Rect<int> Image::bounds() throw(Exception) {
-//  Rect<int> bounds;
-//  mProps.getInts(kOfxImagePropBounds, 4, &(bounds.x1));
-//  return bounds;
-//}
-
-Rect<int> Image::regionOfDefinition() throw(Exception) {
-  Rect<int> rod;
-  mProps.getInts(kOfxImagePropRegionOfDefinition, 4, &(rod.x1));
-  return rod;
-}
-
-//int Image::rowBytes() throw(Exception) {
-//  return mProps.getInt(kOfxImagePropRowBytes, 0);
-//}
-
-ImageField Image::field() throw(Exception) {
-  return StringToImageField(mProps.getString(kOfxImagePropField, 0));
-}
-
-std::string Image::uniqueIdentifier() throw(Exception) {
-  return mProps.getString(kOfxImagePropUniqueIdentifier, 0);
-}
-
 // ---
-
-//OfxImageEffectSuiteV1 * ClipDescriptor::msSuiteV1 = 0;
 
 ClipDescriptor::ClipDescriptor() {
 }

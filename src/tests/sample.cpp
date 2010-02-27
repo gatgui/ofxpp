@@ -37,6 +37,7 @@ USA.
 
 #define CLAMP(val, minVal, maxVal) (val < minVal ? minVal : (val > maxVal ? maxVal : val))
 
+/*
 class SampleInteractDescriptor : public ofx::InteractDescriptor {
   public:
     SampleInteractDescriptor(ofx::ImageEffectHost *host, OfxInteractHandle hdl) throw(ofx::Exception);
@@ -44,6 +45,7 @@ class SampleInteractDescriptor : public ofx::InteractDescriptor {
 
     virtual void describe() throw(ofx::Exception);
 };
+*/
 
 class SampleInteract : public ofx::Interact {
   public:
@@ -156,7 +158,7 @@ class SamplePlugin : public ofx::ImageEffectPlugin<SampleDescriptor, SampleEffec
 };
 
 // ---
-
+/*
 SampleInteractDescriptor::SampleInteractDescriptor(ofx::ImageEffectHost *host, OfxInteractHandle hdl) throw(ofx::Exception)
   : ofx::InteractDescriptor(host, hdl) {
 }
@@ -167,7 +169,7 @@ SampleInteractDescriptor::~SampleInteractDescriptor() {
 void SampleInteractDescriptor::describe() throw(ofx::Exception) {
   // NOOP
 }
-
+*/
 // ---
 
 SampleInteract::SampleInteract(ofx::ImageEffectHost *host, OfxInteractHandle hdl) throw(ofx::Exception)
@@ -412,7 +414,8 @@ void SampleDescriptor::describe() throw(ofx::Exception) {
   setGrouping("gatgui");
   setLabel("sample");
   if (host()->supportsOverlays()) {
-    setOverlayInteract(ofx::InteractEntryPoint<SamplePlugin, SampleInteractDescriptor, SampleInteract>);
+    //setOverlayInteract(ofx::InteractEntryPoint<SamplePlugin, SampleInteractDescriptor, SampleInteract>);
+    setOverlayInteract(ofx::InteractEntryPoint<SamplePlugin, ofx::InteractDescriptor, SampleInteract>);
   }
 }
 

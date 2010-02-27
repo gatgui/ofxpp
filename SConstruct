@@ -23,6 +23,7 @@ import glob
 import excons
 import excons.tools
 from excons.tools import gl
+from excons.tools import openfx
 
 prjs = [
   { "name"    : "ofxpp",
@@ -37,7 +38,7 @@ prjs = [
     "srcs"    : glob.glob("src/tests/sample.cpp"),
     "libs"    : ["ofxpp"],
     "custom"  : [gl.Require],
-    "deps"    : ["lwc"]
+    "post"    : openfx.MakeBundle
   }
 ]
 

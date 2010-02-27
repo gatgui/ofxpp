@@ -174,7 +174,7 @@ namespace ofx {
   // when you want to set an interact somewhere
   // obj->setOverlayInteract(InteractEntryPoint<MyPlugin, MyInteractDesc, MyInteract>)
   
-  template <class PluginClass, class DescriptorClass, class InstanceClass>    
+  template <class PluginClass, class DescriptorClass, class InstanceClass>
   OfxStatus InteractEntryPoint(const char *action,
                                const void *handle,
                                OfxPropertySetHandle hInArgs,

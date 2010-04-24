@@ -557,7 +557,7 @@ void SampleEffect::render(ofx::ImageEffect::RenderArgs &args) throw(ofx::Excepti
 
 SamplePlugin::SamplePlugin()
   : ofx::ImageEffectPlugin<SampleDescriptor, SampleEffect>() {
-  setMajorVersion(0);
+  setMajorVersion(1);
   setMinorVersion(0);
   setID("gatgui.filter.sample");
 }

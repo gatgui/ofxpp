@@ -377,7 +377,7 @@ namespace ofx {
 #ifdef _DEBUG
   void Log(const char *msg, ...);
 #else
-# define Log(msg, ...)
+  inline void Log(const char *, ...) {}
 #endif
 }
 

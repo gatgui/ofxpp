@@ -80,7 +80,15 @@ namespace ofx {
                             OfxPropertySetHandle hOutArgs) {
         
         SelfType *plugin = Instance();
+        if (!plugin) {
+          Log("*** Invalid plugin");
+          return kOfxStatFailed;
+        }
         ImageEffectHost *host = plugin->host();
+        if (!host) {
+          Log("*** Invalid host");
+          return kOfxStatFailed;
+        }
         
         PropertySet inArgs(host, hInArgs);
         PropertySet outArgs(host, hOutArgs);
@@ -92,21 +100,25 @@ namespace ofx {
         try {
           switch (a) {
           case ActionLoad: {
+            Log("OFX Image Effect Plugin: Load");
             host->init();
             plugin->load();
             break;
           }
           case ActionUnload: {
+            Log("OFX Image Effect Plugin: Unload");
             plugin->unload();
             delete plugin;
             break;
           }
           case ActionDescribe: {
+            Log("OFX Image Effect Plugin: Describe");
             Descriptor desc(host, hEffect);
             desc.describe();
             break;
           }
           case ActionImageEffectDescribeInContext: {
+            Log("OFX Image Effect Plugin: Describe in context");
             // might not be the same handle as in ActionDescribe
             Descriptor desc(host, hEffect);
             ImageEffectContext ctx = StringToImageEffectContext(inArgs.getString(kOfxImageEffectPropContext, 0));
@@ -114,107 +126,192 @@ namespace ofx {
             break;
           }
           case ActionCreateInstance: {
+            Log("OFX Image Effect Plugin: Create instance");
             plugin->addEffect(hEffect);
             break;
           }
           case ActionDestroyInstance: {
+            Log("OFX Image Effect Plugin: Destroy instance");
             plugin->remEffect(hEffect);
             break;
           }
           case ActionBeginInstanceChanged: {
+            Log("OFX Image Effect Plugin: Begin instance changed");
             Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
             ChangeReason reason = StringToChangeReason(inArgs.getString(kOfxPropChangeReason, 0));
             effect->beginInstanceChanged(reason);
             break;
           }
           case ActionEndInstanceChanged: {
+            Log("OFX Image Effect Plugin: End instance changed");
             Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
             ChangeReason reason = StringToChangeReason(inArgs.getString(kOfxPropChangeReason, 0));
             effect->endInstanceChanged(reason);
             break;
           }
           case ActionInstanceChanged: {
+            Log("OFX Image Effect Plugin: Instance changed");
             Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
             ImageEffect::InstanceChangedArgs args(inArgs);
             effect->instanceChanged(args);
             break;
           }
           case ActionPurgeCaches: {
+            Log("OFX Image Effect Plugin: Purge caches");
             Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
             effect->purgeCaches();
             break;
           }
           case ActionSyncPrivateData: {
+            Log("OFX Image Effect Plugin: Sync private data");
             Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
             effect->syncPrivateData();
             break;
           }
           case ActionBeginInstanceEdit: {
+            Log("OFX Image Effect Plugin: Begin instance edit");
             Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
             effect->beginInstanceEdit();
             break;
           }
           case ActionEndInstanceEdit: {
+            Log("OFX Image Effect Plugin: End instance edit");
             Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
             effect->endInstanceEdit();
             break;
           }
           case ActionImageEffectGetRoD: {
+            Log("OFX Image Effect Plugin: Get region of definition");
             Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
             ImageEffect::GetRoDArgs args(inArgs);
             effect->getRegionOfDefinition(args);
             args.setOutputs(outArgs);
             break;
           }
           case ActionImageEffectGetRoI: {
+            Log("OFX Image Effect Plugin: Get regions of interest");
             Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
             ImageEffect::GetRoIArgs args(inArgs);
             effect->getRegionsOfInterest(args);
             args.setOutputs(outArgs);
             break;
           }
           case ActionImageEffectGetFramesNeeded: {
+            Log("OFX Image Effect Plugin: Get frames needed");
             Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
             ImageEffect::GetFramesNeededArgs args(inArgs);
             effect->getFramesNeeded(args);
             args.setOutputs(outArgs);
             break;
           }
           case ActionImageEffectIsIdentity: {
+            Log("OFX Image Effect Plugin: Is identity");
             Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
             ImageEffect::IsIdentityArgs args(inArgs);
             if (effect->isIdentity(args)) {
               args.setOutputs(outArgs);
+            } else {
+              // must return this code if we want render to be called
+              return kOfxStatReplyDefault;
             }
             break;
           }
           case ActionImageEffectRender: {
+            Log("OFX Image Effect Plugin: Render");
             Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
             ImageEffect::RenderArgs args(inArgs);
             effect->render(args);
             break;
           }
           case ActionImageEffectBeginSequenceRender: {
+            Log("OFX Image Effect Plugin: Begin sequence render");
             Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
             ImageEffect::SequenceArgs args(inArgs);
             effect->beginSequenceRender(args);
             break;
           }
           case ActionImageEffectEndSequenceRender: {
+            Log("OFX Image Effect Plugin: End sequence render");
             Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
             ImageEffect::SequenceArgs args(inArgs);
             effect->endSequenceRender(args);
             break;
           }
           case ActionImageEffectGetClipPreferences: {
+            Log("OFX Image Effect Plugin: Get clip preferences");
             Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
             ImageEffect::GetClipPrefArgs args;
             effect->getClipPreferences(args);
             args.setOutputs(outArgs);
             break;
           }
           case ActionImageEffectGetTimeDomain: {
+            Log("OFX Image Effect Plugin: Get time domain");
             Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
             double first, last;
             effect->getTimeDomain(first, last);
             outArgs.setDouble(kOfxImageEffectPropFrameRange, 0, first);

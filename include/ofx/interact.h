@@ -195,61 +195,73 @@ namespace ofx {
     try {
       switch (a) {
       case ActionDescribe: {
+        Log("OFX Overlay Interact: Describe");
         DescriptorClass desc(host, hInteract);
         desc.describe();
         break;
       }
       case ActionCreateInstance: {
+        Log("OFX Overlay Interact: Create instance");
         new InstanceClass(host, hInteract);
         break;
       }
       case ActionDestroyInstance: {
+        Log("OFX Overlay Interact: Destroy instance");
         if (ic) {
           delete ic;
         }
         break;
       }
       case ActionInteractDraw: {
+        Log("OFX Overlay Interact: Draw");
         Interact::DrawArgs args(inArgs);
         ic->draw(args);
         break;
       }
       case ActionInteractPenMotion: {
+        Log("OFX Overlay Interact: Pen motion");
         Interact::PenArgs args(inArgs);
         ic->penMotion(args);
         break;
       }
       case ActionInteractPenUp: {
+        Log("OFX Overlay Interact: Pen up");
         Interact::PenArgs args(inArgs);
         ic->penUp(args);
         break;
       }
       case ActionInteractPenDown: {
+        Log("OFX Overlay Interact: Pen down");
         Interact::PenArgs args(inArgs);
         ic->penDown(args);
         break;
       }
       case ActionInteractKeyDown: {
+        Log("OFX Overlay Interact: Key down");
         Interact::KeyArgs args(inArgs);
         ic->keyDown(args);
         break;
       }
       case ActionInteractKeyUp: {
+        Log("OFX Overlay Interact: Key up");
         Interact::KeyArgs args(inArgs);
         ic->keyUp(args);
         break;
       }
       case ActionInteractKeyRepeat: {
+        Log("OFX Overlay Interact: Key repeat");
         Interact::KeyArgs args(inArgs);
         ic->keyRepeat(args);
         break;
       }
       case ActionInteractGainFocus: {
+        Log("OFX Overlay Interact: Gain focus");
         Interact::FocusArgs args(inArgs);
         ic->gainFocus(args);
         break;
       }
       case ActionInteractLoseFocus: {
+        Log("OFX Overlay Interact: Lose focus");
         Interact::FocusArgs args(inArgs);
         ic->loseFocus(args);
         break;

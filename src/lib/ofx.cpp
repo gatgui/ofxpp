@@ -192,4 +192,48 @@ BEGIN_ENUM_MAP(MessageType)
   ADD_ENUM_MAPPING_CUSTOM(MessageType, MessageTypeQuestion, kOfxMessageQuestion)
 END_ENUM_MAP(MessageType)
 
+#ifdef _DEBUG
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstdarg>
+
+static FILE *gLog = 0;
+
+void CloseLog(void) {
+  if (gLog != 0) {
+    fclose(gLog);
+    gLog = 0;
+  }
+}
+
+void Log(const char *msg, ...) {
+  if (!gLog) {
+    std::string path;
+    char *ofxlog = getenv("OFX_LOG");
+    if (ofxlog) {
+      path = ofxlog;
+    } else {
+      char *home = getenv("HOME");
+      if (home) {
+        path = home;
+        path += "/ofx.log";
+      } else {
+        path = "./ofx.log";
+      }
+    }
+    gLog = fopen(path.c_str(), "w");
+    atexit(CloseLog);
+  }
+  //fprintf(gLog, "%s\n", msg);
+  va_list args;
+  va_start(args, msg);
+  vfprintf(gLog, msg, args);
+  va_end(args);
+  fprintf(gLog, "\n");
+  fflush(gLog);
+}
+
+#endif
+
 }

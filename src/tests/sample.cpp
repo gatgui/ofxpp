@@ -105,17 +105,19 @@ SampleInteract::SampleInteract(ofx::ImageEffectHost *host, OfxInteractHandle hdl
     mCenterSelected(false),
     mLastX(-1),
     mLastY(-1) {
+  ofx::Log("SampleInteract::SampleInteract");
   // do I need to call setSlaveToParam? This seems to already be the case in fusion
-  setSlaveToParam(0, "center");
-  setSlaveToParam(1, "width");
-  setSlaveToParam(2, "height");
+  //setSlaveToParam(0, "center");
+  //setSlaveToParam(1, "width");
+  //setSlaveToParam(2, "height");
 }
 
 SampleInteract::~SampleInteract() {
+  ofx::Log("SampleInteract::~SampleInteract");
 }
 
 void SampleInteract::penMotion(ofx::Interact::PenArgs &args) throw(ofx::Exception) {
-  
+  ofx::Log("SampleInteract::penMotion");
   if (mDragOp == DO_NONE) {
     return;
   }
@@ -172,6 +174,7 @@ void SampleInteract::penMotion(ofx::Interact::PenArgs &args) throw(ofx::Exceptio
 }
     
 void SampleInteract::penDown(ofx::Interact::PenArgs &args) throw(ofx::Exception) {
+  ofx::Log("SampleInteract::penDown");
   
   ofx::Double2Parameter pC = args.effect->parameters().getDouble2Param("center");
   ofx::DoubleParameter pW = args.effect->parameters().getDoubleParam("width");
@@ -219,6 +222,7 @@ void SampleInteract::penDown(ofx::Interact::PenArgs &args) throw(ofx::Exception)
 }
 
 void SampleInteract::penUp(ofx::Interact::PenArgs &) throw(ofx::Exception) {
+  ofx::Log("SampleInteract::penUp");
   mCenterSelected = false;
   mWidthSelected = false;
   mHeightSelected = false;
@@ -229,6 +233,8 @@ void SampleInteract::penUp(ofx::Interact::PenArgs &) throw(ofx::Exception) {
 }
 
 void SampleInteract::draw(ofx::Interact::DrawArgs &args) throw(ofx::Exception) {
+  ofx::Log("SampleInteract::draw");
+  
   ofx::Double2Parameter pC = args.effect->parameters().getDouble2Param("center");
   ofx::DoubleParameter pW = args.effect->parameters().getDoubleParam("width");
   ofx::DoubleParameter pH = args.effect->parameters().getDoubleParam("height");
@@ -306,12 +312,15 @@ void SampleInteract::draw(ofx::Interact::DrawArgs &args) throw(ofx::Exception) {
 
 SampleDescriptor::SampleDescriptor(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception)
   : ofx::ImageEffectDescriptor(h, hdl) {
+  ofx::Log("SampleDescriptor::SampleDescriptor");
 }
 
 SampleDescriptor::~SampleDescriptor() {
+  ofx::Log("SampleDescriptor::~SampleDescriptor");
 }
 
 void SampleDescriptor::describe() throw(ofx::Exception) {
+  ofx::Log("SampleDescriptor::describe");
   setMultipleClipDepthsSupport(false);
   setSupportedPixelDepth(0, ofx::BitDepthByte);
   setSupportedContext(0, ofx::ImageEffectContextFilter);
@@ -323,6 +332,7 @@ void SampleDescriptor::describe() throw(ofx::Exception) {
 }
 
 void SampleDescriptor::describeInContext(ofx::ImageEffectContext) throw(ofx::Exception) {
+  ofx::Log("SampleDescriptor::describeInContext");
   
   ofx::ClipDescriptor clip;
   
@@ -372,9 +382,11 @@ void SampleDescriptor::describeInContext(ofx::ImageEffectContext) throw(ofx::Exc
 
 SampleEffect::SampleEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception)
   : ofx::ImageEffect(h, hdl) {
+  ofx::Log("SampleEffect::SampleEffect");
 }
 
 SampleEffect::~SampleEffect() {
+  ofx::Log("SampleEffect::~SampleEffect");
 }
 
 double SampleEffect::normalisedDistanceToEllipseCenter(double x, double y, double w, double h, double px, double py) {
@@ -408,12 +420,14 @@ void SampleEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args) thr
   //double projectPixelAspectRatio() throw(Exception);
 }
 
-void SampleEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIsArgs &args) throw(Exception) {
+void SampleEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args) throw(Exception) {
 }
 */
 
 void SampleEffect::render(ofx::ImageEffect::RenderArgs &args) throw(ofx::Exception)
 {
+  ofx::Log("SampleEffect::render");
+  
   // renderWindow is in pixels, not canonical coords
   
   ofx::Clip cSrc = getClip("Source");
@@ -551,18 +565,21 @@ void SampleEffect::render(ofx::ImageEffect::RenderArgs &args) throw(ofx::Excepti
   if (abort()) {
     throw ofx::Exception(kOfxStatFailed, "InverEffect::render aborted");
   }
+  
 }
 
 // ---
 
 SamplePlugin::SamplePlugin()
   : ofx::ImageEffectPlugin<SampleDescriptor, SampleEffect>() {
+  ofx::Log("SamplePlugin::SamplePlugin");
   setMajorVersion(1);
   setMinorVersion(0);
   setID("gatgui.filter.sample");
 }
 
 SamplePlugin::~SamplePlugin() {
+  ofx::Log("SamplePlugin::~SamplePlugin");
 }
 
 // ---

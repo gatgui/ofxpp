@@ -373,6 +373,12 @@ namespace ofx {
     nx = (cx - (absolute ? xoff : 0.0)) / wsize;
     ny = (cy - (absolute ? yoff : 0.0)) / hsize;
   }
+  
+#ifdef _DEBUG
+  void Log(const char *msg, ...);
+#else
+# define Log(msg, ...)
+#endif
 }
 
 #endif

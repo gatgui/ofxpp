@@ -69,15 +69,9 @@ namespace ofx {
   class Interact {
     protected:
       
-      //static OfxInteractSuiteV1 * msSuiteV1;
-      
       OfxInteractHandle mHandle;
       PropertySet mProps;
       OfxInteractSuiteV1 *mSuite;
-      
-    //public:
-    //  
-    //  static void Init(Host *h) throw(Exception);
       
       static std::map<OfxInteractHandle, Interact*> msInteracts;
     
@@ -87,13 +81,49 @@ namespace ofx {
       
     public:
       
+      struct BaseArgs {
+        ImageEffect *effect;
+        Time time;
+        double renderScaleX;
+        double renderScaleY;
+        
+        BaseArgs(PropertySet &args);
+      };
+      
+      struct CommonArgs : public BaseArgs {
+        int viewportWidth;
+        int viewportHeight;
+        double pixelScaleX;
+        double pixelScaleY;
+        RGBAColour<double> bgColour;
+        
+        CommonArgs(PropertySet &args);
+      };
+      
+      typedef CommonArgs DrawArgs;
+      
+      typedef CommonArgs FocusArgs;
+      
+      struct PenArgs : public CommonArgs {
+        double x;
+        double y;
+        double pressure;
+        
+        PenArgs(PropertySet &args);
+      };
+      
+      struct KeyArgs : public BaseArgs {
+        int sym;
+        std::string string;
+        
+        KeyArgs(PropertySet &args);
+      };
+      
+    public:
+      
       Interact();
       Interact(ImageEffectHost *h, OfxInteractHandle hdl) throw(Exception);
-      //Interact(const Interact &rhs);
       ~Interact();
-      
-      //Interact& operator=(const Interact &rhs);
-      //Interact& operator=(OfxInteractHandle hdl);
       
       // suite
       
@@ -102,7 +132,6 @@ namespace ofx {
       
       // properties
       
-      // Review this one
       ImageEffect* effectInstance() throw(Exception);
       
       void* instanceData() throw(Exception);
@@ -124,50 +153,23 @@ namespace ofx {
       
       // for sub-classing
       
-      virtual void draw(ImageEffect *effect, //int w, int h,
-                        double pixelScaleX, double pixelScaleY,
-                        const RGBAColour<double> &bgColor, Time t,
-                        double renderScaleX, double renderScaleY) throw(Exception);
+      virtual void draw(DrawArgs &args) throw(Exception);
       
-      virtual void penMotion(ImageEffect *effect, //int w, int h,
-                             double pixelScaleX, double pixelScaleY,
-                             const RGBAColour<double> &bgColor, Time t,
-                             double renderScaleX, double renderScaleY,
-                             double penX, double penY, double pressure) throw(Exception);
+      virtual void penMotion(PenArgs &args) throw(Exception);
       
-      virtual void penDown(ImageEffect *effectt, //int w, int h,
-                           double pixelScaleX, double pixelScaleY,
-                           const RGBAColour<double> &bgColor, Time t,
-                           double renderScaleX, double renderScaleY,
-                           double penX, double penY, double pressure) throw(Exception);
+      virtual void penDown(PenArgs &args) throw(Exception);
       
-      virtual void penUp(ImageEffect *effect, //int w, int h,
-                         double pixelScaleX, double pixelScaleY,
-                         const RGBAColour<double> &bgColor, Time t,
-                         double renderScaleX, double renderScaleY,
-                         double penX, double penY, double pressure) throw(Exception);
+      virtual void penUp(PenArgs &args) throw(Exception);
       
-      virtual void keyDown(ImageEffect *effect,
-                           int keySym, const std::string &keyStr,
-                           Time t, double renderScaleX, double renderScaleY) throw(Exception);
+      virtual void keyDown(KeyArgs &args) throw(Exception);
       
-      virtual void keyUp(ImageEffect *effect,
-                         int keySym, const std::string &keyStr,
-                         Time t, double renderScaleX, double renderScaleY) throw(Exception);
+      virtual void keyUp(KeyArgs &args) throw(Exception);
       
-      virtual void keyRepeat(ImageEffect *effect,
-                             int keySym, const std::string &keyStr,
-                             Time t, double renderScaleX, double renderScaleY) throw(Exception);
+      virtual void keyRepeat(KeyArgs &args) throw(Exception);
       
-      virtual void gainFocus(ImageEffect *effect, //int w, int h,
-                             double pixelScaleX, double pixelScaleY,
-                             const RGBAColour<double> &bgColor, Time t,
-                             double renderScaleX, double renderScaleY) throw(Exception);
+      virtual void gainFocus(FocusArgs &args) throw(Exception);
       
-      virtual void loseFocus(ImageEffect *effect, //int w, int h,
-                             double pixelScaleX, double pixelScaleY,
-                             const RGBAColour<double> &bgColor, Time t,
-                             double renderScaleX, double renderScaleY) throw(Exception);
+      virtual void loseFocus(FocusArgs &args) throw(Exception);
   };
   
   
@@ -178,14 +180,13 @@ namespace ofx {
   OfxStatus InteractEntryPoint(const char *action,
                                const void *handle,
                                OfxPropertySetHandle hInArgs,
-                               OfxPropertySetHandle hOutArgs) {
+                               OfxPropertySetHandle) {
     
     ImageEffectHost *host = PluginClass::Instance()->host();
     
     OfxInteractHandle hInteract = (OfxInteractHandle) handle;
     
     PropertySet inArgs(host, hInArgs);
-    PropertySet outArgs(host, hOutArgs);
     
     Action a = StringToAction(action);
     
@@ -209,144 +210,48 @@ namespace ofx {
         break;
       }
       case ActionInteractDraw: {
-        OfxImageEffectHandle hEffect = (OfxImageEffectHandle) inArgs.getPointer(kOfxPropEffectInstance, 0);
-        //int w = inArgs.getInt(kOfxInteractPropViewportSize, 0);
-        //int h = inArgs.getInt(kOfxInteractPropViewportSize, 1);
-        double psx = inArgs.getDouble(kOfxInteractPropPixelScale, 0);
-        double psy = inArgs.getDouble(kOfxInteractPropPixelScale, 1);
-        RGBAColour<double> bg;
-        bg.r = inArgs.getDouble(kOfxInteractPropBackgroundColour, 0);
-        bg.g = inArgs.getDouble(kOfxInteractPropBackgroundColour, 1);
-        bg.b = inArgs.getDouble(kOfxInteractPropBackgroundColour, 2);
-        bg.a = 1.0;
-        Time t = inArgs.getDouble(kOfxPropTime, 0);
-        double rsx = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
-        double rsy = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
-        ic->draw(ImageEffect::GetEffect(hEffect), /*w, h,*/ psx, psy, bg, t, rsx, rsy);
+        Interact::DrawArgs args(inArgs);
+        ic->draw(args);
         break;
       }
       case ActionInteractPenMotion: {
-        OfxImageEffectHandle hEffect = (OfxImageEffectHandle) inArgs.getPointer(kOfxPropEffectInstance, 0);
-        //int w = inArgs.getInt(kOfxInteractPropViewportSize, 0);
-        //int h = inArgs.getInt(kOfxInteractPropViewportSize, 1);
-        double psx = inArgs.getDouble(kOfxInteractPropPixelScale, 0);
-        double psy = inArgs.getDouble(kOfxInteractPropPixelScale, 1);
-        RGBAColour<double> bg;
-        bg.r = inArgs.getDouble(kOfxInteractPropBackgroundColour, 0);
-        bg.g = inArgs.getDouble(kOfxInteractPropBackgroundColour, 1);
-        bg.b = inArgs.getDouble(kOfxInteractPropBackgroundColour, 2);
-        bg.a = 1.0;
-        Time t = inArgs.getDouble(kOfxPropTime, 0);
-        double rsx = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
-        double rsy = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
-        double px = inArgs.getDouble(kOfxInteractPropPenPosition, 0);
-        double py = inArgs.getDouble(kOfxInteractPropPenPosition, 1);
-        double pp = inArgs.getDouble(kOfxInteractPropPenPressure, 0);
-        ic->penMotion(ImageEffect::GetEffect(hEffect), /*w, h,*/ psx, psy, bg, t, rsx, rsy, px, py, pp);
+        Interact::PenArgs args(inArgs);
+        ic->penMotion(args);
         break;
       }
       case ActionInteractPenUp: {
-        OfxImageEffectHandle hEffect = (OfxImageEffectHandle) inArgs.getPointer(kOfxPropEffectInstance, 0);
-        //int w = inArgs.getInt(kOfxInteractPropViewportSize, 0);
-        //int h = inArgs.getInt(kOfxInteractPropViewportSize, 1);
-        double psx = inArgs.getDouble(kOfxInteractPropPixelScale, 0);
-        double psy = inArgs.getDouble(kOfxInteractPropPixelScale, 1);
-        RGBAColour<double> bg;
-        bg.r = inArgs.getDouble(kOfxInteractPropBackgroundColour, 0);
-        bg.g = inArgs.getDouble(kOfxInteractPropBackgroundColour, 1);
-        bg.b = inArgs.getDouble(kOfxInteractPropBackgroundColour, 2);
-        bg.a = 1.0;
-        Time t = inArgs.getDouble(kOfxPropTime, 0);
-        double rsx = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
-        double rsy = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
-        double px = inArgs.getDouble(kOfxInteractPropPenPosition, 0);
-        double py = inArgs.getDouble(kOfxInteractPropPenPosition, 1);
-        double pp = inArgs.getDouble(kOfxInteractPropPenPressure, 0);
-        ic->penUp(ImageEffect::GetEffect(hEffect), /*w, h,*/ psx, psy, bg, t, rsx, rsy, px, py, pp);
+        Interact::PenArgs args(inArgs);
+        ic->penUp(args);
         break;
       }
       case ActionInteractPenDown: {
-        OfxImageEffectHandle hEffect = (OfxImageEffectHandle) inArgs.getPointer(kOfxPropEffectInstance, 0);
-        //int w = inArgs.getInt(kOfxInteractPropViewportSize, 0);
-        //int h = inArgs.getInt(kOfxInteractPropViewportSize, 1);
-        double psx = inArgs.getDouble(kOfxInteractPropPixelScale, 0);
-        double psy = inArgs.getDouble(kOfxInteractPropPixelScale, 1);
-        RGBAColour<double> bg;
-        bg.r = inArgs.getDouble(kOfxInteractPropBackgroundColour, 0);
-        bg.g = inArgs.getDouble(kOfxInteractPropBackgroundColour, 1);
-        bg.b = inArgs.getDouble(kOfxInteractPropBackgroundColour, 2);
-        bg.a = 1.0;
-        Time t = inArgs.getDouble(kOfxPropTime, 0);
-        double rsx = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
-        double rsy = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
-        double px = inArgs.getDouble(kOfxInteractPropPenPosition, 0);
-        double py = inArgs.getDouble(kOfxInteractPropPenPosition, 1);
-        double pp = inArgs.getDouble(kOfxInteractPropPenPressure, 0);
-        ic->penDown(ImageEffect::GetEffect(hEffect), /*w, h,*/ psx, psy, bg, t, rsx, rsy, px, py, pp);
+        Interact::PenArgs args(inArgs);
+        ic->penDown(args);
         break;
       }
       case ActionInteractKeyDown: {
-        OfxImageEffectHandle hEffect = (OfxImageEffectHandle) inArgs.getPointer(kOfxPropEffectInstance, 0);
-        int key = inArgs.getInt(kOfxPropKeySym, 0);
-        std::string keyStr = inArgs.getString(kOfxPropKeyString, 0);
-        Time t = inArgs.getDouble(kOfxPropTime, 0);
-        double rsx = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
-        double rsy = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
-        ic->keyDown(ImageEffect::GetEffect(hEffect), key, keyStr, t, rsx, rsy);
+        Interact::KeyArgs args(inArgs);
+        ic->keyDown(args);
         break;
       }
       case ActionInteractKeyUp: {
-        OfxImageEffectHandle hEffect = (OfxImageEffectHandle) inArgs.getPointer(kOfxPropEffectInstance, 0);
-        int key = inArgs.getInt(kOfxPropKeySym, 0);
-        std::string keyStr = inArgs.getString(kOfxPropKeyString, 0);
-        Time t = inArgs.getDouble(kOfxPropTime, 0);
-        double rsx = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
-        double rsy = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
-        ic->keyUp(ImageEffect::GetEffect(hEffect), key, keyStr, t, rsx, rsy);
+        Interact::KeyArgs args(inArgs);
+        ic->keyUp(args);
         break;
       }
       case ActionInteractKeyRepeat: {
-        OfxImageEffectHandle hEffect = (OfxImageEffectHandle) inArgs.getPointer(kOfxPropEffectInstance, 0);
-        int key = inArgs.getInt(kOfxPropKeySym, 0);
-        std::string keyStr = inArgs.getString(kOfxPropKeyString, 0);
-        Time t = inArgs.getDouble(kOfxPropTime, 0);
-        double rsx = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
-        double rsy = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
-        ic->keyRepeat(ImageEffect::GetEffect(hEffect), key, keyStr, t, rsx, rsy);
+        Interact::KeyArgs args(inArgs);
+        ic->keyRepeat(args);
         break;
       }
       case ActionInteractGainFocus: {
-        OfxImageEffectHandle hEffect = (OfxImageEffectHandle) inArgs.getPointer(kOfxPropEffectInstance, 0);
-        //int w = inArgs.getInt(kOfxInteractPropViewportSize, 0);
-        //int h = inArgs.getInt(kOfxInteractPropViewportSize, 1);
-        double psx = inArgs.getDouble(kOfxInteractPropPixelScale, 0);
-        double psy = inArgs.getDouble(kOfxInteractPropPixelScale, 1);
-        RGBAColour<double> bg;
-        bg.r = inArgs.getDouble(kOfxInteractPropBackgroundColour, 0);
-        bg.g = inArgs.getDouble(kOfxInteractPropBackgroundColour, 1);
-        bg.b = inArgs.getDouble(kOfxInteractPropBackgroundColour, 2);
-        bg.a = 1.0;
-        Time t = inArgs.getDouble(kOfxPropTime, 0);
-        double rsx = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
-        double rsy = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
-        ic->gainFocus(ImageEffect::GetEffect(hEffect), /*w, h,*/ psx, psy, bg, t, rsx, rsy);
+        Interact::FocusArgs args(inArgs);
+        ic->gainFocus(args);
         break;
       }
       case ActionInteractLoseFocus: {
-        OfxImageEffectHandle hEffect = (OfxImageEffectHandle) inArgs.getPointer(kOfxPropEffectInstance, 0);
-        //int w = inArgs.getInt(kOfxInteractPropViewportSize, 0);
-        //int h = inArgs.getInt(kOfxInteractPropViewportSize, 1);
-        double psx = inArgs.getDouble(kOfxInteractPropPixelScale, 0);
-        double psy = inArgs.getDouble(kOfxInteractPropPixelScale, 1);
-        RGBAColour<double> bg;
-        bg.r = inArgs.getDouble(kOfxInteractPropBackgroundColour, 0);
-        bg.g = inArgs.getDouble(kOfxInteractPropBackgroundColour, 1);
-        bg.b = inArgs.getDouble(kOfxInteractPropBackgroundColour, 2);
-        bg.a = 1.0;
-        Time t = inArgs.getDouble(kOfxPropTime, 0);
-        double rsx = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
-        double rsy = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
-        ic->loseFocus(ImageEffect::GetEffect(hEffect), /*w, h,*/ psx, psy, bg, t, rsx, rsy);
+        Interact::FocusArgs args(inArgs);
+        ic->loseFocus(args);
         break;
       }
       default:

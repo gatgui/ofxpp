@@ -76,14 +76,6 @@ USA.
   }
 
 namespace ofx {
-    
-  enum BitDepth {
-    BitDepthNone = 0,
-    BitDepthByte,
-    BitDepthShort,
-    BitDepthFloat,
-    MaxBitDepth
-  };
   
   enum Type {
     TypeImageEffectHost = 0,
@@ -94,6 +86,14 @@ namespace ofx {
     TypeClip,
     TypeImage,
     MaxType
+  };
+  
+  enum BitDepth {
+    BitDepthNone = 0,
+    BitDepthByte,
+    BitDepthShort,
+    BitDepthFloat,
+    MaxBitDepth
   };
   
   enum ImageComponent {

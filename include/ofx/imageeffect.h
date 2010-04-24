@@ -44,7 +44,7 @@ namespace ofx {
     double pixelAspectRatio;
   };
   
-  struct ClipPreferences {
+  struct ClipPreferences { // derive from PixelPreferences?
     double frameRate;
     ImageFieldOrder fieldOrder;
     ImagePreMult preMult;
@@ -132,43 +132,9 @@ namespace ofx {
       
       template <typename ComponentType>
       inline bool pixelAddress(int x, int y, RGBAColour<ComponentType> *&adr) {
-        //if (x < mBounds.x1 || x >= mBounds.x2 || y < mBounds.y1 || y >= mBounds.y2) {
-        //  adr = 0;
-        //  return false;
-        //}
-        //adr = (RGBAColour<ComponentType>*)((char*)mData + ((y - mBounds.y1) * mRowBytes) + ((x - mBounds.x1) * mPixelBytes));
-        //return true;
         adr = (RGBAColour<ComponentType>*) pixelAddress(x, y);
         return (adr != 0);
       }
-      
-      /*
-      template <typename ComponentType>
-      inline bool getPixelAt(int x, int y, RGBAColour<ComponentType> &dst) {
-        if (sizeof(ComponentType) != mCompBytes) {
-          return false;
-        }
-        void *src = pixelAddress(x, y);
-        if (!src) {
-          return false;
-        }
-        memcpy(&(dst.r), src, mPixelBytes);
-        return true;
-      }
-      
-      template <typename ComponentType>
-      inline bool setPixelAt(int x, int y, const RGBAColour<ComponentType> &src) {
-        if (sizeof(ComponentType) != mCompBytes) {
-          return false;
-        }
-        void *dst = pixelAddress(x, y);
-        if (!dst) {
-          return false;
-        }
-        memcpy(dst, &(src.r), mPixelBytes);
-        return true;
-      }
-      */
       
       // suite
       
@@ -200,15 +166,12 @@ namespace ofx {
   class ClipDescriptor {
     public:
       
-      //friend class ImageEffect;
-      
       ClipDescriptor();
       ClipDescriptor(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception);
       ClipDescriptor(const ClipDescriptor &rhs);
       ~ClipDescriptor();
       
       ClipDescriptor& operator=(const ClipDescriptor &rhs);
-      //ClipDescriptor& operator=(OfxPropertySetHandle hdl);
       
       inline OfxPropertySetHandle handle() {
         return mProps.handle();
@@ -249,14 +212,10 @@ namespace ofx {
     protected:
       
       PropertySet mProps;
-      
-      //static OfxImageEffectSuiteV1 *msSuiteV1;
   };
   
   class Clip {
     public:
-      
-      //friend class ImageEffect;
       
       Clip();
       Clip(ImageEffectHost *h, OfxImageClipHandle hdl) throw(Exception);
@@ -264,7 +223,6 @@ namespace ofx {
       ~Clip();
       
       Clip& operator=(const Clip &rhs);
-      //Clip& operator=(OfxImageClipHandle hdl);
       
       inline ImageEffectHost* host() {
         return mHost;
@@ -336,8 +294,6 @@ namespace ofx {
       OfxImageClipHandle mHandle;
       PropertySet mProps;
       ImageEffectHost *mHost;
-      
-      //static OfxImageEffectSuiteV1 *msSuiteV1;
   };
   
   class ImageEffectDescriptor {
@@ -348,21 +304,15 @@ namespace ofx {
       ParameterSetDescriptor mParams;
       ImageEffectHost *mHost;
       
-      //static OfxImageEffectSuiteV1 *msSuiteV1;
-      
       ImageEffectDescriptor();
       
     public:
       
-      //friend class ImageEffect;
-      
-      //ImageEffectDescriptor();
       ImageEffectDescriptor(ImageEffectHost *h, OfxImageEffectHandle hdl) throw(Exception);
       ImageEffectDescriptor(const ImageEffectDescriptor &rhs);
       virtual ~ImageEffectDescriptor();
       
       ImageEffectDescriptor& operator=(const ImageEffectDescriptor &rhs);
-      //ImageEffectDescriptor& operator=(OfxImageEffectHandle hdl);
       
       inline ImageEffectHost* host() {
         return mHost;
@@ -457,26 +407,97 @@ namespace ofx {
       ParameterSet mParams;
       ImageEffectHost *mHost;
       
-      //static OfxImageEffectSuiteV1 * msSuiteV1;
       static std::map<OfxImageEffectHandle, ImageEffect*> msEffects;
       
       ImageEffect();
       
     public:
       
-      //static void Init(Host *h) throw(Exception);
-      
       static ImageEffect* GetEffect(OfxImageEffectHandle hdl);
+    
+    public:
+      
+      struct RenderScaleArgs {
+        double renderScaleX;
+        double renderScaleY;
+        
+        RenderScaleArgs(PropertySet &props);
+      };
+      
+      struct TimeArgs {
+        Time time;
+        
+        TimeArgs(PropertySet &props);
+      };
+      
+      struct InstanceChangedArgs : public RenderScaleArgs, public TimeArgs {
+        Type type;
+        std::string name;
+        ChangeReason reason;
+        
+        InstanceChangedArgs(PropertySet &props);
+      };
+      
+      struct GetRoDArgs : public RenderScaleArgs, public TimeArgs {
+        Rect<double> RoD;
+        
+        GetRoDArgs(PropertySet &in);
+        void setOutputs(PropertySet &out);
+      };
+      
+      struct RenderArgs : public RenderScaleArgs, public TimeArgs {
+        ImageField field;
+        Rect<int> renderWindow;
+        
+        RenderArgs(PropertySet &props);
+      };
+      
+      struct IsIdentityArgs : public RenderArgs {
+        std::string idClip;
+        Time idTime;
+        
+        IsIdentityArgs(PropertySet &in);
+        void setOutputs(PropertySet &out);
+      };
+      
+      struct GetRoIArgs : public RenderScaleArgs, public TimeArgs {
+        Rect<double> outRoI;
+        std::map<std::string, Rect<double> > inRoIs;
+        
+        GetRoIArgs(PropertySet &in);
+        void setOutputs(PropertySet &out);
+        void setInputRoI(const std::string &name, const Rect<double> &RoI);
+      };
+      
+      struct GetFramesNeededArgs : public TimeArgs {
+        std::map<std::string, FrameRangeList> inRanges;
+        
+        GetFramesNeededArgs(PropertySet &in);
+        void setOutputs(PropertySet &out);
+        void addInputRange(const std::string &name, const FrameRange &range);
+      };
+      
+      struct SequenceArgs : public RenderScaleArgs {
+        FrameRange range;
+        int step;
+        bool interactive;
+        
+        SequenceArgs(PropertySet &props);
+      };
+      
+      struct GetClipPrefArgs {
+        ClipPreferences outPref;
+        std::map<std::string, PixelPreferences> inPrefs;
+        
+        GetClipPrefArgs();
+        void setOutputs(PropertySet &out);
+        void setInputPref(const std::string &name, const PixelPreferences &prefs);
+      };
       
     public:
       
-      //ImageEffect();
       ImageEffect(ImageEffectHost *h, OfxImageEffectHandle hdl) throw(Exception);
-      //ImageEffect(const ImageEffect &rhs);
       virtual ~ImageEffect();
-      
-      //ImageEffect& operator=(const ImageEffect &rhs);
-      //ImageEffect& operator=(OfxImageEffectHandle hdl);
       
       inline ImageEffectHost* host() {
         return mHost;
@@ -536,8 +557,7 @@ namespace ofx {
       
       virtual void endInstanceChanged(ChangeReason reason) throw(Exception);
       
-      virtual void instanceChanged(Type typ, const std::string &name, ChangeReason reason,
-                                   Time t, double renderScaleX, double renderScaleY) throw(Exception);
+      virtual void instanceChanged(InstanceChangedArgs &args) throw(Exception);
       
       virtual void purgeCaches() throw(Exception);
       
@@ -547,29 +567,21 @@ namespace ofx {
       
       virtual void endInstanceEdit() throw(Exception);
       
-      virtual Rect<double> getRegionOfDefinition(Time t, double renderScaleX, double renderScaleY) throw(Exception);
+      virtual Rect<double> getRegionOfDefinition(GetRoDArgs &args) throw(Exception);
       
-      virtual void getRegionsOfInterest(Time t, double renderScaleX, double renderScaleY,
-                                        const Rect<double> &outRoI,
-                                        std::map<std::string, Rect<double> > &inClipsRoI) throw(Exception);
+      virtual void getRegionsOfInterest(GetRoIArgs &args) throw(Exception);
       
-      virtual void getFramesNeeded(Time t, std::map<std::string, FrameRangeList> &clipsFrameRange) throw(Exception);
+      virtual void getFramesNeeded(GetFramesNeededArgs &args) throw(Exception);
       
-      virtual bool isIdentity(Time t, ImageField field, const Rect<int> &renderWindow,
-                              double renderScaleX, double renderScaleY,
-                              std::string &idClip, Time &idTime) throw(Exception);
+      virtual bool isIdentity(IsIdentityArgs &args) throw(Exception);
       
-      virtual void render(Time t, ImageField field, const Rect<int> &renderWindow,
-                          double renderScaleX, double renderScaleY) throw(Exception);
+      virtual void render(RenderArgs &args) throw(Exception);
       
-      virtual void beginSequenceRender(const FrameRange &range, int step, bool interactive,
-                                       double renderScaleX, double renderScaleY) throw(Exception);
+      virtual void beginSequenceRender(SequenceArgs &args) throw(Exception);
       
-      virtual void endSequenceRender(const FrameRange &range, int step, bool interactive,
-                                     double renderScaleX, double renderScaleY) throw(Exception);
+      virtual void endSequenceRender(SequenceArgs &args) throw(Exception);
       
-      virtual void getClipPreferences(ClipPreferences &outPrefs,
-                                      std::map<std::string, PixelPreferences> &inClipsPrefs) throw(Exception);
+      virtual void getClipPreferences(GetClipPrefArgs &args) throw(Exception);
       
       virtual void getTimeDomain(double &first, double &last) throw(Exception);
   };

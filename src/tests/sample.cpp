@@ -37,60 +37,19 @@ USA.
 
 #define CLAMP(val, minVal, maxVal) (val < minVal ? minVal : (val > maxVal ? maxVal : val))
 
-/*
-class SampleInteractDescriptor : public ofx::InteractDescriptor {
-  public:
-    SampleInteractDescriptor(ofx::ImageEffectHost *host, OfxInteractHandle hdl) throw(ofx::Exception);
-    virtual ~SampleInteractDescriptor();
-
-    virtual void describe() throw(ofx::Exception);
-};
-*/
-
 class SampleInteract : public ofx::Interact {
   public:
     
     SampleInteract(ofx::ImageEffectHost *host, OfxInteractHandle hdl) throw(ofx::Exception);
     virtual ~SampleInteract();
     
-    virtual void draw(ofx::ImageEffect *effect,
-                      double pixelScaleX,
-                      double pixelScaleY,
-                      const ofx::RGBAColourD &bgColor,
-                      ofx::Time t,
-                      double renderScaleX,
-                      double renderScaleY) throw(ofx::Exception);
+    virtual void draw(ofx::Interact::DrawArgs &args) throw(ofx::Exception);
+    virtual void penMotion(ofx::Interact::PenArgs &args) throw(ofx::Exception);
+    virtual void penDown(ofx::Interact::PenArgs &args) throw(ofx::Exception);
+    virtual void penUp(ofx::Interact::PenArgs &args) throw(ofx::Exception);
     
-    virtual void penMotion(ofx::ImageEffect *effect,
-                           double pixelScaleX, double pixelScaleY,
-                           const ofx::RGBAColour<double> &bgColor, ofx::Time t,
-                           double renderScaleX, double renderScaleY,
-                           double penX, double penY, double pressure) throw(ofx::Exception);
-    
-    virtual void penDown(ofx::ImageEffect *effectt,
-                         double pixelScaleX, double pixelScaleY,
-                         const ofx::RGBAColour<double> &bgColor, ofx::Time t,
-                         double renderScaleX, double renderScaleY,
-                         double penX, double penY, double pressure) throw(ofx::Exception);
-    
-    virtual void penUp(ofx::ImageEffect *effect,
-                       double pixelScaleX, double pixelScaleY,
-                       const ofx::RGBAColour<double> &bgColor, ofx::Time t,
-                       double renderScaleX, double renderScaleY,
-                       double penX, double penY, double pressure) throw(ofx::Exception);
-    
-    /*
-    virtual void gainFocus(ofx::ImageEffect *effect, //int w, int h,
-                           double pixelScaleX, double pixelScaleY,
-                           const ofx::RGBAColour<double> &bgColor, ofx::Time t,
-                           double renderScaleX, double renderScaleY) throw(ofx::Exception);
-    
-    virtual void loseFocus(ofx::ImageEffect *effect, //int w, int h,
-                           double pixelScaleX, double pixelScaleY,
-                           const ofx::RGBAColour<double> &bgColor, ofx::Time t,
-                           double renderScaleX, double renderScaleY) throw(ofx::Exception);
-    */
   protected:
+    
     enum DragOp {
       DO_NONE = 0,
       DO_CENTER,
@@ -124,31 +83,10 @@ class SampleEffect : public ofx::ImageEffect {
     
     double normalisedDistanceToEllipseCenter(double x, double y, double w, double h, double px, double py);
     
-    virtual bool isIdentity(ofx::Time t,
-                            ofx::ImageField field,
-                            const ofx::Rect<int> &renderWindow,
-                            double renderScaleX,
-                            double renderScaleY,
-                            std::string &idClip,
-                            ofx::Time &idTime) throw(ofx::Exception);
-    
-    /*
-    virtual ofx::Rect<double> getRegionOfDefinition(ofx::Time t,
-                                                    double renderScaleX,
-                                                    double renderScaleY) throw(ofx::Exception);
-    
-    virtual void getRegionsOfInterest(ofx::Time t,
-                                      double renderScaleX,
-                                      double renderScaleY,
-                                      const ofx::Rect<double> &outRoI,
-                                      std::map<std::string, ofx::Rect<double> > &inClipsRoI) throw(Exception);
-    */
-    
-    virtual void render(ofx::Time t,
-                        ofx::ImageField field,
-                        const ofx::Rect<int> &renderWindow,
-                        double &renderScaleX,
-                        double renderScaleY) throw(ofx::Exception);
+    virtual bool isIdentity(ofx::ImageEffect::IsIdentityArgs &args) throw(ofx::Exception);
+    //virtual void getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args) throw(ofx::Exception);
+    //virtual void getRegionsOfInterest(ofx::ImageEffect::GetRoIsArgs &args) throw(Exception);
+    virtual void render(ofx::ImageEffect::RenderArgs &args) throw(ofx::Exception);
 };
 
 class SamplePlugin : public ofx::ImageEffectPlugin<SampleDescriptor, SampleEffect> {
@@ -157,19 +95,6 @@ class SamplePlugin : public ofx::ImageEffectPlugin<SampleDescriptor, SampleEffec
     virtual ~SamplePlugin();
 };
 
-// ---
-/*
-SampleInteractDescriptor::SampleInteractDescriptor(ofx::ImageEffectHost *host, OfxInteractHandle hdl) throw(ofx::Exception)
-  : ofx::InteractDescriptor(host, hdl) {
-}
-
-SampleInteractDescriptor::~SampleInteractDescriptor() {
-}
-
-void SampleInteractDescriptor::describe() throw(ofx::Exception) {
-  // NOOP
-}
-*/
 // ---
 
 SampleInteract::SampleInteract(ofx::ImageEffectHost *host, OfxInteractHandle hdl) throw(ofx::Exception)
@@ -189,30 +114,26 @@ SampleInteract::SampleInteract(ofx::ImageEffectHost *host, OfxInteractHandle hdl
 SampleInteract::~SampleInteract() {
 }
 
-void SampleInteract::penMotion(ofx::ImageEffect *effect,
-                               double, double,
-                               const ofx::RGBAColourD &, ofx::Time t,
-                               double, double,
-                               double penX, double penY, double) throw(ofx::Exception) {
+void SampleInteract::penMotion(ofx::Interact::PenArgs &args) throw(ofx::Exception) {
   
   if (mDragOp == DO_NONE) {
     return;
   }
 
-  ofx::Double2Parameter pC = effect->parameters().getDouble2Param("center");
-  ofx::DoubleParameter pW = effect->parameters().getDoubleParam("width");
-  ofx::DoubleParameter pH = effect->parameters().getDoubleParam("height");
+  ofx::Double2Parameter pC = args.effect->parameters().getDouble2Param("center");
+  ofx::DoubleParameter pW = args.effect->parameters().getDoubleParam("width");
+  ofx::DoubleParameter pH = args.effect->parameters().getDoubleParam("height");
   
   double ecx, ecy;
-  pC.getValueAtTime(t, ecx, ecy);
-  double ew = 0.5 * pW.getValueAtTime(t);
-  double eh = 0.5 * pH.getValueAtTime(t);
+  pC.getValueAtTime(args.time, ecx, ecy);
+  double ew = 0.5 * pW.getValueAtTime(args.time);
+  double eh = 0.5 * pH.getValueAtTime(args.time);
   
   double wext, hext;
-  effect->projectExtent(wext, hext);
+  args.effect->projectExtent(wext, hext);
   
   double xoff, yoff;
-  effect->projectOffset(xoff, yoff);
+  args.effect->projectOffset(xoff, yoff);
   
   // canonical values for eclipse
   double cecx, cecy, cew, ceh;
@@ -220,77 +141,73 @@ void SampleInteract::penMotion(ofx::ImageEffect *effect,
   ofx::NormalisedToCanonicalCoords(ew, eh, wext, hext, 0, 0, false, cew, ceh);
   
   if (mDragOp == DO_CENTER) {
-    double dx = penX - mLastX;
-    double dy = penY - mLastY;
+    double dx = args.x - mLastX;
+    double dy = args.y - mLastY;
     cecx += dx;
     cecy += dy;
     ofx::CanonicalToNormalisedCoords(cecx, cecy, wext, hext, xoff, yoff, true, ecx, ecy);
-    pC.setValueAtTime(t, ecx, ecy);
+    pC.setValueAtTime(args.time, ecx, ecy);
     redraw();
 
   } else if (mDragOp == DO_WIDTH) {
-    double dx = penX - mLastX;
+    double dx = args.x - mLastX;
     cew += dx;
     ofx::CanonicalToNormalisedCoords(cew, ceh, wext, hext, 0, 0, false, ew, eh);
     ew *= 2.0;
-    pW.setValueAtTime(t, ew);
+    pW.setValueAtTime(args.time, ew);
     redraw();
 
   } else if (mDragOp == DO_HEIGHT) {
-    double dy = penY - mLastY;
+    double dy = args.y - mLastY;
     ceh += dy;
     ofx::CanonicalToNormalisedCoords(cew, ceh, wext, hext, 0, 0, false, ew, eh);
     eh *= 2.0;
-    pH.setValueAtTime(t, eh);
+    pH.setValueAtTime(args.time, eh);
     redraw();
 
   }
 
-  mLastX = penX;
-  mLastY = penY;
+  mLastX = args.x;
+  mLastY = args.y;
 }
     
-void SampleInteract::penDown(ofx::ImageEffect *effect,
-                             double pixelScaleX, double pixelScaleY,
-                             const ofx::RGBAColourD &, ofx::Time t,
-                             double, double,
-                             double penX, double penY, double) throw(ofx::Exception) {
+void SampleInteract::penDown(ofx::Interact::PenArgs &args) throw(ofx::Exception) {
   
-  ofx::Double2Parameter pC = effect->parameters().getDouble2Param("center");
-  ofx::DoubleParameter pW = effect->parameters().getDoubleParam("width");
-  ofx::DoubleParameter pH = effect->parameters().getDoubleParam("height");
+  ofx::Double2Parameter pC = args.effect->parameters().getDouble2Param("center");
+  ofx::DoubleParameter pW = args.effect->parameters().getDoubleParam("width");
+  ofx::DoubleParameter pH = args.effect->parameters().getDoubleParam("height");
   
   double ecx, ecy;
-  pC.getValueAtTime(t, ecx, ecy);
-  double ew = 0.5 * pW.getValueAtTime(t);
-  double eh = 0.5 * pH.getValueAtTime(t);
+  pC.getValueAtTime(args.time, ecx, ecy);
+  double ew = 0.5 * pW.getValueAtTime(args.time);
+  double eh = 0.5 * pH.getValueAtTime(args.time);
   
   double wext, hext;
-  effect->projectExtent(wext, hext);
+  args.effect->projectExtent(wext, hext);
   
   double xoff, yoff;
-  effect->projectOffset(xoff, yoff);
+  args.effect->projectOffset(xoff, yoff);
   
   // canonical values for eclipse
   double cecx, cecy, cew, ceh;
   ofx::NormalisedToCanonicalCoords(ecx, ecy, wext, hext, xoff, yoff, true, cecx, cecy);
   ofx::NormalisedToCanonicalCoords(ew, eh, wext, hext, 0, 0, false, cew, ceh);
 
-  double bw = 4.0 * pixelScaleX;
-  double bh = 4.0 * pixelScaleY;
+  double bw = 4.0 * args.pixelScaleX;
+  double bh = 4.0 * args.pixelScaleY;
   
-  if (penX >= cecx-bw && penX <= cecx+bw) {
-    if (penY >= cecy-bh && penY <= cecy+bh) {
+  if (args.x >= cecx-bw && args.x <= cecx+bw) {
+    if (args.y >= cecy-bh && args.y <= cecy+bh) {
       mDragOp = DO_CENTER;
-    } else if (penY >= cecy+ceh-bh && penY <= cecy+ceh+bh) {
+    } else if (args.y >= cecy+ceh-bh && args.y <= cecy+ceh+bh) {
       mDragOp = DO_HEIGHT;
     }
-  } else if (penX >= cecx+cew-bw && penX <= cecx+cew+bw && penY >= cecy-bh && penY <= cecy+bh) {
+  } else if (args.x >= cecx+cew-bw && args.x <= cecx+cew+bw && args.y >= cecy-bh && args.y <= cecy+bh) {
     mDragOp = DO_WIDTH;
   }
   
-  mLastX = penX;
-  mLastY = penY;
+  mLastX = args.x;
+  mLastY = args.y;
   
   mCenterSelected = (mDragOp == DO_CENTER);
   mWidthSelected = (mDragOp == DO_WIDTH);
@@ -301,11 +218,7 @@ void SampleInteract::penDown(ofx::ImageEffect *effect,
   }
 }
 
-void SampleInteract::penUp(ofx::ImageEffect *,
-                           double, double,
-                           const ofx::RGBAColourD &, ofx::Time,
-                           double, double,
-                           double, double, double) throw(ofx::Exception) {
+void SampleInteract::penUp(ofx::Interact::PenArgs &) throw(ofx::Exception) {
   mCenterSelected = false;
   mWidthSelected = false;
   mHeightSelected = false;
@@ -315,30 +228,21 @@ void SampleInteract::penUp(ofx::ImageEffect *,
   mDragOp = DO_NONE;
 }
 
-void SampleInteract::draw(ofx::ImageEffect *effect,
-                          //int w,
-                          //int h,
-                          double pixelScaleX,
-                          double pixelScaleY,
-                          const ofx::RGBAColourD &,
-                          ofx::Time t,
-                          double,
-                          double) throw(ofx::Exception)
-{
-  ofx::Double2Parameter pC = effect->parameters().getDouble2Param("center");
-  ofx::DoubleParameter pW = effect->parameters().getDoubleParam("width");
-  ofx::DoubleParameter pH = effect->parameters().getDoubleParam("height");
+void SampleInteract::draw(ofx::Interact::DrawArgs &args) throw(ofx::Exception) {
+  ofx::Double2Parameter pC = args.effect->parameters().getDouble2Param("center");
+  ofx::DoubleParameter pW = args.effect->parameters().getDoubleParam("width");
+  ofx::DoubleParameter pH = args.effect->parameters().getDoubleParam("height");
   
   double ecx, ecy;
-  pC.getValueAtTime(t, ecx, ecy);
-  double ew = 0.5 * pW.getValueAtTime(t);
-  double eh = 0.5 * pH.getValueAtTime(t);
+  pC.getValueAtTime(args.time, ecx, ecy);
+  double ew = 0.5 * pW.getValueAtTime(args.time);
+  double eh = 0.5 * pH.getValueAtTime(args.time);
   
   double wext, hext;
-  effect->projectExtent(wext, hext);
+  args.effect->projectExtent(wext, hext);
   
   double xoff, yoff;
-  effect->projectOffset(xoff, yoff);
+  args.effect->projectOffset(xoff, yoff);
   
   //double par = effect->projectPixelAspectRatio();
   
@@ -346,8 +250,8 @@ void SampleInteract::draw(ofx::ImageEffect *effect,
   ofx::NormalisedToCanonicalCoords(ecx, ecy, wext, hext, xoff, yoff, true, cecx, cecy);
   ofx::NormalisedToCanonicalCoords(ew, eh, wext, hext, 0, 0, false, cew, ceh);
 
-  double bw = 2.0 * pixelScaleX;
-  double bh = 2.0 * pixelScaleY;
+  double bw = 2.0 * args.pixelScaleX;
+  double bh = 2.0 * args.pixelScaleY;
   
   // center manipulator
   if (mCenterSelected) {
@@ -414,7 +318,6 @@ void SampleDescriptor::describe() throw(ofx::Exception) {
   setGrouping("gatgui");
   setLabel("sample");
   if (host()->supportsOverlays()) {
-    //setOverlayInteract(ofx::InteractEntryPoint<SamplePlugin, SampleInteractDescriptor, SampleInteract>);
     setOverlayInteract(ofx::InteractEntryPoint<SamplePlugin, ofx::InteractDescriptor, SampleInteract>);
   }
 }
@@ -480,19 +383,12 @@ double SampleEffect::normalisedDistanceToEllipseCenter(double x, double y, doubl
   return (dx*dx + dy*dy);
 }
 
-bool SampleEffect::isIdentity(ofx::Time t,
-                              ofx::ImageField,
-                              const ofx::Rect<int> &,
-                              double,
-                              double,
-                              std::string &idClip,
-                              ofx::Time &idTime) throw(ofx::Exception)
-{
+bool SampleEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args) throw(ofx::Exception) {
   ofx::DoubleParameter w = parameters().getDoubleParam("width");
   ofx::DoubleParameter h = parameters().getDoubleParam("height");
   if (w.getValue() <= 0.0 || h.getValue() <= 0.0) {
-    idClip = "Source";
-    idTime = t;
+    args.idClip = "Source";
+    args.idTime = args.time;
     return true;
   } else {
     return false;
@@ -500,10 +396,7 @@ bool SampleEffect::isIdentity(ofx::Time t,
 }
 
 /*
-ofx::RectD SampleEffect::getRegionOfDefinition(ofx::Time t,
-                                               double renderScaleX,
-                                               double renderScaleY) throw(ofx::Exception)
-{
+void SampleEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args) throw(ofx::Exception) {
   ofx::Rect<double> RoD;
   // -> check center, width, and height
   // -> also apply renderScaleX and renderScaleY
@@ -513,32 +406,21 @@ ofx::RectD SampleEffect::getRegionOfDefinition(ofx::Time t,
   //void projectOffset(double &x, double &y) throw(Exception);
   //void projectExtent(double &w, double &h) throw(Exception);
   //double projectPixelAspectRatio() throw(Exception);
-  
-  return RoD;
 }
 
-void SampleEffect::getRegionsOfInterest(ofx::Time t,
-                                        double renderScaleX,
-                                        double renderScaleY,
-                                        const ofx::Rect<double> &outRoI,
-                                        std::map<std::string, ofx::Rect<double> > &inClipsRoI) throw(Exception)
-{
+void SampleEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIsArgs &args) throw(Exception) {
 }
 */
 
-void SampleEffect::render(ofx::Time t,
-                          ofx::ImageField field,
-                          const ofx::Rect<int> &renderWindow,
-                          double &renderScaleX,
-                          double renderScaleY) throw(ofx::Exception)
+void SampleEffect::render(ofx::ImageEffect::RenderArgs &args) throw(ofx::Exception)
 {
   // renderWindow is in pixels, not canonical coords
   
   ofx::Clip cSrc = getClip("Source");
   ofx::Clip cOut = getClip("Output");
   
-  ofx::Image iSrc = cSrc.getImage(t);
-  ofx::Image iOut = cOut.getImage(t);
+  ofx::Image iSrc = cSrc.getImage(args.time);
+  ofx::Image iOut = cOut.getImage(args.time);
   
   ofx::RGBAColourB *srcPix, *dstPix;
   
@@ -548,10 +430,10 @@ void SampleEffect::render(ofx::Time t,
   ofx::BooleanParameter pInvert = parameters().getBooleanParam("invert");
   
   double nx, ny;
-  pCenter.getValueAtTime(t, nx, ny);
+  pCenter.getValueAtTime(args.time, nx, ny);
   
-  double w = pWidth.getValueAtTime(t);
-  double h = pHeight.getValueAtTime(t);
+  double w = pWidth.getValueAtTime(args.time);
+  double h = pHeight.getValueAtTime(args.time);
   bool invert = pInvert.getValue();
   
   double xoff, yoff;
@@ -574,15 +456,15 @@ void SampleEffect::render(ofx::Time t,
   double pcx, pcy;
   
   if (invert) {
-    for (int y=renderWindow.y1; y<renderWindow.y2; ++y) {
+    for (int y=args.renderWindow.y1; y<args.renderWindow.y2; ++y) {
       if (abort()) {
         break;
       }
-      if (!iOut.pixelAddress(renderWindow.x1, y, dstPix)) {
+      if (!iOut.pixelAddress(args.renderWindow.x1, y, dstPix)) {
         continue;
       }
-      for (int x=renderWindow.x1; x<renderWindow.x2; ++x) {
-        PixelToCanonicalCoords(x, y, par, renderScaleX, renderScaleY, field, pcx, pcy);
+      for (int x=args.renderWindow.x1; x<args.renderWindow.x2; ++x) {
+        PixelToCanonicalCoords(x, y, par, args.renderScaleX, args.renderScaleY, args.field, pcx, pcy);
         double d = normalisedDistanceToEllipseCenter(cx, cy, cw, ch, pcx, pcy);
         if (d <= 1.0) {
           if (!iSrc.pixelAddress(x, y, srcPix)) {
@@ -621,15 +503,15 @@ void SampleEffect::render(ofx::Time t,
       }
     }
   } else {
-    for (int y=renderWindow.y1; y<renderWindow.y2; ++y) {
+    for (int y=args.renderWindow.y1; y<args.renderWindow.y2; ++y) {
       if (abort()) {
         break;
       }
-      if (!iOut.pixelAddress(renderWindow.x1, y, dstPix)) {
+      if (!iOut.pixelAddress(args.renderWindow.x1, y, dstPix)) {
         continue;
       }
-      for (int x=renderWindow.x1; x<renderWindow.x2; ++x) {
-        PixelToCanonicalCoords(x, y, par, renderScaleX, renderScaleY, field, pcx, pcy);
+      for (int x=args.renderWindow.x1; x<args.renderWindow.x2; ++x) {
+        PixelToCanonicalCoords(x, y, par, args.renderScaleX, args.renderScaleY, args.field, pcx, pcy);
         double d = normalisedDistanceToEllipseCenter(cx, cy, cw, ch, pcx, pcy);
         if (d <= 1.0) {
           if (!iSrc.pixelAddress(x, y, srcPix)) {

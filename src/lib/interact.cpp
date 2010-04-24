@@ -26,8 +26,6 @@ USA.
 
 namespace ofx {
 
-//OfxInteractSuiteV1 * InteractDescriptor::msSuiteV1 = 0;
-
 InteractDescriptor::InteractDescriptor()
   : mHandle(0) {
 }
@@ -58,16 +56,6 @@ InteractDescriptor& InteractDescriptor::operator=(const InteractDescriptor &rhs)
   return *this;
 }
 
-//InteractDescriptor& InteractDescriptor::operator=(OfxInteractHandle hdl) {
-//  mHandle = hdl;
-//  if (mHandle != 0 && msSuiteV1 != 0) {
-//    OfxPropertySetHandle hProps;
-//    msSuiteV1->interactGetPropertySet(mHandle, &hProps);
-//    mProps = hProps;
-//  }
-//  return *this;
-//}
-
 bool InteractDescriptor::hasAlpha() throw(Exception) {
   return (mProps.getInt(kOfxInteractPropHasAlpha, 0) == 1);
 }
@@ -82,18 +70,46 @@ void InteractDescriptor::describe() throw(Exception) {
   
 // ---
 
-//OfxInteractSuiteV1 * Interact::msSuiteV1 = 0;
+Interact::BaseArgs::BaseArgs(PropertySet &args) {
+  OfxImageEffectHandle hEffect = (OfxImageEffectHandle) args.getPointer(kOfxPropEffectInstance, 0);
+  effect = ImageEffect::GetEffect(hEffect);
+  time = args.getDouble(kOfxPropTime, 0);
+  renderScaleX = args.getDouble(kOfxImageEffectPropRenderScale, 0);
+  renderScaleY = args.getDouble(kOfxImageEffectPropRenderScale, 1);
+}
 
-//void Interact::Init(Host *h) throw(Exception) {
-//  if (h) {
-//    msSuiteV1 = h->fetchSuite<OfxInteractSuiteV1>(kOfxInteractSuite, 1);
-//    if (msSuiteV1) {
-//      InteractDescriptor::msSuiteV1 = msSuiteV1;
-//      return;
-//    }
-//  }
-//  throw Exception(kOfxStatErrMissingHostFeature, "Cannot initialize ofx::Interact");
-//}
+// ---
+
+Interact::CommonArgs::CommonArgs(PropertySet &args)
+  : Interact::BaseArgs(args) {
+  viewportWidth = args.getInt(kOfxInteractPropViewportSize, 0);
+  viewportHeight = args.getInt(kOfxInteractPropViewportSize, 1);
+  pixelScaleX = args.getDouble(kOfxInteractPropPixelScale, 0);
+  pixelScaleY = args.getDouble(kOfxInteractPropPixelScale, 1);
+  bgColour.r = args.getDouble(kOfxInteractPropBackgroundColour, 0);
+  bgColour.g = args.getDouble(kOfxInteractPropBackgroundColour, 1);
+  bgColour.b = args.getDouble(kOfxInteractPropBackgroundColour, 2);
+  bgColour.a = 1.0;
+}
+
+// ---
+
+Interact::PenArgs::PenArgs(PropertySet &args)
+  : Interact::CommonArgs(args) {
+  x = args.getDouble(kOfxInteractPropPenPosition, 0);
+  y = args.getDouble(kOfxInteractPropPenPosition, 1);
+  pressure = args.getDouble(kOfxInteractPropPenPressure, 0);  
+}
+
+// ---
+
+Interact::KeyArgs::KeyArgs(PropertySet &args)
+  : Interact::BaseArgs(args) {
+  sym = args.getInt(kOfxPropKeySym, 0);
+  string = args.getString(kOfxPropKeyString, 0);
+}
+
+// ---
 
 std::map<OfxInteractHandle, Interact*> Interact::msInteracts;
     
@@ -125,32 +141,11 @@ Interact::Interact(ImageEffectHost *h, OfxInteractHandle hdl) throw(Exception)
   msInteracts[hdl] = this;
 }
 
-//Interact::Interact(const Interact &rhs)
-//  : mHandle(rhs.mHandle), mProps(rhs.mProps), mSuite(rhs.mSuite) {
-//}
-
 Interact::~Interact() {
   if (mHandle != 0) {
     msInteracts.erase(msInteracts.find(mHandle));
   }
 }
-
-//Interact& Interact::operator=(const Interact &rhs) {
-//  mHandle = rhs.mHandle;
-//  mProps = rhs.mProps;
-//  mSuite = rhs.mSuite;
-//  return *this;
-//}
-
-//Interact& Interact::operator=(OfxInteractHandle hdl) {
-//  mHandle = hdl;
-//  if (mHandle != 0 && msSuiteV1 != 0) {
-//    OfxPropertySetHandle hProps;
-//    msSuiteV1->interactGetPropertySet(mHandle, &hProps);
-//    mProps = hProps;
-//  }
-//  return *this;
-//}
 
 void Interact::swapBuffers() throw(Exception) {
   OfxStatus stat = mSuite->interactSwapBuffers(mHandle);
@@ -218,66 +213,39 @@ void Interact::setSlaveToParam(int i, const std::string &pn) throw(Exception) {
   mProps.setString(kOfxInteractPropSlaveToParam, i, pn);
 }
 
-void Interact::draw(ImageEffect *, //int w, int h,
-                    double, double,
-                    const RGBAColour<double> &, Time,
-                    double, double) throw(Exception) {
+void Interact::draw(Interact::DrawArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
-void Interact::penMotion(ImageEffect *, //int w, int h,
-                         double, double,
-                         const RGBAColour<double> &, Time,
-                         double, double,
-                         double, double, double) throw(Exception) {
+void Interact::penMotion(Interact::PenArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
-void Interact::penDown(ImageEffect *, //int w, int h,
-                       double, double,
-                       const RGBAColour<double> &, Time,
-                       double, double,
-                       double, double, double) throw(Exception) {
+void Interact::penDown(Interact::PenArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
-void Interact::penUp(ImageEffect *, //int w, int h,
-                     double, double,
-                     const RGBAColour<double> &, Time,
-                     double, double,
-                     double, double, double) throw(Exception) {
+void Interact::penUp(Interact::PenArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
-void Interact::keyDown(ImageEffect *,
-                       int, const std::string &,
-                       Time, double, double) throw(Exception) {
+void Interact::keyDown(Interact::KeyArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
-void Interact::keyUp(ImageEffect *,
-                     int, const std::string &,
-                     Time, double, double) throw(Exception) {
+void Interact::keyUp(Interact::KeyArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
-void Interact::keyRepeat(ImageEffect *,
-                         int, const std::string &,
-                         Time, double, double) throw(Exception) {
+void Interact::keyRepeat(Interact::KeyArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
-void Interact::gainFocus(ImageEffect *, //int w, int h,
-                         double, double,
-                         const RGBAColour<double> &, Time,
-                         double, double) throw(Exception) {
+void Interact::gainFocus(Interact::FocusArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
-void Interact::loseFocus(ImageEffect *, //int w, int h,
-                         double, double,
-                         const RGBAColour<double> &, Time,
-                         double, double) throw(Exception) {
+void Interact::loseFocus(Interact::FocusArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 

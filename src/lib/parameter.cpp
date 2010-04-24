@@ -26,8 +26,6 @@ USA.
 
 namespace ofx {
 
-//OfxParameterSuiteV1 * ParameterDescriptor::msSuiteV1 = 0;
-
 ParameterDescriptor::ParameterDescriptor() {
 }
 
@@ -47,11 +45,6 @@ ParameterDescriptor& ParameterDescriptor::operator=(const ParameterDescriptor &r
   PropertySet::operator=(rhs);
   return *this;
 }
-
-//ParameterDescriptor& ParameterDescriptor::operator=(OfxPropertySetHandle hdl) {
-//  PropertySet::operator=(hdl);
-//  return *this;
-//}
 
 std::string ParameterDescriptor::name() throw(Exception) {
   return getString(kOfxPropName, 0);
@@ -166,11 +159,6 @@ ValueParameterDescriptor& ValueParameterDescriptor::operator=(const ValueParamet
   ParameterDescriptor::operator=(rhs);
   return *this;
 }
-
-//ValueParameterDescriptor& ValueParameterDescriptor::operator=(OfxPropertySetHandle hdl) {
-//  ParameterDescriptor::operator=(hdl);
-//  return *this;
-//}
 
 EntryPoint ValueParameterDescriptor::interact() throw(Exception) {
   return ((EntryPoint) getPointer(kOfxParamPropInteractV1, 0));
@@ -295,11 +283,6 @@ IntParameterDescriptor& IntParameterDescriptor::operator=(const IntParameterDesc
   return *this;
 }
 
-//IntParameterDescriptor& IntParameterDescriptor::operator=(OfxPropertySetHandle hdl) {
-//  ValueParameterDescriptor::operator=(hdl);
-//  return *this;
-//}
-
 int IntParameterDescriptor::getDefault() throw(Exception) {
   return getInt(kOfxParamPropDefault, 0);
 }
@@ -361,11 +344,6 @@ Int2ParameterDescriptor& Int2ParameterDescriptor::operator=(const Int2ParameterD
   ValueParameterDescriptor::operator=(rhs);
   return *this;
 }
-
-//Int2ParameterDescriptor& Int2ParameterDescriptor::operator=(OfxPropertySetHandle hdl) {
-//  ValueParameterDescriptor::operator=(hdl);
-//  return *this;
-//}
 
 void Int2ParameterDescriptor::getDefault(int &v0, int &v1) throw(Exception) {
   v0 = getInt(kOfxParamPropDefault, 0);
@@ -446,11 +424,6 @@ Int3ParameterDescriptor& Int3ParameterDescriptor::operator=(const Int3ParameterD
   ValueParameterDescriptor::operator=(rhs);
   return *this;
 }
-
-//Int3ParameterDescriptor& Int3ParameterDescriptor::operator=(OfxPropertySetHandle hdl) {
-//  ValueParameterDescriptor::operator=(hdl);
-//  return *this;
-//}
 
 void Int3ParameterDescriptor::getDefault(int &v0, int &v1, int &v2) throw(Exception) {
   v0 = getInt(kOfxParamPropDefault, 0);
@@ -541,11 +514,6 @@ DoubleParameterDescriptor& DoubleParameterDescriptor::operator=(const DoublePara
   ValueParameterDescriptor::operator=(rhs);
   return *this;
 }
-
-//DoubleParameterDescriptor& DoubleParameterDescriptor::operator=(OfxPropertySetHandle hdl) {
-//  ValueParameterDescriptor::operator=(hdl);
-//  return *this;
-//}
 
 double DoubleParameterDescriptor::getDefault() throw(Exception) {
   return getDouble(kOfxParamPropDefault, 0);
@@ -640,11 +608,6 @@ Double2ParameterDescriptor& Double2ParameterDescriptor::operator=(const Double2P
   ValueParameterDescriptor::operator=(rhs);
   return *this;
 }
-
-//Double2ParameterDescriptor& Double2ParameterDescriptor::operator=(OfxPropertySetHandle hdl) {
-//  ValueParameterDescriptor::operator=(hdl);
-//  return *this;
-//}
 
 void Double2ParameterDescriptor::getDefault(double &v0, double &v1) throw(Exception) {
   v0 = getDouble(kOfxParamPropDefault, 0);
@@ -749,11 +712,6 @@ Double3ParameterDescriptor& Double3ParameterDescriptor::operator=(const Double3P
   ValueParameterDescriptor::operator=(rhs);
   return *this;
 }
-
-//Double3ParameterDescriptor& Double3ParameterDescriptor::operator=(OfxPropertySetHandle hdl) {
-//  ValueParameterDescriptor::operator=(hdl);
-//  return *this;
-//}
 
 void Double3ParameterDescriptor::getDefault(double &v0, double &v1, double &v2) throw(Exception) {
   v0 = getDouble(kOfxParamPropDefault, 0);
@@ -869,11 +827,6 @@ ChoiceParameterDescriptor& ChoiceParameterDescriptor::operator=(const ChoicePara
   return *this;
 }
 
-//ChoiceParameterDescriptor& ChoiceParameterDescriptor::operator=(OfxPropertySetHandle hdl) {
-//  ValueParameterDescriptor::operator=(hdl);
-//  return *this;
-//}
-
 int ChoiceParameterDescriptor::getDefault() throw(Exception) {
   return getInt(kOfxParamPropDefault, 0);
 }
@@ -917,11 +870,6 @@ StringParameterDescriptor& StringParameterDescriptor::operator=(const StringPara
   ValueParameterDescriptor::operator=(rhs);
   return *this;
 }
-
-//StringParameterDescriptor& StringParameterDescriptor::operator=(OfxPropertySetHandle hdl) {
-//  ValueParameterDescriptor::operator=(hdl);
-//  return *this;
-//}
 
 std::string StringParameterDescriptor::getDefault() throw(Exception) {
   return getString(kOfxParamPropDefault, 0);
@@ -969,11 +917,6 @@ CustomParameterDescriptor& CustomParameterDescriptor::operator=(const CustomPara
   return *this;
 }
 
-//CustomParameterDescriptor& CustomParameterDescriptor::operator=(OfxPropertySetHandle hdl) {
-//  ValueParameterDescriptor::operator=(hdl);
-//  return *this;
-//}
-
 std::string CustomParameterDescriptor::getDefault() throw(Exception) {
   return getString(kOfxParamPropDefault, 0);
 }
@@ -1002,11 +945,6 @@ BooleanParameterDescriptor::BooleanParameterDescriptor(const BooleanParameterDes
 
 BooleanParameterDescriptor::~BooleanParameterDescriptor() {
 }
-
-//BooleanParameterDescriptor& BooleanParameterDescriptor::operator=(OfxPropertySetHandle hdl) {
-//  ValueParameterDescriptor::operator=(hdl);
-//  return *this;
-//}
 
 BooleanParameterDescriptor& BooleanParameterDescriptor::operator=(const BooleanParameterDescriptor &rhs) {
   ValueParameterDescriptor::operator=(rhs);
@@ -1037,11 +975,6 @@ RGBParameterDescriptor::RGBParameterDescriptor(const RGBParameterDescriptor &rhs
 
 RGBParameterDescriptor::~RGBParameterDescriptor() {
 }
-
-//RGBParameterDescriptor& RGBParameterDescriptor::operator=(OfxPropertySetHandle hdl) {
-//  ValueParameterDescriptor::operator=(hdl);
-//  return *this;
-//}
 
 RGBParameterDescriptor& RGBParameterDescriptor::operator=(const RGBParameterDescriptor &rhs) {
   ValueParameterDescriptor::operator=(rhs);
@@ -1075,11 +1008,6 @@ RGBAParameterDescriptor::RGBAParameterDescriptor(const RGBAParameterDescriptor &
 
 RGBAParameterDescriptor::~RGBAParameterDescriptor() {
 }
-
-//RGBAParameterDescriptor& RGBAParameterDescriptor::operator=(OfxPropertySetHandle hdl) {
-//  ValueParameterDescriptor::operator=(hdl);
-//  return *this;
-//}
 
 RGBAParameterDescriptor& RGBAParameterDescriptor::operator=(const RGBAParameterDescriptor &rhs) {
   ValueParameterDescriptor::operator=(rhs);
@@ -1118,11 +1046,6 @@ PageParameterDescriptor& PageParameterDescriptor::operator=(const PageParameterD
   return *this;
 }
 
-//PageParameterDescriptor& PageParameterDescriptor::operator=(OfxPropertySetHandle hdl) {
-//  ParameterDescriptor::operator=(hdl);
-//  return *this;
-//}
-
 int PageParameterDescriptor::getChildCount() throw(Exception) {
   return size(kOfxParamPropPageChild);
 }
@@ -1151,11 +1074,6 @@ PushButtonParameterDescriptor::PushButtonParameterDescriptor(const PushButtonPar
 
 PushButtonParameterDescriptor::~PushButtonParameterDescriptor() {
 }
-
-//PushButtonParameterDescriptor& PushButtonParameterDescriptor::operator=(OfxPropertySetHandle hdl) {
-//  ParameterDescriptor::operator=(hdl);
-//  return *this;
-//}
 
 PushButtonParameterDescriptor& PushButtonParameterDescriptor::operator=(const PushButtonParameterDescriptor &rhs) {
   ParameterDescriptor::operator=(rhs);
@@ -1210,8 +1128,6 @@ void PushButtonParameterDescriptor::setInteractPreferedSize(int w, int h) throw(
 
 // ---
 
-//OfxParameterSuiteV1 * Parameter::msSuiteV1 = 0;
-
 Parameter::Parameter()
   : mHandle(0), mSuite(0) {
 }
@@ -1241,16 +1157,6 @@ Parameter& Parameter::operator=(const Parameter &rhs) {
   mSuite = rhs.mSuite;
   return *this;
 }
-
-//Parameter& Parameter::operator=(OfxParamHandle hdl) {
-//  mHandle = hdl;
-//  if (mHandle != 0 && msSuiteV1 != 0) {
-//    OfxPropertySetHandle hProps;
-//    msSuiteV1->paramGetPropertySet(mHandle, &hProps);
-//    mProps = hProps;
-//  }
-//  return *this;
-//}
 
 std::string Parameter::name() throw(Exception) {
   return mProps.getString(kOfxPropName, 0);
@@ -1349,11 +1255,6 @@ ValueParameter& ValueParameter::operator=(const ValueParameter &rhs) {
   Parameter::operator=(rhs);
   return *this;
 }
-
-//ValueParameter& ValueParameter::operator=(OfxParamHandle hdl) {
-//  Parameter::operator=(hdl);
-//  return *this;
-//}
 
 EntryPoint ValueParameter::interact() throw(Exception) {
   return ((EntryPoint) mProps.getPointer(kOfxParamPropInteractV1, 0));
@@ -1489,11 +1390,6 @@ IntParameter& IntParameter::operator=(const IntParameter &rhs) {
   return *this;
 }
 
-//IntParameter& IntParameter::operator=(OfxParamHandle hdl) {
-//  ValueParameter::operator=(hdl);
-//  return *this;
-//}
-
 int IntParameter::getDefault() throw(Exception) {
   return mProps.getInt(kOfxParamPropDefault, 0);
 }
@@ -1601,11 +1497,6 @@ Int2Parameter& Int2Parameter::operator=(const Int2Parameter &rhs) {
   ValueParameter::operator=(rhs);
   return *this;
 }
-
-//Int2Parameter& Int2Parameter::operator=(OfxParamHandle hdl) {
-//  ValueParameter::operator=(hdl);
-//  return *this;
-//}
 
 void Int2Parameter::getDefault(int &v0, int &v1) throw(Exception) {
   v0 = mProps.getInt(kOfxParamPropDefault, 0);
@@ -1719,11 +1610,6 @@ Int3Parameter& Int3Parameter::operator=(const Int3Parameter &rhs) {
   ValueParameter::operator=(rhs);
   return *this;
 }
-
-//Int3Parameter& Int3Parameter::operator=(OfxParamHandle hdl) {
-//  ValueParameter::operator=(hdl);
-//  return *this;
-//}
 
 void Int3Parameter::getDefault(int &v0, int &v1, int &v2) throw(Exception) {
   v0 = mProps.getInt(kOfxParamPropDefault, 0);
@@ -1846,11 +1732,6 @@ DoubleParameter& DoubleParameter::operator=(const DoubleParameter &rhs) {
   ValueParameter::operator=(rhs);
   return *this;
 }
-
-//DoubleParameter& DoubleParameter::operator=(OfxParamHandle hdl) {
-//  ValueParameter::operator=(hdl);
-//  return *this;
-//}
 
 double DoubleParameter::getDefault() throw(Exception) {
   return mProps.getDouble(kOfxParamPropDefault, 0);
@@ -1988,11 +1869,6 @@ Double2Parameter& Double2Parameter::operator=(const Double2Parameter &rhs) {
   return *this;
 }
 
-//Double2Parameter& Double2Parameter::operator=(OfxParamHandle hdl) {
-//  ValueParameter::operator=(hdl);
-//  return *this;
-//}
-
 void Double2Parameter::getDefault(double &v0, double &v1) throw(Exception) {
   v0 = mProps.getDouble(kOfxParamPropDefault, 0);
   v1 = mProps.getDouble(kOfxParamPropDefault, 1);
@@ -2125,11 +2001,6 @@ Double3Parameter& Double3Parameter::operator=(const Double3Parameter &rhs) {
   ValueParameter::operator=(rhs);
   return *this;
 }
-
-//Double3Parameter& Double3Parameter::operator=(OfxParamHandle hdl) {
-//  ValueParameter::operator=(hdl);
-//  return *this;
-//}
 
 void Double3Parameter::getDefault(double &v0, double &v1, double &v2) throw(Exception) {
   v0 = mProps.getDouble(kOfxParamPropDefault, 0);
@@ -2273,11 +2144,6 @@ ChoiceParameter& ChoiceParameter::operator=(const ChoiceParameter &rhs) {
   return *this;
 }
 
-//ChoiceParameter& ChoiceParameter::operator=(OfxParamHandle hdl) {
-//  ValueParameter::operator=(hdl);
-//  return *this;
-//}
-
 int ChoiceParameter::getDefault() throw(Exception) {
   return mProps.getInt(kOfxParamPropDefault, 0);
 }
@@ -2350,11 +2216,6 @@ StringParameter& StringParameter::operator=(const StringParameter &rhs) {
   return *this;
 }
 
-//StringParameter& StringParameter::operator=(OfxParamHandle hdl) {
-//  ValueParameter::operator=(hdl);
-//  return *this;
-//}
-
 std::string StringParameter::getDefault() throw(Exception) {
   return mProps.getString(kOfxParamPropDefault, 0);
 }
@@ -2423,11 +2284,6 @@ CustomParameter& CustomParameter::operator=(const CustomParameter &rhs) {
   return *this;
 }
 
-//CustomParameter& CustomParameter::operator=(OfxParamHandle hdl) {
-//  ValueParameter::operator=(hdl);
-//  return *this;
-//}
-
 std::string CustomParameter::getDefault() throw(Exception) {
   return mProps.getString(kOfxParamPropDefault, 0);
 }
@@ -2486,11 +2342,6 @@ BooleanParameter::BooleanParameter(const BooleanParameter &rhs)
 
 BooleanParameter::~BooleanParameter() {
 }
-
-//BooleanParameter& BooleanParameter::operator=(OfxParamHandle hdl) {
-//  ValueParameter::operator=(hdl);
-//  return *this;
-//}
 
 BooleanParameter& BooleanParameter::operator=(const BooleanParameter &rhs) {
   ValueParameter::operator=(rhs);
@@ -2553,11 +2404,6 @@ RGBParameter::RGBParameter(const RGBParameter &rhs)
 
 RGBParameter::~RGBParameter() {
 }
-
-//RGBParameter& RGBParameter::operator=(OfxParamHandle hdl) {
-//  ValueParameter::operator=(hdl);
-//  return *this;
-//}
 
 RGBParameter& RGBParameter::operator=(const RGBParameter &rhs) {
   ValueParameter::operator=(rhs);
@@ -2641,11 +2487,6 @@ RGBAParameter::RGBAParameter(const RGBAParameter &rhs)
 
 RGBAParameter::~RGBAParameter() {
 }
-
-//RGBAParameter& RGBAParameter::operator=(OfxParamHandle hdl) {
-//  ValueParameter::operator=(hdl);
-//  return *this;
-//}
 
 RGBAParameter& RGBAParameter::operator=(const RGBAParameter &rhs) {
   ValueParameter::operator=(rhs);
@@ -2731,11 +2572,6 @@ PageParameter& PageParameter::operator=(const PageParameter &rhs) {
   return *this;
 }
 
-//PageParameter& PageParameter::operator=(OfxParamHandle hdl) {
-//  Parameter::operator=(hdl);
-//  return *this;
-//}
-
 int PageParameter::getChildCount() throw(Exception) {
   return mProps.size(kOfxParamPropPageChild);
 }
@@ -2760,11 +2596,6 @@ PushButtonParameter::PushButtonParameter(const PushButtonParameter &rhs)
 
 PushButtonParameter::~PushButtonParameter() {
 }
-
-//PushButtonParameter& PushButtonParameter::operator=(OfxParamHandle hdl) {
-//  Parameter::operator=(hdl);
-//  return *this;
-//}
 
 PushButtonParameter& PushButtonParameter::operator=(const PushButtonParameter &rhs) {
   Parameter::operator=(rhs);
@@ -2796,8 +2627,6 @@ void PushButtonParameter::interactPreferedSize(int &w, int &h) throw(Exception) 
 
 // ---
 
-//OfxParameterSuiteV1 * ParameterSetDescriptor::msSuiteV1 = 0;
-
 ParameterSetDescriptor::ParameterSetDescriptor()
   : mHandle(0) {
 }
@@ -2826,16 +2655,6 @@ ParameterSetDescriptor& ParameterSetDescriptor::operator=(const ParameterSetDesc
   mHost = rhs.mHost;
   return *this;
 }
-
-//ParameterSetDescriptor& ParameterSetDescriptor::operator=(OfxParamSetHandle hdl) {
-//  mHandle = hdl;
-//  if (mHandle != 0 && msSuiteV1 != 0) {
-//    OfxPropertySetHandle hProps;
-//    msSuiteV1->paramSetGetPropertySet(mHandle, &hProps);
-//    mProps = hProps;
-//  }
-//  return *this;
-//}
 
 IntParameterDescriptor ParameterSetDescriptor::defineIntParam(const std::string &name) throw(Exception) {
   OfxPropertySetHandle hParam;
@@ -2974,21 +2793,6 @@ PushButtonParameterDescriptor ParameterSetDescriptor::definePushButtonParam(cons
 
 // ---
 
-//void ParameterSet::Init(Host *h) throw(Exception) {
-//  if (h) {
-//    msSuiteV1 = h->fetchSuite<OfxParameterSuiteV1>(kOfxParameterSuite, 1);
-//    if (msSuiteV1) {
-//      ParameterDescriptor::msSuiteV1 = msSuiteV1;
-//      Parameter::msSuiteV1 = msSuiteV1;
-//      ParameterSetDescriptor::msSuiteV1 = msSuiteV1;
-//      return;
-//    }
-//  }
-//  throw Exception(kOfxStatErrMissingHostFeature, "Cannot initialize ofx::ParameterSet");
-//}
-//
-//OfxParameterSuiteV1 * ParameterSet::msSuiteV1 = 0;
-
 ParameterSet::ParameterSet()
   : mHandle(0), mHost(0) {
 }
@@ -3016,16 +2820,6 @@ ParameterSet& ParameterSet::operator=(const ParameterSet &rhs) {
   mHost = rhs.mHost;
   return *this;
 }
-
-//ParameterSet& ParameterSet::operator=(OfxParamSetHandle hdl) {
-//  mHandle = hdl;
-//  if (mHandle != 0 && msSuiteV1 != 0) {
-//    OfxPropertySetHandle hProps;
-//    msSuiteV1->paramSetGetPropertySet(mHandle, &hProps);
-//    mProps = hProps;
-//  }
-//  return *this;
-//}
 
 IntParameter ParameterSet::getIntParam(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;

@@ -143,11 +143,6 @@ ClipDescriptor& ClipDescriptor::operator=(const ClipDescriptor &rhs) {
   return *this;
 }
 
-//ClipDescriptor& ClipDescriptor::operator=(OfxPropertySetHandle hdl) {
-//  mProps = hdl;
-//  return *this;
-//}
-
 std::string ClipDescriptor::name() throw(Exception) {
   return mProps.getString(kOfxPropName, 0);
 }
@@ -230,8 +225,6 @@ void ClipDescriptor::setTilesSupport(bool yes) throw(Exception) {
 
 // ---
 
-//OfxImageEffectSuiteV1 * Clip::msSuiteV1 = 0;
-
 Clip::Clip()
   : mHandle(0), mHost(0) {
 }
@@ -259,16 +252,6 @@ Clip& Clip::operator=(const Clip &rhs) {
   mHost = rhs.mHost;
   return *this;
 }
-
-//Clip& Clip::operator=(OfxImageClipHandle hdl) {
-//  mHandle = hdl;
-//  if (mHandle != 0 && msSuiteV1 != 0) {
-//    OfxPropertySetHandle hProps;
-//    msSuiteV1->clipGetPropertySet(mHandle, &hProps);
-//    mProps = hProps;
-//  }
-//  return *this;
-//}
 
 std::string Clip::name() throw(Exception) {
   return mProps.getString(kOfxPropName, 0);
@@ -407,8 +390,6 @@ Rect<double> Clip::getRegionOfDefinition(Time t) throw(Exception) {
 
 // ---
 
-//OfxImageEffectSuiteV1 * ImageEffectDescriptor::msSuiteV1 = 0;
-
 ImageEffectDescriptor::ImageEffectDescriptor()
   : mHandle(0), mHost(0) {
 }
@@ -444,19 +425,6 @@ ImageEffectDescriptor& ImageEffectDescriptor::operator=(const ImageEffectDescrip
   mHost = rhs.mHost;
   return *this;
 }
-
-//ImageEffectDescriptor& ImageEffectDescriptor::operator=(OfxImageEffectHandle hdl) {
-//  mHandle = hdl;
-//  if (mHandle != 0 && msSuiteV1 != 0) {
-//    OfxPropertySetHandle hProps;
-//    msSuiteV1->getPropertySet(mHandle, &hProps);
-//    mProps = hProps;
-//    OfxParamSetHandle hParams;
-//    msSuiteV1->getParamSet(mHandle, &hParams);
-//    mParams = hParams;
-//  }
-//  return *this;
-//}
 
 std::string ImageEffectDescriptor::label() throw(Exception) {
   return mProps.getString(kOfxPropLabel, 0);
@@ -629,7 +597,146 @@ void ImageEffectDescriptor::describeInContext(ImageEffectContext) throw(Exceptio
 
 // ---
 
-//OfxImageEffectSuiteV1 * ImageEffect::msSuiteV1 = 0;
+ImageEffect::RenderScaleArgs::RenderScaleArgs(PropertySet &inArgs) {
+  renderScaleX = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
+  renderScaleY = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
+}
+
+// ---
+
+ImageEffect::TimeArgs::TimeArgs(PropertySet &inArgs) {
+  time = inArgs.getDouble(kOfxPropTime, 0);
+}
+
+// ---
+
+ImageEffect::InstanceChangedArgs::InstanceChangedArgs(PropertySet &inArgs)
+  : ImageEffect::RenderScaleArgs(inArgs), ImageEffect::TimeArgs(inArgs) {
+  type = StringToType(inArgs.getString(kOfxPropType, 0));
+  name = inArgs.getString(kOfxPropName, 0);
+  reason = StringToChangeReason(inArgs.getString(kOfxPropChangeReason, 0));
+}
+
+// ---
+
+ImageEffect::GetRoDArgs::GetRoDArgs(PropertySet &inArgs)
+  : ImageEffect::RenderScaleArgs(inArgs), ImageEffect::TimeArgs(inArgs) {
+}
+
+void ImageEffect::GetRoDArgs::setOutputs(PropertySet &outArgs) {
+  outArgs.setDoubles(kOfxImageEffectPropRegionOfDefinition, 4, &(RoD.x1));
+}
+
+// ---
+
+ImageEffect::RenderArgs::RenderArgs(PropertySet &inArgs)
+  : ImageEffect::RenderScaleArgs(inArgs), ImageEffect::TimeArgs(inArgs) {
+  field = StringToImageField(inArgs.getString(kOfxImageEffectPropFieldToRender, 0));
+  inArgs.getInts(kOfxImageEffectPropRenderWindow, 4, &(renderWindow.x1));
+}
+
+// ---
+
+ImageEffect::IsIdentityArgs::IsIdentityArgs(PropertySet &inArgs)
+  : ImageEffect::RenderArgs(inArgs) {
+}
+
+void ImageEffect::IsIdentityArgs::setOutputs(PropertySet &outArgs) {
+  outArgs.setString(kOfxPropName, 0, idClip);
+  outArgs.setDouble(kOfxPropTime, 0, idTime);
+}
+
+// ---
+
+ImageEffect::GetRoIArgs::GetRoIArgs(PropertySet &inArgs)
+  : ImageEffect::RenderScaleArgs(inArgs), ImageEffect::TimeArgs(inArgs) {
+  inArgs.getDoubles(kOfxImageEffectPropRegionOfInterest, 4, &(outRoI.x1));
+}
+
+void ImageEffect::GetRoIArgs::setOutputs(PropertySet &outArgs) {
+  static std::string outBaseName = "OfxImageClipPropRoI_";
+  
+  std::map<std::string, Rect<double> >::iterator it = inRoIs.begin();
+  while (it != inRoIs.end()) {
+    std::string name = outBaseName + it->first;
+    outArgs.setDoubles(name.c_str(), 4, &(it->second.x1));
+    ++it;
+  }
+}
+
+void ImageEffect::GetRoIArgs::setInputRoI(const std::string &name, const Rect<double> &RoI) {
+  inRoIs[name] = RoI;
+}
+
+// ---
+
+ImageEffect::GetFramesNeededArgs::GetFramesNeededArgs(PropertySet &inArgs)
+  : ImageEffect::TimeArgs(inArgs) {
+}
+
+void ImageEffect::GetFramesNeededArgs::setOutputs(PropertySet &outArgs) {
+  static std::string outBaseName = "OfxImageClipPropFrameRange_";
+  
+  std::map<std::string, FrameRangeList>::iterator it = inRanges.begin();
+  while (it != inRanges.end()) {
+    std::string outName = outBaseName + it->first;
+    FrameRangeList &frl = it->second;
+    int i = 0;
+    for (size_t j=0; j<frl.size(); ++j, i+=2) {
+      outArgs.setDouble(outName.c_str(), i, frl[j].first);
+      outArgs.setDouble(outName.c_str(), i+1, frl[j].second);
+    }
+    ++it;
+  }
+}
+
+void ImageEffect::GetFramesNeededArgs::addInputRange(const std::string &name, const FrameRange &range) {
+  inRanges[name].push_back(range);
+}
+
+// ---
+
+ImageEffect::SequenceArgs::SequenceArgs(PropertySet &inArgs)
+  : ImageEffect::RenderScaleArgs(inArgs) {
+  range.first = inArgs.getDouble(kOfxImageEffectPropFrameRange, 0);
+  range.second = inArgs.getDouble(kOfxImageEffectPropFrameRange, 1);
+  step = inArgs.getDouble(kOfxImageEffectPropFrameStep, 0);
+  interactive = (inArgs.getInt(kOfxPropIsInteractive, 0) == 1);
+}
+
+// ---
+
+ImageEffect::GetClipPrefArgs::GetClipPrefArgs() {
+}
+
+void ImageEffect::GetClipPrefArgs::setOutputs(PropertySet &outArgs) {
+  static std::string compBase = "OfxImageClipPropComponents_";
+  static std::string depthBase = "OfxImageClipPropDepth_";
+  static std::string parBase = "OfxImageClipPropPAR_";
+  
+  std::map<std::string, PixelPreferences>::iterator it = inPrefs.begin();
+  while (it != inPrefs.end()) {
+    std::string name;
+    name = compBase + it->first;
+    outArgs.setString(name.c_str(), 0, ImageComponentToString(it->second.components));
+    name = depthBase + it->first;
+    outArgs.setString(name.c_str(), 0, BitDepthToString(it->second.bitDepth));
+    name = parBase + it->first;
+    outArgs.setDouble(name.c_str(), 0, it->second.pixelAspectRatio);
+    ++it;
+  }
+  outArgs.setDouble(kOfxImageEffectPropFrameRate, 0, outPref.frameRate);
+  outArgs.setString(kOfxImageClipPropFieldOrder, 0, ImageFieldOrderToString(outPref.fieldOrder));
+  outArgs.setString(kOfxImageEffectPropPreMultiplication, 0, ImagePreMultToString(outPref.preMult));
+  outArgs.setInt(kOfxImageClipPropContinuousSamples, 0, (outPref.continuousSamples ? 1 : 0));
+  outArgs.setInt(kOfxImageEffectFrameVarying, 0, (outPref.frameVarying ? 1 : 0));
+}
+
+void ImageEffect::GetClipPrefArgs::setInputPref(const std::string &name, const PixelPreferences &prefs) {
+  inPrefs[name] = prefs;
+}
+
+// ---
 
 std::map<OfxImageEffectHandle, ImageEffect*> ImageEffect::msEffects;
 
@@ -642,20 +749,6 @@ ImageEffect* ImageEffect::GetEffect(OfxImageEffectHandle handle) {
   }
 }
 
-//void ImageEffect::Init(Host *h) throw(Exception) {
-//  if (h) {
-//    msSuiteV1 = h->fetchSuite<OfxImageEffectSuiteV1>(kOfxImageEffectSuite, 1);
-//    if (msSuiteV1) {
-//      Image::msSuiteV1 = msSuiteV1;
-//      ClipDescriptor::msSuiteV1 = msSuiteV1;
-//      Clip::msSuiteV1 = msSuiteV1;
-//      ImageEffectDescriptor::msSuiteV1 = msSuiteV1;
-//      return;
-//    }
-//  }
-//  throw Exception(kOfxStatErrMissingHostFeature, "Cannot initialize ofx::ImageEffect");
-//}
-
 ImageEffect::ImageEffect()
   : mHandle(0), mHost(0) {
 }
@@ -664,10 +757,6 @@ ImageEffect::ImageEffect(ImageEffectHost *h, OfxImageEffectHandle hdl) throw(Exc
   : mHandle(0), mHost(h) {
   setHandle(hdl);
 }
-
-//ImageEffect::ImageEffect(const ImageEffect &rhs)
-//  : mHandle(rhs.mHandle), mProps(rhs.mProps), mParams(rhs.mParams) {
-//}
 
 ImageEffect::~ImageEffect() {
   setHandle(0);
@@ -693,26 +782,6 @@ void ImageEffect::setHandle(OfxImageEffectHandle handle) throw(Exception) {
     msEffects[mHandle] = this;
   }
 }
-
-//ImageEffect& ImageEffect::operator=(const ImageEffect &rhs) {
-//  mHandle = rhs.mHandle;
-//  mProps = rhs.mProps;
-//  mParams = rhs.mParams;
-//  return *this;
-//}
-
-//ImageEffect& ImageEffect::operator=(OfxImageEffectHandle hdl) {
-//  mHandle = hdl;
-//  if (mHandle != 0 && msSuiteV1 != 0) {
-//    OfxPropertySetHandle hProps;
-//    msSuiteV1->getPropertySet(mHandle, &hProps);
-//    mProps = hProps;
-//    OfxParamSetHandle hParams;
-//    msSuiteV1->getParamSet(mHandle, &hParams);
-//    mParams = hParams;
-//  }
-//  return *this;
-//}
 
 ImageEffectContext ImageEffect::context() throw(Exception) {
   return StringToImageEffectContext(mProps.getString(kOfxImageEffectPropContext, 0));
@@ -818,8 +887,7 @@ void ImageEffect::endInstanceChanged(ChangeReason) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
-void ImageEffect::instanceChanged(Type, const std::string &, ChangeReason,
-                                  Time, double, double) throw(Exception) {
+void ImageEffect::instanceChanged(ImageEffect::InstanceChangedArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
@@ -839,43 +907,35 @@ void ImageEffect::endInstanceEdit() throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
-Rect<double> ImageEffect::getRegionOfDefinition(Time, double, double) throw(Exception) {
+Rect<double> ImageEffect::getRegionOfDefinition(ImageEffect::GetRoDArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
-void ImageEffect::getRegionsOfInterest(Time, double, double,
-                                       const Rect<double> &,
-                                       std::map<std::string, Rect<double> > &) throw(Exception) {
+void ImageEffect::getRegionsOfInterest(ImageEffect::GetRoIArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
-void ImageEffect::getFramesNeeded(Time, std::map<std::string, FrameRangeList> &) throw(Exception) {
+void ImageEffect::getFramesNeeded(ImageEffect::GetFramesNeededArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
-bool ImageEffect::isIdentity(Time, ImageField, const Rect<int> &,
-                             double, double,
-                             std::string &, Time &) throw(Exception) {
+bool ImageEffect::isIdentity(ImageEffect::IsIdentityArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
-void ImageEffect::render(Time, ImageField, const Rect<int> &,
-                         double, double) throw(Exception) {
+void ImageEffect::render(ImageEffect::RenderArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
-void ImageEffect::beginSequenceRender(const FrameRange &, int, bool,
-                                      double, double) throw(Exception) {
+void ImageEffect::beginSequenceRender(ImageEffect::SequenceArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
-void ImageEffect::endSequenceRender(const FrameRange &, int, bool,
-                                    double, double) throw(Exception) {
+void ImageEffect::endSequenceRender(ImageEffect::SequenceArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 
-void ImageEffect::getClipPreferences(ClipPreferences &,
-                                     std::map<std::string, PixelPreferences> &) throw(Exception) {
+void ImageEffect::getClipPreferences(ImageEffect::GetClipPrefArgs &) throw(Exception) {
   throw Exception(kOfxStatReplyDefault, "Not implemented");
 }
 

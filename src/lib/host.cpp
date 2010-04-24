@@ -136,6 +136,14 @@ ImageComponent ImageEffectHost::getSupportedComponent(int idx) throw(Exception) 
   return StringToImageComponent(getString(kOfxImageEffectPropSupportedComponents, idx));
 }
 
+int ImageEffectHost::supportedPixelDepthsCount() throw(Exception) {
+  return size(kOfxImageEffectPropSupportedPixelDepths);
+}
+
+BitDepth ImageEffectHost::getSupportedPixelDepth(int idx) throw(Exception) {
+  return StringToBitDepth(getString(kOfxImageEffectPropSupportedPixelDepths, idx));
+}
+
 int ImageEffectHost::supportedContextsCount() throw(Exception) {
   return size(kOfxImageEffectPropSupportedContexts);
 }

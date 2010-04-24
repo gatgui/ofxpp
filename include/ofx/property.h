@@ -34,14 +34,6 @@ namespace ofx {
   class Host;
   
   class PropertySet {
-    //protected:
-    //  
-    //  static OfxPropertySuiteV1 *msSuiteV1;
-    //  
-    //public:
-    //  
-    //  static void Init(Host *s) throw(Exception);
-    
     public:
       
       PropertySet();
@@ -50,7 +42,6 @@ namespace ofx {
       virtual ~PropertySet();
       
       PropertySet& operator=(const PropertySet &rhs);
-      //PropertySet& operator=(OfxPropertySetHandle hdl);
       
       void setPointer(const char * prop, int index, void *val) throw(Exception);
       void setPointers(const char * prop, int n, void **val) throw(Exception);

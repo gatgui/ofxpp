@@ -60,11 +60,10 @@ namespace ofx {
       OfxPlugin mPlugin;
   };
   
-  template <class Descriptor, class Effect> //, const char *ID, int Major, int Minor>
+  template <class Descriptor, class Effect>
   class ImageEffectPlugin : public Plugin {
     public:
       
-      //typedef ImageEffectPlugin<Descriptor, Effect, ID, Major, Minor> SelfType;
       typedef ImageEffectPlugin<Descriptor, Effect> SelfType;
       typedef Descriptor EffectDescriptor;
       typedef Effect EffectInstance;
@@ -136,13 +135,8 @@ namespace ofx {
           }
           case ActionInstanceChanged: {
             Effect *effect = plugin->getEffect(hEffect);
-            Type type = StringToType(inArgs.getString(kOfxPropType, 0));
-            std::string name = inArgs.getString(kOfxPropName, 0);
-            ChangeReason reason = StringToChangeReason(inArgs.getString(kOfxPropChangeReason, 0));
-            Time t = inArgs.getDouble(kOfxPropTime, 0);
-            double rsx = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
-            double rsy = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
-            effect->instanceChanged(type, name, reason, t, rsx, rsy);
+            ImageEffect::InstanceChangedArgs args(inArgs);
+            effect->instanceChanged(args);
             break;
           }
           case ActionPurgeCaches: {
@@ -167,128 +161,56 @@ namespace ofx {
           }
           case ActionImageEffectGetRoD: {
             Effect *effect = plugin->getEffect(hEffect);
-            Time t = inArgs.getDouble(kOfxPropTime, 0);
-            double rsx = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
-            double rsy = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
-            Rect<double> rod = effect->getRegionOfDefinition(t, rsx, rsy);
-            outArgs.setDoubles(kOfxImageEffectPropRegionOfDefinition, 4, &(rod.x1));
+            ImageEffect::GetRoDArgs args(inArgs);
+            effect->getRegionOfDefinition(args);
+            args.setOutputs(outArgs);
             break;
           }
           case ActionImageEffectGetRoI: {
-            static std::string outBaseName = "OfxImageClipPropRoI_";
-            
             Effect *effect = plugin->getEffect(hEffect);
-            Time t = inArgs.getDouble(kOfxPropTime, 0);
-            double rsx = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
-            double rsy = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
-            Rect<double> outRoI;
-            inArgs.getDoubles(kOfxImageEffectPropRegionOfInterest, 4, &(outRoI.x1));
-            std::map<std::string, Rect<double> > clipsRoI;
-            effect->getRegionsOfInterest(t, rsx, rsy, outRoI, clipsRoI);
-            std::map<std::string, Rect<double> >::iterator it = clipsRoI.begin();
-            while (it != clipsRoI.end()) {
-              std::string name = outBaseName + it->first;
-              outArgs.setDoubles(name.c_str(), 4, &(it->second.x1));
-              ++it;
-            }
+            ImageEffect::GetRoIArgs args(inArgs);
+            effect->getRegionsOfInterest(args);
+            args.setOutputs(outArgs);
             break;
           }
           case ActionImageEffectGetFramesNeeded: {
-            static std::string outBaseName = "OfxImageClipPropFrameRange_";
-            
             Effect *effect = plugin->getEffect(hEffect);
-            Time t = inArgs.getDouble(kOfxPropTime, 0);
-            std::map<std::string, FrameRangeList> clipsFrameRange;
-            effect->getFramesNeeded(t, clipsFrameRange);
-            std::map<std::string, FrameRangeList>::iterator it = clipsFrameRange.begin();
-            while (it != clipsFrameRange.end()) {
-              std::string outName = outBaseName + it->first;
-              FrameRangeList &frl = it->second;
-              int i = 0;
-              for (size_t j=0; j<frl.size(); ++j, i+=2) {
-                outArgs.setDouble(outName.c_str(), i, frl[j].first);
-                outArgs.setDouble(outName.c_str(), i+1, frl[j].second);
-              }
-              ++it;
-            }
+            ImageEffect::GetFramesNeededArgs args(inArgs);
+            effect->getFramesNeeded(args);
+            args.setOutputs(outArgs);
             break;
           }
           case ActionImageEffectIsIdentity: {
             Effect *effect = plugin->getEffect(hEffect);
-            Time t = inArgs.getDouble(kOfxPropTime, 0);
-            ImageField field = StringToImageField(inArgs.getString(kOfxImageEffectPropFieldToRender, 0));
-            Rect<int> renderWindow;
-            inArgs.getInts(kOfxImageEffectPropRenderWindow, 4, &(renderWindow.x1));
-            double rsx = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
-            double rsy = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
-            std::string idClip;
-            Time idTime;
-            if (effect->isIdentity(t, field, renderWindow, rsx, rsy, idClip, idTime)) {
-              outArgs.setString(kOfxPropName, 0, idClip);
-              outArgs.setDouble(kOfxPropTime, 0, idTime);
+            ImageEffect::IsIdentityArgs args(inArgs);
+            if (effect->isIdentity(args)) {
+              args.setOutputs(outArgs);
             }
             break;
           }
           case ActionImageEffectRender: {
             Effect *effect = plugin->getEffect(hEffect);
-            Time t = inArgs.getDouble(kOfxPropTime, 0);
-            ImageField field = StringToImageField(inArgs.getString(kOfxImageEffectPropFieldToRender, 0));
-            Rect<int> renderWindow;
-            inArgs.getInts(kOfxImageEffectPropRenderWindow, 4, &(renderWindow.x1));
-            double rsx = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
-            double rsy = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
-            effect->render(t, field, renderWindow, rsx, rsy);
+            ImageEffect::RenderArgs args(inArgs);
+            effect->render(args);
             break;
           }
           case ActionImageEffectBeginSequenceRender: {
             Effect *effect = plugin->getEffect(hEffect);
-            FrameRange range;
-            range.first = inArgs.getDouble(kOfxImageEffectPropFrameRange, 0);
-            range.second = inArgs.getDouble(kOfxImageEffectPropFrameRange, 1);
-            double step = inArgs.getDouble(kOfxImageEffectPropFrameStep, 0);
-            bool interactive = (inArgs.getInt(kOfxPropIsInteractive, 0) == 1);
-            double rsx = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
-            double rsy = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
-            effect->beginSequenceRender(range, step, interactive, rsx, rsy);
+            ImageEffect::SequenceArgs args(inArgs);
+            effect->beginSequenceRender(args);
             break;
           }
           case ActionImageEffectEndSequenceRender: {
             Effect *effect = plugin->getEffect(hEffect);
-            FrameRange range;
-            range.first = inArgs.getDouble(kOfxImageEffectPropFrameRange, 0);
-            range.second = inArgs.getDouble(kOfxImageEffectPropFrameRange, 1);
-            double step = inArgs.getDouble(kOfxImageEffectPropFrameStep, 0);
-            bool interactive = (inArgs.getInt(kOfxPropIsInteractive, 0) == 1);
-            double rsx = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
-            double rsy = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
-            effect->endSequenceRender(range, step, interactive, rsx, rsy);
+            ImageEffect::SequenceArgs args(inArgs);
+            effect->endSequenceRender(args);
             break;
           }
           case ActionImageEffectGetClipPreferences: {
-            static std::string compBase = "OfxImageClipPropComponents_";
-            static std::string depthBase = "OfxImageClipPropDepth_";
-            static std::string parBase = "OfxImageClipPropPAR_";
-            
             Effect *effect = plugin->getEffect(hEffect);
-            std::map<std::string, PixelPreferences> inClipsPrefs;
-            ClipPreferences outClipPrefs;
-            effect->getClipPreferences(outClipPrefs, inClipsPrefs);
-            std::map<std::string, PixelPreferences>::iterator it = inClipsPrefs.begin();
-            while (it != inClipsPrefs.end()) {
-              std::string name;
-              name = compBase + it->first;
-              outArgs.setString(name.c_str(), 0, ImageComponentToString(it->second.components));
-              name = depthBase + it->first;
-              outArgs.setString(name.c_str(), 0, BitDepthToString(it->second.bitDepth));
-              name = parBase + it->first;
-              outArgs.setDouble(name.c_str(), 0, it->second.pixelAspectRatio);
-              ++it;
-            }
-            outArgs.setDouble(kOfxImageEffectPropFrameRate, 0, outClipPrefs.frameRate);
-            outArgs.setString(kOfxImageClipPropFieldOrder, 0, ImageFieldOrderToString(outClipPrefs.fieldOrder));
-            outArgs.setString(kOfxImageEffectPropPreMultiplication, 0, ImagePreMultToString(outClipPrefs.preMult));
-            outArgs.setInt(kOfxImageClipPropContinuousSamples, 0, (outClipPrefs.continuousSamples ? 1 : 0));
-            outArgs.setInt(kOfxImageEffectFrameVarying, 0, (outClipPrefs.frameVarying ? 1 : 0));
+            ImageEffect::GetClipPrefArgs args;
+            effect->getClipPreferences(args);
+            args.setOutputs(outArgs);
             break;
           }
           case ActionImageEffectGetTimeDomain: {
@@ -311,8 +233,6 @@ namespace ofx {
       }
       
       static SelfType* Instance() {
-        //static SelfType instance;
-        //return &instance;
         return msInstance;
       }
       
@@ -373,9 +293,6 @@ namespace ofx {
         mPlugin.apiVersion = kOfxImageEffectPluginApiVersion;
         mPlugin.setHost = SelfType::SetHost;
         mPlugin.mainEntry = SelfType::Main;
-        //mPlugin.pluginIdentifier = ID;
-        //mPlugin.pluginVersionMajor = Major;
-        //mPlugin.pluginVersionMinor = Minor;
         msInstance = this;
       }
       

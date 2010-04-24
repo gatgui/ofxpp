@@ -69,12 +69,7 @@ namespace ofx {
   
   
   class ParameterDescriptor : public PropertySet {
-    //protected:
-    //  static OfxParameterSuiteV1 *msSuiteV1;
-      
     public:
-      
-      //friend class ParameterSet;
       
       ParameterDescriptor();
       ParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception);
@@ -82,7 +77,6 @@ namespace ofx {
       virtual ~ParameterDescriptor();
       
       ParameterDescriptor& operator=(const ParameterDescriptor &rhs);
-      //ParameterDescriptor& operator=(OfxPropertySetHandle hdl);
       
       // properties
       
@@ -131,7 +125,6 @@ namespace ofx {
       virtual ~ValueParameterDescriptor();
       
       ValueParameterDescriptor& operator=(const ValueParameterDescriptor &rhs);
-      //ValueParameterDescriptor& operator=(OfxPropertySetHandle hdl);
       
       // properties
       
@@ -180,7 +173,6 @@ namespace ofx {
       virtual ~IntParameterDescriptor();
       
       IntParameterDescriptor& operator=(const IntParameterDescriptor &rhs);
-      //IntParameterDescriptor& operator=(OfxPropertySetHandle hdl);
       
       // properties
       
@@ -208,7 +200,6 @@ namespace ofx {
       virtual ~Int2ParameterDescriptor();
       
       Int2ParameterDescriptor& operator=(const Int2ParameterDescriptor &rhs);
-      //Int2ParameterDescriptor& operator=(OfxPropertySetHandle hdl);
       
       // properties
       
@@ -239,7 +230,6 @@ namespace ofx {
       virtual ~Int3ParameterDescriptor();
       
       Int3ParameterDescriptor& operator=(const Int3ParameterDescriptor &rhs);
-      //Int3ParameterDescriptor& operator=(OfxPropertySetHandle hdl);
       
       // properties
       
@@ -270,7 +260,6 @@ namespace ofx {
       virtual ~DoubleParameterDescriptor();
       
       DoubleParameterDescriptor& operator=(const DoubleParameterDescriptor &rhs);
-      //DoubleParameterDescriptor& operator=(OfxPropertySetHandle hdl);
       
       // properties
       
@@ -310,7 +299,6 @@ namespace ofx {
       virtual ~Double2ParameterDescriptor();
       
       Double2ParameterDescriptor& operator=(const Double2ParameterDescriptor &rhs);
-      //Double2ParameterDescriptor& operator=(OfxPropertySetHandle hdl);
       
       // properties
       
@@ -350,7 +338,6 @@ namespace ofx {
       virtual ~Double3ParameterDescriptor();
       
       Double3ParameterDescriptor& operator=(const Double3ParameterDescriptor &rhs);
-      //Double3ParameterDescriptor& operator=(OfxPropertySetHandle hdl);
       
       // properties
       
@@ -390,7 +377,6 @@ namespace ofx {
       virtual ~ChoiceParameterDescriptor();
       
       ChoiceParameterDescriptor& operator=(const ChoiceParameterDescriptor &rhs);
-      //ChoiceParameterDescriptor& operator=(OfxPropertySetHandle hdl);
       
       // properties
       
@@ -410,7 +396,6 @@ namespace ofx {
       virtual ~StringParameterDescriptor();
       
       StringParameterDescriptor& operator=(const StringParameterDescriptor &rhs);
-      //StringParameterDescriptor& operator=(OfxPropertySetHandle hdl);
       
       // properties
       
@@ -432,7 +417,6 @@ namespace ofx {
       virtual ~CustomParameterDescriptor();
       
       CustomParameterDescriptor& operator=(const CustomParameterDescriptor &rhs);
-      //CustomParameterDescriptor& operator=(OfxPropertySetHandle hdl);
       
       // properties
       
@@ -455,7 +439,6 @@ namespace ofx {
       virtual ~PageParameterDescriptor();
       
       PageParameterDescriptor& operator=(const PageParameterDescriptor &rhs);
-      //PageParameterDescriptor& operator=(OfxPropertySetHandle hdl);
       
       // properties
       
@@ -474,7 +457,6 @@ namespace ofx {
       BooleanParameterDescriptor(const BooleanParameterDescriptor &rhs);
       virtual ~BooleanParameterDescriptor();
       
-      //BooleanParameterDescriptor& operator=(OfxPropertySetHandle hdl);
       BooleanParameterDescriptor& operator=(const BooleanParameterDescriptor &rhs);
       
       // properties
@@ -490,7 +472,6 @@ namespace ofx {
       RGBParameterDescriptor(const RGBParameterDescriptor &rhs);
       virtual ~RGBParameterDescriptor();
       
-      //RGBParameterDescriptor& operator=(OfxPropertySetHandle hdl);
       RGBParameterDescriptor& operator=(const RGBParameterDescriptor &rhs);
       
       // properties
@@ -506,7 +487,6 @@ namespace ofx {
       RGBAParameterDescriptor(const RGBAParameterDescriptor &rhs);
       virtual ~RGBAParameterDescriptor();
       
-      //RGBAParameterDescriptor& operator=(OfxPropertySetHandle hdl);
       RGBAParameterDescriptor& operator=(const RGBAParameterDescriptor &rhs);
       
       // properties
@@ -522,7 +502,6 @@ namespace ofx {
       PushButtonParameterDescriptor(const PushButtonParameterDescriptor &rhs);
       virtual ~PushButtonParameterDescriptor();
       
-      //PushButtonParameterDescriptor& operator=(OfxPropertySetHandle hdl);
       PushButtonParameterDescriptor& operator=(const PushButtonParameterDescriptor &rhs);
       
       // properties
@@ -548,15 +527,11 @@ namespace ofx {
   class Parameter {
     protected:
       
-      //static OfxParameterSuiteV1 *msSuiteV1;
-      
       OfxParamHandle mHandle;
       PropertySet mProps;
       OfxParameterSuiteV1 *mSuite;
       
     public:
-      
-      //friend class ParameterSet;
       
       Parameter();
       Parameter(Host *h, OfxParamHandle hdl) throw(Exception);
@@ -564,7 +539,6 @@ namespace ofx {
       virtual ~Parameter();
       
       Parameter& operator=(const Parameter &rhs);
-      //Parameter& operator=(OfxParamHandle hdl);
       
       inline OfxParamHandle handle() {
         return mHandle;
@@ -615,7 +589,6 @@ namespace ofx {
       virtual ~ValueParameter();
       
       ValueParameter& operator=(const ValueParameter &rhs);
-      //ValueParameter& operator=(OfxParamHandle hdl);
       
       // properties
       
@@ -666,7 +639,6 @@ namespace ofx {
       virtual ~IntParameter();
       
       IntParameter& operator=(const IntParameter &rhs);
-      //IntParameter& operator=(OfxParamHandle hdl);
       
       // properties
       
@@ -703,7 +675,6 @@ namespace ofx {
       virtual ~Int2Parameter();
       
       Int2Parameter& operator=(const Int2Parameter &rhs);
-      //Int2Parameter& operator=(OfxParamHandle hdl);
       
       // properties
       
@@ -742,7 +713,6 @@ namespace ofx {
       virtual ~Int3Parameter();
       
       Int3Parameter& operator=(const Int3Parameter &rhs);
-      //Int3Parameter& operator=(OfxParamHandle hdl);
       
       // properties
       
@@ -781,7 +751,6 @@ namespace ofx {
       virtual ~DoubleParameter();
       
       DoubleParameter& operator=(const DoubleParameter &rhs);
-      //DoubleParameter& operator=(OfxParamHandle hdl);
       
       // properties
       
@@ -829,7 +798,6 @@ namespace ofx {
       virtual ~Double2Parameter();
       
       Double2Parameter& operator=(const Double2Parameter &rhs);
-      //Double2Parameter& operator=(OfxParamHandle hdl);
       
       // properties
       
@@ -876,7 +844,6 @@ namespace ofx {
       virtual ~Double3Parameter();
       
       Double3Parameter& operator=(const Double3Parameter &rhs);
-      //Double3Parameter& operator=(OfxParamHandle hdl);
       
       // properties
       
@@ -923,7 +890,6 @@ namespace ofx {
       virtual ~StringParameter();
       
       StringParameter& operator=(const StringParameter &rhs);
-      //StringParameter& operator=(OfxParamHandle hdl);
       
       // properties
       
@@ -950,7 +916,6 @@ namespace ofx {
       virtual ~CustomParameter();
       
       CustomParameter& operator=(const CustomParameter &rhs);
-      //CustomParameter& operator=(OfxParamHandle hdl);
       
       // properties
       
@@ -974,7 +939,6 @@ namespace ofx {
       BooleanParameter(const BooleanParameter &rhs);
       virtual ~BooleanParameter();
       
-      //BooleanParameter& operator=(OfxParamHandle hdl);
       BooleanParameter& operator=(const BooleanParameter &rhs);
       
       // properties
@@ -997,7 +961,6 @@ namespace ofx {
       RGBParameter(const RGBParameter &rhs);
       virtual ~RGBParameter();
       
-      //RGBParameter& operator=(OfxParamHandle hdl);
       RGBParameter& operator=(const RGBParameter &rhs);
       
       // properties
@@ -1022,7 +985,6 @@ namespace ofx {
       RGBAParameter(const RGBAParameter &rhs);
       virtual ~RGBAParameter();
       
-      //RGBAParameter& operator=(OfxParamHandle hdl);
       RGBAParameter& operator=(const RGBAParameter &rhs);
       
       // properties
@@ -1048,7 +1010,6 @@ namespace ofx {
       virtual ~ChoiceParameter();
       
       ChoiceParameter& operator=(const ChoiceParameter &rhs);
-      //ChoiceParameter& operator=(OfxParamHandle hdl);
       
       // properties
       
@@ -1075,7 +1036,6 @@ namespace ofx {
       virtual ~PageParameter();
       
       PageParameter& operator=(const PageParameter &rhs);
-      //PageParameter& operator=(OfxParamHandle hdl);
       
       // properties
       
@@ -1091,7 +1051,6 @@ namespace ofx {
       PushButtonParameter(const PushButtonParameter &rhs);
       virtual ~PushButtonParameter();
       
-      //PushButtonParameter& operator=(OfxParamHandle hdl);
       PushButtonParameter& operator=(const PushButtonParameter &rhs);
       
       // properties
@@ -1113,7 +1072,6 @@ namespace ofx {
   
   class ParameterSetDescriptor {
     protected:
-      //static OfxParameterSuiteV1 *msSuiteV1;
       
       OfxParamSetHandle mHandle;
       PropertySet mProps;
@@ -1121,15 +1079,12 @@ namespace ofx {
     
     public:
       
-      //friend class ParameterSet;
-      
       ParameterSetDescriptor();
       ParameterSetDescriptor(Host *h, OfxParamSetHandle hdl) throw(Exception);
       ParameterSetDescriptor(const ParameterSetDescriptor &rhs);
       ~ParameterSetDescriptor();
       
       ParameterSetDescriptor& operator=(const ParameterSetDescriptor &rhs);
-      //ParameterSetDescriptor& operator=(OfxParamSetHandle hdl);
       
       inline Host* host() {
         return mHost;
@@ -1159,15 +1114,9 @@ namespace ofx {
   class ParameterSet {
     protected:
       
-      //static OfxParameterSuiteV1 *msSuiteV1;
-      
       OfxParamSetHandle mHandle;
       PropertySet mProps;
       Host *mHost;
-      
-    //public:
-    //  
-    //  static void Init(Host *) throw(Exception);
     
     public:
       
@@ -1177,7 +1126,6 @@ namespace ofx {
       ~ParameterSet();
       
       ParameterSet& operator=(const ParameterSet &rhs);
-      //ParameterSet& operator=(OfxParamSetHandle hdl);
       
       inline Host* host() {
         return mHost;

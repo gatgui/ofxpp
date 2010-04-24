@@ -27,18 +27,6 @@ USA.
 
 namespace ofx {
 
-//OfxPropertySuiteV1 * PropertySet::msSuiteV1 = 0;
-//
-//void PropertySet::Init(Host *h) throw(Exception) {
-//  if (h) {
-//    msSuiteV1 = h->fetchSuite<OfxPropertySuiteV1>(kOfxPropertySuite, 1);
-//    if (msSuiteV1) {
-//      return;
-//    }
-//  }
-//  throw Exception(kOfxStatErrMissingHostFeature, "Cannot initialize ofx::PropertySet");
-//}
-
 PropertySet::PropertySet()
   : mHandle(0), mSuite(0) {
 }
@@ -63,11 +51,6 @@ PropertySet& PropertySet::operator=(const PropertySet &rhs) {
   mSuite = rhs.mSuite;
   return *this;
 }
-
-//PropertySet& PropertySet::operator=(OfxPropertySetHandle hdl) {
-//  mHandle = hdl;
-//  return *this;
-//}
 
 void PropertySet::checkStatus(OfxStatus s, const std::string &msg) throw(Exception) {
   if (s != kOfxStatOK) {

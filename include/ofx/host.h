@@ -106,6 +106,8 @@ namespace ofx {
       ImageComponent getSupportedComponent(int idx) throw(Exception);
       int supportedContextsCount() throw(Exception);
       ImageEffectContext getSupportedContext(int idx) throw(Exception);
+      int supportedPixelDepthsCount() throw(Exception);
+      BitDepth getSupportedPixelDepth(int idx) throw(Exception);
       bool supportsMultipleClipDepths() throw(Exception);
       bool supportsMultipleClipPARs() throw(Exception);
       bool setableFramerate() throw(Exception);

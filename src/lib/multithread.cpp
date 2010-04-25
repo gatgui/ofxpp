@@ -37,11 +37,11 @@ Thread::~Thread() {
 
 MultiThread::MultiThread(Host *h) throw(Exception) {
   if (!h) {
-    throw Exception(kOfxStatErrFatal, "Cannot initialize ofx::Threads: no host");
+    throw BadHandleError("Cannot initialize ofx::Threads: invalid host");
   }
   mSuite = h->fetchSuite<OfxMultiThreadSuiteV1>(kOfxMultiThreadSuite, 1);
   if (!mSuite) {
-    throw Exception(kOfxStatErrMissingHostFeature, "Cannot initialize ofx::Threads: no suite");
+    throw MissingHostFeatureError("Multithread suite");
     return;
   }
 }
@@ -115,7 +115,7 @@ bool MultiThread::tryLock(Mutex mutex) throw(Exception) {
   return true;
 }
 
-void MultiThread::destroyMutex(Mutex mutex) throw(Exception) {
+void MultiThread::destroyMutex(Mutex mutex) {
   mSuite->mutexDestroy(mutex);
 }
 

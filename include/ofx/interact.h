@@ -36,16 +36,9 @@ namespace ofx {
   class Host;
   
   class InteractDescriptor {
-    protected:
-      
-      //static OfxInteractSuiteV1 * msSuiteV1;
-      
-      OfxInteractHandle mHandle;
-      PropertySet mProps;
-      
     public:
       
-      friend class Interact;
+      //friend class Interact;
       
       InteractDescriptor();
       InteractDescriptor(ImageEffectHost *h, OfxInteractHandle hdl) throw(Exception);
@@ -53,28 +46,24 @@ namespace ofx {
       ~InteractDescriptor();
       
       InteractDescriptor& operator=(const InteractDescriptor &rhs);
-      //InteractDescriptor& operator=(OfxInteractHandle hdl);
       
       // properties
       
-      bool hasAlpha() throw(Exception);
+      bool hasAlpha();
       
-      int bitDepth() throw(Exception);
+      int bitDepth();
       
-      // for sub-classing
+      // Interact actions
       
-      virtual void describe() throw(Exception);
-  };
-  
-  class Interact {
+      virtual OfxStatus describe();
+    
     protected:
       
       OfxInteractHandle mHandle;
       PropertySet mProps;
-      OfxInteractSuiteV1 *mSuite;
-      
-      static std::map<OfxInteractHandle, Interact*> msInteracts;
-    
+  };
+  
+  class Interact {
     public:
       
       static Interact* GetInteract(OfxInteractHandle hdl);
@@ -132,44 +121,45 @@ namespace ofx {
       
       // properties
       
-      ImageEffect* effectInstance() throw(Exception);
+      ImageEffect* effectInstance();
       
-      void* instanceData() throw(Exception);
-      void setInstanceData(void *d) throw(Exception);
+      void* instanceData();
+      void setInstanceData(void *d);
       
-      void pixelScale(double &sx, double &sy) throw(Exception);
+      void pixelScale(double &sx, double &sy);
       
-      RGBAColour<double> backgroundColor() throw(Exception);
+      RGBAColour<double> backgroundColor();
       
-      void viewportSize(int &w, int &h) throw(Exception);
+      void viewportSize(int &w, int &h);
       
-      bool hasAlpha() throw(Exception);
+      bool hasAlpha();
       
-      int bitDepth() throw(Exception);
+      int bitDepth();
       
-      int slaveToParamCount() throw(Exception);
-      std::string getSlaveToParam(int i) throw(Exception);
-      void setSlaveToParam(int i, const std::string &pn) throw(Exception);
+      int slaveToParamCount();
+      std::string getSlaveToParam(int i);
+      void setSlaveToParam(int i, const std::string &pn);
       
-      // for sub-classing
       
-      virtual void draw(DrawArgs &args) throw(Exception);
+      // Interact actions
       
-      virtual void penMotion(PenArgs &args) throw(Exception);
+      virtual OfxStatus draw(DrawArgs &args);
+      virtual OfxStatus penMotion(PenArgs &args);
+      virtual OfxStatus penDown(PenArgs &args);
+      virtual OfxStatus penUp(PenArgs &args);
+      virtual OfxStatus keyDown(KeyArgs &args);
+      virtual OfxStatus keyUp(KeyArgs &args);
+      virtual OfxStatus keyRepeat(KeyArgs &args);
+      virtual OfxStatus gainFocus(FocusArgs &args);
+      virtual OfxStatus loseFocus(FocusArgs &args);
       
-      virtual void penDown(PenArgs &args) throw(Exception);
+    protected:
       
-      virtual void penUp(PenArgs &args) throw(Exception);
+      OfxInteractHandle mHandle;
+      PropertySet mProps;
+      OfxInteractSuiteV1 *mSuite;
       
-      virtual void keyDown(KeyArgs &args) throw(Exception);
-      
-      virtual void keyUp(KeyArgs &args) throw(Exception);
-      
-      virtual void keyRepeat(KeyArgs &args) throw(Exception);
-      
-      virtual void gainFocus(FocusArgs &args) throw(Exception);
-      
-      virtual void loseFocus(FocusArgs &args) throw(Exception);
+      static std::map<OfxInteractHandle, Interact*> msInteracts;
   };
   
   
@@ -197,8 +187,7 @@ namespace ofx {
       case ActionDescribe: {
         Log("OFX Overlay Interact: Describe");
         DescriptorClass desc(host, hInteract);
-        desc.describe();
-        break;
+        return desc.describe();
       }
       case ActionCreateInstance: {
         Log("OFX Overlay Interact: Create instance");
@@ -215,56 +204,47 @@ namespace ofx {
       case ActionInteractDraw: {
         Log("OFX Overlay Interact: Draw");
         Interact::DrawArgs args(inArgs);
-        ic->draw(args);
-        break;
+        return ic->draw(args);
       }
       case ActionInteractPenMotion: {
         Log("OFX Overlay Interact: Pen motion");
         Interact::PenArgs args(inArgs);
-        ic->penMotion(args);
-        break;
+        return ic->penMotion(args);
       }
       case ActionInteractPenUp: {
         Log("OFX Overlay Interact: Pen up");
         Interact::PenArgs args(inArgs);
-        ic->penUp(args);
-        break;
+        return ic->penUp(args);
       }
       case ActionInteractPenDown: {
         Log("OFX Overlay Interact: Pen down");
         Interact::PenArgs args(inArgs);
-        ic->penDown(args);
-        break;
+        return ic->penDown(args);
       }
       case ActionInteractKeyDown: {
         Log("OFX Overlay Interact: Key down");
         Interact::KeyArgs args(inArgs);
-        ic->keyDown(args);
-        break;
+        return ic->keyDown(args);
       }
       case ActionInteractKeyUp: {
         Log("OFX Overlay Interact: Key up");
         Interact::KeyArgs args(inArgs);
-        ic->keyUp(args);
-        break;
+        return ic->keyUp(args);
       }
       case ActionInteractKeyRepeat: {
         Log("OFX Overlay Interact: Key repeat");
         Interact::KeyArgs args(inArgs);
-        ic->keyRepeat(args);
-        break;
+        return ic->keyRepeat(args);
       }
       case ActionInteractGainFocus: {
         Log("OFX Overlay Interact: Gain focus");
         Interact::FocusArgs args(inArgs);
-        ic->gainFocus(args);
-        break;
+        return ic->gainFocus(args);
       }
       case ActionInteractLoseFocus: {
         Log("OFX Overlay Interact: Lose focus");
         Interact::FocusArgs args(inArgs);
-        ic->loseFocus(args);
-        break;
+        return ic->loseFocus(args);
       }
       default:
         return kOfxStatReplyDefault; // there's another value here

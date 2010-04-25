@@ -28,11 +28,11 @@ namespace ofx {
 
 Message::Message(Host *h) throw(Exception) {
   if (!h) {
-    throw Exception(kOfxStatErrFatal, "Cannot initialize ofx::Message: no host");
+    throw BadHandleError("Cannot initialize ofx::Message: invalid host");
   }
   mSuite = h->fetchSuite<OfxMessageSuiteV1>(kOfxMessageSuite, 1);
   if (!mSuite) {
-    throw Exception(kOfxStatErrMissingHostFeature, "Cannot initialize ofx::Message: no suite");
+    throw MissingHostFeatureError("Message suite");
   }
 }
 

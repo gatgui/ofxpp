@@ -43,10 +43,10 @@ class SampleInteract : public ofx::Interact {
     SampleInteract(ofx::ImageEffectHost *host, OfxInteractHandle hdl) throw(ofx::Exception);
     virtual ~SampleInteract();
     
-    virtual void draw(ofx::Interact::DrawArgs &args) throw(ofx::Exception);
-    virtual void penMotion(ofx::Interact::PenArgs &args) throw(ofx::Exception);
-    virtual void penDown(ofx::Interact::PenArgs &args) throw(ofx::Exception);
-    virtual void penUp(ofx::Interact::PenArgs &args) throw(ofx::Exception);
+    virtual OfxStatus draw(ofx::Interact::DrawArgs &args);
+    virtual OfxStatus penMotion(ofx::Interact::PenArgs &args);
+    virtual OfxStatus penDown(ofx::Interact::PenArgs &args);
+    virtual OfxStatus penUp(ofx::Interact::PenArgs &args);
     
   protected:
     
@@ -71,8 +71,8 @@ class SampleDescriptor : public ofx::ImageEffectDescriptor {
     SampleDescriptor(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception);
     virtual ~SampleDescriptor();
     
-    virtual void describe() throw(ofx::Exception);
-    virtual void describeInContext(ofx::ImageEffectContext ctx) throw(ofx::Exception);
+    virtual OfxStatus describe();
+    virtual OfxStatus describeInContext(ofx::ImageEffectContext ctx);
 };
 
 class SampleEffect : public ofx::ImageEffect {
@@ -83,10 +83,10 @@ class SampleEffect : public ofx::ImageEffect {
     
     double normalisedDistanceToEllipseCenter(double x, double y, double w, double h, double px, double py);
     
-    virtual bool isIdentity(ofx::ImageEffect::IsIdentityArgs &args) throw(ofx::Exception);
-    //virtual void getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args) throw(ofx::Exception);
-    //virtual void getRegionsOfInterest(ofx::ImageEffect::GetRoIsArgs &args) throw(Exception);
-    virtual void render(ofx::ImageEffect::RenderArgs &args) throw(ofx::Exception);
+    virtual OfxStatus isIdentity(ofx::ImageEffect::IsIdentityArgs &args);
+    //virtual OfxStatus getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args);
+    //virtual OfxStatus getRegionsOfInterest(ofx::ImageEffect::GetRoIsArgs &args);
+    virtual OfxStatus render(ofx::ImageEffect::RenderArgs &args);
 };
 
 class SamplePlugin : public ofx::ImageEffectPlugin<SampleDescriptor, SampleEffect> {
@@ -105,7 +105,6 @@ SampleInteract::SampleInteract(ofx::ImageEffectHost *host, OfxInteractHandle hdl
     mCenterSelected(false),
     mLastX(-1),
     mLastY(-1) {
-  ofx::Log("SampleInteract::SampleInteract");
   // do I need to call setSlaveToParam? This seems to already be the case in fusion
   //setSlaveToParam(0, "center");
   //setSlaveToParam(1, "width");
@@ -113,13 +112,11 @@ SampleInteract::SampleInteract(ofx::ImageEffectHost *host, OfxInteractHandle hdl
 }
 
 SampleInteract::~SampleInteract() {
-  ofx::Log("SampleInteract::~SampleInteract");
 }
 
-void SampleInteract::penMotion(ofx::Interact::PenArgs &args) throw(ofx::Exception) {
-  ofx::Log("SampleInteract::penMotion");
+OfxStatus SampleInteract::penMotion(ofx::Interact::PenArgs &args) {
   if (mDragOp == DO_NONE) {
-    return;
+    return kOfxStatOK;
   }
 
   ofx::Double2Parameter pC = args.effect->parameters().getDouble2Param("center");
@@ -171,10 +168,11 @@ void SampleInteract::penMotion(ofx::Interact::PenArgs &args) throw(ofx::Exceptio
 
   mLastX = args.x;
   mLastY = args.y;
+  
+  return kOfxStatOK;
 }
     
-void SampleInteract::penDown(ofx::Interact::PenArgs &args) throw(ofx::Exception) {
-  ofx::Log("SampleInteract::penDown");
+OfxStatus SampleInteract::penDown(ofx::Interact::PenArgs &args) {
   
   ofx::Double2Parameter pC = args.effect->parameters().getDouble2Param("center");
   ofx::DoubleParameter pW = args.effect->parameters().getDoubleParam("width");
@@ -219,10 +217,11 @@ void SampleInteract::penDown(ofx::Interact::PenArgs &args) throw(ofx::Exception)
   if (mDragOp != DO_NONE) {
     redraw();
   }
+  
+  return kOfxStatOK;
 }
 
-void SampleInteract::penUp(ofx::Interact::PenArgs &) throw(ofx::Exception) {
-  ofx::Log("SampleInteract::penUp");
+OfxStatus SampleInteract::penUp(ofx::Interact::PenArgs &) {
   mCenterSelected = false;
   mWidthSelected = false;
   mHeightSelected = false;
@@ -230,11 +229,10 @@ void SampleInteract::penUp(ofx::Interact::PenArgs &) throw(ofx::Exception) {
     redraw();
   }
   mDragOp = DO_NONE;
+  return kOfxStatOK;
 }
 
-void SampleInteract::draw(ofx::Interact::DrawArgs &args) throw(ofx::Exception) {
-  ofx::Log("SampleInteract::draw");
-  
+OfxStatus SampleInteract::draw(ofx::Interact::DrawArgs &args) {  
   ofx::Double2Parameter pC = args.effect->parameters().getDouble2Param("center");
   ofx::DoubleParameter pW = args.effect->parameters().getDoubleParam("width");
   ofx::DoubleParameter pH = args.effect->parameters().getDoubleParam("height");
@@ -306,21 +304,19 @@ void SampleInteract::draw(ofx::Interact::DrawArgs &args) throw(ofx::Exception) {
   glVertex2d(cecx, cecy+ceh-bh);
   glEnd();
   
+  return kOfxStatOK;
 }
 
 // ---
 
 SampleDescriptor::SampleDescriptor(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception)
   : ofx::ImageEffectDescriptor(h, hdl) {
-  ofx::Log("SampleDescriptor::SampleDescriptor");
 }
 
 SampleDescriptor::~SampleDescriptor() {
-  ofx::Log("SampleDescriptor::~SampleDescriptor");
 }
 
-void SampleDescriptor::describe() throw(ofx::Exception) {
-  ofx::Log("SampleDescriptor::describe");
+OfxStatus SampleDescriptor::describe() {
   setMultipleClipDepthsSupport(false);
   setSupportedPixelDepth(0, ofx::BitDepthByte);
   setSupportedContext(0, ofx::ImageEffectContextFilter);
@@ -329,10 +325,10 @@ void SampleDescriptor::describe() throw(ofx::Exception) {
   if (host()->supportsOverlays()) {
     setOverlayInteract(ofx::InteractEntryPoint<SamplePlugin, ofx::InteractDescriptor, SampleInteract>);
   }
+  return kOfxStatOK;
 }
 
-void SampleDescriptor::describeInContext(ofx::ImageEffectContext) throw(ofx::Exception) {
-  ofx::Log("SampleDescriptor::describeInContext");
+OfxStatus SampleDescriptor::describeInContext(ofx::ImageEffectContext) {
   
   ofx::ClipDescriptor clip;
   
@@ -376,17 +372,17 @@ void SampleDescriptor::describeInContext(ofx::ImageEffectContext) throw(ofx::Exc
   i.setDefault(false);
   i.setPersistant(true);
   i.setAnimateable(false);
+  
+  return kOfxStatOK;
 }
 
 // ---
 
 SampleEffect::SampleEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception)
   : ofx::ImageEffect(h, hdl) {
-  ofx::Log("SampleEffect::SampleEffect");
 }
 
 SampleEffect::~SampleEffect() {
-  ofx::Log("SampleEffect::~SampleEffect");
 }
 
 double SampleEffect::normalisedDistanceToEllipseCenter(double x, double y, double w, double h, double px, double py) {
@@ -395,20 +391,20 @@ double SampleEffect::normalisedDistanceToEllipseCenter(double x, double y, doubl
   return (dx*dx + dy*dy);
 }
 
-bool SampleEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args) throw(ofx::Exception) {
+OfxStatus SampleEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args) {
   ofx::DoubleParameter w = parameters().getDoubleParam("width");
   ofx::DoubleParameter h = parameters().getDoubleParam("height");
   if (w.getValue() <= 0.0 || h.getValue() <= 0.0) {
     args.idClip = "Source";
     args.idTime = args.time;
-    return true;
+    return kOfxStatOK;
   } else {
-    return false;
+    return kOfxStatReplyDefault;
   }
 }
 
 /*
-void SampleEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args) throw(ofx::Exception) {
+OfxStatus SampleEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args) {
   ofx::Rect<double> RoD;
   // -> check center, width, and height
   // -> also apply renderScaleX and renderScaleY
@@ -420,14 +416,11 @@ void SampleEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args) thr
   //double projectPixelAspectRatio() throw(Exception);
 }
 
-void SampleEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args) throw(Exception) {
+OfxStatus SampleEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args) {
 }
 */
 
-void SampleEffect::render(ofx::ImageEffect::RenderArgs &args) throw(ofx::Exception)
-{
-  ofx::Log("SampleEffect::render");
-  
+OfxStatus SampleEffect::render(ofx::ImageEffect::RenderArgs &args) { 
   // renderWindow is in pixels, not canonical coords
   
   ofx::Clip cSrc = getClip("Source");
@@ -563,7 +556,9 @@ void SampleEffect::render(ofx::ImageEffect::RenderArgs &args) throw(ofx::Excepti
   }
   
   if (abort()) {
-    throw ofx::Exception(kOfxStatFailed, "InverEffect::render aborted");
+    return kOfxStatFailed;
+  } else {
+    return kOfxStatOK;
   }
   
 }
@@ -572,14 +567,12 @@ void SampleEffect::render(ofx::ImageEffect::RenderArgs &args) throw(ofx::Excepti
 
 SamplePlugin::SamplePlugin()
   : ofx::ImageEffectPlugin<SampleDescriptor, SampleEffect>() {
-  ofx::Log("SamplePlugin::SamplePlugin");
   setMajorVersion(1);
   setMinorVersion(0);
   setID("gatgui.filter.sample");
 }
 
 SamplePlugin::~SamplePlugin() {
-  ofx::Log("SamplePlugin::~SamplePlugin");
 }
 
 // ---

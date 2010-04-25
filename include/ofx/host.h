@@ -93,35 +93,35 @@ namespace ofx {
       inline OfxImageEffectSuiteV1 *imageEffectSuite() {return mImageEffectSuite;}
       
       // general properties
-      std::string name() throw(Exception);
-      std::string label() throw(Exception);
+      std::string name();
+      std::string label();
       
       // image effect properties
-      bool isBackground() throw(Exception);
-      bool supportsOverlays() throw(Exception);
-      bool supportsMultiResolution() throw(Exception);
-      bool supportsTiles() throw(Exception);
-      bool supportsTemporalClipAccess() throw(Exception);
-      int supportedComponentsCount() throw(Exception);
-      ImageComponent getSupportedComponent(int idx) throw(Exception);
-      int supportedContextsCount() throw(Exception);
-      ImageEffectContext getSupportedContext(int idx) throw(Exception);
-      int supportedPixelDepthsCount() throw(Exception);
-      BitDepth getSupportedPixelDepth(int idx) throw(Exception);
-      bool supportsMultipleClipDepths() throw(Exception);
-      bool supportsMultipleClipPARs() throw(Exception);
-      bool setableFramerate() throw(Exception);
-      bool setableFielding() throw(Exception);
+      bool isBackground();
+      bool supportsOverlays();
+      bool supportsMultiResolution();
+      bool supportsTiles();
+      bool supportsTemporalClipAccess();
+      int supportedComponentsCount();
+      ImageComponent getSupportedComponent(int idx);
+      int supportedContextsCount();
+      ImageEffectContext getSupportedContext(int idx);
+      int supportedPixelDepthsCount();
+      BitDepth getSupportedPixelDepth(int idx);
+      bool supportsMultipleClipDepths();
+      bool supportsMultipleClipPARs();
+      bool setableFramerate();
+      bool setableFielding();
       
       // parameter properties
-      bool supportsCustomParamAnimation() throw(Exception);
-      bool supportsStringParamAnimation() throw(Exception);
-      bool supportsChoiceParamAnimation() throw(Exception);
-      bool supportsBooleanParamAnimation() throw(Exception);
-      bool supportsParamCustomInteract() throw(Exception);
-      int maxParameters() throw(Exception);
-      int maxParameterPages() throw(Exception);
-      void parameterPageRowColumnCount(int &rowCount, int &columnCount) throw(Exception);
+      bool supportsCustomParamAnimation();
+      bool supportsStringParamAnimation();
+      bool supportsChoiceParamAnimation();
+      bool supportsBooleanParamAnimation();
+      bool supportsParamCustomInteract();
+      int maxParameters();
+      int maxParameterPages();
+      void parameterPageRowColumnCount(int &rowCount, int &columnCount);
     
     protected:
       

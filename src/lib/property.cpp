@@ -34,7 +34,7 @@ PropertySet::PropertySet()
 PropertySet::PropertySet(Host *h, OfxPropertySetHandle hdl) throw(Exception)
   : mHandle(hdl), mSuite(0) {
   if (!h) {
-    throw Exception(kOfxStatErrFatal, "ofx::PropertySet::PropertySet: no host");
+    throw BadHandleError("ofx::PropertySet::PropertySet: invalid host");
   }
   mSuite = h->propertySuite();
 }
@@ -62,19 +62,19 @@ void PropertySet::checkStatus(OfxStatus s, const std::string &msg) throw(Excepti
   }
 }
 
-void PropertySet::setPointer(const char * prop, int index, void *val) throw(Exception) {
+void PropertySet::setPointer(const char * prop, int index, void *val) {
   checkStatus(mSuite->propSetPointer(mHandle, prop, index, val));
 }
 
-void PropertySet::setPointers(const char* prop, int n, void **val) throw(Exception) {
+void PropertySet::setPointers(const char* prop, int n, void **val) {
   checkStatus(mSuite->propSetPointerN(mHandle, prop, n, val));
 }
 
-void PropertySet::setString(const char* prop, int index, const std::string &val) throw(Exception) {
+void PropertySet::setString(const char* prop, int index, const std::string &val) {
   checkStatus(mSuite->propSetString(mHandle, prop, index, val.c_str()));
 }
 
-void PropertySet::setStrings(const char* prop, int n, const std::string *val) throw(Exception) {
+void PropertySet::setStrings(const char* prop, int n, const std::string *val) {
   if (!val) {
     throw Exception(kOfxStatFailed, "ofx::PropertySet::setStrings received a NULL pointer");
   }
@@ -87,33 +87,33 @@ void PropertySet::setStrings(const char* prop, int n, const std::string *val) th
   checkStatus(stat);
 }
 
-void PropertySet::setDouble(const char* prop, int index, double val) throw(Exception) {
+void PropertySet::setDouble(const char* prop, int index, double val) {
   checkStatus(mSuite->propSetDouble(mHandle, prop, index, val));
 }
 
-void PropertySet::setDoubles(const char* prop, int n, double *val) throw(Exception) {
+void PropertySet::setDoubles(const char* prop, int n, double *val) {
   checkStatus(mSuite->propSetDoubleN(mHandle, prop, n, val));
 }
 
-void PropertySet::setInt(const char* prop, int index, int val) throw(Exception) {
+void PropertySet::setInt(const char* prop, int index, int val) {
   checkStatus(mSuite->propSetInt(mHandle, prop, index, val));
 }
 
-void PropertySet::setInts(const char* prop, int n, int *val) throw(Exception) {
+void PropertySet::setInts(const char* prop, int n, int *val) {
   checkStatus(mSuite->propSetIntN(mHandle, prop, n, val));
 }
 
-void* PropertySet::getPointer(const char* prop, int index) throw(Exception) {
+void* PropertySet::getPointer(const char* prop, int index) {
   void *rv = 0;
   checkStatus(mSuite->propGetPointer(mHandle, prop, index, &rv));
   return rv;
 }
 
-void PropertySet::getPointers(const char* prop, int n, void **rv) throw(Exception) {
+void PropertySet::getPointers(const char* prop, int n, void **rv) {
   checkStatus(mSuite->propGetPointerN(mHandle, prop, n, rv));
 }
 
-std::string PropertySet::getString(const char* prop, int index) throw(Exception) {
+std::string PropertySet::getString(const char* prop, int index) {
   char *rv = 0;
   checkStatus(mSuite->propGetString(mHandle, prop, index, &rv));
   return std::string(rv);
@@ -121,7 +121,7 @@ std::string PropertySet::getString(const char* prop, int index) throw(Exception)
 
 void PropertySet::getStrings(const char* prop, int n, std::string *rv) throw(Exception) {
   if (!rv) {
-    throw Exception(kOfxStatFailed, "ofx::PropertySet::getStrings received a NULL pointer");
+    throw FailedError("ofx::PropertySet::getStrings received a NULL pointer");
   }
   char ** strs = new char* [n];
   OfxStatus stat = mSuite->propGetStringN(mHandle, prop, n, strs);
@@ -134,31 +134,31 @@ void PropertySet::getStrings(const char* prop, int n, std::string *rv) throw(Exc
   checkStatus(stat);
 }
 
-double PropertySet::getDouble(const char* prop, int index) throw(Exception) {
+double PropertySet::getDouble(const char* prop, int index) {
   double rv = 0;
   checkStatus(mSuite->propGetDouble(mHandle, prop, index, &rv));
   return rv;
 }
 
-void PropertySet::getDoubles(const char* prop, int n, double *rv) throw(Exception) {
+void PropertySet::getDoubles(const char* prop, int n, double *rv) {
   checkStatus(mSuite->propGetDoubleN(mHandle, prop, n, rv));
 }
 
-int PropertySet::getInt(const char* prop, int index) throw(Exception) {
+int PropertySet::getInt(const char* prop, int index) {
   int rv = 0;
   checkStatus(mSuite->propGetInt(mHandle, prop, index, &rv));
   return rv;
 }
 
-void PropertySet::getInts(const char* prop, int n, int *rv) throw(Exception) {
+void PropertySet::getInts(const char* prop, int n, int *rv) {
   checkStatus(mSuite->propGetIntN(mHandle, prop, n, rv));
 }
 
-void PropertySet::reset(const char* prop) throw(Exception) {
+void PropertySet::reset(const char* prop) {
   checkStatus(mSuite->propReset(mHandle, prop));
 }
 
-int PropertySet::size(const char* prop) throw(Exception) {
+int PropertySet::size(const char* prop) {
   int n;
   checkStatus(mSuite->propGetDimension(mHandle, prop, &n));
   return n;

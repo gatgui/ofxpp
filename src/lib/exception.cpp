@@ -34,4 +34,103 @@ Exception::Exception(OfxStatus s, const std::string &msg)
 Exception::~Exception() throw() {
 }
 
+// ---
+
+FailedError::FailedError(const std::string &msg)
+  : Exception(kOfxStatFailed, "[Failed] "+msg) {
+}
+
+FailedError::~FailedError() throw() {
+}
+
+// ---
+
+FatalError::FatalError(const std::string &msg)
+  : Exception(kOfxStatErrFatal, "[Fatal] "+msg) {
+}
+
+FatalError::~FatalError() throw() {
+}
+
+// ---
+
+UnknownError::UnknownError(const std::string &msg)
+  : Exception(kOfxStatErrUnknown, "[Unknown] "+msg) {
+}
+
+UnknownError::~UnknownError() throw() {
+}
+
+// ---
+
+MissingHostFeatureError::MissingHostFeatureError(const std::string &msg)
+  : Exception(kOfxStatErrMissingHostFeature, "[Missing host feature] "+msg) {
+}
+
+MissingHostFeatureError::~MissingHostFeatureError() throw() {
+}
+
+// ---
+
+UnsupportedError::UnsupportedError(const std::string &msg)
+  : Exception(kOfxStatErrUnsupported, "[Unsupported] "+msg) {
+}
+
+UnsupportedError::~UnsupportedError() throw() {
+}
+
+// ---
+
+ExistsError::ExistsError(const std::string &msg)
+  : Exception(kOfxStatErrExists, "[Already exists] "+msg) {
+}
+
+ExistsError::~ExistsError() throw() {
+}
+
+// ---
+
+FormatError::FormatError(const std::string &msg)
+  : Exception(kOfxStatErrFormat, "[Invalid format] "+msg) {
+}
+
+FormatError::~FormatError() throw() {
+}
+
+// ---
+
+MemoryError::MemoryError(const std::string &msg)
+  : Exception(kOfxStatErrMemory, "[Memory] "+msg) {
+}
+
+MemoryError::~MemoryError() throw() {
+}
+
+// ---
+
+BadHandleError::BadHandleError(const std::string &msg)
+  : Exception(kOfxStatErrBadHandle, "[Bad handle] "+msg) {
+}
+
+BadHandleError::~BadHandleError() throw() {
+}
+
+// ---
+
+BadIndexError::BadIndexError(const std::string &msg)
+  : Exception(kOfxStatErrBadIndex, "[Bad index] "+msg) {
+}
+
+BadIndexError::~BadIndexError() throw() {
+}
+
+// ---
+
+ValueError::ValueError(const std::string &msg)
+  : Exception(kOfxStatErrValue, "[Invalid value] "+msg) {
+}
+
+ValueError::~ValueError() throw() {
+}
+
 }

@@ -43,27 +43,27 @@ namespace ofx {
       
       PropertySet& operator=(const PropertySet &rhs);
       
-      void setPointer(const char * prop, int index, void *val) throw(Exception);
-      void setPointers(const char * prop, int n, void **val) throw(Exception);
-      void setString(const char * prop, int index, const std::string &val) throw(Exception);
-      void setStrings(const char * prop, int n, const std::string *val) throw(Exception);
-      void setDouble(const char * prop, int index, double val) throw(Exception);
-      void setDoubles(const char * prop, int n, double *val) throw(Exception);
-      void setInt(const char * prop, int index, int val) throw(Exception);
-      void setInts(const char * prop, int n, int *val) throw(Exception);
+      void setPointer(const char * prop, int index, void *val);
+      void setPointers(const char * prop, int n, void **val);
+      void setString(const char * prop, int index, const std::string &val);
+      void setStrings(const char * prop, int n, const std::string *val);
+      void setDouble(const char * prop, int index, double val);
+      void setDoubles(const char * prop, int n, double *val);
+      void setInt(const char * prop, int index, int val);
+      void setInts(const char * prop, int n, int *val);
       
-      void* getPointer(const char * prop, int index) throw(Exception);
-      void getPointers(const char * prop, int n, void **rv) throw(Exception);
-      std::string getString(const char * prop, int index) throw(Exception);
+      void* getPointer(const char * prop, int index);
+      void getPointers(const char * prop, int n, void **rv);
+      std::string getString(const char * prop, int index);
       void getStrings(const char * prop, int n, std::string *rv) throw(Exception);
-      double getDouble(const char * prop, int index) throw(Exception);
-      void getDoubles(const char * prop, int n, double *rv) throw(Exception);
-      int getInt(const char * prop, int index) throw(Exception);
-      void getInts(const char * prop, int n, int *rv) throw(Exception);
+      double getDouble(const char * prop, int index);
+      void getDoubles(const char * prop, int n, double *rv);
+      int getInt(const char * prop, int index);
+      void getInts(const char * prop, int n, int *rv);
       
-      void reset(const char * prop) throw(Exception);
+      void reset(const char * prop);
       
-      int size(const char * prop) throw(Exception);
+      int size(const char * prop);
       
       inline OfxPropertySetHandle handle() {
         return mHandle;

@@ -33,10 +33,10 @@ InteractDescriptor::InteractDescriptor()
 InteractDescriptor::InteractDescriptor(ImageEffectHost *h, OfxInteractHandle hdl) throw(Exception)
   : mHandle(hdl) {
   if (!h) {
-    throw Exception(kOfxStatErrFatal, "ofx::InteractDescriptor::InteractDescriptor: no host");
+    throw BadHandleError("ofx::InteractDescriptor::InteractDescriptor: invalid host");
   }
   if (!h->interactSuite()) {
-    throw Exception(kOfxStatErrMissingHostFeature, "ofx::InteractDescriptor::InteractDescriptor: no interact suite");
+    throw MissingHostFeatureError("Interact suite");
   }
   OfxPropertySetHandle hProps;
   h->interactSuite()->interactGetPropertySet(mHandle, &hProps);
@@ -56,16 +56,16 @@ InteractDescriptor& InteractDescriptor::operator=(const InteractDescriptor &rhs)
   return *this;
 }
 
-bool InteractDescriptor::hasAlpha() throw(Exception) {
+bool InteractDescriptor::hasAlpha() {
   return (mProps.getInt(kOfxInteractPropHasAlpha, 0) == 1);
 }
 
-int InteractDescriptor::bitDepth() throw(Exception) {
+int InteractDescriptor::bitDepth() {
   return mProps.getInt(kOfxInteractPropBitDepth, 0);
 }
 
-void InteractDescriptor::describe() throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus InteractDescriptor::describe() {
+  return kOfxStatReplyDefault;
 }
   
 // ---
@@ -129,10 +129,10 @@ Interact::Interact()
 Interact::Interact(ImageEffectHost *h, OfxInteractHandle hdl) throw(Exception)
   : mHandle(hdl) {
   if (!h) {
-    throw Exception(kOfxStatErrFatal, "ofx::Interact::Interact: no host");
+    throw BadHandleError("ofx::Interact::Interact: invalid host");
   }
   if (!h->interactSuite()) {
-    throw Exception(kOfxStatErrMissingHostFeature, "ofx::Interact::Interact: no interact suite");
+    throw MissingHostFeatureError("Interact suite");
   }
   mSuite = h->interactSuite();
   OfxPropertySetHandle hProps;
@@ -161,25 +161,25 @@ void Interact::redraw() throw(Exception) {
   }
 }
 
-ImageEffect* Interact::effectInstance() throw(Exception) {
+ImageEffect* Interact::effectInstance() {
   OfxImageEffectHandle hdl = (OfxImageEffectHandle) mProps.getPointer(kOfxPropEffectInstance, 0);
   return ImageEffect::GetEffect(hdl);
 }
 
-void* Interact::instanceData() throw(Exception) {
+void* Interact::instanceData() {
   return mProps.getPointer(kOfxPropInstanceData, 0);
 }
 
-void Interact::setInstanceData(void *d) throw(Exception) {
+void Interact::setInstanceData(void *d) {
   mProps.setPointer(kOfxPropInstanceData, 0, d);
 }
 
-void Interact::pixelScale(double &sx, double &sy) throw(Exception) {
+void Interact::pixelScale(double &sx, double &sy) {
   sx = mProps.getDouble(kOfxInteractPropPixelScale, 0);
   sy = mProps.getDouble(kOfxInteractPropPixelScale, 1);
 }
 
-RGBAColour<double> Interact::backgroundColor() throw(Exception) {
+RGBAColour<double> Interact::backgroundColor() {
   RGBAColour<double> color;
   color.r = mProps.getDouble(kOfxInteractPropBackgroundColour, 0);
   color.g = mProps.getDouble(kOfxInteractPropBackgroundColour, 1);
@@ -188,65 +188,65 @@ RGBAColour<double> Interact::backgroundColor() throw(Exception) {
   return color;
 }
 
-void Interact::viewportSize(int &w, int &h) throw(Exception) {
+void Interact::viewportSize(int &w, int &h) {
   w = mProps.getInt(kOfxInteractPropViewportSize, 0);
   h = mProps.getInt(kOfxInteractPropViewportSize, 1);
 }
 
-bool Interact::hasAlpha() throw(Exception) {
+bool Interact::hasAlpha() {
   return (mProps.getInt(kOfxInteractPropHasAlpha, 0) == 1);
 }
 
-int Interact::bitDepth() throw(Exception) {
+int Interact::bitDepth() {
   return mProps.getInt(kOfxInteractPropBitDepth, 0);
 }
 
-int Interact::slaveToParamCount() throw(Exception) {
+int Interact::slaveToParamCount() {
   return mProps.size(kOfxInteractPropSlaveToParam);
 }
 
-std::string Interact::getSlaveToParam(int i) throw(Exception) {
+std::string Interact::getSlaveToParam(int i) {
   return mProps.getString(kOfxInteractPropSlaveToParam, i);
 }
 
-void Interact::setSlaveToParam(int i, const std::string &pn) throw(Exception) {
+void Interact::setSlaveToParam(int i, const std::string &pn) {
   mProps.setString(kOfxInteractPropSlaveToParam, i, pn);
 }
 
-void Interact::draw(Interact::DrawArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus Interact::draw(Interact::DrawArgs &) {
+  return kOfxStatReplyDefault;
 }
 
-void Interact::penMotion(Interact::PenArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus Interact::penMotion(Interact::PenArgs &) {
+  return kOfxStatReplyDefault;
 }
 
-void Interact::penDown(Interact::PenArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus Interact::penDown(Interact::PenArgs &) {
+  return kOfxStatReplyDefault;
 }
 
-void Interact::penUp(Interact::PenArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus Interact::penUp(Interact::PenArgs &) {
+  return kOfxStatReplyDefault;
 }
 
-void Interact::keyDown(Interact::KeyArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus Interact::keyDown(Interact::KeyArgs &) {
+  return kOfxStatReplyDefault;
 }
 
-void Interact::keyUp(Interact::KeyArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus Interact::keyUp(Interact::KeyArgs &) {
+  return kOfxStatReplyDefault;
 }
 
-void Interact::keyRepeat(Interact::KeyArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus Interact::keyRepeat(Interact::KeyArgs &) {
+  return kOfxStatReplyDefault;
 }
 
-void Interact::gainFocus(Interact::FocusArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus Interact::gainFocus(Interact::FocusArgs &) {
+  return kOfxStatReplyDefault;
 }
 
-void Interact::loseFocus(Interact::FocusArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus Interact::loseFocus(Interact::FocusArgs &) {
+  return kOfxStatReplyDefault;
 }
 
 }

@@ -28,11 +28,11 @@ namespace ofx {
 
 Memory::Memory(Host *h) throw(Exception) {
   if (!h) {
-    throw Exception(kOfxStatErrFatal, "Cannot initialize ofx::Memory: no host");
+    throw BadHandleError("Cannot initialize ofx::Memory: invalid host");
   }
   mSuite = h->fetchSuite<OfxMemorySuiteV1>(kOfxMemorySuite, 1);
   if (!mSuite) {
-    throw Exception(kOfxStatErrMissingHostFeature, "Cannot initialize ofx::Memory: no suite");
+    throw MissingHostFeatureError("Memory suite");
   }
 }
 

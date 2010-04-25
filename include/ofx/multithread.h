@@ -68,7 +68,7 @@ namespace ofx {
       bool isSpawned();
       
       Mutex createMutex(int lockCount=0) throw(Exception);
-      void destroyMutex(Mutex mutex) throw(Exception);
+      void destroyMutex(Mutex mutex);
       void lock(Mutex mutex) throw(Exception);
       void unlock(Mutex mutex) throw(Exception);
       bool tryLock(Mutex mutex) throw(Exception);

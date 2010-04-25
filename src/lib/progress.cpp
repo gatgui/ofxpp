@@ -28,11 +28,11 @@ namespace ofx {
 
 Progress::Progress(Host *h) throw(Exception) {
   if (!h) {
-    throw Exception(kOfxStatErrFatal, "Cannot initialize ofx::Progress: no host");
+    throw BadHandleError("Cannot initialize ofx::Progress: invalid host");
   }
   mSuite = h->fetchSuite<OfxProgressSuiteV1>(kOfxProgressSuite, 1);
   if (!mSuite) {
-    throw Exception(kOfxStatErrMissingHostFeature, "Cannot initialize ofx::Progress: no suite");
+    throw MissingHostFeatureError("Progress suite");
   }
 }
 

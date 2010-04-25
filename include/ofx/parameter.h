@@ -72,7 +72,7 @@ namespace ofx {
     public:
       
       ParameterDescriptor();
-      ParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception);
+      ParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
       ParameterDescriptor(const ParameterDescriptor &rhs);
       virtual ~ParameterDescriptor();
       
@@ -80,47 +80,47 @@ namespace ofx {
       
       // properties
       
-      std::string name() throw(Exception);
-      void setName(const std::string &name) throw(Exception);
+      std::string name();
+      void setName(const std::string &name);
       
-      std::string label() throw(Exception);
-      void setLabel(const std::string &lbl) throw(Exception);
+      std::string label();
+      void setLabel(const std::string &lbl);
       
-      std::string shortLabel() throw(Exception);
-      void setShortLabel(const std::string &lbl) throw(Exception);
+      std::string shortLabel();
+      void setShortLabel(const std::string &lbl);
       
-      std::string longLabel() throw(Exception);
-      void setLongLabel(const std::string &lbl) throw(Exception);
+      std::string longLabel();
+      void setLongLabel(const std::string &lbl);
       
-      ParamType type() throw(Exception);
+      ParamType type();
       
-      bool isSecret() throw(Exception);
-      void setSecret(bool) throw(Exception);
+      bool isSecret();
+      void setSecret(bool);
       
-      bool canUndo() throw(Exception);
-      void setCanUndo(bool) throw(Exception);
+      bool canUndo();
+      void setCanUndo(bool);
       
-      std::string hint() throw(Exception);
-      void setHint(const std::string &h) throw(Exception);
+      std::string hint();
+      void setHint(const std::string &h);
       
-      std::string scriptName() throw(Exception);
-      void setScriptName(const std::string &h) throw(Exception);
+      std::string scriptName();
+      void setScriptName(const std::string &h);
       
-      std::string parent() throw(Exception);
-      void setParent(const std::string &n) throw(Exception);
+      std::string parent();
+      void setParent(const std::string &n);
       
-      bool isEnable() throw(Exception);
-      void enable(bool) throw(Exception);
+      bool isEnable();
+      void enable(bool);
       
-      void* data() throw(Exception);
-      void setData(void *) throw(Exception);
+      void* data();
+      void setData(void *);
   };
   
   class ValueParameterDescriptor : public ParameterDescriptor {
     public:
       
       ValueParameterDescriptor();
-      ValueParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception);
+      ValueParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
       ValueParameterDescriptor(const ValueParameterDescriptor &rhs);
       virtual ~ValueParameterDescriptor();
       
@@ -128,47 +128,47 @@ namespace ofx {
       
       // properties
       
-      EntryPoint interact() throw(Exception);
-      void setInteract(EntryPoint func) throw(Exception);
+      EntryPoint interact();
+      void setInteract(EntryPoint func);
       
-      void interactSize(double &w, double &h) throw(Exception);
-      void setInteractSize(double w, double h) throw(Exception);
+      void interactSize(double &w, double &h);
+      void setInteractSize(double w, double h);
       
-      double interactSizeAspect() throw(Exception);
-      void setInteractSizeAspect(double a) throw(Exception);
+      double interactSizeAspect();
+      void setInteractSizeAspect(double a);
       
-      void interactMinimumSize(int &w, int &h) throw(Exception);
-      void setMinimumInteractSize(int w, int h) throw(Exception);
+      void interactMinimumSize(int &w, int &h);
+      void setMinimumInteractSize(int w, int h);
       
-      void interactPreferedSize(int &w, int &h) throw(Exception);
-      void setInteractPreferedSize(int w, int h) throw(Exception);
+      void interactPreferedSize(int &w, int &h);
+      void setInteractPreferedSize(int w, int h);
       
-      bool isAnimateable() throw(Exception);
-      void setAnimateable(bool) throw(Exception);
+      bool isAnimateable();
+      void setAnimateable(bool);
       
-      bool isAnimating() throw(Exception);
-      void setAnimating(bool) throw(Exception);
+      bool isAnimating();
+      void setAnimating(bool);
       
-      bool isAutoKeying() throw(Exception);
-      void setAutoKeying(bool) throw(Exception);
+      bool isAutoKeying();
+      void setAutoKeying(bool);
       
-      bool isPersistant() throw(Exception);
-      void setPersistant(bool) throw(Exception);
+      bool isPersistant();
+      void setPersistant(bool);
       
-      bool evaluateOnChange() throw(Exception);
-      void setEvaluateOnChange(bool) throw(Exception);
+      bool evaluateOnChange();
+      void setEvaluateOnChange(bool);
       
-      bool pluginMayWrite() throw(Exception);
-      void setPluginMayWrite(bool) throw(Exception);
+      bool pluginMayWrite();
+      void setPluginMayWrite(bool);
       
-      ParamInvalidate cacheInvalidation() throw(Exception);
-      void setCacheInvalidation(ParamInvalidate i) throw(Exception);
+      ParamInvalidate cacheInvalidation();
+      void setCacheInvalidation(ParamInvalidate i);
   };
   
   class IntParameterDescriptor : public ValueParameterDescriptor {
     public:
       IntParameterDescriptor();
-      IntParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception);
+      IntParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
       IntParameterDescriptor(const IntParameterDescriptor &rhs);
       virtual ~IntParameterDescriptor();
       
@@ -176,26 +176,26 @@ namespace ofx {
       
       // properties
       
-      int getDefault() throw(Exception);
-      void setDefault(int v) throw(Exception);
+      int getDefault();
+      void setDefault(int v);
       
-      int getMin() throw(Exception);
-      void setMin(int v) throw(Exception);
+      int getMin();
+      void setMin(int v);
       
-      int getMax() throw(Exception);
-      void setMax(int v) throw(Exception);
+      int getMax();
+      void setMax(int v);
       
-      int getDisplayMin() throw(Exception);
-      void setDisplayMin(int v) throw(Exception);
+      int getDisplayMin();
+      void setDisplayMin(int v);
       
-      int getDisplayMax() throw(Exception);
-      void setDisplayMax(int v) throw(Exception);
+      int getDisplayMax();
+      void setDisplayMax(int v);
   };
   
   class Int2ParameterDescriptor : public ValueParameterDescriptor {
     public:
       Int2ParameterDescriptor();
-      Int2ParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception);
+      Int2ParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
       Int2ParameterDescriptor(const Int2ParameterDescriptor &rhs);
       virtual ~Int2ParameterDescriptor();
       
@@ -203,29 +203,29 @@ namespace ofx {
       
       // properties
       
-      void getDefault(int &v0, int &v1) throw(Exception);
-      void setDefault(int v0, int v1) throw(Exception);
+      void getDefault(int &v0, int &v1);
+      void setDefault(int v0, int v1);
       
-      void getMin(int &min0, int &min1) throw(Exception);
-      void setMin(int min0, int min1) throw(Exception);
+      void getMin(int &min0, int &min1);
+      void setMin(int min0, int min1);
       
-      void getMax(int &max0, int &max1) throw(Exception);
-      void setMax(int max0, int max1) throw(Exception);
+      void getMax(int &max0, int &max1);
+      void setMax(int max0, int max1);
       
-      void getDisplayMin(int &min0, int &min1) throw(Exception);
-      void setDisplayMin(int min0, int min1) throw(Exception);
+      void getDisplayMin(int &min0, int &min1);
+      void setDisplayMin(int min0, int min1);
       
-      void getDisplayMax(int &max0, int &max1) throw(Exception);
-      void setDisplayMax(int max0, int max1) throw(Exception);
+      void getDisplayMax(int &max0, int &max1);
+      void setDisplayMax(int max0, int max1);
       
-      void setDimensionLabel(int i, const std::string &name) throw(Exception);
-      std::string getDimensionLabel(int i) throw(Exception);
+      void setDimensionLabel(int i, const std::string &name);
+      std::string getDimensionLabel(int i);
   };
   
   class Int3ParameterDescriptor : public ValueParameterDescriptor {
     public:
       Int3ParameterDescriptor();
-      Int3ParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception);
+      Int3ParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
       Int3ParameterDescriptor(const Int3ParameterDescriptor &rhs);
       virtual ~Int3ParameterDescriptor();
       
@@ -233,29 +233,29 @@ namespace ofx {
       
       // properties
       
-      void getDefault(int &v0, int &v1, int &v2) throw(Exception);
-      void setDefault(int v0, int v1, int v2) throw(Exception);
+      void getDefault(int &v0, int &v1, int &v2);
+      void setDefault(int v0, int v1, int v2);
       
-      void getMin(int &min0, int &min1, int &min2) throw(Exception);
-      void setMin(int min0, int min1, int min2) throw(Exception);
+      void getMin(int &min0, int &min1, int &min2);
+      void setMin(int min0, int min1, int min2);
       
-      void getMax(int &max0, int &max1, int &max2) throw(Exception);
-      void setMax(int max0, int max1, int max2) throw(Exception);
+      void getMax(int &max0, int &max1, int &max2);
+      void setMax(int max0, int max1, int max2);
       
-      void getDisplayMin(int &min0, int &min1, int &max2) throw(Exception);
-      void setDisplayMin(int min0, int min1, int max2) throw(Exception);
+      void getDisplayMin(int &min0, int &min1, int &max2);
+      void setDisplayMin(int min0, int min1, int max2);
       
-      void getDisplayMax(int &max0, int &max1, int &max2) throw(Exception);
-      void setDisplayMax(int max0, int max1, int max2) throw(Exception);
+      void getDisplayMax(int &max0, int &max1, int &max2);
+      void setDisplayMax(int max0, int max1, int max2);
       
-      void setDimensionLabel(int i, const std::string &name) throw(Exception);
-      std::string getDimensionLabel(int i) throw(Exception);
+      void setDimensionLabel(int i, const std::string &name);
+      std::string getDimensionLabel(int i);
   };
   
   class DoubleParameterDescriptor : public ValueParameterDescriptor {
     public:
       DoubleParameterDescriptor();
-      DoubleParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception);
+      DoubleParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
       DoubleParameterDescriptor(const DoubleParameterDescriptor &rhs);
       virtual ~DoubleParameterDescriptor();
       
@@ -263,38 +263,38 @@ namespace ofx {
       
       // properties
       
-      double getDefault() throw(Exception);
-      void setDefault(double v) throw(Exception);
+      double getDefault();
+      void setDefault(double v);
       
-      double getMin() throw(Exception);
-      void setMin(double min0) throw(Exception);
+      double getMin();
+      void setMin(double min0);
       
-      double getMax() throw(Exception);
-      void setMax(double max0) throw(Exception);
+      double getMax();
+      void setMax(double max0);
       
-      double getDisplayMin() throw(Exception);
-      void setDisplayMin(double min0) throw(Exception);
+      double getDisplayMin();
+      void setDisplayMin(double min0);
       
-      double getDisplayMax() throw(Exception);
-      void setDisplayMax(double max0) throw(Exception);
+      double getDisplayMax();
+      void setDisplayMax(double max0);
       
-      double increment() throw(Exception);
-      void setIncrement(double i) throw(Exception);
+      double increment();
+      void setIncrement(double i);
       
-      int digits() throw(Exception);
-      void setDigits(int d) throw(Exception);
+      int digits();
+      void setDigits(int d);
       
-      bool showTimeMarker() throw(Exception);
-      void setShowTimeMarker(bool) throw(Exception);
+      bool showTimeMarker();
+      void setShowTimeMarker(bool);
       
-      DoubleParamType doubleType() throw(Exception);
-      void setDoubleType(DoubleParamType t) throw(Exception);
+      DoubleParamType doubleType();
+      void setDoubleType(DoubleParamType t);
   };
   
   class Double2ParameterDescriptor : public ValueParameterDescriptor {
     public:
       Double2ParameterDescriptor();
-      Double2ParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception);
+      Double2ParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
       Double2ParameterDescriptor(const Double2ParameterDescriptor &rhs);
       virtual ~Double2ParameterDescriptor();
       
@@ -302,38 +302,38 @@ namespace ofx {
       
       // properties
       
-      void getDefault(double &v0, double &v1) throw(Exception);
-      void setDefault(double v0, double v1) throw(Exception);
+      void getDefault(double &v0, double &v1);
+      void setDefault(double v0, double v1);
       
-      void getMin(double &min0, double &min1) throw(Exception);
-      void setMin(double min0, double min1) throw(Exception);
+      void getMin(double &min0, double &min1);
+      void setMin(double min0, double min1);
       
-      void getMax(double &max0, double &max1) throw(Exception);
-      void setMax(double max0, double max1) throw(Exception);
+      void getMax(double &max0, double &max1);
+      void setMax(double max0, double max1);
       
-      void getDisplayMin(double &min0, double &min1) throw(Exception);
-      void setDisplayMin(double min0, double min1) throw(Exception);
+      void getDisplayMin(double &min0, double &min1);
+      void setDisplayMin(double min0, double min1);
       
-      void getDisplayMax(double &max0, double &max1) throw(Exception);
-      void setDisplayMax(double max0, double max1) throw(Exception);
+      void getDisplayMax(double &max0, double &max1);
+      void setDisplayMax(double max0, double max1);
       
-      double increment() throw(Exception);
-      void setIncrement(double i) throw(Exception);
+      double increment();
+      void setIncrement(double i);
       
-      int digits() throw(Exception);
-      void setDigits(int d) throw(Exception);
+      int digits();
+      void setDigits(int d);
       
-      DoubleParamType doubleType() throw(Exception);
-      void setDoubleType(DoubleParamType t) throw(Exception);
+      DoubleParamType doubleType();
+      void setDoubleType(DoubleParamType t);
       
-      void setDimensionLabel(int i, const std::string &name) throw(Exception);
-      std::string getDimensionLabel(int i) throw(Exception);
+      void setDimensionLabel(int i, const std::string &name);
+      std::string getDimensionLabel(int i);
   };
   
   class Double3ParameterDescriptor : public ValueParameterDescriptor {
     public:
       Double3ParameterDescriptor();
-      Double3ParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception);
+      Double3ParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
       Double3ParameterDescriptor(const Double3ParameterDescriptor &rhs);
       virtual ~Double3ParameterDescriptor();
       
@@ -341,38 +341,38 @@ namespace ofx {
       
       // properties
       
-      void getDefault(double &v0, double &v1, double &v2) throw(Exception);
-      void setDefault(double v0, double v1, double v2) throw(Exception);
+      void getDefault(double &v0, double &v1, double &v2);
+      void setDefault(double v0, double v1, double v2);
       
-      void getMin(double &min0, double &min1, double &min2) throw(Exception);
-      void setMin(double min0, double min1, double min2) throw(Exception);
+      void getMin(double &min0, double &min1, double &min2);
+      void setMin(double min0, double min1, double min2);
       
-      void getMax(double &max0, double &max1, double &max2) throw(Exception);
-      void setMax(double max0, double max1, double max2) throw(Exception);
+      void getMax(double &max0, double &max1, double &max2);
+      void setMax(double max0, double max1, double max2);
       
-      void getDisplayMin(double &min0, double &min1, double &max2) throw(Exception);
-      void setDisplayMin(double min0, double min1, double max2) throw(Exception);
+      void getDisplayMin(double &min0, double &min1, double &max2);
+      void setDisplayMin(double min0, double min1, double max2);
       
-      void getDisplayMax(double &max0, double &max1, double &max2) throw(Exception);
-      void setDisplayMax(double max0, double max1, double max2) throw(Exception);
+      void getDisplayMax(double &max0, double &max1, double &max2);
+      void setDisplayMax(double max0, double max1, double max2);
       
-      double increment() throw(Exception);
-      void setIncrement(double i) throw(Exception);
+      double increment();
+      void setIncrement(double i);
       
-      int digits() throw(Exception);
-      void setDigits(int d) throw(Exception);
+      int digits();
+      void setDigits(int d);
       
-      DoubleParamType doubleType() throw(Exception);
-      void setDoubleType(DoubleParamType t) throw(Exception);
+      DoubleParamType doubleType();
+      void setDoubleType(DoubleParamType t);
       
-      void setDimensionLabel(int i, const std::string &name) throw(Exception);
-      std::string getDimensionLabel(int i) throw(Exception);
+      void setDimensionLabel(int i, const std::string &name);
+      std::string getDimensionLabel(int i);
   };
   
   class ChoiceParameterDescriptor : public ValueParameterDescriptor {
     public:
       ChoiceParameterDescriptor();
-      ChoiceParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception);
+      ChoiceParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
       ChoiceParameterDescriptor(const ChoiceParameterDescriptor &rhs);
       virtual ~ChoiceParameterDescriptor();
       
@@ -380,18 +380,18 @@ namespace ofx {
       
       // properties
       
-      int getDefault() throw(Exception);
-      void setDefault(int) throw(Exception);
+      int getDefault();
+      void setDefault(int);
       
-      int getChoiceCount() throw(Exception);
-      void setChoice(int i, const std::string &str) throw(Exception);
-      std::string getChoice(int i) throw(Exception);
+      int getChoiceCount();
+      void setChoice(int i, const std::string &str);
+      std::string getChoice(int i);
   };
   
   class StringParameterDescriptor : public ValueParameterDescriptor {
     public:
       StringParameterDescriptor();
-      StringParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception);
+      StringParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
       StringParameterDescriptor(const StringParameterDescriptor &rhs);
       virtual ~StringParameterDescriptor();
       
@@ -399,20 +399,20 @@ namespace ofx {
       
       // properties
       
-      std::string getDefault() throw(Exception);
-      void setDefault(const std::string &v) throw(Exception);
+      std::string getDefault();
+      void setDefault(const std::string &v);
       
-      StringParamMode mode() throw(Exception);
-      void setMode(StringParamMode m) throw(Exception);
+      StringParamMode mode();
+      void setMode(StringParamMode m);
       
-      bool filePathExists() throw(Exception);
-      void setFilePathExists(bool) throw(Exception);
+      bool filePathExists();
+      void setFilePathExists(bool);
   };
   
   class CustomParameterDescriptor : public ValueParameterDescriptor {
     public:
       CustomParameterDescriptor();
-      CustomParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception);
+      CustomParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
       CustomParameterDescriptor(const CustomParameterDescriptor &rhs);
       virtual ~CustomParameterDescriptor();
       
@@ -420,21 +420,21 @@ namespace ofx {
       
       // properties
       
-      std::string getDefault() throw(Exception);
-      void setDefault(const std::string &v) throw(Exception);
+      std::string getDefault();
+      void setDefault(const std::string &v);
       
       template <InterpFunc F>
-      void setInterpolator(InterpFunc func) throw(Exception) {
+      void setInterpolator(InterpFunc func) {
         setPointer(kOfxParamPropCustomInterpCallbackV1, 0, (void*) &Interpolator<InterpFunc>);
       }
       // no proper getter. cannot cast back from void* to Interpolator<func>
-      void* getInterpolator() throw(Exception);
+      void* getInterpolator();
   };
   
   class PageParameterDescriptor : ParameterDescriptor {
     public:
       PageParameterDescriptor();
-      PageParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception);
+      PageParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
       PageParameterDescriptor(const PageParameterDescriptor &rhs);
       virtual ~PageParameterDescriptor();
       
@@ -445,15 +445,15 @@ namespace ofx {
       // special string values:
       //   kOfxParamPageSkipRow
       //   kOfxParamPageSkipColumn
-      int getChildCount() throw(Exception);
-      void setChild(int i, const std::string &name) throw(Exception);
-      std::string getChild(int i) throw(Exception);
+      int getChildCount();
+      void setChild(int i, const std::string &name);
+      std::string getChild(int i);
   };
   
   class BooleanParameterDescriptor : public ValueParameterDescriptor {
     public:
       BooleanParameterDescriptor();
-      BooleanParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception);
+      BooleanParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
       BooleanParameterDescriptor(const BooleanParameterDescriptor &rhs);
       virtual ~BooleanParameterDescriptor();
       
@@ -461,14 +461,14 @@ namespace ofx {
       
       // properties
       
-      bool getDefault() throw(Exception);
-      void setDefault(bool v) throw(Exception);
+      bool getDefault();
+      void setDefault(bool v);
   };
   
   class RGBParameterDescriptor : public ValueParameterDescriptor {
     public:
       RGBParameterDescriptor();
-      RGBParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception);
+      RGBParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
       RGBParameterDescriptor(const RGBParameterDescriptor &rhs);
       virtual ~RGBParameterDescriptor();
       
@@ -476,14 +476,14 @@ namespace ofx {
       
       // properties
       
-      RGBAColour<double> getDefault() throw(Exception);
-      void setDefault(const RGBAColour<double> &v) throw(Exception);
+      RGBAColour<double> getDefault();
+      void setDefault(const RGBAColour<double> &v);
   };
   
   class RGBAParameterDescriptor : public ValueParameterDescriptor {
     public:
       RGBAParameterDescriptor();
-      RGBAParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception);
+      RGBAParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
       RGBAParameterDescriptor(const RGBAParameterDescriptor &rhs);
       virtual ~RGBAParameterDescriptor();
       
@@ -491,14 +491,14 @@ namespace ofx {
       
       // properties
       
-      RGBAColour<double> getDefault() throw(Exception);
-      void setDefault(const RGBAColour<double> &v) throw(Exception);
+      RGBAColour<double> getDefault();
+      void setDefault(const RGBAColour<double> &v);
   };
   
   class PushButtonParameterDescriptor : public ParameterDescriptor {
     public:
       PushButtonParameterDescriptor();
-      PushButtonParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception);
+      PushButtonParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
       PushButtonParameterDescriptor(const PushButtonParameterDescriptor &rhs);
       virtual ~PushButtonParameterDescriptor();
       
@@ -506,20 +506,20 @@ namespace ofx {
       
       // properties
       
-      EntryPoint interact() throw(Exception);
-      void setInteract(EntryPoint func) throw(Exception);
+      EntryPoint interact();
+      void setInteract(EntryPoint func);
       
-      void interactSize(double &w, double &h) throw(Exception);
-      void setInteractSize(double w, double h) throw(Exception);
+      void interactSize(double &w, double &h);
+      void setInteractSize(double w, double h);
       
-      double interactSizeAspect() throw(Exception);
-      void setInteractSizeAspect(double a) throw(Exception);
+      double interactSizeAspect();
+      void setInteractSizeAspect(double a);
       
-      void interactMinimumSize(int &w, int &h) throw(Exception);
-      void setMinimumInteractSize(int w, int h) throw(Exception);
+      void interactMinimumSize(int &w, int &h);
+      void setMinimumInteractSize(int w, int h);
       
-      void interactPreferedSize(int &w, int &h) throw(Exception);
-      void setInteractPreferedSize(int w, int h) throw(Exception);
+      void interactPreferedSize(int &w, int &h);
+      void setInteractPreferedSize(int w, int h);
   };
   
   typedef ParameterDescriptor GroupParameterDescriptor;
@@ -546,36 +546,36 @@ namespace ofx {
       
       // properties
       
-      std::string name() throw(Exception);
+      std::string name();
       
-      std::string label() throw(Exception);
-      void setLabel(const std::string &lbl) throw(Exception);
+      std::string label();
+      void setLabel(const std::string &lbl);
       
-      std::string shortLabel() throw(Exception);
-      void setShortLabel(const std::string &lbl) throw(Exception);
+      std::string shortLabel();
+      void setShortLabel(const std::string &lbl);
       
-      std::string longLabel() throw(Exception);
-      void setLongLabel(const std::string &lbl) throw(Exception);
+      std::string longLabel();
+      void setLongLabel(const std::string &lbl);
       
-      ParamType type() throw(Exception);
+      ParamType type();
       
-      bool isSecret() throw(Exception);
-      void setSecret(bool) throw(Exception);
+      bool isSecret();
+      void setSecret(bool);
       
-      bool canUndo() throw(Exception);
+      bool canUndo();
       
-      std::string hint() throw(Exception);
-      void setHint(const std::string &h) throw(Exception);
+      std::string hint();
+      void setHint(const std::string &h);
       
-      std::string scriptName() throw(Exception);
+      std::string scriptName();
       
-      std::string parent() throw(Exception);
+      std::string parent();
       
-      bool isEnable() throw(Exception);
-      void enable(bool) throw(Exception);
+      bool isEnable();
+      void enable(bool);
       
-      void* data() throw(Exception);
-      void setData(void *) throw(Exception);
+      void* data();
+      void setData(void *);
       
       // suite
   };
@@ -584,7 +584,7 @@ namespace ofx {
     public:
       
       ValueParameter();
-      ValueParameter(Host *h, OfxParamHandle hdl) throw(Exception);
+      ValueParameter(Host *h, OfxParamHandle hdl);
       ValueParameter(const ValueParameter &rhs);
       virtual ~ValueParameter();
       
@@ -592,29 +592,29 @@ namespace ofx {
       
       // properties
       
-      EntryPoint interact() throw(Exception);
+      EntryPoint interact();
       
-      void interactSize(double &w, double &h) throw(Exception);
+      void interactSize(double &w, double &h);
       
-      double interactSizeAspect() throw(Exception);
+      double interactSizeAspect();
       
-      void interactMinimumSize(int &w, int &h) throw(Exception);
+      void interactMinimumSize(int &w, int &h);
       
-      void interactPreferedSize(int &w, int &h) throw(Exception);
+      void interactPreferedSize(int &w, int &h);
       
-      bool isAnimateable() throw(Exception);
+      bool isAnimateable();
       
-      bool isAnimating() throw(Exception);
+      bool isAnimating();
       
-      bool isAutoKeying() throw(Exception);
+      bool isAutoKeying();
       
-      bool isPersistant() throw(Exception);
+      bool isPersistant();
       
-      bool evaluateOnChange() throw(Exception);
+      bool evaluateOnChange();
       
-      bool pluginMayWrite() throw(Exception);
+      bool pluginMayWrite();
       
-      ParamInvalidate cacheInvalidation() throw(Exception);
+      ParamInvalidate cacheInvalidation();
       
       // suite
       
@@ -634,7 +634,7 @@ namespace ofx {
   class IntParameter : public ValueParameter {
     public:
       IntParameter();
-      IntParameter(Host *h, OfxParamHandle hdl) throw(Exception);
+      IntParameter(Host *h, OfxParamHandle hdl);
       IntParameter(const IntParameter &rhs);
       virtual ~IntParameter();
       
@@ -642,19 +642,19 @@ namespace ofx {
       
       // properties
       
-      int getDefault() throw(Exception);
+      int getDefault();
       
-      int getMin() throw(Exception);
-      void setMin(int v) throw(Exception);
+      int getMin();
+      void setMin(int v);
       
-      int getMax() throw(Exception);
-      void setMax(int v) throw(Exception);
+      int getMax();
+      void setMax(int v);
       
-      int getDisplayMin() throw(Exception);
-      void setDisplayMin(int v) throw(Exception);
+      int getDisplayMin();
+      void setDisplayMin(int v);
       
-      int getDisplayMax() throw(Exception);
-      void setDisplayMax(int v) throw(Exception);
+      int getDisplayMax();
+      void setDisplayMax(int v);
       
       // suite
       
@@ -670,7 +670,7 @@ namespace ofx {
   class Int2Parameter : public ValueParameter {
     public:
       Int2Parameter();
-      Int2Parameter(Host *h, OfxParamHandle hdl) throw(Exception);
+      Int2Parameter(Host *h, OfxParamHandle hdl);
       Int2Parameter(const Int2Parameter &rhs);
       virtual ~Int2Parameter();
       
@@ -678,21 +678,21 @@ namespace ofx {
       
       // properties
       
-      void getDefault(int &v0, int &v1) throw(Exception);
+      void getDefault(int &v0, int &v1);
       
-      void getMin(int &min0, int &min1) throw(Exception);
-      void setMin(int min0, int min1) throw(Exception);
+      void getMin(int &min0, int &min1);
+      void setMin(int min0, int min1);
       
-      void getMax(int &max0, int &max1) throw(Exception);
-      void setMax(int max0, int max1) throw(Exception);
+      void getMax(int &max0, int &max1);
+      void setMax(int max0, int max1);
       
-      void getDisplayMin(int &min0, int &min1) throw(Exception);
-      void setDisplayMin(int min0, int min1) throw(Exception);
+      void getDisplayMin(int &min0, int &min1);
+      void setDisplayMin(int min0, int min1);
       
-      void getDisplayMax(int &max0, int &max1) throw(Exception);
-      void setDisplayMax(int max0, int max1) throw(Exception);
+      void getDisplayMax(int &max0, int &max1);
+      void setDisplayMax(int max0, int max1);
       
-      std::string getDimensionLabel(int i) throw(Exception);
+      std::string getDimensionLabel(int i);
       
       // suite
       
@@ -708,7 +708,7 @@ namespace ofx {
   class Int3Parameter : public ValueParameter {
     public:
       Int3Parameter();
-      Int3Parameter(Host *h, OfxParamHandle hdl) throw(Exception);
+      Int3Parameter(Host *h, OfxParamHandle hdl);
       Int3Parameter(const Int3Parameter &rhs);
       virtual ~Int3Parameter();
       
@@ -716,21 +716,21 @@ namespace ofx {
       
       // properties
       
-      void getDefault(int &v0, int &v1, int &v2) throw(Exception);
+      void getDefault(int &v0, int &v1, int &v2);
       
-      void getMin(int &min0, int &min1, int &min2) throw(Exception);
-      void setMin(int min0, int min1, int min2) throw(Exception);
+      void getMin(int &min0, int &min1, int &min2);
+      void setMin(int min0, int min1, int min2);
       
-      void getMax(int &max0, int &max1, int &max2) throw(Exception);
-      void setMax(int max0, int max1, int max2) throw(Exception);
+      void getMax(int &max0, int &max1, int &max2);
+      void setMax(int max0, int max1, int max2);
       
-      void getDisplayMin(int &min0, int &min1, int &max2) throw(Exception);
-      void setDisplayMin(int min0, int min1, int max2) throw(Exception);
+      void getDisplayMin(int &min0, int &min1, int &max2);
+      void setDisplayMin(int min0, int min1, int max2);
       
-      void getDisplayMax(int &max0, int &max1, int &max2) throw(Exception);
-      void setDisplayMax(int max0, int max1, int max2) throw(Exception);
+      void getDisplayMax(int &max0, int &max1, int &max2);
+      void setDisplayMax(int max0, int max1, int max2);
       
-      std::string getDimensionLabel(int i) throw(Exception);
+      std::string getDimensionLabel(int i);
       
       // suite
       
@@ -746,7 +746,7 @@ namespace ofx {
   class DoubleParameter : public ValueParameter {
     public:
       DoubleParameter();
-      DoubleParameter(Host *h, OfxParamHandle hdl) throw(Exception);
+      DoubleParameter(Host *h, OfxParamHandle hdl);
       DoubleParameter(const DoubleParameter &rhs);
       virtual ~DoubleParameter();
       
@@ -754,30 +754,30 @@ namespace ofx {
       
       // properties
       
-      double getDefault() throw(Exception);
+      double getDefault();
       
-      double getMin() throw(Exception);
-      void setMin(double min0) throw(Exception);
+      double getMin();
+      void setMin(double min0);
       
-      double getMax() throw(Exception);
-      void setMax(double max0) throw(Exception);
+      double getMax();
+      void setMax(double max0);
       
-      double getDisplayMin() throw(Exception);
-      void setDisplayMin(double min0) throw(Exception);
+      double getDisplayMin();
+      void setDisplayMin(double min0);
       
-      double getDisplayMax() throw(Exception);
-      void setDisplayMax(double max0) throw(Exception);
+      double getDisplayMax();
+      void setDisplayMax(double max0);
       
-      double increment() throw(Exception);
-      void setIncrement(double i) throw(Exception);
+      double increment();
+      void setIncrement(double i);
       
-      int digits() throw(Exception);
-      void setDigits(int d) throw(Exception);
+      int digits();
+      void setDigits(int d);
       
-      bool showTimeMarker() throw(Exception);
-      void setShowTimeMarker(bool) throw(Exception);
+      bool showTimeMarker();
+      void setShowTimeMarker(bool);
       
-      DoubleParamType doubleType() throw(Exception);
+      DoubleParamType doubleType();
       
       // suite
       
@@ -793,7 +793,7 @@ namespace ofx {
   class Double2Parameter : public ValueParameter {
     public:
       Double2Parameter();
-      Double2Parameter(Host *h, OfxParamHandle hdl) throw(Exception);
+      Double2Parameter(Host *h, OfxParamHandle hdl);
       Double2Parameter(const Double2Parameter &rhs);
       virtual ~Double2Parameter();
       
@@ -801,29 +801,29 @@ namespace ofx {
       
       // properties
       
-      void getDefault(double &v0, double &v1) throw(Exception);
+      void getDefault(double &v0, double &v1);
       
-      void getMin(double &min0, double &min1) throw(Exception);
-      void setMin(double min0, double min1) throw(Exception);
+      void getMin(double &min0, double &min1);
+      void setMin(double min0, double min1);
       
-      void getMax(double &max0, double &max1) throw(Exception);
-      void setMax(double max0, double max1) throw(Exception);
+      void getMax(double &max0, double &max1);
+      void setMax(double max0, double max1);
       
-      void getDisplayMin(double &min0, double &min1) throw(Exception);
-      void setDisplayMin(double min0, double min1) throw(Exception);
+      void getDisplayMin(double &min0, double &min1);
+      void setDisplayMin(double min0, double min1);
       
-      void getDisplayMax(double &max0, double &max1) throw(Exception);
-      void setDisplayMax(double max0, double max1) throw(Exception);
+      void getDisplayMax(double &max0, double &max1);
+      void setDisplayMax(double max0, double max1);
       
-      double increment() throw(Exception);
-      void setIncrement(double i) throw(Exception);
+      double increment();
+      void setIncrement(double i);
       
-      int digits() throw(Exception);
-      void setDigits(int d) throw(Exception);
+      int digits();
+      void setDigits(int d);
       
-      DoubleParamType doubleType() throw(Exception);
+      DoubleParamType doubleType();
       
-      std::string getDimensionLabel(int i) throw(Exception);
+      std::string getDimensionLabel(int i);
       
       // suite
       
@@ -839,7 +839,7 @@ namespace ofx {
   class Double3Parameter : public ValueParameter {
     public:
       Double3Parameter();
-      Double3Parameter(Host *h, OfxParamHandle hdl) throw(Exception);
+      Double3Parameter(Host *h, OfxParamHandle hdl);
       Double3Parameter(const Double3Parameter &rhs);
       virtual ~Double3Parameter();
       
@@ -847,29 +847,29 @@ namespace ofx {
       
       // properties
       
-      void getDefault(double &v0, double &v1, double &v2) throw(Exception);
+      void getDefault(double &v0, double &v1, double &v2);
       
-      void getMin(double &min0, double &min1, double &min2) throw(Exception);
-      void setMin(double min0, double min1, double min2) throw(Exception);
+      void getMin(double &min0, double &min1, double &min2);
+      void setMin(double min0, double min1, double min2);
       
-      void getMax(double &max0, double &max1, double &max2) throw(Exception);
-      void setMax(double max0, double max1, double max2) throw(Exception);
+      void getMax(double &max0, double &max1, double &max2);
+      void setMax(double max0, double max1, double max2);
       
-      void getDisplayMin(double &min0, double &min1, double &max2) throw(Exception);
-      void setDisplayMin(double min0, double min1, double max2) throw(Exception);
+      void getDisplayMin(double &min0, double &min1, double &max2);
+      void setDisplayMin(double min0, double min1, double max2);
       
-      void getDisplayMax(double &max0, double &max1, double &max2) throw(Exception);
-      void setDisplayMax(double max0, double max1, double max2) throw(Exception);
+      void getDisplayMax(double &max0, double &max1, double &max2);
+      void setDisplayMax(double max0, double max1, double max2);
       
-      double increment() throw(Exception);
-      void setIncrement(double i) throw(Exception);
+      double increment();
+      void setIncrement(double i);
       
-      int digits() throw(Exception);
-      void setDigits(int d) throw(Exception);
+      int digits();
+      void setDigits(int d);
       
-      DoubleParamType doubleType() throw(Exception);
+      DoubleParamType doubleType();
       
-      std::string getDimensionLabel(int i) throw(Exception);
+      std::string getDimensionLabel(int i);
       
       // suite
       
@@ -885,7 +885,7 @@ namespace ofx {
   class StringParameter : public ValueParameter {
     public:
       StringParameter();
-      StringParameter(Host *h, OfxParamHandle hdl) throw(Exception);
+      StringParameter(Host *h, OfxParamHandle hdl);
       StringParameter(const StringParameter &rhs);
       virtual ~StringParameter();
       
@@ -893,11 +893,11 @@ namespace ofx {
       
       // properties
       
-      std::string getDefault() throw(Exception);
+      std::string getDefault();
       
-      StringParamMode mode() throw(Exception);
+      StringParamMode mode();
       
-      bool filePathExists() throw(Exception);
+      bool filePathExists();
       
       // suite
       
@@ -911,7 +911,7 @@ namespace ofx {
   class CustomParameter : public ValueParameter {
     public:
       CustomParameter();
-      CustomParameter(Host *h, OfxParamHandle hdl) throw(Exception);
+      CustomParameter(Host *h, OfxParamHandle hdl);
       CustomParameter(const CustomParameter &rhs);
       virtual ~CustomParameter();
       
@@ -919,9 +919,9 @@ namespace ofx {
       
       // properties
       
-      std::string getDefault() throw(Exception);
+      std::string getDefault();
       
-      void* getInterpolator() throw(Exception);
+      void* getInterpolator();
       
       // suite
       
@@ -935,7 +935,7 @@ namespace ofx {
   class BooleanParameter : public ValueParameter {
     public:
       BooleanParameter();
-      BooleanParameter(Host *h, OfxParamHandle hdl) throw(Exception);
+      BooleanParameter(Host *h, OfxParamHandle hdl);
       BooleanParameter(const BooleanParameter &rhs);
       virtual ~BooleanParameter();
       
@@ -943,7 +943,7 @@ namespace ofx {
       
       // properties
       
-      bool getDefault() throw(Exception);
+      bool getDefault();
       
       // suite
       
@@ -957,7 +957,7 @@ namespace ofx {
   class RGBParameter : public ValueParameter {
     public:
       RGBParameter();
-      RGBParameter(Host *h, OfxParamHandle hdl) throw(Exception);
+      RGBParameter(Host *h, OfxParamHandle hdl);
       RGBParameter(const RGBParameter &rhs);
       virtual ~RGBParameter();
       
@@ -965,7 +965,7 @@ namespace ofx {
       
       // properties
       
-      RGBAColour<double> getDefault() throw(Exception);
+      RGBAColour<double> getDefault();
       
       // suite
       
@@ -981,7 +981,7 @@ namespace ofx {
   class RGBAParameter : public ValueParameter {
     public:
       RGBAParameter();
-      RGBAParameter(Host *h, OfxParamHandle hdl) throw(Exception);
+      RGBAParameter(Host *h, OfxParamHandle hdl);
       RGBAParameter(const RGBAParameter &rhs);
       virtual ~RGBAParameter();
       
@@ -989,7 +989,7 @@ namespace ofx {
       
       // properties
       
-      RGBAColour<double> getDefault() throw(Exception);
+      RGBAColour<double> getDefault();
       
       // suite
       
@@ -1005,7 +1005,7 @@ namespace ofx {
   class ChoiceParameter : public ValueParameter {
     public:
       ChoiceParameter();
-      ChoiceParameter(Host *h, OfxParamHandle hdl) throw(Exception);
+      ChoiceParameter(Host *h, OfxParamHandle hdl);
       ChoiceParameter(const ChoiceParameter &rhs);
       virtual ~ChoiceParameter();
       
@@ -1013,11 +1013,11 @@ namespace ofx {
       
       // properties
       
-      int getDefault() throw(Exception);
+      int getDefault();
       
-      int getChoiceCount() throw(Exception);
-      void setChoice(int i, const std::string &str) throw(Exception);
-      std::string getChoice(int i) throw(Exception);
+      int getChoiceCount();
+      void setChoice(int i, const std::string &str);
+      std::string getChoice(int i);
       
       // suite
       
@@ -1031,7 +1031,7 @@ namespace ofx {
   class PageParameter : public Parameter {
     public:
       PageParameter();
-      PageParameter(Host *h, OfxParamHandle hdl) throw(Exception);
+      PageParameter(Host *h, OfxParamHandle hdl);
       PageParameter(const PageParameter &rhs);
       virtual ~PageParameter();
       
@@ -1039,15 +1039,15 @@ namespace ofx {
       
       // properties
       
-      int getChildCount() throw(Exception);
-      std::string getChild(int i) throw(Exception);
+      int getChildCount();
+      std::string getChild(int i);
   };
   
   class PushButtonParameter : public Parameter {
     public:
       
       PushButtonParameter();
-      PushButtonParameter(Host *h, OfxParamHandle hdl) throw(Exception);
+      PushButtonParameter(Host *h, OfxParamHandle hdl);
       PushButtonParameter(const PushButtonParameter &rhs);
       virtual ~PushButtonParameter();
       
@@ -1055,15 +1055,15 @@ namespace ofx {
       
       // properties
       
-      EntryPoint interact() throw(Exception);
+      EntryPoint interact();
       
-      void interactSize(double &w, double &h) throw(Exception);
+      void interactSize(double &w, double &h);
       
-      double interactSizeAspect() throw(Exception);
+      double interactSizeAspect();
       
-      void interactMinimumSize(int &w, int &h) throw(Exception);
+      void interactMinimumSize(int &w, int &h);
       
-      void interactPreferedSize(int &w, int &h) throw(Exception);
+      void interactPreferedSize(int &w, int &h);
   };
   
   typedef Parameter GroupParameter;
@@ -1151,8 +1151,8 @@ namespace ofx {
       PageParameter getPageParam(const std::string &name) throw(Exception);
       PushButtonParameter getPushButtonParam(const std::string &name) throw(Exception);
       
-      void beginEdit(const std::string &label) throw(Exception);
-      void endEdit() throw(Exception);
+      void beginEdit(const std::string &label);
+      void endEdit();
   };
   
 }

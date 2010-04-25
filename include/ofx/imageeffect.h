@@ -167,7 +167,7 @@ namespace ofx {
     public:
       
       ClipDescriptor();
-      ClipDescriptor(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception);
+      ClipDescriptor(ImageEffectHost *h, OfxPropertySetHandle hdl);
       ClipDescriptor(const ClipDescriptor &rhs);
       ~ClipDescriptor();
       
@@ -179,35 +179,35 @@ namespace ofx {
       
       // properties
       
-      std::string name() throw(Exception);
+      std::string name();
       
-      std::string label() throw(Exception);
-      void setLabel(const std::string &l) throw(Exception);
+      std::string label();
+      void setLabel(const std::string &l);
       
-      std::string shortLabel() throw(Exception);
-      void setShortLabel(const std::string &l) throw(Exception);
+      std::string shortLabel();
+      void setShortLabel(const std::string &l);
       
-      std::string longLabel() throw(Exception);
-      void setLongLabel(const std::string &l) throw(Exception);
+      std::string longLabel();
+      void setLongLabel(const std::string &l);
       
-      int supportedComponentsCount() throw(Exception);
-      ImageComponent getSupportedComponent(int i) throw(Exception);
-      void setSupportedComponent(int i, ImageComponent ic) throw(Exception);
+      int supportedComponentsCount();
+      ImageComponent getSupportedComponent(int i);
+      void setSupportedComponent(int i, ImageComponent ic);
       
-      bool needsTemporalClipAccess() throw(Exception);
-      void requireTemporalClipAccess(bool) throw(Exception);
+      bool needsTemporalClipAccess();
+      void requireTemporalClipAccess(bool);
       
-      bool isOptional() throw(Exception);
-      void setOptional(bool) throw(Exception);
+      bool isOptional();
+      void setOptional(bool);
       
-      ImageFieldExtract fieldExtraction() throw(Exception);
-      void setFieldExtraction(ImageFieldExtract f) throw(Exception);
+      ImageFieldExtract fieldExtraction();
+      void setFieldExtraction(ImageFieldExtract f);
       
-      bool isMask() throw(Exception);
-      void setMask(bool) throw(Exception);
+      bool isMask();
+      void setMask(bool);
       
-      bool supportsTiles() throw(Exception);
-      void setTilesSupport(bool) throw(Exception);
+      bool supportsTiles();
+      void setTilesSupport(bool);
     
     protected:
       
@@ -242,52 +242,52 @@ namespace ofx {
       
       // properties
       
-      std::string name() throw(Exception);
+      std::string name();
       
-      std::string label() throw(Exception);
+      std::string label();
       
-      std::string shortLabel() throw(Exception);
+      std::string shortLabel();
       
-      std::string longLabel() throw(Exception);
+      std::string longLabel();
       
-      int supportedComponentsCount() throw(Exception);
-      ImageComponent getSupportedComponent(int i) throw(Exception);
+      int supportedComponentsCount();
+      ImageComponent getSupportedComponent(int i);
       
-      bool needsTemporalClipAccess() throw(Exception);
+      bool needsTemporalClipAccess();
       
-      bool isOptional() throw(Exception);
+      bool isOptional();
       
-      ImageFieldExtract fieldExtraction() throw(Exception);
+      ImageFieldExtract fieldExtraction();
       
-      bool isMask() throw(Exception);
+      bool isMask();
       
-      bool supportsTiles() throw(Exception);
+      bool supportsTiles();
       
-      BitDepth pixelDepth() throw(Exception);
+      BitDepth pixelDepth();
       
-      ImageComponent components() throw(Exception);
+      ImageComponent components();
       
-      BitDepth unmappedPixelDepth() throw(Exception);
+      BitDepth unmappedPixelDepth();
       
-      ImageComponent unmappedComponents() throw(Exception);
+      ImageComponent unmappedComponents();
       
-      ImagePreMult preMultiplication() throw(Exception);
+      ImagePreMult preMultiplication();
       
-      double pixelAspectRatio() throw(Exception);
+      double pixelAspectRatio();
       
-      double frameRate() throw(Exception);
+      double frameRate();
       
-      void frameRange(double &from, double &to) throw(Exception);
+      void frameRange(double &from, double &to);
       
-      ImageFieldOrder fieldOrder() throw(Exception);
+      ImageFieldOrder fieldOrder();
       
-      bool isConnected() throw(Exception);
+      bool isConnected();
       
-      void unmappedFrameRange(double &from, double &to) throw(Exception);
+      void unmappedFrameRange(double &from, double &to);
       
-      double unmappedFrameRate() throw(Exception);
+      double unmappedFrameRate();
       
-      bool continuousSamples() throw(Exception);
+      bool continuousSamples();
       
     protected:
       
@@ -336,81 +336,71 @@ namespace ofx {
       
       // properties
       
-      std::string label() throw(Exception);
-      void setLabel(const std::string &s) throw(Exception);
+      std::string label();
+      void setLabel(const std::string &s);
       
-      std::string shortLabel() throw(Exception);
-      void setShortLabel(const std::string &s) throw(Exception);
+      std::string shortLabel();
+      void setShortLabel(const std::string &s);
       
-      std::string longLabel() throw(Exception);
-      void setLongLabel(const std::string &s) throw(Exception);
+      std::string longLabel();
+      void setLongLabel(const std::string &s);
       
-      int supportedContextsCount() throw(Exception);
-      ImageEffectContext getSupportedContext(int i) throw(Exception);
-      void setSupportedContext(int i, ImageEffectContext ctx) throw(Exception);
+      int supportedContextsCount();
+      ImageEffectContext getSupportedContext(int i);
+      void setSupportedContext(int i, ImageEffectContext ctx);
       
-      std::string grouping() throw(Exception);
-      void setGrouping(const std::string &g) throw(Exception);
+      std::string grouping();
+      void setGrouping(const std::string &g);
       
-      bool singleInstance() throw(Exception);
-      void setSingleInstance(bool) throw(Exception);
+      bool singleInstance();
+      void setSingleInstance(bool);
       
-      RenderThreadSafety renderThreadSafety() throw(Exception);
-      void setRenderThreadSafety(RenderThreadSafety rts) throw(Exception);
+      RenderThreadSafety renderThreadSafety();
+      void setRenderThreadSafety(RenderThreadSafety rts);
       
-      bool hostFrameThreading() throw(Exception);
-      void setHostFrameThreading(bool) throw(Exception);
+      bool hostFrameThreading();
+      void setHostFrameThreading(bool);
       
       // Use this way:
       //   effectDesc->setOverlayInteract(InteractEntryPoint<MyPluginClass, MyInteractDescriptionClass, MyInteractClass>)
-      EntryPoint overlayInteract() throw(Exception);
-      void setOverlayInteract(EntryPoint func) throw(Exception);
+      EntryPoint overlayInteract();
+      void setOverlayInteract(EntryPoint func);
       
-      bool supportsMultiResolution() throw(Exception);
-      void setMultiResolutionSupport(bool) throw(Exception);
+      bool supportsMultiResolution();
+      void setMultiResolutionSupport(bool);
       
-      bool supportsTiles() throw(Exception);
-      void setTilesSupport(bool) throw(Exception);
+      bool supportsTiles();
+      void setTilesSupport(bool);
       
-      bool needsTemporalClipAccess() throw(Exception);
-      void requireTemporalClipAccess(bool) throw(Exception);
+      bool needsTemporalClipAccess();
+      void requireTemporalClipAccess(bool);
       
-      int supportedPixelDepthsCount() throw(Exception);
-      void setSupportedPixelDepth(int i, BitDepth bd) throw(Exception);
-      BitDepth getSupportedPixelDepth(int i) throw(Exception);
+      int supportedPixelDepthsCount();
+      void setSupportedPixelDepth(int i, BitDepth bd);
+      BitDepth getSupportedPixelDepth(int i);
       
-      bool fieldRenderTwiceAlways() throw(Exception);
-      void setFieldRenderTwiceAlways(bool) throw(Exception);
+      bool fieldRenderTwiceAlways();
+      void setFieldRenderTwiceAlways(bool);
       
-      bool supportsMultipleClipDepths() throw(Exception);
-      void setMultipleClipDepthsSupport(bool) throw(Exception);
+      bool supportsMultipleClipDepths();
+      void setMultipleClipDepthsSupport(bool);
       
-      bool supportsMultipleClipPARs() throw(Exception);
-      void setMultipleClipPARsSupport(bool) throw(Exception);  
+      bool supportsMultipleClipPARs();
+      void setMultipleClipPARsSupport(bool);  
       
-      int clipPreferencesSlaveParamCount() throw(Exception);
-      std::string getClipPreferencesSlaveParam(int i) throw(Exception);
-      void setClipPreferencesSlaveParam(int i, const std::string &n) throw(Exception);
+      int clipPreferencesSlaveParamCount();
+      std::string getClipPreferencesSlaveParam(int i);
+      void setClipPreferencesSlaveParam(int i, const std::string &n);
       
-      std::string pluginFilePath() throw(Exception);
+      std::string pluginFilePath();
       
-      // for sub-classing
-      virtual void describe() throw(Exception);
-      virtual void describeInContext(ImageEffectContext ctx) throw(Exception);
+      // Image effect actions
+      
+      virtual OfxStatus describe();
+      virtual OfxStatus describeInContext(ImageEffectContext ctx);
   };
   
   class ImageEffect {
-    protected:
-      
-      OfxImageEffectHandle mHandle;
-      PropertySet mProps;
-      ParameterSet mParams;
-      ImageEffectHost *mHost;
-      
-      static std::map<OfxImageEffectHandle, ImageEffect*> msEffects;
-      
-      ImageEffect();
-      
     public:
       
       static ImageEffect* GetEffect(OfxImageEffectHandle hdl);
@@ -496,7 +486,7 @@ namespace ofx {
       
     public:
       
-      ImageEffect(ImageEffectHost *h, OfxImageEffectHandle hdl) throw(Exception);
+      ImageEffect(ImageEffectHost *h, OfxImageEffectHandle hdl);
       virtual ~ImageEffect();
       
       inline ImageEffectHost* host() {
@@ -529,61 +519,57 @@ namespace ofx {
       
       // properties
       
-      ImageEffectContext context() throw(Exception);
+      ImageEffectContext context();
       
-      void* instanceData() throw(Exception);
-      void setInstanceData(void *data) throw(Exception);
+      void* instanceData();
+      void setInstanceData(void *data);
       
-      void projectSize(double &w, double &h) throw(Exception);
+      void projectSize(double &w, double &h);
       
-      void projectOffset(double &x, double &y) throw(Exception);
+      void projectOffset(double &x, double &y);
       
-      void projectExtent(double &w, double &h) throw(Exception);
+      void projectExtent(double &w, double &h);
       
-      double projectPixelAspectRatio() throw(Exception);
+      double projectPixelAspectRatio();
       
-      double duration() throw(Exception);
+      double duration();
       
-      bool needsSequentialRender() throw(Exception);
-      void requireSequentialRender(bool) throw(Exception);
+      bool needsSequentialRender();
+      void requireSequentialRender(bool);
       
-      double frameRate() throw(Exception);
+      double frameRate();
       
-      bool isInteractive() throw(Exception);
+      bool isInteractive();
       
-      // for sub-classing
+      // Image effect actions
       
-      virtual void beginInstanceChanged(ChangeReason reason) throw(Exception);
+      virtual OfxStatus beginInstanceChanged(ChangeReason reason);
+      virtual OfxStatus endInstanceChanged(ChangeReason reason);
+      virtual OfxStatus instanceChanged(InstanceChangedArgs &args);
+      virtual OfxStatus purgeCaches();
+      virtual OfxStatus syncPrivateData();
+      virtual OfxStatus beginInstanceEdit();
+      virtual OfxStatus endInstanceEdit();
+      virtual OfxStatus getRegionOfDefinition(GetRoDArgs &args);
+      virtual OfxStatus getRegionsOfInterest(GetRoIArgs &args);
+      virtual OfxStatus getFramesNeeded(GetFramesNeededArgs &args);
+      virtual OfxStatus isIdentity(IsIdentityArgs &args);
+      virtual OfxStatus render(RenderArgs &args);
+      virtual OfxStatus beginSequenceRender(SequenceArgs &args);
+      virtual OfxStatus endSequenceRender(SequenceArgs &args);
+      virtual OfxStatus getClipPreferences(GetClipPrefArgs &args);
+      virtual OfxStatus getTimeDomain(double &first, double &last);
+    
+    protected:
       
-      virtual void endInstanceChanged(ChangeReason reason) throw(Exception);
+      OfxImageEffectHandle mHandle;
+      PropertySet mProps;
+      ParameterSet mParams;
+      ImageEffectHost *mHost;
       
-      virtual void instanceChanged(InstanceChangedArgs &args) throw(Exception);
+      static std::map<OfxImageEffectHandle, ImageEffect*> msEffects;
       
-      virtual void purgeCaches() throw(Exception);
-      
-      virtual void syncPrivateData() throw(Exception);
-      
-      virtual void beginInstanceEdit() throw(Exception);
-      
-      virtual void endInstanceEdit() throw(Exception);
-      
-      virtual Rect<double> getRegionOfDefinition(GetRoDArgs &args) throw(Exception);
-      
-      virtual void getRegionsOfInterest(GetRoIArgs &args) throw(Exception);
-      
-      virtual void getFramesNeeded(GetFramesNeededArgs &args) throw(Exception);
-      
-      virtual bool isIdentity(IsIdentityArgs &args) throw(Exception);
-      
-      virtual void render(RenderArgs &args) throw(Exception);
-      
-      virtual void beginSequenceRender(SequenceArgs &args) throw(Exception);
-      
-      virtual void endSequenceRender(SequenceArgs &args) throw(Exception);
-      
-      virtual void getClipPreferences(GetClipPrefArgs &args) throw(Exception);
-      
-      virtual void getTimeDomain(double &first, double &last) throw(Exception);
+      ImageEffect();
   };
 }
 

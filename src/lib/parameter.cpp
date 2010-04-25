@@ -29,7 +29,7 @@ namespace ofx {
 ParameterDescriptor::ParameterDescriptor() {
 }
 
-ParameterDescriptor::ParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception)
+ParameterDescriptor::ParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
   : PropertySet(h, hdl) {
 }
 
@@ -46,95 +46,95 @@ ParameterDescriptor& ParameterDescriptor::operator=(const ParameterDescriptor &r
   return *this;
 }
 
-std::string ParameterDescriptor::name() throw(Exception) {
+std::string ParameterDescriptor::name() {
   return getString(kOfxPropName, 0);
 }
 
-void ParameterDescriptor::setName(const std::string &name) throw(Exception) {
+void ParameterDescriptor::setName(const std::string &name) {
   setString(kOfxPropName, 0, name);
 }
 
-std::string ParameterDescriptor::label() throw(Exception) {
+std::string ParameterDescriptor::label() {
   return getString(kOfxPropLabel, 0);
 }
 
-void ParameterDescriptor::setLabel(const std::string &lbl) throw(Exception) {
+void ParameterDescriptor::setLabel(const std::string &lbl) {
   setString(kOfxPropLabel, 0, lbl);
 }
 
-std::string ParameterDescriptor::shortLabel() throw(Exception) {
+std::string ParameterDescriptor::shortLabel() {
   return getString(kOfxPropShortLabel, 0);
 }
 
-void ParameterDescriptor::setShortLabel(const std::string &lbl) throw(Exception) {
+void ParameterDescriptor::setShortLabel(const std::string &lbl) {
   setString(kOfxPropShortLabel, 0, lbl);
 }
 
-std::string ParameterDescriptor::longLabel() throw(Exception) {
+std::string ParameterDescriptor::longLabel() {
   return getString(kOfxPropLongLabel, 0);
 }
 
-void ParameterDescriptor::setLongLabel(const std::string &lbl) throw(Exception) {
+void ParameterDescriptor::setLongLabel(const std::string &lbl) {
   setString(kOfxPropLongLabel, 0, lbl);
 }
 
-ParamType ParameterDescriptor::type() throw(Exception) {
+ParamType ParameterDescriptor::type() {
   return StringToParamType(getString(kOfxParamPropType, 0));
 }
 
-bool ParameterDescriptor::isSecret() throw(Exception) {
+bool ParameterDescriptor::isSecret() {
   return (getInt(kOfxParamPropSecret, 0) == 1);
 }
 
-void ParameterDescriptor::setSecret(bool yes) throw(Exception) {
+void ParameterDescriptor::setSecret(bool yes) {
   setInt(kOfxParamPropSecret, 0, (yes ? 1 : 0));
 }
 
-bool ParameterDescriptor::canUndo() throw(Exception) {
+bool ParameterDescriptor::canUndo() {
   return (getInt(kOfxParamPropCanUndo, 0) == 1);
 }
 
-void ParameterDescriptor::setCanUndo(bool yes) throw(Exception) {
+void ParameterDescriptor::setCanUndo(bool yes) {
   setInt(kOfxParamPropCanUndo, 0, (yes ? 1 : 0));
 }
 
-std::string ParameterDescriptor::hint() throw(Exception) {
+std::string ParameterDescriptor::hint() {
   return getString(kOfxParamPropHint, 0);
 }
 
-void ParameterDescriptor::setHint(const std::string &h) throw(Exception) {
+void ParameterDescriptor::setHint(const std::string &h) {
   setString(kOfxParamPropHint, 0, h);
 }
 
-std::string ParameterDescriptor::scriptName() throw(Exception) {
+std::string ParameterDescriptor::scriptName() {
   return getString(kOfxParamPropScriptName, 0);
 }
 
-void ParameterDescriptor::setScriptName(const std::string &h) throw(Exception) {
+void ParameterDescriptor::setScriptName(const std::string &h) {
   setString(kOfxParamPropScriptName, 0, h);
 }
 
-std::string ParameterDescriptor::parent() throw(Exception) {
+std::string ParameterDescriptor::parent() {
   return getString(kOfxParamPropParent, 0);
 }
 
-void ParameterDescriptor::setParent(const std::string &n) throw(Exception) {
+void ParameterDescriptor::setParent(const std::string &n) {
   setString(kOfxParamPropParent, 0, n);
 }
 
-bool ParameterDescriptor::isEnable() throw(Exception) {
+bool ParameterDescriptor::isEnable() {
   return (getInt(kOfxParamPropEnabled, 0) == 1);
 }
 
-void ParameterDescriptor::enable(bool yes) throw(Exception) {
+void ParameterDescriptor::enable(bool yes) {
   setInt(kOfxParamPropEnabled, 0, (yes ? 1 : 0));
 }
 
-void* ParameterDescriptor::data() throw(Exception) {
+void* ParameterDescriptor::data() {
   return getPointer(kOfxParamPropDataPtr, 0);
 }
 
-void ParameterDescriptor::setData(void *d) throw(Exception) {
+void ParameterDescriptor::setData(void *d) {
   setPointer(kOfxParamPropDataPtr, 0, d);
 }
 
@@ -144,7 +144,7 @@ ValueParameterDescriptor::ValueParameterDescriptor()
   : ParameterDescriptor() {
 }
 
-ValueParameterDescriptor::ValueParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception)
+ValueParameterDescriptor::ValueParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
   : ParameterDescriptor(h, hdl) {
 }
 
@@ -160,104 +160,104 @@ ValueParameterDescriptor& ValueParameterDescriptor::operator=(const ValueParamet
   return *this;
 }
 
-EntryPoint ValueParameterDescriptor::interact() throw(Exception) {
+EntryPoint ValueParameterDescriptor::interact() {
   return ((EntryPoint) getPointer(kOfxParamPropInteractV1, 0));
 }
 
-void ValueParameterDescriptor::setInteract(EntryPoint func) throw(Exception) {
+void ValueParameterDescriptor::setInteract(EntryPoint func) {
   setPointer(kOfxParamPropInteractV1, 0, (void*)func);
 }
 
-void ValueParameterDescriptor::interactSize(double &w, double &h) throw(Exception) {
+void ValueParameterDescriptor::interactSize(double &w, double &h) {
   w = getDouble(kOfxParamPropInteractSize, 0);
   h = getDouble(kOfxParamPropInteractSize, 1);
 }
 
-void ValueParameterDescriptor::setInteractSize(double w, double h) throw(Exception) {
+void ValueParameterDescriptor::setInteractSize(double w, double h) {
   setDouble(kOfxParamPropInteractSize, 0, w);
   setDouble(kOfxParamPropInteractSize, 1, h);
 }
 
-double ValueParameterDescriptor::interactSizeAspect() throw(Exception) {
+double ValueParameterDescriptor::interactSizeAspect() {
   return getDouble(kOfxParamPropInteractSizeAspect, 0);
 }
 
-void ValueParameterDescriptor::setInteractSizeAspect(double a) throw(Exception) {
+void ValueParameterDescriptor::setInteractSizeAspect(double a) {
   setDouble(kOfxParamPropInteractSizeAspect, 0, a);
 }
 
-void ValueParameterDescriptor::interactMinimumSize(int &w, int &h) throw(Exception) {
+void ValueParameterDescriptor::interactMinimumSize(int &w, int &h) {
   w = getInt(kOfxParamPropInteractMinimumSize, 0);
   h = getInt(kOfxParamPropInteractMinimumSize, 1);
 }
 
-void ValueParameterDescriptor::setMinimumInteractSize(int w, int h) throw(Exception) {
+void ValueParameterDescriptor::setMinimumInteractSize(int w, int h) {
   setInt(kOfxParamPropInteractMinimumSize, 0, w);
   setInt(kOfxParamPropInteractMinimumSize, 1, h);
 }
 
-void ValueParameterDescriptor::interactPreferedSize(int &w, int &h) throw(Exception) {
+void ValueParameterDescriptor::interactPreferedSize(int &w, int &h) {
   w = getInt(kOfxParamPropInteractPreferedSize, 0);
   h = getInt(kOfxParamPropInteractPreferedSize, 1);
 }
 
-void ValueParameterDescriptor::setInteractPreferedSize(int w, int h) throw(Exception) {
+void ValueParameterDescriptor::setInteractPreferedSize(int w, int h) {
   setInt(kOfxParamPropInteractPreferedSize, 0, w);
   setInt(kOfxParamPropInteractPreferedSize, 1, h);
 }
 
-bool ValueParameterDescriptor::isAnimateable() throw(Exception) {
+bool ValueParameterDescriptor::isAnimateable() {
   return (getInt(kOfxParamPropAnimates, 0) == 1);
 }
 
-void ValueParameterDescriptor::setAnimateable(bool yes) throw(Exception) {
+void ValueParameterDescriptor::setAnimateable(bool yes) {
   setInt(kOfxParamPropAnimates, 0, (yes ? 1 : 0));
 }
 
-bool ValueParameterDescriptor::isAnimating() throw(Exception) {
+bool ValueParameterDescriptor::isAnimating() {
   return (getInt(kOfxParamPropIsAnimating, 0) == 1);
 }
 
-void ValueParameterDescriptor::setAnimating(bool yes) throw(Exception) {
+void ValueParameterDescriptor::setAnimating(bool yes) {
   setInt(kOfxParamPropIsAnimating, 0, (yes ? 1 : 0));
 }
 
-bool ValueParameterDescriptor::isAutoKeying() throw(Exception) {
+bool ValueParameterDescriptor::isAutoKeying() {
   return (getInt(kOfxParamPropIsAutoKeying, 0) == 1);
 }
 
-void ValueParameterDescriptor::setAutoKeying(bool yes) throw(Exception) {
+void ValueParameterDescriptor::setAutoKeying(bool yes) {
   setInt(kOfxParamPropIsAutoKeying, 0, (yes ? 1 : 0));
 }
 
-bool ValueParameterDescriptor::isPersistant() throw(Exception) {
+bool ValueParameterDescriptor::isPersistant() {
   return (getInt(kOfxParamPropPersistant, 0) == 1);
 }
 
-void ValueParameterDescriptor::setPersistant(bool yes) throw(Exception) {
+void ValueParameterDescriptor::setPersistant(bool yes) {
   setInt(kOfxParamPropPersistant, 0, (yes ? 1 : 0));
 }
 
-bool ValueParameterDescriptor::evaluateOnChange() throw(Exception) {
+bool ValueParameterDescriptor::evaluateOnChange() {
   return (getInt(kOfxParamPropEvaluateOnChange, 0) == 1);
 }
 
-void ValueParameterDescriptor::setEvaluateOnChange(bool yes) throw(Exception) {
+void ValueParameterDescriptor::setEvaluateOnChange(bool yes) {
   setInt(kOfxParamPropEvaluateOnChange, 0, (yes ? 1 : 0));
 }
 
-bool ValueParameterDescriptor::pluginMayWrite() throw(Exception) {
+bool ValueParameterDescriptor::pluginMayWrite() {
   return (getInt(kOfxParamPropPluginMayWrite, 0) == 1);
 }
-void ValueParameterDescriptor::setPluginMayWrite(bool yes) throw(Exception) {
+void ValueParameterDescriptor::setPluginMayWrite(bool yes) {
   setInt(kOfxParamPropPluginMayWrite, 0, (yes ? 1 : 0));
 }
 
-ParamInvalidate ValueParameterDescriptor::cacheInvalidation() throw(Exception) {
+ParamInvalidate ValueParameterDescriptor::cacheInvalidation() {
   return StringToParamInvalidate(getString(kOfxParamPropCacheInvalidation, 0));
 }
 
-void ValueParameterDescriptor::setCacheInvalidation(ParamInvalidate i) throw(Exception) {
+void ValueParameterDescriptor::setCacheInvalidation(ParamInvalidate i) {
   setString(kOfxParamPropCacheInvalidation, 0, ParamInvalidateToString(i));
 }
 
@@ -267,7 +267,7 @@ IntParameterDescriptor::IntParameterDescriptor()
   : ValueParameterDescriptor() {
 }
 
-IntParameterDescriptor::IntParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception)
+IntParameterDescriptor::IntParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
   : ValueParameterDescriptor(h, hdl) {
 }
 
@@ -283,43 +283,43 @@ IntParameterDescriptor& IntParameterDescriptor::operator=(const IntParameterDesc
   return *this;
 }
 
-int IntParameterDescriptor::getDefault() throw(Exception) {
+int IntParameterDescriptor::getDefault() {
   return getInt(kOfxParamPropDefault, 0);
 }
 
-void IntParameterDescriptor::setDefault(int v0) throw(Exception) {
+void IntParameterDescriptor::setDefault(int v0) {
   setInt(kOfxParamPropDefault, 0, v0);
 }
 
-int IntParameterDescriptor::getMin() throw(Exception) {
+int IntParameterDescriptor::getMin() {
   return getInt(kOfxParamPropMin, 0);
 }
 
-void IntParameterDescriptor::setMin(int v) throw(Exception) {
+void IntParameterDescriptor::setMin(int v) {
   setInt(kOfxParamPropMin, 0, v);
 }
 
-int IntParameterDescriptor::getMax() throw(Exception) {
+int IntParameterDescriptor::getMax() {
   return getInt(kOfxParamPropMax, 0);
 }
 
-void IntParameterDescriptor::setMax(int v) throw(Exception) {
+void IntParameterDescriptor::setMax(int v) {
   setInt(kOfxParamPropMax, 0, v);
 }
 
-int IntParameterDescriptor::getDisplayMin() throw(Exception) {
+int IntParameterDescriptor::getDisplayMin() {
   return getInt(kOfxParamPropDisplayMin, 0);
 }
 
-void IntParameterDescriptor::setDisplayMin(int v) throw(Exception) {
+void IntParameterDescriptor::setDisplayMin(int v) {
   setInt(kOfxParamPropDisplayMin, 0, v);
 }
 
-int IntParameterDescriptor::getDisplayMax() throw(Exception) {
+int IntParameterDescriptor::getDisplayMax() {
   return getInt(kOfxParamPropDisplayMax, 0);
 }
 
-void IntParameterDescriptor::setDisplayMax(int v) throw(Exception) {
+void IntParameterDescriptor::setDisplayMax(int v) {
   setInt(kOfxParamPropDisplayMax, 0, v);
 }
 
@@ -329,7 +329,7 @@ Int2ParameterDescriptor::Int2ParameterDescriptor()
   : ValueParameterDescriptor() {
 }
 
-Int2ParameterDescriptor::Int2ParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception)
+Int2ParameterDescriptor::Int2ParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
   : ValueParameterDescriptor(h, hdl) {
 }
 
@@ -345,61 +345,61 @@ Int2ParameterDescriptor& Int2ParameterDescriptor::operator=(const Int2ParameterD
   return *this;
 }
 
-void Int2ParameterDescriptor::getDefault(int &v0, int &v1) throw(Exception) {
+void Int2ParameterDescriptor::getDefault(int &v0, int &v1) {
   v0 = getInt(kOfxParamPropDefault, 0);
   v1 = getInt(kOfxParamPropDefault, 1);
 }
 
-void Int2ParameterDescriptor::setDefault(int v0, int v1) throw(Exception) {
+void Int2ParameterDescriptor::setDefault(int v0, int v1) {
   setInt(kOfxParamPropDefault, 0, v0);
   setInt(kOfxParamPropDefault, 1, v1);
 }
 
-void Int2ParameterDescriptor::getMin(int &v0, int &v1) throw(Exception) {
+void Int2ParameterDescriptor::getMin(int &v0, int &v1) {
   v0 = getInt(kOfxParamPropMin, 0);
   v1 = getInt(kOfxParamPropMin, 1);
 }
 
-void Int2ParameterDescriptor::setMin(int v0, int v1) throw(Exception) {
+void Int2ParameterDescriptor::setMin(int v0, int v1) {
   setInt(kOfxParamPropMin, 0, v0);
   setInt(kOfxParamPropMin, 1, v1);
 }
 
-void Int2ParameterDescriptor::getMax(int &v0, int &v1) throw(Exception) {
+void Int2ParameterDescriptor::getMax(int &v0, int &v1) {
   v0 = getInt(kOfxParamPropMax, 0);
   v1 = getInt(kOfxParamPropMax, 1);
 }
 
-void Int2ParameterDescriptor::setMax(int v0, int v1) throw(Exception) {
+void Int2ParameterDescriptor::setMax(int v0, int v1) {
   setInt(kOfxParamPropMax, 0, v0);
   setInt(kOfxParamPropMax, 1, v1);
 }
 
-void Int2ParameterDescriptor::getDisplayMin(int &v0, int &v1) throw(Exception) {
+void Int2ParameterDescriptor::getDisplayMin(int &v0, int &v1) {
   v0 = getInt(kOfxParamPropDisplayMin, 0);
   v1 = getInt(kOfxParamPropDisplayMin, 1);
 }
 
-void Int2ParameterDescriptor::setDisplayMin(int v0, int v1) throw(Exception) {
+void Int2ParameterDescriptor::setDisplayMin(int v0, int v1) {
   setInt(kOfxParamPropDisplayMin, 0, v0);
   setInt(kOfxParamPropDisplayMin, 1, v1);
 }
 
-void Int2ParameterDescriptor::getDisplayMax(int &v0, int &v1) throw(Exception) {
+void Int2ParameterDescriptor::getDisplayMax(int &v0, int &v1) {
   v0 = getInt(kOfxParamPropDisplayMax, 0);
   v1 = getInt(kOfxParamPropDisplayMax, 1);
 }
 
-void Int2ParameterDescriptor::setDisplayMax(int v0, int v1) throw(Exception) {
+void Int2ParameterDescriptor::setDisplayMax(int v0, int v1) {
   setInt(kOfxParamPropDisplayMax, 0, v0);
   setInt(kOfxParamPropDisplayMax, 1, v1);
 }
 
-void Int2ParameterDescriptor::setDimensionLabel(int i, const std::string &l) throw(Exception) {
+void Int2ParameterDescriptor::setDimensionLabel(int i, const std::string &l) {
   setString(kOfxParamPropDimensionLabel, i, l);
 }
 
-std::string Int2ParameterDescriptor::getDimensionLabel(int i) throw(Exception) {
+std::string Int2ParameterDescriptor::getDimensionLabel(int i) {
   return getString(kOfxParamPropDimensionLabel, i);
 }
 
@@ -409,7 +409,7 @@ Int3ParameterDescriptor::Int3ParameterDescriptor()
   : ValueParameterDescriptor() {
 }
 
-Int3ParameterDescriptor::Int3ParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception)
+Int3ParameterDescriptor::Int3ParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
   : ValueParameterDescriptor(h, hdl) {
 }
 
@@ -425,71 +425,71 @@ Int3ParameterDescriptor& Int3ParameterDescriptor::operator=(const Int3ParameterD
   return *this;
 }
 
-void Int3ParameterDescriptor::getDefault(int &v0, int &v1, int &v2) throw(Exception) {
+void Int3ParameterDescriptor::getDefault(int &v0, int &v1, int &v2) {
   v0 = getInt(kOfxParamPropDefault, 0);
   v1 = getInt(kOfxParamPropDefault, 1);
   v2 = getInt(kOfxParamPropDefault, 2);
 }
 
-void Int3ParameterDescriptor::setDefault(int v0, int v1, int v2) throw(Exception) {
+void Int3ParameterDescriptor::setDefault(int v0, int v1, int v2) {
   setInt(kOfxParamPropDefault, 0, v0);
   setInt(kOfxParamPropDefault, 1, v1);
   setInt(kOfxParamPropDefault, 2, v2);
 }
 
-void Int3ParameterDescriptor::getMin(int &v0, int &v1, int &v2) throw(Exception) {
+void Int3ParameterDescriptor::getMin(int &v0, int &v1, int &v2) {
   v0 = getInt(kOfxParamPropMin, 0);
   v1 = getInt(kOfxParamPropMin, 1);
   v2 = getInt(kOfxParamPropMin, 2);
 }
 
-void Int3ParameterDescriptor::setMin(int v0, int v1, int v2) throw(Exception) {
+void Int3ParameterDescriptor::setMin(int v0, int v1, int v2) {
   setInt(kOfxParamPropMin, 0, v0);
   setInt(kOfxParamPropMin, 1, v1);
   setInt(kOfxParamPropMin, 2, v2);
 }
 
-void Int3ParameterDescriptor::getMax(int &v0, int &v1, int &v2) throw(Exception) {
+void Int3ParameterDescriptor::getMax(int &v0, int &v1, int &v2) {
   v0 = getInt(kOfxParamPropMax, 0);
   v1 = getInt(kOfxParamPropMax, 1);
   v2 = getInt(kOfxParamPropMax, 2);
 }
 
-void Int3ParameterDescriptor::setMax(int v0, int v1, int v2) throw(Exception) {
+void Int3ParameterDescriptor::setMax(int v0, int v1, int v2) {
   setInt(kOfxParamPropMax, 0, v0);
   setInt(kOfxParamPropMax, 1, v1);
   setInt(kOfxParamPropMax, 2, v2);
 }
 
-void Int3ParameterDescriptor::getDisplayMin(int &v0, int &v1, int &v2) throw(Exception) {
+void Int3ParameterDescriptor::getDisplayMin(int &v0, int &v1, int &v2) {
   v0 = getInt(kOfxParamPropDisplayMin, 0);
   v1 = getInt(kOfxParamPropDisplayMin, 1);
   v2 = getInt(kOfxParamPropDisplayMin, 2);
 }
 
-void Int3ParameterDescriptor::setDisplayMin(int v0, int v1, int v2) throw(Exception) {
+void Int3ParameterDescriptor::setDisplayMin(int v0, int v1, int v2) {
   setInt(kOfxParamPropDisplayMin, 0, v0);
   setInt(kOfxParamPropDisplayMin, 1, v1);
   setInt(kOfxParamPropDisplayMin, 2, v2);
 }
 
-void Int3ParameterDescriptor::getDisplayMax(int &v0, int &v1, int &v2) throw(Exception) {
+void Int3ParameterDescriptor::getDisplayMax(int &v0, int &v1, int &v2) {
   v0 = getInt(kOfxParamPropDisplayMax, 0);
   v1 = getInt(kOfxParamPropDisplayMax, 1);
   v2 = getInt(kOfxParamPropDisplayMax, 2);
 }
 
-void Int3ParameterDescriptor::setDisplayMax(int v0, int v1, int v2) throw(Exception) {
+void Int3ParameterDescriptor::setDisplayMax(int v0, int v1, int v2) {
   setInt(kOfxParamPropDisplayMax, 0, v0);
   setInt(kOfxParamPropDisplayMax, 1, v1);
   setInt(kOfxParamPropDisplayMax, 2, v2);
 }
 
-void Int3ParameterDescriptor::setDimensionLabel(int i, const std::string &l) throw(Exception) {
+void Int3ParameterDescriptor::setDimensionLabel(int i, const std::string &l) {
   setString(kOfxParamPropDimensionLabel, i, l);
 }
 
-std::string Int3ParameterDescriptor::getDimensionLabel(int i) throw(Exception) {
+std::string Int3ParameterDescriptor::getDimensionLabel(int i) {
   return getString(kOfxParamPropDimensionLabel, i);
 }
 
@@ -499,7 +499,7 @@ DoubleParameterDescriptor::DoubleParameterDescriptor()
   : ValueParameterDescriptor() {
 }
 
-DoubleParameterDescriptor::DoubleParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception)
+DoubleParameterDescriptor::DoubleParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
   : ValueParameterDescriptor(h, hdl) {
 }
 
@@ -515,75 +515,75 @@ DoubleParameterDescriptor& DoubleParameterDescriptor::operator=(const DoublePara
   return *this;
 }
 
-double DoubleParameterDescriptor::getDefault() throw(Exception) {
+double DoubleParameterDescriptor::getDefault() {
   return getDouble(kOfxParamPropDefault, 0);
 }
 
-void DoubleParameterDescriptor::setDefault(double v0) throw(Exception) {
+void DoubleParameterDescriptor::setDefault(double v0) {
   setDouble(kOfxParamPropDefault, 0, v0);
 }
 
-double DoubleParameterDescriptor::getMin() throw(Exception) {
+double DoubleParameterDescriptor::getMin() {
   return getDouble(kOfxParamPropMin, 0);
 }
 
-void DoubleParameterDescriptor::setMin(double min0) throw(Exception) {
+void DoubleParameterDescriptor::setMin(double min0) {
   setDouble(kOfxParamPropMin, 0, min0);
 }
 
-double DoubleParameterDescriptor::getMax() throw(Exception) {
+double DoubleParameterDescriptor::getMax() {
   return getDouble(kOfxParamPropMax, 0);
 }
 
-void DoubleParameterDescriptor::setMax(double max0) throw(Exception) {
+void DoubleParameterDescriptor::setMax(double max0) {
   setDouble(kOfxParamPropMax, 0, max0);
 }
 
-double DoubleParameterDescriptor::getDisplayMin() throw(Exception) {
+double DoubleParameterDescriptor::getDisplayMin() {
   return getDouble(kOfxParamPropDisplayMin, 0);
 }
 
-void DoubleParameterDescriptor::setDisplayMin(double min0) throw(Exception) {
+void DoubleParameterDescriptor::setDisplayMin(double min0) {
   setDouble(kOfxParamPropDisplayMin, 0, min0);
 }
 
-double DoubleParameterDescriptor::getDisplayMax() throw(Exception) {
+double DoubleParameterDescriptor::getDisplayMax() {
   return getDouble(kOfxParamPropDisplayMax, 0);
 }
 
-void DoubleParameterDescriptor::setDisplayMax(double max0) throw(Exception) {
+void DoubleParameterDescriptor::setDisplayMax(double max0) {
   setDouble(kOfxParamPropDisplayMax, 0, max0);
 }
 
-double DoubleParameterDescriptor::increment() throw(Exception) {
+double DoubleParameterDescriptor::increment() {
   return getDouble(kOfxParamPropIncrement, 0);
 }
 
-void DoubleParameterDescriptor::setIncrement(double i) throw(Exception) {
+void DoubleParameterDescriptor::setIncrement(double i) {
   setDouble(kOfxParamPropIncrement, 0, i);
 }
 
-int DoubleParameterDescriptor::digits() throw(Exception) {
+int DoubleParameterDescriptor::digits() {
   return getInt(kOfxParamPropDigits, 0);
 }
 
-void DoubleParameterDescriptor::setDigits(int d) throw(Exception) {
+void DoubleParameterDescriptor::setDigits(int d) {
   setInt(kOfxParamPropDigits, 0, d);
 }
 
-bool DoubleParameterDescriptor::showTimeMarker() throw(Exception) {
+bool DoubleParameterDescriptor::showTimeMarker() {
   return (getInt(kOfxParamPropShowTimeMarker, 0) == 1);
 }
 
-void DoubleParameterDescriptor::setShowTimeMarker(bool yes) throw(Exception) {
+void DoubleParameterDescriptor::setShowTimeMarker(bool yes) {
   setInt(kOfxParamPropShowTimeMarker, 0, (yes ? 1 : 0));
 }
 
-DoubleParamType DoubleParameterDescriptor::doubleType() throw(Exception) {
+DoubleParamType DoubleParameterDescriptor::doubleType() {
   return StringToDoubleParamType(getString(kOfxParamPropDoubleType, 0));
 }
 
-void DoubleParameterDescriptor::setDoubleType(DoubleParamType t) throw(Exception) {
+void DoubleParameterDescriptor::setDoubleType(DoubleParamType t) {
   setString(kOfxParamPropDoubleType, 0, DoubleParamTypeToString(t));
 }
 
@@ -593,7 +593,7 @@ Double2ParameterDescriptor::Double2ParameterDescriptor()
   : ValueParameterDescriptor() {
 }
 
-Double2ParameterDescriptor::Double2ParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception)
+Double2ParameterDescriptor::Double2ParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
   : ValueParameterDescriptor(h, hdl) {
 }
 
@@ -609,85 +609,85 @@ Double2ParameterDescriptor& Double2ParameterDescriptor::operator=(const Double2P
   return *this;
 }
 
-void Double2ParameterDescriptor::getDefault(double &v0, double &v1) throw(Exception) {
+void Double2ParameterDescriptor::getDefault(double &v0, double &v1) {
   v0 = getDouble(kOfxParamPropDefault, 0);
   v1 = getDouble(kOfxParamPropDefault, 1);
 }
 
-void Double2ParameterDescriptor::setDefault(double v0, double v1) throw(Exception) {
+void Double2ParameterDescriptor::setDefault(double v0, double v1) {
   setDouble(kOfxParamPropDefault, 0, v0);
   setDouble(kOfxParamPropDefault, 1, v1);
 }
 
-void Double2ParameterDescriptor::getMin(double &v0, double &v1) throw(Exception) {
+void Double2ParameterDescriptor::getMin(double &v0, double &v1) {
   v0 = getDouble(kOfxParamPropMin, 0);
   v1 = getDouble(kOfxParamPropMin, 1);
 }
 
-void Double2ParameterDescriptor::setMin(double min0, double min1) throw(Exception) {
+void Double2ParameterDescriptor::setMin(double min0, double min1) {
   setDouble(kOfxParamPropMin, 0, min0);
   setDouble(kOfxParamPropMin, 1, min1);
 }
 
-void Double2ParameterDescriptor::getMax(double &v0, double &v1) throw(Exception) {
+void Double2ParameterDescriptor::getMax(double &v0, double &v1) {
   v0 = getDouble(kOfxParamPropMax, 0);
   v1 = getDouble(kOfxParamPropMax, 1);
 }
 
-void Double2ParameterDescriptor::setMax(double max0, double max1) throw(Exception) {
+void Double2ParameterDescriptor::setMax(double max0, double max1) {
   setDouble(kOfxParamPropMax, 0, max0);
   setDouble(kOfxParamPropMax, 1, max1);
 }
 
-void Double2ParameterDescriptor::getDisplayMin(double &v0, double &v1) throw(Exception) {
+void Double2ParameterDescriptor::getDisplayMin(double &v0, double &v1) {
   v0 = getDouble(kOfxParamPropDisplayMin, 0);
   v1 = getDouble(kOfxParamPropDisplayMin, 1);
 }
 
-void Double2ParameterDescriptor::setDisplayMin(double min0, double min1) throw(Exception) {
+void Double2ParameterDescriptor::setDisplayMin(double min0, double min1) {
   setDouble(kOfxParamPropDisplayMin, 0, min0);
   setDouble(kOfxParamPropDisplayMin, 1, min1);
 }
 
-void Double2ParameterDescriptor::getDisplayMax(double &v0, double &v1) throw(Exception) {
+void Double2ParameterDescriptor::getDisplayMax(double &v0, double &v1) {
   v0 = getDouble(kOfxParamPropDisplayMax, 0);
   v1 = getDouble(kOfxParamPropDisplayMax, 1);
 }
 
-void Double2ParameterDescriptor::setDisplayMax(double max0, double max1) throw(Exception) {
+void Double2ParameterDescriptor::setDisplayMax(double max0, double max1) {
   setDouble(kOfxParamPropDisplayMax, 0, max0);
   setDouble(kOfxParamPropDisplayMax, 1, max1);
 }
 
-double Double2ParameterDescriptor::increment() throw(Exception) {
+double Double2ParameterDescriptor::increment() {
   return getDouble(kOfxParamPropIncrement, 0);
 }
 
-void Double2ParameterDescriptor::setIncrement(double i) throw(Exception) {
+void Double2ParameterDescriptor::setIncrement(double i) {
   setDouble(kOfxParamPropIncrement, 0, i);
 }
 
-int Double2ParameterDescriptor::digits() throw(Exception) {
+int Double2ParameterDescriptor::digits() {
   return getInt(kOfxParamPropDigits, 0);
 }
 
-void Double2ParameterDescriptor::setDigits(int d) throw(Exception) {
+void Double2ParameterDescriptor::setDigits(int d) {
   setInt(kOfxParamPropDigits, 0, d);
 }
 
-DoubleParamType Double2ParameterDescriptor::doubleType() throw(Exception) {
+DoubleParamType Double2ParameterDescriptor::doubleType() {
   return StringToDoubleParamType(getString(kOfxParamPropDoubleType, 0));
 }
 
-void Double2ParameterDescriptor::setDoubleType(DoubleParamType t) throw(Exception) {
+void Double2ParameterDescriptor::setDoubleType(DoubleParamType t) {
   setString(kOfxParamPropDoubleType, 0, DoubleParamTypeToString(t));
 }
 
-void Double2ParameterDescriptor::setDimensionLabel(int i, const std::string &name) throw(Exception) {
+void Double2ParameterDescriptor::setDimensionLabel(int i, const std::string &name) {
   setString(kOfxParamPropDimensionLabel, i, name);
 }
 
-std::string Double2ParameterDescriptor::getDimensionLabel(int i) throw(Exception) {
+std::string Double2ParameterDescriptor::getDimensionLabel(int i) {
   return getString(kOfxParamPropDimensionLabel, i);
 }
 
@@ -697,7 +697,7 @@ Double3ParameterDescriptor::Double3ParameterDescriptor()
   : ValueParameterDescriptor() {
 }
 
-Double3ParameterDescriptor::Double3ParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception)
+Double3ParameterDescriptor::Double3ParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
   : ValueParameterDescriptor(h, hdl) {
 }
 
@@ -713,95 +713,95 @@ Double3ParameterDescriptor& Double3ParameterDescriptor::operator=(const Double3P
   return *this;
 }
 
-void Double3ParameterDescriptor::getDefault(double &v0, double &v1, double &v2) throw(Exception) {
+void Double3ParameterDescriptor::getDefault(double &v0, double &v1, double &v2) {
   v0 = getDouble(kOfxParamPropDefault, 0);
   v1 = getDouble(kOfxParamPropDefault, 1);
   v2 = getDouble(kOfxParamPropDefault, 2);
 }
 
-void Double3ParameterDescriptor::setDefault(double v0, double v1, double v2) throw(Exception) {
+void Double3ParameterDescriptor::setDefault(double v0, double v1, double v2) {
   setDouble(kOfxParamPropDefault, 0, v0);
   setDouble(kOfxParamPropDefault, 1, v1);
   setDouble(kOfxParamPropDefault, 2, v2);
 }
 
-void Double3ParameterDescriptor::getMin(double &v0, double &v1, double &v2) throw(Exception) {
+void Double3ParameterDescriptor::getMin(double &v0, double &v1, double &v2) {
   v0 = getDouble(kOfxParamPropMin, 0);
   v1 = getDouble(kOfxParamPropMin, 1);
   v2 = getDouble(kOfxParamPropMin, 2);
 }
 
-void Double3ParameterDescriptor::setMin(double min0, double min1, double min2) throw(Exception) {
+void Double3ParameterDescriptor::setMin(double min0, double min1, double min2) {
   setDouble(kOfxParamPropMin, 0, min0);
   setDouble(kOfxParamPropMin, 1, min1);
   setDouble(kOfxParamPropMin, 2, min2);
 }
 
-void Double3ParameterDescriptor::getMax(double &v0, double &v1, double &v2) throw(Exception) {
+void Double3ParameterDescriptor::getMax(double &v0, double &v1, double &v2) {
   v0 = getDouble(kOfxParamPropMax, 0);
   v1 = getDouble(kOfxParamPropMax, 1);
   v2 = getDouble(kOfxParamPropMax, 2);
 }
 
-void Double3ParameterDescriptor::setMax(double max0, double max1, double max2) throw(Exception) {
+void Double3ParameterDescriptor::setMax(double max0, double max1, double max2) {
   setDouble(kOfxParamPropMax, 0, max0);
   setDouble(kOfxParamPropMax, 1, max1);
   setDouble(kOfxParamPropMax, 2, max2);
 }
 
-void Double3ParameterDescriptor::getDisplayMin(double &v0, double &v1, double &v2) throw(Exception) {
+void Double3ParameterDescriptor::getDisplayMin(double &v0, double &v1, double &v2) {
   v0 = getDouble(kOfxParamPropDisplayMin, 0);
   v1 = getDouble(kOfxParamPropDisplayMin, 1);
   v2 = getDouble(kOfxParamPropDisplayMin, 2);
 }
 
-void Double3ParameterDescriptor::setDisplayMin(double min0, double min1, double min2) throw(Exception) {
+void Double3ParameterDescriptor::setDisplayMin(double min0, double min1, double min2) {
   setDouble(kOfxParamPropDisplayMin, 0, min0);
   setDouble(kOfxParamPropDisplayMin, 1, min1);
   setDouble(kOfxParamPropDisplayMin, 2, min2);
 }
 
-void Double3ParameterDescriptor::getDisplayMax(double &v0, double &v1, double &v2) throw(Exception) {
+void Double3ParameterDescriptor::getDisplayMax(double &v0, double &v1, double &v2) {
   v0 = getDouble(kOfxParamPropDisplayMax, 0);
   v1 = getDouble(kOfxParamPropDisplayMax, 1);
   v2 = getDouble(kOfxParamPropDisplayMax, 2);
 }
 
-void Double3ParameterDescriptor::setDisplayMax(double max0, double max1, double max2) throw(Exception) {
+void Double3ParameterDescriptor::setDisplayMax(double max0, double max1, double max2) {
   setDouble(kOfxParamPropDisplayMax, 0, max0);
   setDouble(kOfxParamPropDisplayMax, 1, max1);
   setDouble(kOfxParamPropDisplayMax, 2, max2);
 }
 
-double Double3ParameterDescriptor::increment() throw(Exception) {
+double Double3ParameterDescriptor::increment() {
   return getDouble(kOfxParamPropIncrement, 0);
 }
 
-void Double3ParameterDescriptor::setIncrement(double i) throw(Exception) {
+void Double3ParameterDescriptor::setIncrement(double i) {
   setDouble(kOfxParamPropIncrement, 0, i);
 }
 
-int Double3ParameterDescriptor::digits() throw(Exception) {
+int Double3ParameterDescriptor::digits() {
   return getInt(kOfxParamPropDigits, 0);
 }
 
-void Double3ParameterDescriptor::setDigits(int d) throw(Exception) {
+void Double3ParameterDescriptor::setDigits(int d) {
   setInt(kOfxParamPropDigits, 0, d);
 }
 
-DoubleParamType Double3ParameterDescriptor::doubleType() throw(Exception) {
+DoubleParamType Double3ParameterDescriptor::doubleType() {
   return StringToDoubleParamType(getString(kOfxParamPropDoubleType, 0));
 }
 
-void Double3ParameterDescriptor::setDoubleType(DoubleParamType t) throw(Exception) {
+void Double3ParameterDescriptor::setDoubleType(DoubleParamType t) {
   setString(kOfxParamPropDoubleType, 0, DoubleParamTypeToString(t));
 }
 
-void Double3ParameterDescriptor::setDimensionLabel(int i, const std::string &name) throw(Exception) {
+void Double3ParameterDescriptor::setDimensionLabel(int i, const std::string &name) {
   setString(kOfxParamPropDimensionLabel, i, name);
 }
 
-std::string Double3ParameterDescriptor::getDimensionLabel(int i) throw(Exception) {
+std::string Double3ParameterDescriptor::getDimensionLabel(int i) {
   return getString(kOfxParamPropDimensionLabel, i);
 }
 
@@ -811,7 +811,7 @@ ChoiceParameterDescriptor::ChoiceParameterDescriptor()
   : ValueParameterDescriptor() {
 }
 
-ChoiceParameterDescriptor::ChoiceParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception)
+ChoiceParameterDescriptor::ChoiceParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
   : ValueParameterDescriptor(h, hdl) {
 }
 
@@ -827,23 +827,23 @@ ChoiceParameterDescriptor& ChoiceParameterDescriptor::operator=(const ChoicePara
   return *this;
 }
 
-int ChoiceParameterDescriptor::getDefault() throw(Exception) {
+int ChoiceParameterDescriptor::getDefault() {
   return getInt(kOfxParamPropDefault, 0);
 }
 
-void ChoiceParameterDescriptor::setDefault(int v) throw(Exception) {
+void ChoiceParameterDescriptor::setDefault(int v) {
   setInt(kOfxParamPropDefault, 0, v);
 }
 
-int ChoiceParameterDescriptor::getChoiceCount() throw(Exception) {
+int ChoiceParameterDescriptor::getChoiceCount() {
   return size(kOfxParamPropChoiceOption);
 }
 
-void ChoiceParameterDescriptor::setChoice(int i, const std::string &str) throw(Exception) {
+void ChoiceParameterDescriptor::setChoice(int i, const std::string &str) {
   setString(kOfxParamPropChoiceOption, i, str);
 }
 
-std::string ChoiceParameterDescriptor::getChoice(int i) throw(Exception) {
+std::string ChoiceParameterDescriptor::getChoice(int i) {
   return getString(kOfxParamPropChoiceOption, i);
 }
 
@@ -853,7 +853,7 @@ StringParameterDescriptor::StringParameterDescriptor()
   : ValueParameterDescriptor() {
 }
 
-StringParameterDescriptor::StringParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception)
+StringParameterDescriptor::StringParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
   : ValueParameterDescriptor(h, hdl) {
   
 }
@@ -871,27 +871,27 @@ StringParameterDescriptor& StringParameterDescriptor::operator=(const StringPara
   return *this;
 }
 
-std::string StringParameterDescriptor::getDefault() throw(Exception) {
+std::string StringParameterDescriptor::getDefault() {
   return getString(kOfxParamPropDefault, 0);
 }
 
-void StringParameterDescriptor::setDefault(const std::string &v) throw(Exception) {
+void StringParameterDescriptor::setDefault(const std::string &v) {
   setString(kOfxParamPropDefault, 0, v);
 }
 
-StringParamMode StringParameterDescriptor::mode() throw(Exception) {
+StringParamMode StringParameterDescriptor::mode() {
   return StringToStringParamMode(getString(kOfxParamPropStringMode, 0));
 }
 
-void StringParameterDescriptor::setMode(StringParamMode m) throw(Exception) {
+void StringParameterDescriptor::setMode(StringParamMode m) {
   setString(kOfxParamPropStringMode, 0, StringParamModeToString(m));
 }
 
-bool StringParameterDescriptor::filePathExists() throw(Exception) {
+bool StringParameterDescriptor::filePathExists() {
   return (getInt(kOfxParamPropStringFilePathExists, 0) == 1);
 }
 
-void StringParameterDescriptor::setFilePathExists(bool yes) throw(Exception) {
+void StringParameterDescriptor::setFilePathExists(bool yes) {
   setInt(kOfxParamPropStringFilePathExists, 0, (yes ? 1 : 0));
 }
 
@@ -901,7 +901,7 @@ CustomParameterDescriptor::CustomParameterDescriptor()
   : ValueParameterDescriptor() {
 }
 
-CustomParameterDescriptor::CustomParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception)
+CustomParameterDescriptor::CustomParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
   : ValueParameterDescriptor(h, hdl) {
 }
 
@@ -917,15 +917,15 @@ CustomParameterDescriptor& CustomParameterDescriptor::operator=(const CustomPara
   return *this;
 }
 
-std::string CustomParameterDescriptor::getDefault() throw(Exception) {
+std::string CustomParameterDescriptor::getDefault() {
   return getString(kOfxParamPropDefault, 0);
 }
 
-void CustomParameterDescriptor::setDefault(const std::string &v) throw(Exception) {
+void CustomParameterDescriptor::setDefault(const std::string &v) {
   setString(kOfxParamPropDefault, 0, v);
 }
 
-void* CustomParameterDescriptor::getInterpolator() throw(Exception) {
+void* CustomParameterDescriptor::getInterpolator() {
   return getPointer(kOfxParamPropCustomInterpCallbackV1, 0);
 }
 
@@ -935,7 +935,7 @@ BooleanParameterDescriptor::BooleanParameterDescriptor()
   : ValueParameterDescriptor() {
 }
 
-BooleanParameterDescriptor::BooleanParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception)
+BooleanParameterDescriptor::BooleanParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
   : ValueParameterDescriptor(h, hdl) {
 }
 
@@ -951,11 +951,11 @@ BooleanParameterDescriptor& BooleanParameterDescriptor::operator=(const BooleanP
   return *this;
 }
 
-bool BooleanParameterDescriptor::getDefault() throw(Exception) {
+bool BooleanParameterDescriptor::getDefault() {
   return (getInt(kOfxParamPropDefault, 0) == 1);
 }
 
-void BooleanParameterDescriptor::setDefault(bool v) throw(Exception) {
+void BooleanParameterDescriptor::setDefault(bool v) {
   setInt(kOfxParamPropDefault, 0, (v ? 1 : 0));
 }
 
@@ -965,7 +965,7 @@ RGBParameterDescriptor::RGBParameterDescriptor()
   : ValueParameterDescriptor() {
 }
 
-RGBParameterDescriptor::RGBParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception)
+RGBParameterDescriptor::RGBParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
   : ValueParameterDescriptor(h, hdl) {
 }
 
@@ -981,14 +981,14 @@ RGBParameterDescriptor& RGBParameterDescriptor::operator=(const RGBParameterDesc
   return *this;
 }
 
-RGBAColour<double> RGBParameterDescriptor::getDefault() throw(Exception) {
+RGBAColour<double> RGBParameterDescriptor::getDefault() {
   RGBAColour<double> rv;
   getDoubles(kOfxParamPropDefault, 3, &(rv.r));
   rv.a = 1.0;
   return rv;
 }
 
-void RGBParameterDescriptor::setDefault(const RGBAColour<double> &v) throw(Exception) {
+void RGBParameterDescriptor::setDefault(const RGBAColour<double> &v) {
   setDoubles(kOfxParamPropDefault, 3, (double*)&(v.r));
 }
 
@@ -998,7 +998,7 @@ RGBAParameterDescriptor::RGBAParameterDescriptor()
   : ValueParameterDescriptor() {
 }
 
-RGBAParameterDescriptor::RGBAParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception)
+RGBAParameterDescriptor::RGBAParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
   : ValueParameterDescriptor(h, hdl) {
 }
 
@@ -1014,13 +1014,13 @@ RGBAParameterDescriptor& RGBAParameterDescriptor::operator=(const RGBAParameterD
   return *this;
 }
 
-RGBAColour<double> RGBAParameterDescriptor::getDefault() throw(Exception) {
+RGBAColour<double> RGBAParameterDescriptor::getDefault() {
   RGBAColour<double> rv;
   getDoubles(kOfxParamPropDefault, 4, &(rv.r));
   return rv;
 }
 
-void RGBAParameterDescriptor::setDefault(const RGBAColour<double> &v) throw(Exception) {
+void RGBAParameterDescriptor::setDefault(const RGBAColour<double> &v) {
   setDoubles(kOfxParamPropDefault, 4, (double*)&(v.r));
 }
 
@@ -1030,7 +1030,7 @@ PageParameterDescriptor::PageParameterDescriptor()
   : ParameterDescriptor() {
 }
 
-PageParameterDescriptor::PageParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception)
+PageParameterDescriptor::PageParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
   : ParameterDescriptor(h, hdl) {
 }
 
@@ -1046,15 +1046,15 @@ PageParameterDescriptor& PageParameterDescriptor::operator=(const PageParameterD
   return *this;
 }
 
-int PageParameterDescriptor::getChildCount() throw(Exception) {
+int PageParameterDescriptor::getChildCount() {
   return size(kOfxParamPropPageChild);
 }
 
-void PageParameterDescriptor::setChild(int i, const std::string &name) throw(Exception) {
+void PageParameterDescriptor::setChild(int i, const std::string &name) {
   setString(kOfxParamPropPageChild, i, name);
 }
 
-std::string PageParameterDescriptor::getChild(int i) throw(Exception) {
+std::string PageParameterDescriptor::getChild(int i) {
   return getString(kOfxParamPropPageChild, i);
 }
 
@@ -1064,7 +1064,7 @@ PushButtonParameterDescriptor::PushButtonParameterDescriptor()
   : ParameterDescriptor() {
 }
 
-PushButtonParameterDescriptor::PushButtonParameterDescriptor(Host *h, OfxPropertySetHandle hdl) throw(Exception)
+PushButtonParameterDescriptor::PushButtonParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
   : ParameterDescriptor(h, hdl) {
 }
 
@@ -1080,48 +1080,48 @@ PushButtonParameterDescriptor& PushButtonParameterDescriptor::operator=(const Pu
   return *this;
 }
 
-EntryPoint PushButtonParameterDescriptor::interact() throw(Exception) {
+EntryPoint PushButtonParameterDescriptor::interact() {
   return ((EntryPoint) getPointer(kOfxParamPropInteractV1, 0));
 }
 
-void PushButtonParameterDescriptor::setInteract(EntryPoint func) throw(Exception) {
+void PushButtonParameterDescriptor::setInteract(EntryPoint func) {
   setPointer(kOfxParamPropInteractV1, 0, (void*)func);
 }
 
-void PushButtonParameterDescriptor::interactSize(double &w, double &h) throw(Exception) {
+void PushButtonParameterDescriptor::interactSize(double &w, double &h) {
   w = getDouble(kOfxParamPropInteractSize, 0);
   h = getDouble(kOfxParamPropInteractSize, 1);
 }
 
-void PushButtonParameterDescriptor::setInteractSize(double w, double h) throw(Exception) {
+void PushButtonParameterDescriptor::setInteractSize(double w, double h) {
   setDouble(kOfxParamPropInteractSize, 0, w);
   setDouble(kOfxParamPropInteractSize, 1, h);
 }
 
-double PushButtonParameterDescriptor::interactSizeAspect() throw(Exception) {
+double PushButtonParameterDescriptor::interactSizeAspect() {
   return getDouble(kOfxParamPropInteractSizeAspect, 0);
 }
 
-void PushButtonParameterDescriptor::setInteractSizeAspect(double a) throw(Exception) {
+void PushButtonParameterDescriptor::setInteractSizeAspect(double a) {
   setDouble(kOfxParamPropInteractSizeAspect, 0, a);
 }
 
-void PushButtonParameterDescriptor::interactMinimumSize(int &w, int &h) throw(Exception) {
+void PushButtonParameterDescriptor::interactMinimumSize(int &w, int &h) {
   w = getInt(kOfxParamPropInteractMinimumSize, 0);
   h = getInt(kOfxParamPropInteractMinimumSize, 1);
 }
 
-void PushButtonParameterDescriptor::setMinimumInteractSize(int w, int h) throw(Exception) {
+void PushButtonParameterDescriptor::setMinimumInteractSize(int w, int h) {
   setInt(kOfxParamPropInteractMinimumSize, 0, w);
   setInt(kOfxParamPropInteractMinimumSize, 1, h);
 }
 
-void PushButtonParameterDescriptor::interactPreferedSize(int &w, int &h) throw(Exception) {
+void PushButtonParameterDescriptor::interactPreferedSize(int &w, int &h) {
   w = getInt(kOfxParamPropInteractPreferedSize, 0);
   h = getInt(kOfxParamPropInteractPreferedSize, 1);
 }
 
-void PushButtonParameterDescriptor::setInteractPreferedSize(int w, int h) throw(Exception) {
+void PushButtonParameterDescriptor::setInteractPreferedSize(int w, int h) {
   setInt(kOfxParamPropInteractPreferedSize, 0, w);
   setInt(kOfxParamPropInteractPreferedSize, 1, h);
 }
@@ -1135,7 +1135,7 @@ Parameter::Parameter()
 Parameter::Parameter(Host *h, OfxParamHandle hdl) throw(Exception)
   : mHandle(hdl) {
   if (!h) {
-    throw Exception(kOfxStatErrFatal, "ofx::Parameter::Parameter: no host");
+    throw BadHandleError("ofx::Parameter::Parameter: invalid host");
   }
   mSuite = h->parameterSuite();
   OfxPropertySetHandle hProps;
@@ -1158,79 +1158,79 @@ Parameter& Parameter::operator=(const Parameter &rhs) {
   return *this;
 }
 
-std::string Parameter::name() throw(Exception) {
+std::string Parameter::name() {
   return mProps.getString(kOfxPropName, 0);
 }
 
-std::string Parameter::label() throw(Exception) {
+std::string Parameter::label() {
   return mProps.getString(kOfxPropLabel, 0);
 }
 
-void Parameter::setLabel(const std::string &lbl) throw(Exception) {
+void Parameter::setLabel(const std::string &lbl) {
   mProps.setString(kOfxPropLabel, 0, lbl);
 }
 
-std::string Parameter::shortLabel() throw(Exception) {
+std::string Parameter::shortLabel() {
   return mProps.getString(kOfxPropShortLabel, 0);
 }
 
-void Parameter::setShortLabel(const std::string &lbl) throw(Exception) {
+void Parameter::setShortLabel(const std::string &lbl) {
   mProps.setString(kOfxPropShortLabel, 0, lbl);
 }
 
-std::string Parameter::longLabel() throw(Exception) {
+std::string Parameter::longLabel() {
   return mProps.getString(kOfxPropLongLabel, 0);
 }
 
-void Parameter::setLongLabel(const std::string &lbl) throw(Exception) {
+void Parameter::setLongLabel(const std::string &lbl) {
   mProps.setString(kOfxPropLongLabel, 0, lbl);
 }
 
-ParamType Parameter::type() throw(Exception) {
+ParamType Parameter::type() {
   return StringToParamType(mProps.getString(kOfxParamPropType, 0));
 }
 
-bool Parameter::isSecret() throw(Exception) {
+bool Parameter::isSecret() {
   return (mProps.getInt(kOfxParamPropSecret, 0) == 1);
 }
 
-void Parameter::setSecret(bool yes) throw(Exception) {
+void Parameter::setSecret(bool yes) {
   mProps.setInt(kOfxParamPropSecret, 0, (yes ? 1 : 0));
 }
 
-bool Parameter::canUndo() throw(Exception) {
+bool Parameter::canUndo() {
   return (mProps.getInt(kOfxParamPropCanUndo, 0) == 1);
 }
 
-std::string Parameter::hint() throw(Exception) {
+std::string Parameter::hint() {
   return mProps.getString(kOfxParamPropHint, 0);
 }
 
-void Parameter::setHint(const std::string &h) throw(Exception) {
+void Parameter::setHint(const std::string &h) {
   mProps.setString(kOfxParamPropHint, 0, h);
 }
 
-std::string Parameter::scriptName() throw(Exception) {
+std::string Parameter::scriptName() {
   return mProps.getString(kOfxParamPropScriptName, 0);
 }
 
-std::string Parameter::parent() throw(Exception) {
+std::string Parameter::parent() {
   return mProps.getString(kOfxParamPropParent, 0);
 }
 
-bool Parameter::isEnable() throw(Exception) {
+bool Parameter::isEnable() {
   return (mProps.getInt(kOfxParamPropEnabled, 0) == 1);
 }
 
-void Parameter::enable(bool yes) throw(Exception) {
+void Parameter::enable(bool yes) {
   mProps.setInt(kOfxParamPropEnabled, 0, (yes ? 1 : 0));
 }
 
-void* Parameter::data() throw(Exception) {
+void* Parameter::data() {
   return mProps.getPointer(kOfxParamPropDataPtr, 0);
 }
 
-void Parameter::setData(void *d) throw(Exception) {
+void Parameter::setData(void *d) {
   mProps.setPointer(kOfxParamPropDataPtr, 0, d);
 }
 
@@ -1240,7 +1240,7 @@ ValueParameter::ValueParameter()
   : Parameter() {
 }
 
-ValueParameter::ValueParameter(Host *h, OfxParamHandle hdl) throw(Exception)
+ValueParameter::ValueParameter(Host *h, OfxParamHandle hdl)
   : Parameter(h, hdl) {
 }
 
@@ -1256,54 +1256,54 @@ ValueParameter& ValueParameter::operator=(const ValueParameter &rhs) {
   return *this;
 }
 
-EntryPoint ValueParameter::interact() throw(Exception) {
+EntryPoint ValueParameter::interact() {
   return ((EntryPoint) mProps.getPointer(kOfxParamPropInteractV1, 0));
 }
 
-void ValueParameter::interactSize(double &w, double &h) throw(Exception) {
+void ValueParameter::interactSize(double &w, double &h) {
   w = mProps.getDouble(kOfxParamPropInteractSize, 0);
   h = mProps.getDouble(kOfxParamPropInteractSize, 1);
 }
 
-double ValueParameter::interactSizeAspect() throw(Exception) {
+double ValueParameter::interactSizeAspect() {
   return mProps.getDouble(kOfxParamPropInteractSizeAspect, 0);
 }
 
-void ValueParameter::interactMinimumSize(int &w, int &h) throw(Exception) {
+void ValueParameter::interactMinimumSize(int &w, int &h) {
   w = mProps.getInt(kOfxParamPropInteractMinimumSize, 0);
   h = mProps.getInt(kOfxParamPropInteractMinimumSize, 1);
 }
 
-void ValueParameter::interactPreferedSize(int &w, int &h) throw(Exception) {
+void ValueParameter::interactPreferedSize(int &w, int &h) {
   w = mProps.getInt(kOfxParamPropInteractPreferedSize, 0);
   h = mProps.getInt(kOfxParamPropInteractPreferedSize, 1);
 }
 
-bool ValueParameter::isAnimateable() throw(Exception) {
+bool ValueParameter::isAnimateable() {
   return (mProps.getInt(kOfxParamPropAnimates, 0) == 1);
 }
 
-bool ValueParameter::isAnimating() throw(Exception) {
+bool ValueParameter::isAnimating() {
   return (mProps.getInt(kOfxParamPropIsAnimating, 0) == 1);
 }
 
-bool ValueParameter::isAutoKeying() throw(Exception) {
+bool ValueParameter::isAutoKeying() {
   return (mProps.getInt(kOfxParamPropIsAutoKeying, 0) == 1);
 }
 
-bool ValueParameter::isPersistant() throw(Exception) {
+bool ValueParameter::isPersistant() {
   return (mProps.getInt(kOfxParamPropPersistant, 0) == 1);
 }
 
-bool ValueParameter::evaluateOnChange() throw(Exception) {
+bool ValueParameter::evaluateOnChange() {
   return (mProps.getInt(kOfxParamPropEvaluateOnChange, 0) == 1);
 }
 
-bool ValueParameter::pluginMayWrite() throw(Exception) {
+bool ValueParameter::pluginMayWrite() {
   return (mProps.getInt(kOfxParamPropPluginMayWrite, 0) == 1);
 }
 
-ParamInvalidate ValueParameter::cacheInvalidation() throw(Exception) {
+ParamInvalidate ValueParameter::cacheInvalidation() {
   return StringToParamInvalidate(mProps.getString(kOfxParamPropCacheInvalidation, 0));
 }
 
@@ -1374,7 +1374,7 @@ IntParameter::IntParameter()
   : ValueParameter() {
 }
 
-IntParameter::IntParameter(Host *h, OfxParamHandle hdl) throw(Exception)
+IntParameter::IntParameter(Host *h, OfxParamHandle hdl)
   : ValueParameter(h, hdl) {
 }
 
@@ -1390,39 +1390,39 @@ IntParameter& IntParameter::operator=(const IntParameter &rhs) {
   return *this;
 }
 
-int IntParameter::getDefault() throw(Exception) {
+int IntParameter::getDefault() {
   return mProps.getInt(kOfxParamPropDefault, 0);
 }
 
-int IntParameter::getMin() throw(Exception) {
+int IntParameter::getMin() {
   return mProps.getInt(kOfxParamPropMin, 0);
 }
 
-void IntParameter::setMin(int v) throw(Exception) {
+void IntParameter::setMin(int v) {
   mProps.setInt(kOfxParamPropMin, 0, v);
 }
 
-int IntParameter::getMax() throw(Exception) {
+int IntParameter::getMax() {
   return mProps.getInt(kOfxParamPropMax, 0);
 }
 
-void IntParameter::setMax(int v) throw(Exception) {
+void IntParameter::setMax(int v) {
   mProps.setInt(kOfxParamPropMax, 0, v);
 }
 
-int IntParameter::getDisplayMin() throw(Exception) {
+int IntParameter::getDisplayMin() {
   return mProps.getInt(kOfxParamPropDisplayMin, 0);
 }
 
-void IntParameter::setDisplayMin(int v) throw(Exception) {
+void IntParameter::setDisplayMin(int v) {
   mProps.setInt(kOfxParamPropDisplayMin, 0, v);
 }
 
-int IntParameter::getDisplayMax() throw(Exception) {
+int IntParameter::getDisplayMax() {
   return mProps.getInt(kOfxParamPropDisplayMax, 0);
 }
 
-void IntParameter::setDisplayMax(int v) throw(Exception) {
+void IntParameter::setDisplayMax(int v) {
   mProps.setInt(kOfxParamPropDisplayMax, 0, v);
 }
 
@@ -1482,7 +1482,7 @@ Int2Parameter::Int2Parameter()
   : ValueParameter() {
 }
 
-Int2Parameter::Int2Parameter(Host *h, OfxParamHandle hdl) throw(Exception)
+Int2Parameter::Int2Parameter(Host *h, OfxParamHandle hdl)
   : ValueParameter(h, hdl) {
 }
 
@@ -1498,52 +1498,52 @@ Int2Parameter& Int2Parameter::operator=(const Int2Parameter &rhs) {
   return *this;
 }
 
-void Int2Parameter::getDefault(int &v0, int &v1) throw(Exception) {
+void Int2Parameter::getDefault(int &v0, int &v1) {
   v0 = mProps.getInt(kOfxParamPropDefault, 0);
   v1 = mProps.getInt(kOfxParamPropDefault, 1);
 }
 
-void Int2Parameter::getMin(int &v0, int &v1) throw(Exception) {
+void Int2Parameter::getMin(int &v0, int &v1) {
   v0 = mProps.getInt(kOfxParamPropMin, 0);
   v1 = mProps.getInt(kOfxParamPropMin, 1);
 }
 
-void Int2Parameter::setMin(int v0, int v1) throw(Exception) {
+void Int2Parameter::setMin(int v0, int v1) {
   mProps.setInt(kOfxParamPropMin, 0, v0);
   mProps.setInt(kOfxParamPropMin, 1, v1);
 }
 
-void Int2Parameter::getMax(int &v0, int &v1) throw(Exception) {
+void Int2Parameter::getMax(int &v0, int &v1) {
   v0 = mProps.getInt(kOfxParamPropMax, 0);
   v1 = mProps.getInt(kOfxParamPropMax, 1);
 }
 
-void Int2Parameter::setMax(int v0, int v1) throw(Exception) {
+void Int2Parameter::setMax(int v0, int v1) {
   mProps.setInt(kOfxParamPropMax, 0, v0);
   mProps.setInt(kOfxParamPropMax, 1, v1);
 }
 
-void Int2Parameter::getDisplayMin(int &v0, int &v1) throw(Exception) {
+void Int2Parameter::getDisplayMin(int &v0, int &v1) {
   v0 = mProps.getInt(kOfxParamPropDisplayMin, 0);
   v1 = mProps.getInt(kOfxParamPropDisplayMin, 1);
 }
 
-void Int2Parameter::setDisplayMin(int v0, int v1) throw(Exception) {
+void Int2Parameter::setDisplayMin(int v0, int v1) {
   mProps.setInt(kOfxParamPropDisplayMin, 0, v0);
   mProps.setInt(kOfxParamPropDisplayMin, 1, v1);
 }
 
-void Int2Parameter::getDisplayMax(int &v0, int &v1) throw(Exception) {
+void Int2Parameter::getDisplayMax(int &v0, int &v1) {
   v0 = mProps.getInt(kOfxParamPropDisplayMax, 0);
   v1 = mProps.getInt(kOfxParamPropDisplayMax, 1);
 }
 
-void Int2Parameter::setDisplayMax(int v0, int v1) throw(Exception) {
+void Int2Parameter::setDisplayMax(int v0, int v1) {
   mProps.setInt(kOfxParamPropDisplayMax, 0, v0);
   mProps.setInt(kOfxParamPropDisplayMax, 1, v1);
 }
 
-std::string Int2Parameter::getDimensionLabel(int i) throw(Exception) {
+std::string Int2Parameter::getDimensionLabel(int i) {
   return mProps.getString(kOfxParamPropDimensionLabel, i);
 }
 
@@ -1595,7 +1595,7 @@ Int3Parameter::Int3Parameter()
   : ValueParameter() {
 }
 
-Int3Parameter::Int3Parameter(Host *h, OfxParamHandle hdl) throw(Exception)
+Int3Parameter::Int3Parameter(Host *h, OfxParamHandle hdl)
   : ValueParameter(h, hdl) {
 }
 
@@ -1611,61 +1611,61 @@ Int3Parameter& Int3Parameter::operator=(const Int3Parameter &rhs) {
   return *this;
 }
 
-void Int3Parameter::getDefault(int &v0, int &v1, int &v2) throw(Exception) {
+void Int3Parameter::getDefault(int &v0, int &v1, int &v2) {
   v0 = mProps.getInt(kOfxParamPropDefault, 0);
   v1 = mProps.getInt(kOfxParamPropDefault, 1);
   v2 = mProps.getInt(kOfxParamPropDefault, 2);
 }
 
-void Int3Parameter::getMin(int &v0, int &v1, int &v2) throw(Exception) {
+void Int3Parameter::getMin(int &v0, int &v1, int &v2) {
   v0 = mProps.getInt(kOfxParamPropMin, 0);
   v1 = mProps.getInt(kOfxParamPropMin, 1);
   v2 = mProps.getInt(kOfxParamPropMin, 2);
 }
 
-void Int3Parameter::setMin(int v0, int v1, int v2) throw(Exception) {
+void Int3Parameter::setMin(int v0, int v1, int v2) {
   mProps.setInt(kOfxParamPropMin, 0, v0);
   mProps.setInt(kOfxParamPropMin, 1, v1);
   mProps.setInt(kOfxParamPropMin, 2, v2);
 }
 
-void Int3Parameter::getMax(int &v0, int &v1, int &v2) throw(Exception) {
+void Int3Parameter::getMax(int &v0, int &v1, int &v2) {
   v0 = mProps.getInt(kOfxParamPropMax, 0);
   v1 = mProps.getInt(kOfxParamPropMax, 1);
   v2 = mProps.getInt(kOfxParamPropMax, 2);
 }
 
-void Int3Parameter::setMax(int v0, int v1, int v2) throw(Exception) {
+void Int3Parameter::setMax(int v0, int v1, int v2) {
   mProps.setInt(kOfxParamPropMax, 0, v0);
   mProps.setInt(kOfxParamPropMax, 1, v1);
   mProps.setInt(kOfxParamPropMax, 2, v2);
 }
 
-void Int3Parameter::getDisplayMin(int &v0, int &v1, int &v2) throw(Exception) {
+void Int3Parameter::getDisplayMin(int &v0, int &v1, int &v2) {
   v0 = mProps.getInt(kOfxParamPropDisplayMin, 0);
   v1 = mProps.getInt(kOfxParamPropDisplayMin, 1);
   v2 = mProps.getInt(kOfxParamPropDisplayMin, 2);
 }
 
-void Int3Parameter::setDisplayMin(int v0, int v1, int v2) throw(Exception) {
+void Int3Parameter::setDisplayMin(int v0, int v1, int v2) {
   mProps.setInt(kOfxParamPropDisplayMin, 0, v0);
   mProps.setInt(kOfxParamPropDisplayMin, 1, v1);
   mProps.setInt(kOfxParamPropDisplayMin, 2, v2);
 }
 
-void Int3Parameter::getDisplayMax(int &v0, int &v1, int &v2) throw(Exception) {
+void Int3Parameter::getDisplayMax(int &v0, int &v1, int &v2) {
   v0 = mProps.getInt(kOfxParamPropDisplayMax, 0);
   v1 = mProps.getInt(kOfxParamPropDisplayMax, 1);
   v2 = mProps.getInt(kOfxParamPropDisplayMax, 2);
 }
 
-void Int3Parameter::setDisplayMax(int v0, int v1, int v2) throw(Exception) {
+void Int3Parameter::setDisplayMax(int v0, int v1, int v2) {
   mProps.setInt(kOfxParamPropDisplayMax, 0, v0);
   mProps.setInt(kOfxParamPropDisplayMax, 1, v1);
   mProps.setInt(kOfxParamPropDisplayMax, 2, v2);
 }
 
-std::string Int3Parameter::getDimensionLabel(int i) throw(Exception) {
+std::string Int3Parameter::getDimensionLabel(int i) {
   return mProps.getString(kOfxParamPropDimensionLabel, i);
 }
 
@@ -1717,7 +1717,7 @@ DoubleParameter::DoubleParameter()
   : ValueParameter() {
 }
 
-DoubleParameter::DoubleParameter(Host *h, OfxParamHandle hdl) throw(Exception)
+DoubleParameter::DoubleParameter(Host *h, OfxParamHandle hdl)
   : ValueParameter(h, hdl) {
 }
 
@@ -1733,67 +1733,67 @@ DoubleParameter& DoubleParameter::operator=(const DoubleParameter &rhs) {
   return *this;
 }
 
-double DoubleParameter::getDefault() throw(Exception) {
+double DoubleParameter::getDefault() {
   return mProps.getDouble(kOfxParamPropDefault, 0);
 }
 
-double DoubleParameter::getMin() throw(Exception) {
+double DoubleParameter::getMin() {
   return mProps.getDouble(kOfxParamPropMin, 0);
 }
 
-void DoubleParameter::setMin(double min0) throw(Exception) {
+void DoubleParameter::setMin(double min0) {
   mProps.setDouble(kOfxParamPropMin, 0, min0);
 }
 
-double DoubleParameter::getMax() throw(Exception) {
+double DoubleParameter::getMax() {
   return mProps.getDouble(kOfxParamPropMax, 0);
 }
 
-void DoubleParameter::setMax(double max0) throw(Exception) {
+void DoubleParameter::setMax(double max0) {
   mProps.setDouble(kOfxParamPropMax, 0, max0);
 }
 
-double DoubleParameter::getDisplayMin() throw(Exception) {
+double DoubleParameter::getDisplayMin() {
   return mProps.getDouble(kOfxParamPropDisplayMin, 0);
 }
 
-void DoubleParameter::setDisplayMin(double min0) throw(Exception) {
+void DoubleParameter::setDisplayMin(double min0) {
   mProps.setDouble(kOfxParamPropDisplayMin, 0, min0);
 }
 
-double DoubleParameter::getDisplayMax() throw(Exception) {
+double DoubleParameter::getDisplayMax() {
   return mProps.getDouble(kOfxParamPropDisplayMax, 0);
 }
 
-void DoubleParameter::setDisplayMax(double max0) throw(Exception) {
+void DoubleParameter::setDisplayMax(double max0) {
   mProps.setDouble(kOfxParamPropDisplayMax, 0, max0);
 }
 
-double DoubleParameter::increment() throw(Exception) {
+double DoubleParameter::increment() {
   return mProps.getDouble(kOfxParamPropIncrement, 0);
 }
 
-void DoubleParameter::setIncrement(double i) throw(Exception) {
+void DoubleParameter::setIncrement(double i) {
   mProps.setDouble(kOfxParamPropIncrement, 0, i);
 }
 
-int DoubleParameter::digits() throw(Exception) {
+int DoubleParameter::digits() {
   return mProps.getInt(kOfxParamPropDigits, 0);
 }
 
-void DoubleParameter::setDigits(int d) throw(Exception) {
+void DoubleParameter::setDigits(int d) {
   mProps.setInt(kOfxParamPropDigits, 0, d);
 }
 
-bool DoubleParameter::showTimeMarker() throw(Exception) {
+bool DoubleParameter::showTimeMarker() {
   return (mProps.getInt(kOfxParamPropShowTimeMarker, 0) == 1);
 }
 
-void DoubleParameter::setShowTimeMarker(bool yes) throw(Exception) {
+void DoubleParameter::setShowTimeMarker(bool yes) {
   mProps.setInt(kOfxParamPropShowTimeMarker, 0, (yes ? 1 : 0));
 }
 
-DoubleParamType DoubleParameter::doubleType() throw(Exception) {
+DoubleParamType DoubleParameter::doubleType() {
   return StringToDoubleParamType(mProps.getString(kOfxParamPropDoubleType, 0));
 }
 
@@ -1853,7 +1853,7 @@ Double2Parameter::Double2Parameter()
   : ValueParameter() {
 }
 
-Double2Parameter::Double2Parameter(Host *h, OfxParamHandle hdl) throw(Exception)
+Double2Parameter::Double2Parameter(Host *h, OfxParamHandle hdl)
   : ValueParameter(h, hdl) {
 }
 
@@ -1869,72 +1869,72 @@ Double2Parameter& Double2Parameter::operator=(const Double2Parameter &rhs) {
   return *this;
 }
 
-void Double2Parameter::getDefault(double &v0, double &v1) throw(Exception) {
+void Double2Parameter::getDefault(double &v0, double &v1) {
   v0 = mProps.getDouble(kOfxParamPropDefault, 0);
   v1 = mProps.getDouble(kOfxParamPropDefault, 1);
 }
 
-void Double2Parameter::getMin(double &v0, double &v1) throw(Exception) {
+void Double2Parameter::getMin(double &v0, double &v1) {
   v0 = mProps.getDouble(kOfxParamPropMin, 0);
   v1 = mProps.getDouble(kOfxParamPropMin, 1);
 }
 
-void Double2Parameter::setMin(double min0, double min1) throw(Exception) {
+void Double2Parameter::setMin(double min0, double min1) {
   mProps.setDouble(kOfxParamPropMin, 0, min0);
   mProps.setDouble(kOfxParamPropMin, 1, min1);
 }
 
-void Double2Parameter::getMax(double &v0, double &v1) throw(Exception) {
+void Double2Parameter::getMax(double &v0, double &v1) {
   v0 = mProps.getDouble(kOfxParamPropMax, 0);
   v1 = mProps.getDouble(kOfxParamPropMax, 1);
 }
 
-void Double2Parameter::setMax(double max0, double max1) throw(Exception) {
+void Double2Parameter::setMax(double max0, double max1) {
   mProps.setDouble(kOfxParamPropMax, 0, max0);
   mProps.setDouble(kOfxParamPropMax, 1, max1);
 }
 
-void Double2Parameter::getDisplayMin(double &v0, double &v1) throw(Exception) {
+void Double2Parameter::getDisplayMin(double &v0, double &v1) {
   v0 = mProps.getDouble(kOfxParamPropDisplayMin, 0);
   v1 = mProps.getDouble(kOfxParamPropDisplayMin, 1);
 }
 
-void Double2Parameter::setDisplayMin(double min0, double min1) throw(Exception) {
+void Double2Parameter::setDisplayMin(double min0, double min1) {
   mProps.setDouble(kOfxParamPropDisplayMin, 0, min0);
   mProps.setDouble(kOfxParamPropDisplayMin, 1, min1);
 }
 
-void Double2Parameter::getDisplayMax(double &v0, double &v1) throw(Exception) {
+void Double2Parameter::getDisplayMax(double &v0, double &v1) {
   v0 = mProps.getDouble(kOfxParamPropDisplayMax, 0);
   v1 = mProps.getDouble(kOfxParamPropDisplayMax, 1);
 }
 
-void Double2Parameter::setDisplayMax(double max0, double max1) throw(Exception) {
+void Double2Parameter::setDisplayMax(double max0, double max1) {
   mProps.setDouble(kOfxParamPropDisplayMax, 0, max0);
   mProps.setDouble(kOfxParamPropDisplayMax, 1, max1);
 }
 
-double Double2Parameter::increment() throw(Exception) {
+double Double2Parameter::increment() {
   return mProps.getDouble(kOfxParamPropIncrement, 0);
 }
 
-void Double2Parameter::setIncrement(double i) throw(Exception) {
+void Double2Parameter::setIncrement(double i) {
   mProps.setDouble(kOfxParamPropIncrement, 0, i);
 }
 
-int Double2Parameter::digits() throw(Exception) {
+int Double2Parameter::digits() {
   return mProps.getInt(kOfxParamPropDigits, 0);
 }
 
-void Double2Parameter::setDigits(int d) throw(Exception) {
+void Double2Parameter::setDigits(int d) {
   mProps.setInt(kOfxParamPropDigits, 0, d);
 }
 
-DoubleParamType Double2Parameter::doubleType() throw(Exception) {
+DoubleParamType Double2Parameter::doubleType() {
   return StringToDoubleParamType(mProps.getString(kOfxParamPropDoubleType, 0));
 }
 
-std::string Double2Parameter::getDimensionLabel(int i) throw(Exception) {
+std::string Double2Parameter::getDimensionLabel(int i) {
   return mProps.getString(kOfxParamPropDimensionLabel, i);
 }
 
@@ -1986,7 +1986,7 @@ Double3Parameter::Double3Parameter()
   : ValueParameter() {
 }
 
-Double3Parameter::Double3Parameter(Host *h, OfxParamHandle hdl) throw(Exception)
+Double3Parameter::Double3Parameter(Host *h, OfxParamHandle hdl)
   : ValueParameter(h, hdl) {
 }
 
@@ -2002,81 +2002,81 @@ Double3Parameter& Double3Parameter::operator=(const Double3Parameter &rhs) {
   return *this;
 }
 
-void Double3Parameter::getDefault(double &v0, double &v1, double &v2) throw(Exception) {
+void Double3Parameter::getDefault(double &v0, double &v1, double &v2) {
   v0 = mProps.getDouble(kOfxParamPropDefault, 0);
   v1 = mProps.getDouble(kOfxParamPropDefault, 1);
   v2 = mProps.getDouble(kOfxParamPropDefault, 2);
 }
 
-void Double3Parameter::getMin(double &v0, double &v1, double &v2) throw(Exception) {
+void Double3Parameter::getMin(double &v0, double &v1, double &v2) {
   v0 = mProps.getDouble(kOfxParamPropMin, 0);
   v1 = mProps.getDouble(kOfxParamPropMin, 1);
   v2 = mProps.getDouble(kOfxParamPropMin, 2);
 }
 
-void Double3Parameter::setMin(double min0, double min1, double min2) throw(Exception) {
+void Double3Parameter::setMin(double min0, double min1, double min2) {
   mProps.setDouble(kOfxParamPropMin, 0, min0);
   mProps.setDouble(kOfxParamPropMin, 1, min1);
   mProps.setDouble(kOfxParamPropMin, 2, min2);
 }
 
-void Double3Parameter::getMax(double &v0, double &v1, double &v2) throw(Exception) {
+void Double3Parameter::getMax(double &v0, double &v1, double &v2) {
   v0 = mProps.getDouble(kOfxParamPropMax, 0);
   v1 = mProps.getDouble(kOfxParamPropMax, 1);
   v2 = mProps.getDouble(kOfxParamPropMax, 2);
 }
 
-void Double3Parameter::setMax(double max0, double max1, double max2) throw(Exception) {
+void Double3Parameter::setMax(double max0, double max1, double max2) {
   mProps.setDouble(kOfxParamPropMax, 0, max0);
   mProps.setDouble(kOfxParamPropMax, 1, max1);
   mProps.setDouble(kOfxParamPropMax, 2, max2);
 }
 
-void Double3Parameter::getDisplayMin(double &v0, double &v1, double &v2) throw(Exception) {
+void Double3Parameter::getDisplayMin(double &v0, double &v1, double &v2) {
   v0 = mProps.getDouble(kOfxParamPropDisplayMin, 0);
   v1 = mProps.getDouble(kOfxParamPropDisplayMin, 1);
   v2 = mProps.getDouble(kOfxParamPropDisplayMin, 2);
 }
 
-void Double3Parameter::setDisplayMin(double min0, double min1, double min2) throw(Exception) {
+void Double3Parameter::setDisplayMin(double min0, double min1, double min2) {
   mProps.setDouble(kOfxParamPropDisplayMin, 0, min0);
   mProps.setDouble(kOfxParamPropDisplayMin, 1, min1);
   mProps.setDouble(kOfxParamPropDisplayMin, 2, min2);
 }
 
-void Double3Parameter::getDisplayMax(double &v0, double &v1, double &v2) throw(Exception) {
+void Double3Parameter::getDisplayMax(double &v0, double &v1, double &v2) {
   v0 = mProps.getDouble(kOfxParamPropDisplayMax, 0);
   v1 = mProps.getDouble(kOfxParamPropDisplayMax, 1);
   v2 = mProps.getDouble(kOfxParamPropDisplayMax, 2);
 }
 
-void Double3Parameter::setDisplayMax(double max0, double max1, double max2) throw(Exception) {
+void Double3Parameter::setDisplayMax(double max0, double max1, double max2) {
   mProps.setDouble(kOfxParamPropDisplayMax, 0, max0);
   mProps.setDouble(kOfxParamPropDisplayMax, 1, max1);
   mProps.setDouble(kOfxParamPropDisplayMax, 2, max2);
 }
 
-double Double3Parameter::increment() throw(Exception) {
+double Double3Parameter::increment() {
   return mProps.getDouble(kOfxParamPropIncrement, 0);
 }
 
-void Double3Parameter::setIncrement(double i) throw(Exception) {
+void Double3Parameter::setIncrement(double i) {
   mProps.setDouble(kOfxParamPropIncrement, 0, i);
 }
 
-int Double3Parameter::digits() throw(Exception) {
+int Double3Parameter::digits() {
   return mProps.getInt(kOfxParamPropDigits, 0);
 }
 
-void Double3Parameter::setDigits(int d) throw(Exception) {
+void Double3Parameter::setDigits(int d) {
   mProps.setInt(kOfxParamPropDigits, 0, d);
 }
 
-DoubleParamType Double3Parameter::doubleType() throw(Exception) {
+DoubleParamType Double3Parameter::doubleType() {
   return StringToDoubleParamType(mProps.getString(kOfxParamPropDoubleType, 0));
 }
 
-std::string Double3Parameter::getDimensionLabel(int i) throw(Exception) {
+std::string Double3Parameter::getDimensionLabel(int i) {
   return mProps.getString(kOfxParamPropDimensionLabel, i);
 }
 
@@ -2128,7 +2128,7 @@ ChoiceParameter::ChoiceParameter()
   : ValueParameter() {
 }
 
-ChoiceParameter::ChoiceParameter(Host *h, OfxParamHandle hdl) throw(Exception)
+ChoiceParameter::ChoiceParameter(Host *h, OfxParamHandle hdl)
   : ValueParameter(h, hdl) {
 }
 
@@ -2144,19 +2144,19 @@ ChoiceParameter& ChoiceParameter::operator=(const ChoiceParameter &rhs) {
   return *this;
 }
 
-int ChoiceParameter::getDefault() throw(Exception) {
+int ChoiceParameter::getDefault() {
   return mProps.getInt(kOfxParamPropDefault, 0);
 }
 
-int ChoiceParameter::getChoiceCount() throw(Exception) {
+int ChoiceParameter::getChoiceCount() {
   return mProps.size(kOfxParamPropChoiceOption);
 }
 
-void ChoiceParameter::setChoice(int i, const std::string &str) throw(Exception) {
+void ChoiceParameter::setChoice(int i, const std::string &str) {
   mProps.setString(kOfxParamPropChoiceOption, i, str);
 }
 
-std::string ChoiceParameter::getChoice(int i) throw(Exception) {
+std::string ChoiceParameter::getChoice(int i) {
   return mProps.getString(kOfxParamPropChoiceOption, i);
 }
 
@@ -2198,7 +2198,7 @@ StringParameter::StringParameter()
   : ValueParameter() {
 }
 
-StringParameter::StringParameter(Host *h, OfxParamHandle hdl) throw(Exception)
+StringParameter::StringParameter(Host *h, OfxParamHandle hdl)
   : ValueParameter(h, hdl) {
   
 }
@@ -2216,15 +2216,15 @@ StringParameter& StringParameter::operator=(const StringParameter &rhs) {
   return *this;
 }
 
-std::string StringParameter::getDefault() throw(Exception) {
+std::string StringParameter::getDefault() {
   return mProps.getString(kOfxParamPropDefault, 0);
 }
 
-StringParamMode StringParameter::mode() throw(Exception) {
+StringParamMode StringParameter::mode() {
   return StringToStringParamMode(mProps.getString(kOfxParamPropStringMode, 0));
 }
 
-bool StringParameter::filePathExists() throw(Exception) {
+bool StringParameter::filePathExists() {
   return (mProps.getInt(kOfxParamPropStringFilePathExists, 0) == 1);
 }
 
@@ -2268,7 +2268,7 @@ CustomParameter::CustomParameter()
   : ValueParameter() {
 }
 
-CustomParameter::CustomParameter(Host *h, OfxParamHandle hdl) throw(Exception)
+CustomParameter::CustomParameter(Host *h, OfxParamHandle hdl)
   : ValueParameter(h, hdl) {
 }
 
@@ -2284,11 +2284,11 @@ CustomParameter& CustomParameter::operator=(const CustomParameter &rhs) {
   return *this;
 }
 
-std::string CustomParameter::getDefault() throw(Exception) {
+std::string CustomParameter::getDefault() {
   return mProps.getString(kOfxParamPropDefault, 0);
 }
 
-void* CustomParameter::getInterpolator() throw(Exception) {
+void* CustomParameter::getInterpolator() {
   return mProps.getPointer(kOfxParamPropCustomInterpCallbackV1, 0);
 }
 
@@ -2332,7 +2332,7 @@ BooleanParameter::BooleanParameter()
   : ValueParameter() {
 }
 
-BooleanParameter::BooleanParameter(Host *h, OfxParamHandle hdl) throw(Exception)
+BooleanParameter::BooleanParameter(Host *h, OfxParamHandle hdl)
   : ValueParameter(h, hdl) {
 }
 
@@ -2348,7 +2348,7 @@ BooleanParameter& BooleanParameter::operator=(const BooleanParameter &rhs) {
   return *this;
 }
 
-bool BooleanParameter::getDefault() throw(Exception) {
+bool BooleanParameter::getDefault() {
   return (mProps.getInt(kOfxParamPropDefault, 0) == 1);
 }
 
@@ -2394,7 +2394,7 @@ RGBParameter::RGBParameter()
   : ValueParameter() {
 }
 
-RGBParameter::RGBParameter(Host *h, OfxParamHandle hdl) throw(Exception)
+RGBParameter::RGBParameter(Host *h, OfxParamHandle hdl)
   : ValueParameter(h, hdl) {
 }
 
@@ -2410,7 +2410,7 @@ RGBParameter& RGBParameter::operator=(const RGBParameter &rhs) {
   return *this;
 }
 
-RGBAColour<double> RGBParameter::getDefault() throw(Exception) {
+RGBAColour<double> RGBParameter::getDefault() {
   RGBAColour<double> rv;
   mProps.getDoubles(kOfxParamPropDefault, 3, &(rv.r));
   rv.a = 1.0;
@@ -2477,7 +2477,7 @@ RGBAParameter::RGBAParameter()
   : ValueParameter() {
 }
 
-RGBAParameter::RGBAParameter(Host *h, OfxParamHandle hdl) throw(Exception)
+RGBAParameter::RGBAParameter(Host *h, OfxParamHandle hdl)
   : ValueParameter(h, hdl) {
 }
 
@@ -2493,7 +2493,7 @@ RGBAParameter& RGBAParameter::operator=(const RGBAParameter &rhs) {
   return *this;
 }
 
-RGBAColour<double> RGBAParameter::getDefault() throw(Exception) {
+RGBAColour<double> RGBAParameter::getDefault() {
   RGBAColour<double> rv;
   mProps.getDoubles(kOfxParamPropDefault, 4, &(rv.r));
   return rv;
@@ -2556,7 +2556,7 @@ PageParameter::PageParameter()
   : Parameter() {
 }
 
-PageParameter::PageParameter(Host *h, OfxParamHandle hdl) throw(Exception)
+PageParameter::PageParameter(Host *h, OfxParamHandle hdl)
   : Parameter(h, hdl) {
 }
 
@@ -2572,11 +2572,11 @@ PageParameter& PageParameter::operator=(const PageParameter &rhs) {
   return *this;
 }
 
-int PageParameter::getChildCount() throw(Exception) {
+int PageParameter::getChildCount() {
   return mProps.size(kOfxParamPropPageChild);
 }
 
-std::string PageParameter::getChild(int i) throw(Exception) {
+std::string PageParameter::getChild(int i) {
   return mProps.getString(kOfxParamPropPageChild, i);
 }
 
@@ -2586,7 +2586,7 @@ PushButtonParameter::PushButtonParameter()
   : Parameter() {
 }
 
-PushButtonParameter::PushButtonParameter(Host *h, OfxParamHandle hdl) throw(Exception)
+PushButtonParameter::PushButtonParameter(Host *h, OfxParamHandle hdl)
   : Parameter(h, hdl) {
 }
 
@@ -2602,25 +2602,25 @@ PushButtonParameter& PushButtonParameter::operator=(const PushButtonParameter &r
   return *this;
 }
 
-EntryPoint PushButtonParameter::interact() throw(Exception) {
+EntryPoint PushButtonParameter::interact() {
   return ((EntryPoint) mProps.getPointer(kOfxParamPropInteractV1, 0));
 }
 
-void PushButtonParameter::interactSize(double &w, double &h) throw(Exception) {
+void PushButtonParameter::interactSize(double &w, double &h) {
   w = mProps.getDouble(kOfxParamPropInteractSize, 0);
   h = mProps.getDouble(kOfxParamPropInteractSize, 1);
 }
 
-double PushButtonParameter::interactSizeAspect() throw(Exception) {
+double PushButtonParameter::interactSizeAspect() {
   return mProps.getDouble(kOfxParamPropInteractSizeAspect, 0);
 }
 
-void PushButtonParameter::interactMinimumSize(int &w, int &h) throw(Exception) {
+void PushButtonParameter::interactMinimumSize(int &w, int &h) {
   w = mProps.getInt(kOfxParamPropInteractMinimumSize, 0);
   h = mProps.getInt(kOfxParamPropInteractMinimumSize, 1);
 }
 
-void PushButtonParameter::interactPreferedSize(int &w, int &h) throw(Exception) {
+void PushButtonParameter::interactPreferedSize(int &w, int &h) {
   w = mProps.getInt(kOfxParamPropInteractPreferedSize, 0);
   h = mProps.getInt(kOfxParamPropInteractPreferedSize, 1);
 }
@@ -2634,7 +2634,7 @@ ParameterSetDescriptor::ParameterSetDescriptor()
 ParameterSetDescriptor::ParameterSetDescriptor(Host *h, OfxParamSetHandle hdl) throw(Exception)
   : mHandle(hdl), mHost(h) {
   if (!mHost) {
-    throw Exception(kOfxStatErrFatal, "ofx::ParameterSetDescriptor::ParameterSetDescriptor: no host");
+    throw BadHandleError("ofx::ParameterSetDescriptor::ParameterSetDescriptor: invalid host");
   }
   OfxPropertySetHandle hProps;
   mHost->parameterSuite()->paramSetGetPropertySet(mHandle, &hProps);
@@ -2800,7 +2800,7 @@ ParameterSet::ParameterSet()
 ParameterSet::ParameterSet(Host *h, OfxParamSetHandle hdl) throw(Exception)
   : mHandle(hdl), mHost(h) {
   if (!mHost) {
-    throw Exception(kOfxStatErrFatal, "ofx::ParameterSet::ParameterSet: no host");
+    throw BadHandleError("ofx::ParameterSet::ParameterSet: invalid host");
   }
   OfxPropertySetHandle hProps;
   mHost->parameterSuite()->paramSetGetPropertySet(mHandle, &hProps);
@@ -3016,11 +3016,11 @@ PushButtonParameter ParameterSet::getPushButtonParam(const std::string &name) th
   return param;
 }
 
-void ParameterSet::beginEdit(const std::string &label) throw(Exception) {
+void ParameterSet::beginEdit(const std::string &label) {
   mHost->parameterSuite()->paramEditBegin(mHandle, label.c_str());
 }
 
-void ParameterSet::endEdit() throw(Exception) {
+void ParameterSet::endEdit() {
   mHost->parameterSuite()->paramEditEnd(mHandle);
 }
 

@@ -47,6 +47,72 @@ namespace ofx {
       OfxStatus mStat;
   };
   
+  class FailedError : public Exception {
+    public:
+      explicit FailedError(const std::string &msg="");
+      virtual ~FailedError() throw();
+  };
+  
+  class FatalError : public Exception {
+    public:
+      explicit FatalError(const std::string &msg="");
+      virtual ~FatalError() throw();
+  };
+  
+  class UnknownError : public Exception {
+    public:
+      explicit UnknownError(const std::string &msg="");
+      virtual ~UnknownError() throw();
+  };
+  
+  class MissingHostFeatureError : public Exception {
+    public:
+      explicit MissingHostFeatureError(const std::string &msg="");
+      virtual ~MissingHostFeatureError() throw();
+  };
+  
+  class UnsupportedError : public Exception {
+    public:
+      explicit UnsupportedError(const std::string &msg="");
+      virtual ~UnsupportedError() throw();
+  };
+  
+  class ExistsError : public Exception {
+    public:
+      explicit ExistsError(const std::string &msg="");
+      virtual ~ExistsError() throw();
+  };
+  
+  class FormatError : public Exception {
+    public:
+      explicit FormatError(const std::string &msg="");
+      virtual ~FormatError() throw();
+  };
+  
+  class MemoryError : public Exception {
+    public:
+      explicit MemoryError(const std::string &msg="");
+      virtual ~MemoryError() throw();
+  };
+  
+  class BadHandleError : public Exception {
+    public:
+      explicit BadHandleError(const std::string &msg="");
+      virtual ~BadHandleError() throw();
+  };
+  
+  class BadIndexError : public Exception {
+    public:
+      explicit BadIndexError(const std::string &msg="");
+      virtual ~BadIndexError() throw();
+  };
+  
+  class ValueError : public Exception {
+    public:
+      explicit ValueError(const std::string &msg="");
+      virtual ~ValueError() throw();
+  };
+  
 }
 
 #endif

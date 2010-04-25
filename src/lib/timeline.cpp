@@ -29,11 +29,11 @@ namespace ofx {
 
 TimeLine::TimeLine(Host *h) throw(Exception) {
   if (!h) {
-    throw Exception(kOfxStatErrFatal, "Cannot initialize ofx::TimeLine: invalid host");
+    throw BadHandleError("ofx::TimeLine: invalid host");
   }
   mSuite = h->fetchSuite<OfxTimeLineSuiteV1>(kOfxTimeLineSuite, 1);
   if (!mSuite) {
-    throw Exception(kOfxStatErrMissingHostFeature, "Cannot initialize ofx::TimeLine: no suite");
+    throw MissingHostFeatureError("Timeline suite");
   }
 }
 

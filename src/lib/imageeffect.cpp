@@ -44,7 +44,7 @@ Image::Image()
 Image::Image(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception)
   : mProps(h, hdl) {
   if (!h) {
-    throw Exception(kOfxStatErrFatal, "ofx::Image::Image: no host");
+    throw BadHandleError("ofx::Image::Image: invalid host");
   }
   
   mSuite = h->imageEffectSuite();
@@ -114,7 +114,10 @@ Image& Image::operator=(const Image &rhs) {
 }
 
 void Image::release() throw(Exception) {
-  mSuite->clipReleaseImage(mProps.handle());
+  OfxStatus stat = mSuite->clipReleaseImage(mProps.handle());
+  if (stat != kOfxStatOK) {
+    throw Exception(stat, "ofx::Image::release");
+  }
   mData = 0;
   mNumComps = 0;
   mCompBytes = 0;
@@ -127,7 +130,7 @@ void Image::release() throw(Exception) {
 ClipDescriptor::ClipDescriptor() {
 }
 
-ClipDescriptor::ClipDescriptor(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception)
+ClipDescriptor::ClipDescriptor(ImageEffectHost *h, OfxPropertySetHandle hdl)
   : mProps(h, hdl) {
 }
 
@@ -143,83 +146,83 @@ ClipDescriptor& ClipDescriptor::operator=(const ClipDescriptor &rhs) {
   return *this;
 }
 
-std::string ClipDescriptor::name() throw(Exception) {
+std::string ClipDescriptor::name() {
   return mProps.getString(kOfxPropName, 0);
 }
 
-std::string ClipDescriptor::label() throw(Exception) {
+std::string ClipDescriptor::label() {
   return mProps.getString(kOfxPropLabel, 0);
 }
 
-void ClipDescriptor::setLabel(const std::string &l) throw(Exception) {
+void ClipDescriptor::setLabel(const std::string &l) {
   mProps.setString(kOfxPropLabel, 0, l);
 }
 
-std::string ClipDescriptor::shortLabel() throw(Exception) {
+std::string ClipDescriptor::shortLabel() {
   return mProps.getString(kOfxPropShortLabel, 0);
 }
 
-void ClipDescriptor::setShortLabel(const std::string &l) throw(Exception) {
+void ClipDescriptor::setShortLabel(const std::string &l) {
   mProps.setString(kOfxPropShortLabel, 0, l);
 }
 
-std::string ClipDescriptor::longLabel() throw(Exception) {
+std::string ClipDescriptor::longLabel() {
   return mProps.getString(kOfxPropLongLabel, 0);
 }
 
-void ClipDescriptor::setLongLabel(const std::string &l) throw(Exception) {
+void ClipDescriptor::setLongLabel(const std::string &l) {
   mProps.setString(kOfxPropLongLabel, 0, l);
 }
  
-int ClipDescriptor::supportedComponentsCount() throw(Exception) {
+int ClipDescriptor::supportedComponentsCount() {
   return mProps.size(kOfxImageEffectPropSupportedComponents);
 }
 
-ImageComponent ClipDescriptor::getSupportedComponent(int i) throw(Exception) {
+ImageComponent ClipDescriptor::getSupportedComponent(int i) {
   return StringToImageComponent(mProps.getString(kOfxImageEffectPropSupportedComponents, i));
 }
 
-void ClipDescriptor::setSupportedComponent(int i, ImageComponent ic) throw(Exception) {
+void ClipDescriptor::setSupportedComponent(int i, ImageComponent ic) {
   mProps.setString(kOfxImageEffectPropSupportedComponents, i, ImageComponentToString(ic));
 }
 
-bool ClipDescriptor::needsTemporalClipAccess() throw(Exception) {
+bool ClipDescriptor::needsTemporalClipAccess() {
   return (mProps.getInt(kOfxImageEffectPropTemporalClipAccess, 0) == 1);
 }
 
-void ClipDescriptor::requireTemporalClipAccess(bool yes) throw(Exception) {
+void ClipDescriptor::requireTemporalClipAccess(bool yes) {
   mProps.setInt(kOfxImageEffectPropTemporalClipAccess, 0, (yes ? 1 : 0));
 }
  
-bool ClipDescriptor::isOptional() throw(Exception) {
+bool ClipDescriptor::isOptional() {
   return (mProps.getInt(kOfxImageClipPropOptional, 0) == 1);
 }
 
-void ClipDescriptor::setOptional(bool yes) throw(Exception) {
+void ClipDescriptor::setOptional(bool yes) {
   mProps.setInt(kOfxImageClipPropOptional, 0, (yes ? 1 : 0));
 }
  
-ImageFieldExtract ClipDescriptor::fieldExtraction() throw(Exception) {
+ImageFieldExtract ClipDescriptor::fieldExtraction() {
   return StringToImageFieldExtract(mProps.getString(kOfxImageClipPropFieldExtraction, 0));
 }
 
-void ClipDescriptor::setFieldExtraction(ImageFieldExtract f) throw(Exception) {
+void ClipDescriptor::setFieldExtraction(ImageFieldExtract f) {
   mProps.setString(kOfxImageClipPropFieldExtraction, 0, ImageFieldExtractToString(f));
 }
  
-bool ClipDescriptor::isMask() throw(Exception) {
+bool ClipDescriptor::isMask() {
   return (mProps.getInt(kOfxImageClipPropIsMask, 0) == 1);
 }
 
-void ClipDescriptor::setMask(bool yes) throw(Exception) {
+void ClipDescriptor::setMask(bool yes) {
   mProps.setInt(kOfxImageClipPropIsMask, 0, (yes ? 1 : 0));
 }
  
-bool ClipDescriptor::supportsTiles() throw(Exception) {
+bool ClipDescriptor::supportsTiles() {
   return (mProps.getInt(kOfxImageEffectPropSupportsTiles, 0) == 1);
 }
 
-void ClipDescriptor::setTilesSupport(bool yes) throw(Exception) {
+void ClipDescriptor::setTilesSupport(bool yes) {
   mProps.setInt(kOfxImageEffectPropSupportsTiles, 0, (yes ? 1 : 0));
 }
 
@@ -232,7 +235,7 @@ Clip::Clip()
 Clip::Clip(ImageEffectHost *h, OfxImageClipHandle hdl) throw(Exception)
   : mHandle(hdl), mHost(h) {
   if (!h) {
-    throw Exception(kOfxStatErrFatal, "ofx::Clip::Clip: no host");
+    throw BadHandleError("ofx::Clip::Clip: invalid host");
   }
   OfxPropertySetHandle hProps;
   mHost->imageEffectSuite()->clipGetPropertySet(mHandle, &hProps);
@@ -253,101 +256,101 @@ Clip& Clip::operator=(const Clip &rhs) {
   return *this;
 }
 
-std::string Clip::name() throw(Exception) {
+std::string Clip::name() {
   return mProps.getString(kOfxPropName, 0);
 }
       
-std::string Clip::label() throw(Exception) {
+std::string Clip::label() {
   return mProps.getString(kOfxPropLabel, 0);
 }
 
-std::string Clip::shortLabel() throw(Exception) {
+std::string Clip::shortLabel() {
   return mProps.getString(kOfxPropShortLabel, 0);
 }
 
-std::string Clip::longLabel() throw(Exception) {
+std::string Clip::longLabel() {
   return mProps.getString(kOfxPropLongLabel, 0);
 }
 
-int Clip::supportedComponentsCount() throw(Exception) {
+int Clip::supportedComponentsCount() {
   return mProps.size(kOfxImageEffectPropSupportedComponents);
 }
 
-ImageComponent Clip::getSupportedComponent(int i) throw(Exception) {
+ImageComponent Clip::getSupportedComponent(int i) {
   return StringToImageComponent(mProps.getString(kOfxImageEffectPropSupportedComponents, i));
 }
 
-bool Clip::needsTemporalClipAccess() throw(Exception) {
+bool Clip::needsTemporalClipAccess() {
   return (mProps.getInt(kOfxImageEffectPropTemporalClipAccess, 0) == 1);
 }
 
-bool Clip::isOptional() throw(Exception) {
+bool Clip::isOptional() {
   return (mProps.getInt(kOfxImageClipPropOptional, 0) == 1);
 }
 
-ImageFieldExtract Clip::fieldExtraction() throw(Exception) {
+ImageFieldExtract Clip::fieldExtraction() {
   return StringToImageFieldExtract(mProps.getString(kOfxImageClipPropFieldExtraction, 0));
 }
 
-bool Clip::isMask() throw(Exception) {
+bool Clip::isMask() {
   return (mProps.getInt(kOfxImageClipPropIsMask, 0) == 1);
 }
 
-bool Clip::supportsTiles() throw(Exception) {
+bool Clip::supportsTiles() {
   return (mProps.getInt(kOfxImageEffectPropSupportsTiles, 0) == 1);
 }
 
-BitDepth Clip::pixelDepth() throw(Exception) {
+BitDepth Clip::pixelDepth() {
   return StringToBitDepth(mProps.getString(kOfxImageEffectPropPixelDepth, 0));
 }
       
-ImageComponent Clip::components() throw(Exception) {
+ImageComponent Clip::components() {
   return StringToImageComponent(mProps.getString(kOfxImageEffectPropComponents, 0));
 }
 
-BitDepth Clip::unmappedPixelDepth() throw(Exception) {
+BitDepth Clip::unmappedPixelDepth() {
   return StringToBitDepth(mProps.getString(kOfxImageClipPropUnmappedPixelDepth, 0));
 }
 
-ImageComponent Clip::unmappedComponents() throw(Exception) {
+ImageComponent Clip::unmappedComponents() {
   return StringToImageComponent(mProps.getString(kOfxImageClipPropUnmappedComponents, 0));
 }
 
-ImagePreMult Clip::preMultiplication() throw(Exception) {
+ImagePreMult Clip::preMultiplication() {
   return StringToImagePreMult(mProps.getString(kOfxImageEffectPropPreMultiplication, 0));
 }
 
-double Clip::pixelAspectRatio() throw(Exception) {
+double Clip::pixelAspectRatio() {
   return mProps.getDouble(kOfxImagePropPixelAspectRatio, 0);
 }
 
-double Clip::frameRate() throw(Exception) {
+double Clip::frameRate() {
   return mProps.getDouble(kOfxImageEffectPropFrameRate, 0);
 }
 
-void Clip::frameRange(double &from, double &to) throw(Exception) {
+void Clip::frameRange(double &from, double &to) {
   from = mProps.getDouble(kOfxImageEffectPropFrameRange, 0);
   to = mProps.getDouble(kOfxImageEffectPropFrameRange, 1);
 }
 
-ImageFieldOrder Clip::fieldOrder() throw(Exception) {
+ImageFieldOrder Clip::fieldOrder() {
   return StringToImageFieldOrder(mProps.getString(kOfxImageClipPropConnected, 0));
 }
 
-bool Clip::isConnected() throw(Exception) {
+bool Clip::isConnected() {
   return (mProps.getInt(kOfxImageClipPropConnected, 0) == 1);
 }
 
-void Clip::unmappedFrameRange(double &from, double &to) throw(Exception) {
+void Clip::unmappedFrameRange(double &from, double &to) {
   from = mProps.getDouble(kOfxImageEffectPropUnmappedFrameRange, 0);
   to = mProps.getDouble(kOfxImageEffectPropUnmappedFrameRange, 1);
 }
 
-double Clip::unmappedFrameRate() throw(Exception) {
+double Clip::unmappedFrameRate() {
   return mProps.getDouble(kOfxImageEffectPropUnmappedFrameRate, 0);
 }
 
-bool Clip::continuousSamples() throw(Exception) {
+bool Clip::continuousSamples() {
   return (mProps.getInt(kOfxImageClipPropContinuousSamples, 0) == 1);
 }
 
@@ -397,7 +400,7 @@ ImageEffectDescriptor::ImageEffectDescriptor()
 ImageEffectDescriptor::ImageEffectDescriptor(ImageEffectHost *h, OfxImageEffectHandle hdl) throw(Exception)
   : mHandle(hdl), mHost(h) {
   if (!h) {
-    throw Exception(kOfxStatErrFatal, "ofx::ImageEffectDescriptor::ImageEffectDescriptor: no host");
+    throw BadHandleError("ofx::ImageEffectDescriptor::ImageEffectDescriptor: invalid host");
   }
   
   OfxPropertySetHandle hProps;
@@ -426,147 +429,147 @@ ImageEffectDescriptor& ImageEffectDescriptor::operator=(const ImageEffectDescrip
   return *this;
 }
 
-std::string ImageEffectDescriptor::label() throw(Exception) {
+std::string ImageEffectDescriptor::label() {
   return mProps.getString(kOfxPropLabel, 0);
 }
 
-void ImageEffectDescriptor::setLabel(const std::string &s) throw(Exception) {
+void ImageEffectDescriptor::setLabel(const std::string &s) {
   mProps.setString(kOfxPropLabel, 0, s);
 }
 
-std::string ImageEffectDescriptor::shortLabel() throw(Exception) {
+std::string ImageEffectDescriptor::shortLabel() {
   return mProps.getString(kOfxPropShortLabel, 0);
 }
 
-void ImageEffectDescriptor::setShortLabel(const std::string &s) throw(Exception) {
+void ImageEffectDescriptor::setShortLabel(const std::string &s) {
   mProps.setString(kOfxPropShortLabel, 0, s);
 }
 
-std::string ImageEffectDescriptor::longLabel() throw(Exception) {
+std::string ImageEffectDescriptor::longLabel() {
   return mProps.getString(kOfxPropLongLabel, 0);
 }
 
-void ImageEffectDescriptor::setLongLabel(const std::string &s) throw(Exception) {
+void ImageEffectDescriptor::setLongLabel(const std::string &s) {
   mProps.setString(kOfxPropLongLabel, 0, s);
 }
 
-int ImageEffectDescriptor::supportedContextsCount() throw(Exception) {
+int ImageEffectDescriptor::supportedContextsCount() {
   return mProps.size(kOfxImageEffectPropSupportedContexts);
 }
 
-ImageEffectContext ImageEffectDescriptor::getSupportedContext(int i) throw(Exception) {
+ImageEffectContext ImageEffectDescriptor::getSupportedContext(int i) {
   return StringToImageEffectContext(mProps.getString(kOfxImageEffectPropSupportedContexts, i));
 }
 
-void ImageEffectDescriptor::setSupportedContext(int i, ImageEffectContext ctx) throw(Exception) {
+void ImageEffectDescriptor::setSupportedContext(int i, ImageEffectContext ctx) {
   mProps.setString(kOfxImageEffectPropSupportedContexts, i, ImageEffectContextToString(ctx));
 }
 
-std::string ImageEffectDescriptor::grouping() throw(Exception) {
+std::string ImageEffectDescriptor::grouping() {
   return mProps.getString(kOfxImageEffectPluginPropGrouping, 0);
 }
 
-void ImageEffectDescriptor::setGrouping(const std::string &g) throw(Exception) {
+void ImageEffectDescriptor::setGrouping(const std::string &g) {
   mProps.setString(kOfxImageEffectPluginPropGrouping, 0, g);
 }
 
-bool ImageEffectDescriptor::singleInstance() throw(Exception) {
+bool ImageEffectDescriptor::singleInstance() {
   return (mProps.getInt(kOfxImageEffectPluginPropSingleInstance, 0) == 1);
 }
 
-void ImageEffectDescriptor::setSingleInstance(bool yes) throw(Exception) {
+void ImageEffectDescriptor::setSingleInstance(bool yes) {
   mProps.setInt(kOfxImageEffectPluginPropSingleInstance, 0, (yes ? 1 : 0));
 }
 
-RenderThreadSafety ImageEffectDescriptor::renderThreadSafety() throw(Exception) {
+RenderThreadSafety ImageEffectDescriptor::renderThreadSafety() {
   return StringToRenderThreadSafety(mProps.getString(kOfxImageEffectPluginRenderThreadSafety, 0));
 }
 
-void ImageEffectDescriptor::setRenderThreadSafety(RenderThreadSafety rts) throw(Exception) {
+void ImageEffectDescriptor::setRenderThreadSafety(RenderThreadSafety rts) {
   mProps.setString(kOfxImageEffectPluginRenderThreadSafety, 0, RenderThreadSafetyToString(rts));
 }
 
-bool ImageEffectDescriptor::hostFrameThreading() throw(Exception) {
+bool ImageEffectDescriptor::hostFrameThreading() {
   return (mProps.getInt(kOfxImageEffectPluginPropHostFrameThreading, 0) == 1);
 }
   
-void ImageEffectDescriptor::setHostFrameThreading(bool yes) throw(Exception) {
+void ImageEffectDescriptor::setHostFrameThreading(bool yes) {
   mProps.setInt(kOfxImageEffectPluginPropHostFrameThreading, 0, (yes ? 1 : 0));
 }
  
-bool ImageEffectDescriptor::supportsMultiResolution() throw(Exception) {
+bool ImageEffectDescriptor::supportsMultiResolution() {
   return (mProps.getInt(kOfxImageEffectPropSupportsMultiResolution, 0) == 1);
 }
 
-void ImageEffectDescriptor::setMultiResolutionSupport(bool yes) throw(Exception) {
+void ImageEffectDescriptor::setMultiResolutionSupport(bool yes) {
   mProps.setInt(kOfxImageEffectPropSupportsMultiResolution, 0, (yes ? 1 : 0));
 }
 
-bool ImageEffectDescriptor::supportsTiles() throw(Exception) {
+bool ImageEffectDescriptor::supportsTiles() {
   return (mProps.getInt(kOfxImageEffectPropSupportsTiles, 0) == 1);
 }
 
-void ImageEffectDescriptor::setTilesSupport(bool yes) throw(Exception) {
+void ImageEffectDescriptor::setTilesSupport(bool yes) {
   mProps.setInt(kOfxImageEffectPropSupportsTiles, 0, (yes ? 1 : 0));
 }
 
-bool ImageEffectDescriptor::needsTemporalClipAccess() throw(Exception) {
+bool ImageEffectDescriptor::needsTemporalClipAccess() {
   return (mProps.getInt(kOfxImageEffectPropTemporalClipAccess, 0) == 1);
 }
 
-void ImageEffectDescriptor::requireTemporalClipAccess(bool yes) throw(Exception) {
+void ImageEffectDescriptor::requireTemporalClipAccess(bool yes) {
   mProps.setInt(kOfxImageEffectPropTemporalClipAccess, 0, (yes ? 1 : 0));
 }
  
-int ImageEffectDescriptor::supportedPixelDepthsCount() throw(Exception) {
+int ImageEffectDescriptor::supportedPixelDepthsCount() {
   return mProps.size(kOfxImageEffectPropSupportedPixelDepths);
 }
 
-void ImageEffectDescriptor::setSupportedPixelDepth(int i, BitDepth bd) throw(Exception) {
+void ImageEffectDescriptor::setSupportedPixelDepth(int i, BitDepth bd) {
   mProps.setString(kOfxImageEffectPropSupportedPixelDepths, i, BitDepthToString(bd));
 }
 
-BitDepth ImageEffectDescriptor::getSupportedPixelDepth(int i) throw(Exception) {
+BitDepth ImageEffectDescriptor::getSupportedPixelDepth(int i) {
   return StringToBitDepth(mProps.getString(kOfxImageEffectPropSupportedPixelDepths, i));
 }
 
-bool ImageEffectDescriptor::fieldRenderTwiceAlways() throw(Exception) {
+bool ImageEffectDescriptor::fieldRenderTwiceAlways() {
   return (mProps.getInt(kOfxImageEffectPluginPropFieldRenderTwiceAlways, 0) == 1);
 }
 
-void ImageEffectDescriptor::setFieldRenderTwiceAlways(bool yes) throw(Exception) {
+void ImageEffectDescriptor::setFieldRenderTwiceAlways(bool yes) {
   mProps.setInt(kOfxImageEffectPluginPropFieldRenderTwiceAlways, 0, (yes ? 1 : 0));
 }
 
-bool ImageEffectDescriptor::supportsMultipleClipDepths() throw(Exception) {
+bool ImageEffectDescriptor::supportsMultipleClipDepths() {
   return (mProps.getInt(kOfxImageEffectPropSupportsMultipleClipDepths, 0) == 1);
 }
 
-void ImageEffectDescriptor::setMultipleClipDepthsSupport(bool yes) throw(Exception) {
+void ImageEffectDescriptor::setMultipleClipDepthsSupport(bool yes) {
   mProps.setInt(kOfxImageEffectPropSupportsMultipleClipDepths, 0, (yes ? 1 : 0));
 }
 
-bool ImageEffectDescriptor::supportsMultipleClipPARs() throw(Exception) {
+bool ImageEffectDescriptor::supportsMultipleClipPARs() {
   return (mProps.getInt(kOfxImageEffectPropSupportsMultipleClipPARs, 0) == 1);
 }
 
-void ImageEffectDescriptor::setMultipleClipPARsSupport(bool yes) throw(Exception) {
+void ImageEffectDescriptor::setMultipleClipPARsSupport(bool yes) {
   mProps.setInt(kOfxImageEffectPropSupportsMultipleClipPARs, 0, (yes ? 1 : 0));
 }  
 
-int ImageEffectDescriptor::clipPreferencesSlaveParamCount() throw(Exception) {
+int ImageEffectDescriptor::clipPreferencesSlaveParamCount() {
   return mProps.size(kOfxImageEffectPropClipPreferencesSlaveParam);
 }
 
-std::string ImageEffectDescriptor::getClipPreferencesSlaveParam(int i) throw(Exception) {
+std::string ImageEffectDescriptor::getClipPreferencesSlaveParam(int i) {
   return mProps.getString(kOfxImageEffectPropClipPreferencesSlaveParam, i);
 }
 
-void ImageEffectDescriptor::setClipPreferencesSlaveParam(int i, const std::string &n) throw(Exception) {
+void ImageEffectDescriptor::setClipPreferencesSlaveParam(int i, const std::string &n) {
   mProps.setString(kOfxImageEffectPropClipPreferencesSlaveParam, i, n);
 }
 
-std::string ImageEffectDescriptor::pluginFilePath() throw(Exception) {
+std::string ImageEffectDescriptor::pluginFilePath() {
   return mProps.getString(kOfxPluginPropFilePath, 0);
 }
 
@@ -579,20 +582,20 @@ ClipDescriptor ImageEffectDescriptor::defineClip(const std::string &name) throw(
   return ClipDescriptor(mHost, hProps);
 }
 
-EntryPoint ImageEffectDescriptor::overlayInteract() throw(Exception) {
+EntryPoint ImageEffectDescriptor::overlayInteract() {
   return ((EntryPoint) mProps.getPointer(kOfxImageEffectPluginPropOverlayInteractV1, 0));
 }
 
-void ImageEffectDescriptor::setOverlayInteract(EntryPoint func) throw(Exception) {
+void ImageEffectDescriptor::setOverlayInteract(EntryPoint func) {
   mProps.setPointer(kOfxImageEffectPluginPropOverlayInteractV1, 0, (void*)func);
 }
 
-void ImageEffectDescriptor::describe() throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffectDescriptor::describe() {
+  return kOfxStatFailed;
 }
 
-void ImageEffectDescriptor::describeInContext(ImageEffectContext) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffectDescriptor::describeInContext(ImageEffectContext) {
+  return kOfxStatFailed;
 }
 
 // ---
@@ -753,7 +756,7 @@ ImageEffect::ImageEffect()
   : mHandle(0), mHost(0) {
 }
 
-ImageEffect::ImageEffect(ImageEffectHost *h, OfxImageEffectHandle hdl) throw(Exception)
+ImageEffect::ImageEffect(ImageEffectHost *h, OfxImageEffectHandle hdl)
   : mHandle(0), mHost(h) {
   setHandle(hdl);
 }
@@ -767,7 +770,7 @@ void ImageEffect::setHandle(OfxImageEffectHandle handle) throw(Exception) {
     msEffects.erase(msEffects.find(mHandle));
   }
   if (!mHost) {
-    throw Exception(kOfxStatErrFatal, "ofx::ImageEffet::setHandle: no host");
+    throw BadHandleError("ofx::ImageEffet::setHandle: invalid host");
   }
   mHandle = handle;
   if (mHandle != 0) {
@@ -783,54 +786,54 @@ void ImageEffect::setHandle(OfxImageEffectHandle handle) throw(Exception) {
   }
 }
 
-ImageEffectContext ImageEffect::context() throw(Exception) {
+ImageEffectContext ImageEffect::context() {
   return StringToImageEffectContext(mProps.getString(kOfxImageEffectPropContext, 0));
 }
 
-void* ImageEffect::instanceData() throw(Exception) {
+void* ImageEffect::instanceData() {
   return mProps.getPointer(kOfxPropInstanceData, 0);
 }
 
-void ImageEffect::setInstanceData(void *data) throw(Exception) {
+void ImageEffect::setInstanceData(void *data) {
   mProps.setPointer(kOfxPropInstanceData, 0, data);
 }
 
-void ImageEffect::projectSize(double &w, double &h) throw(Exception) {
+void ImageEffect::projectSize(double &w, double &h) {
   w = mProps.getDouble(kOfxImageEffectPropProjectSize, 0);
   h = mProps.getDouble(kOfxImageEffectPropProjectSize, 1);
 }
 
-void ImageEffect::projectOffset(double &x, double &y) throw(Exception) {
+void ImageEffect::projectOffset(double &x, double &y) {
   x = mProps.getDouble(kOfxImageEffectPropProjectOffset, 0);
   y = mProps.getDouble(kOfxImageEffectPropProjectOffset, 1);
 }
 
-void ImageEffect::projectExtent(double &w, double &h) throw(Exception) {
+void ImageEffect::projectExtent(double &w, double &h) {
   w = mProps.getDouble(kOfxImageEffectPropProjectExtent, 0);
   h = mProps.getDouble(kOfxImageEffectPropProjectExtent, 1);
 }
 
-double ImageEffect::projectPixelAspectRatio() throw(Exception) {
+double ImageEffect::projectPixelAspectRatio() {
   return mProps.getDouble(kOfxImageEffectPropProjectPixelAspectRatio, 0);
 }
 
-double ImageEffect::duration() throw(Exception) {
+double ImageEffect::duration() {
   return mProps.getDouble(kOfxImageEffectInstancePropEffectDuration, 0);
 }
 
-bool ImageEffect::needsSequentialRender() throw(Exception) {
+bool ImageEffect::needsSequentialRender() {
   return (mProps.getInt(kOfxImageEffectInstancePropSequentialRender, 0) == 1);
 }
 
-void ImageEffect::requireSequentialRender(bool yes) throw(Exception) {
+void ImageEffect::requireSequentialRender(bool yes) {
   mProps.setInt(kOfxImageEffectInstancePropSequentialRender, 0, (yes ? 1 : 0));
 }
 
-double ImageEffect::frameRate() throw(Exception) {
+double ImageEffect::frameRate() {
   return mProps.getDouble(kOfxImageEffectPropFrameRate, 0);
 }
 
-bool ImageEffect::isInteractive() throw(Exception) {
+bool ImageEffect::isInteractive() {
   return (mProps.getInt(kOfxPropIsInteractive, 0) == 1);
 }
 
@@ -879,68 +882,68 @@ void ImageEffect::free(OfxImageMemoryHandle hdl) throw(Exception) {
   }
 }
 
-void ImageEffect::beginInstanceChanged(ChangeReason) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffect::beginInstanceChanged(ChangeReason) {
+  return kOfxStatReplyDefault;
 }
       
-void ImageEffect::endInstanceChanged(ChangeReason) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffect::endInstanceChanged(ChangeReason) {
+  return kOfxStatReplyDefault;
 }
 
-void ImageEffect::instanceChanged(ImageEffect::InstanceChangedArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffect::instanceChanged(ImageEffect::InstanceChangedArgs &) {
+  return kOfxStatReplyDefault;
 }
 
-void ImageEffect::purgeCaches() throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffect::purgeCaches() {
+  return kOfxStatReplyDefault;
 }
 
-void ImageEffect::syncPrivateData() throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffect::syncPrivateData() {
+  return kOfxStatReplyDefault;
 }
 
-void ImageEffect::beginInstanceEdit() throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffect::beginInstanceEdit() {
+  return kOfxStatReplyDefault;
 }
 
-void ImageEffect::endInstanceEdit() throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffect::endInstanceEdit() {
+  return kOfxStatReplyDefault;
 }
 
-Rect<double> ImageEffect::getRegionOfDefinition(ImageEffect::GetRoDArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffect::getRegionOfDefinition(ImageEffect::GetRoDArgs &) {
+  return kOfxStatReplyDefault;
 }
 
-void ImageEffect::getRegionsOfInterest(ImageEffect::GetRoIArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffect::getRegionsOfInterest(ImageEffect::GetRoIArgs &) {
+  return kOfxStatReplyDefault;
 }
 
-void ImageEffect::getFramesNeeded(ImageEffect::GetFramesNeededArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffect::getFramesNeeded(ImageEffect::GetFramesNeededArgs &) {
+  return kOfxStatReplyDefault;
 }
 
-bool ImageEffect::isIdentity(ImageEffect::IsIdentityArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffect::isIdentity(ImageEffect::IsIdentityArgs &) {
+  return kOfxStatReplyDefault;
 }
 
-void ImageEffect::render(ImageEffect::RenderArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffect::render(ImageEffect::RenderArgs &) {
+  return kOfxStatFailed;
 }
 
-void ImageEffect::beginSequenceRender(ImageEffect::SequenceArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffect::beginSequenceRender(ImageEffect::SequenceArgs &) {
+  return kOfxStatReplyDefault;
 }
 
-void ImageEffect::endSequenceRender(ImageEffect::SequenceArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffect::endSequenceRender(ImageEffect::SequenceArgs &) {
+  return kOfxStatReplyDefault;
 }
 
-void ImageEffect::getClipPreferences(ImageEffect::GetClipPrefArgs &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffect::getClipPreferences(ImageEffect::GetClipPrefArgs &) {
+  return kOfxStatReplyDefault;
 }
 
-void ImageEffect::getTimeDomain(double &, double &) throw(Exception) {
-  throw Exception(kOfxStatReplyDefault, "Not implemented");
+OfxStatus ImageEffect::getTimeDomain(double &, double &) {
+  return kOfxStatReplyDefault;
 }
 
 }

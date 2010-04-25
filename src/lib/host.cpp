@@ -37,7 +37,7 @@ Host::Host(OfxHost *host) throw(Exception)
   : PropertySet(), mHost(host), mTimeLine(0), mProgress(0), mMessage(0),
     mMemory(0), mMultiThread(0), mPropSuite(0), mParamSuite(0) {
   if (host == 0) {
-    throw Exception(kOfxStatErrMissingHostFeature, "Invalid Host handle");
+    throw BadHandleError("Host");
   }
   // this member comes from PropertySet
   mHandle = mHost->host;
@@ -69,11 +69,11 @@ void Host::init() throw(Exception) {
   mProgress = new Progress(this);
   mPropSuite = fetchSuite<OfxPropertySuiteV1>(kOfxPropertySuite, 1);
   if (!mPropSuite) {
-    throw Exception(kOfxStatErrMissingHostFeature, "Missing property suite");
+    throw MissingHostFeatureError("Property suite");
   }
   mParamSuite = fetchSuite<OfxParameterSuiteV1>(kOfxParameterSuite, 1);
   if (!mParamSuite) {
-    throw Exception(kOfxStatErrMissingHostFeature, "Missing parameter suite");
+    throw MissingHostFeatureError("Parameter suite");
   }
   // this member comes from PropertySet
   mSuite = mPropSuite;
@@ -92,111 +92,111 @@ void ImageEffectHost::init() throw(Exception) {
   Host::init();
   mInteractSuite = fetchSuite<OfxInteractSuiteV1>(kOfxInteractSuite, 1);
   if (!mInteractSuite) {
-    throw Exception(kOfxStatErrMissingHostFeature, "Missing interact suite");
+    throw MissingHostFeatureError("Interact suite");
   }
   mImageEffectSuite = fetchSuite<OfxImageEffectSuiteV1>(kOfxImageEffectSuite, 1);
   if (!mImageEffectSuite) {
-    throw Exception(kOfxStatErrMissingHostFeature, "Missing image effect suite");
+    throw MissingHostFeatureError("Image effect suite");
   }
 }
 
-std::string ImageEffectHost::name() throw(Exception) {
+std::string ImageEffectHost::name() {
   return getString(kOfxPropName, 0);
 }
 
-std::string ImageEffectHost::label() throw(Exception) {
+std::string ImageEffectHost::label() {
   return getString(kOfxPropLabel, 0);
 }
 
-bool ImageEffectHost::isBackground() throw(Exception) {
+bool ImageEffectHost::isBackground() {
   return (getInt(kOfxImageEffectHostPropIsBackground, 0) == 1);
 }
 
-bool ImageEffectHost::supportsOverlays() throw(Exception) {
+bool ImageEffectHost::supportsOverlays() {
   return (getInt(kOfxImageEffectPropSupportsOverlays, 0) == 1);
 }
 
-bool ImageEffectHost::supportsMultiResolution() throw(Exception) {
+bool ImageEffectHost::supportsMultiResolution() {
   return (getInt(kOfxImageEffectPropSupportsMultiResolution, 0) == 1);
 }
 
-bool ImageEffectHost::supportsTiles() throw(Exception) {
+bool ImageEffectHost::supportsTiles() {
   return (getInt(kOfxImageEffectPropSupportsTiles, 0) == 1);
 }
 
-bool ImageEffectHost::supportsTemporalClipAccess() throw(Exception) {
+bool ImageEffectHost::supportsTemporalClipAccess() {
   return (getInt(kOfxImageEffectPropTemporalClipAccess, 0) == 1);
 }
 
-int ImageEffectHost::supportedComponentsCount() throw(Exception) {
+int ImageEffectHost::supportedComponentsCount() {
   return size(kOfxImageEffectPropSupportedComponents);
 }
 
-ImageComponent ImageEffectHost::getSupportedComponent(int idx) throw(Exception) {
+ImageComponent ImageEffectHost::getSupportedComponent(int idx) {
   return StringToImageComponent(getString(kOfxImageEffectPropSupportedComponents, idx));
 }
 
-int ImageEffectHost::supportedPixelDepthsCount() throw(Exception) {
+int ImageEffectHost::supportedPixelDepthsCount() {
   return size(kOfxImageEffectPropSupportedPixelDepths);
 }
 
-BitDepth ImageEffectHost::getSupportedPixelDepth(int idx) throw(Exception) {
+BitDepth ImageEffectHost::getSupportedPixelDepth(int idx) {
   return StringToBitDepth(getString(kOfxImageEffectPropSupportedPixelDepths, idx));
 }
 
-int ImageEffectHost::supportedContextsCount() throw(Exception) {
+int ImageEffectHost::supportedContextsCount() {
   return size(kOfxImageEffectPropSupportedContexts);
 }
 
-ImageEffectContext ImageEffectHost::getSupportedContext(int idx) throw(Exception) {
+ImageEffectContext ImageEffectHost::getSupportedContext(int idx) {
   return StringToImageEffectContext(getString(kOfxImageEffectPropSupportedContexts, idx));
 }
 
-bool ImageEffectHost::supportsMultipleClipDepths() throw(Exception) {
+bool ImageEffectHost::supportsMultipleClipDepths() {
   return (getInt(kOfxImageEffectPropSupportsMultipleClipDepths, 0) == 1);
 }
 
-bool ImageEffectHost::supportsMultipleClipPARs() throw(Exception) {
+bool ImageEffectHost::supportsMultipleClipPARs() {
   return (getInt(kOfxImageEffectPropSupportsMultipleClipPARs, 0) == 1);
 }
 
-bool ImageEffectHost::setableFramerate() throw(Exception) {
+bool ImageEffectHost::setableFramerate() {
   return (getInt(kOfxImageEffectPropSetableFrameRate, 0) == 1);
 }
 
-bool ImageEffectHost::setableFielding() throw(Exception) {
+bool ImageEffectHost::setableFielding() {
   return (getInt(kOfxImageEffectPropSetableFielding, 0) == 1);
 }
 
-bool ImageEffectHost::supportsCustomParamAnimation() throw(Exception) {
+bool ImageEffectHost::supportsCustomParamAnimation() {
   return (getInt(kOfxParamHostPropSupportsCustomAnimation, 0) == 1);
 }
 
-bool ImageEffectHost::supportsStringParamAnimation() throw(Exception) {
+bool ImageEffectHost::supportsStringParamAnimation() {
   return (getInt(kOfxParamHostPropSupportsStringAnimation, 0) == 1);
 }
 
-bool ImageEffectHost::supportsChoiceParamAnimation() throw(Exception) {
+bool ImageEffectHost::supportsChoiceParamAnimation() {
   return (getInt(kOfxParamHostPropSupportsChoiceAnimation, 0) == 1);
 }
 
-bool ImageEffectHost::supportsBooleanParamAnimation() throw(Exception) {
+bool ImageEffectHost::supportsBooleanParamAnimation() {
   return (getInt(kOfxParamHostPropSupportsBooleanAnimation, 0) == 1);
 }
 
-bool ImageEffectHost::supportsParamCustomInteract() throw(Exception) {
+bool ImageEffectHost::supportsParamCustomInteract() {
   return (getInt(kOfxParamHostPropSupportsCustomInteract, 0) == 1);
 }
 
-int ImageEffectHost::maxParameters() throw(Exception) {
+int ImageEffectHost::maxParameters() {
   return (getInt(kOfxParamHostPropMaxParameters, 0));
 }
 
-int ImageEffectHost::maxParameterPages() throw(Exception) {
+int ImageEffectHost::maxParameterPages() {
   return (getInt(kOfxParamHostPropMaxPages, 0));
 }
 
-void ImageEffectHost::parameterPageRowColumnCount(int &rowCount, int &columnCount) throw(Exception) {
+void ImageEffectHost::parameterPageRowColumnCount(int &rowCount, int &columnCount) {
   columnCount = getInt(kOfxParamHostPropPageRowColumnCount, 0);
   rowCount = getInt(kOfxParamHostPropPageRowColumnCount, 1);
 }

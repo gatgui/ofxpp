@@ -125,12 +125,12 @@ namespace ofx {
           case ActionCreateInstance: {
             Log("OFX Image Effect Plugin: Create instance");
             plugin->addEffect(hEffect);
-            break;
+            return kOfxStatOK;
           }
           case ActionDestroyInstance: {
             Log("OFX Image Effect Plugin: Destroy instance");
             plugin->remEffect(hEffect);
-            break;
+            return kOfxStatOK;
           }
           case ActionBeginInstanceChanged: {
             Log("OFX Image Effect Plugin: Begin instance changed");
@@ -196,8 +196,7 @@ namespace ofx {
               Log("*** Invalid effect");
               return kOfxStatErrUnknown;
             }
-            effect->endInstanceEdit();
-            break;
+            return effect->endInstanceEdit();
           }
           case ActionImageEffectGetRoD: {
             Log("OFX Image Effect Plugin: Get region of definition");
@@ -317,7 +316,6 @@ namespace ofx {
           default:
             return kOfxStatReplyDefault;
           }
-          return kOfxStatOK;
           
         } catch (Exception &e) {
           return e.getStatus();

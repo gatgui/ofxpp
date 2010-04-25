@@ -192,14 +192,14 @@ namespace ofx {
       case ActionCreateInstance: {
         Log("OFX Overlay Interact: Create instance");
         new InstanceClass(host, hInteract);
-        break;
+        return kOfxStatOK;
       }
       case ActionDestroyInstance: {
         Log("OFX Overlay Interact: Destroy instance");
         if (ic) {
           delete ic;
         }
-        break;
+        return kOfxStatOK;
       }
       case ActionInteractDraw: {
         Log("OFX Overlay Interact: Draw");
@@ -249,7 +249,6 @@ namespace ofx {
       default:
         return kOfxStatReplyDefault; // there's another value here
       }
-      return kOfxStatOK;
       
     } catch (Exception &e) {
       return e.getStatus();

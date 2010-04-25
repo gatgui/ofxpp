@@ -106,9 +106,9 @@ SampleInteract::SampleInteract(ofx::ImageEffectHost *host, OfxInteractHandle hdl
     mLastX(-1),
     mLastY(-1) {
   // do I need to call setSlaveToParam? This seems to already be the case in fusion
-  //setSlaveToParam(0, "center");
-  //setSlaveToParam(1, "width");
-  //setSlaveToParam(2, "height");
+  setSlaveToParam(0, "center");
+  setSlaveToParam(1, "width");
+  setSlaveToParam(2, "height");
 }
 
 SampleInteract::~SampleInteract() {
@@ -146,7 +146,7 @@ OfxStatus SampleInteract::penMotion(ofx::Interact::PenArgs &args) {
     cecy += dy;
     ofx::CanonicalToNormalisedCoords(cecx, cecy, wext, hext, xoff, yoff, true, ecx, ecy);
     pC.setValueAtTime(args.time, ecx, ecy);
-    redraw();
+    //redraw();
 
   } else if (mDragOp == DO_WIDTH) {
     double dx = args.x - mLastX;
@@ -154,7 +154,7 @@ OfxStatus SampleInteract::penMotion(ofx::Interact::PenArgs &args) {
     ofx::CanonicalToNormalisedCoords(cew, ceh, wext, hext, 0, 0, false, ew, eh);
     ew *= 2.0;
     pW.setValueAtTime(args.time, ew);
-    redraw();
+    //redraw();
 
   } else if (mDragOp == DO_HEIGHT) {
     double dy = args.y - mLastY;
@@ -162,7 +162,7 @@ OfxStatus SampleInteract::penMotion(ofx::Interact::PenArgs &args) {
     ofx::CanonicalToNormalisedCoords(cew, ceh, wext, hext, 0, 0, false, ew, eh);
     eh *= 2.0;
     pH.setValueAtTime(args.time, eh);
-    redraw();
+    //redraw();
 
   }
 
@@ -214,9 +214,9 @@ OfxStatus SampleInteract::penDown(ofx::Interact::PenArgs &args) {
   mWidthSelected = (mDragOp == DO_WIDTH);
   mHeightSelected = (mDragOp == DO_HEIGHT);
   
-  if (mDragOp != DO_NONE) {
-    redraw();
-  }
+  //if (mDragOp != DO_NONE) {
+  //  redraw();
+  //}
   
   return kOfxStatOK;
 }
@@ -225,9 +225,9 @@ OfxStatus SampleInteract::penUp(ofx::Interact::PenArgs &) {
   mCenterSelected = false;
   mWidthSelected = false;
   mHeightSelected = false;
-  if (mDragOp != DO_NONE) {
-    redraw();
-  }
+  //if (mDragOp != DO_NONE) {
+  //  redraw();
+  //}
   mDragOp = DO_NONE;
   return kOfxStatOK;
 }

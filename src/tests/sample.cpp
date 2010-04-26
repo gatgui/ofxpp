@@ -87,6 +87,13 @@ class SampleEffect : public ofx::ImageEffect {
     //virtual OfxStatus getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args);
     //virtual OfxStatus getRegionsOfInterest(ofx::ImageEffect::GetRoIsArgs &args);
     virtual OfxStatus render(ofx::ImageEffect::RenderArgs &args);
+    
+  public:
+    
+    ofx::Double2Parameter pCenter;
+    ofx::DoubleParameter pWidth;
+    ofx::DoubleParameter pHeight;
+    ofx::BooleanParameter pInvert;
 };
 
 class SamplePlugin : public ofx::ImageEffectPlugin<SampleDescriptor, SampleEffect> {
@@ -119,9 +126,9 @@ OfxStatus SampleInteract::penMotion(ofx::Interact::PenArgs &args) {
     return kOfxStatReplyDefault;
   }
 
-  ofx::Double2Parameter pC = args.effect->parameters().getDouble2Param("center");
-  ofx::DoubleParameter pW = args.effect->parameters().getDoubleParam("width");
-  ofx::DoubleParameter pH = args.effect->parameters().getDoubleParam("height");
+  ofx::Double2Parameter pC = ((SampleEffect*) args.effect)->pCenter; //args.effect->parameters().getDouble2Param("center");
+  ofx::DoubleParameter pW = ((SampleEffect*) args.effect)->pWidth; //args.effect->parameters().getDoubleParam("width");
+  ofx::DoubleParameter pH = ((SampleEffect*) args.effect)->pHeight; //args.effect->parameters().getDoubleParam("height");
   
   double ecx, ecy;
   pC.getValueAtTime(args.time, ecx, ecy);
@@ -145,7 +152,11 @@ OfxStatus SampleInteract::penMotion(ofx::Interact::PenArgs &args) {
     cecx += dx;
     cecy += dy;
     ofx::CanonicalToNormalisedCoords(cecx, cecy, wext, hext, xoff, yoff, true, ecx, ecy);
-    pC.setValueAtTime(args.time, ecx, ecy);
+    if (pC.isAutoKeying()) {
+      pC.setValueAtTime(args.time, ecx, ecy);
+    } else {
+      pC.setValue(ecx, ecy);
+    }
     //redraw();
 
   } else if (mDragOp == DO_WIDTH) {
@@ -153,7 +164,11 @@ OfxStatus SampleInteract::penMotion(ofx::Interact::PenArgs &args) {
     cew += dx;
     ofx::CanonicalToNormalisedCoords(cew, ceh, wext, hext, 0, 0, false, ew, eh);
     ew *= 2.0;
-    pW.setValueAtTime(args.time, ew);
+    if (pW.isAutoKeying()) {
+      pW.setValueAtTime(args.time, ew);
+    } else {
+      pW.setValue(ew);
+    }
     //redraw();
 
   } else if (mDragOp == DO_HEIGHT) {
@@ -161,7 +176,11 @@ OfxStatus SampleInteract::penMotion(ofx::Interact::PenArgs &args) {
     ceh += dy;
     ofx::CanonicalToNormalisedCoords(cew, ceh, wext, hext, 0, 0, false, ew, eh);
     eh *= 2.0;
-    pH.setValueAtTime(args.time, eh);
+    if (pH.isAutoKeying()) {
+      pH.setValueAtTime(args.time, eh);
+    } else {
+      pH.setValue(eh);
+    }
     //redraw();
 
   }
@@ -174,9 +193,9 @@ OfxStatus SampleInteract::penMotion(ofx::Interact::PenArgs &args) {
     
 OfxStatus SampleInteract::penDown(ofx::Interact::PenArgs &args) {
   
-  ofx::Double2Parameter pC = args.effect->parameters().getDouble2Param("center");
-  ofx::DoubleParameter pW = args.effect->parameters().getDoubleParam("width");
-  ofx::DoubleParameter pH = args.effect->parameters().getDoubleParam("height");
+  ofx::Double2Parameter pC = ((SampleEffect*) args.effect)->pCenter; //args.effect->parameters().getDouble2Param("center");
+  ofx::DoubleParameter pW = ((SampleEffect*) args.effect)->pWidth; //args.effect->parameters().getDoubleParam("width");
+  ofx::DoubleParameter pH = ((SampleEffect*) args.effect)->pHeight; //args.effect->parameters().getDoubleParam("height");
   
   double ecx, ecy;
   pC.getValueAtTime(args.time, ecx, ecy);
@@ -233,9 +252,9 @@ OfxStatus SampleInteract::penUp(ofx::Interact::PenArgs &) {
 }
 
 OfxStatus SampleInteract::draw(ofx::Interact::DrawArgs &args) {  
-  ofx::Double2Parameter pC = args.effect->parameters().getDouble2Param("center");
-  ofx::DoubleParameter pW = args.effect->parameters().getDoubleParam("width");
-  ofx::DoubleParameter pH = args.effect->parameters().getDoubleParam("height");
+  ofx::Double2Parameter pC = ((SampleEffect*) args.effect)->pCenter; //args.effect->parameters().getDouble2Param("center");
+  ofx::DoubleParameter pW = ((SampleEffect*) args.effect)->pWidth; //args.effect->parameters().getDoubleParam("width");
+  ofx::DoubleParameter pH = ((SampleEffect*) args.effect)->pHeight; //args.effect->parameters().getDoubleParam("height");
   
   double ecx, ecy;
   pC.getValueAtTime(args.time, ecx, ecy);
@@ -380,6 +399,10 @@ OfxStatus SampleDescriptor::describeInContext(ofx::ImageEffectContext) {
 
 SampleEffect::SampleEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception)
   : ofx::ImageEffect(h, hdl) {
+  pCenter = parameters().getDouble2Param("center");
+  pWidth = parameters().getDoubleParam("width");
+  pHeight = parameters().getDoubleParam("height");
+  pInvert = parameters().getBooleanParam("invert");
 }
 
 SampleEffect::~SampleEffect() {
@@ -392,9 +415,9 @@ double SampleEffect::normalisedDistanceToEllipseCenter(double x, double y, doubl
 }
 
 OfxStatus SampleEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args) {
-  ofx::DoubleParameter w = parameters().getDoubleParam("width");
-  ofx::DoubleParameter h = parameters().getDoubleParam("height");
-  if (w.getValue() <= 0.0 || h.getValue() <= 0.0) {
+  //ofx::DoubleParameter w = parameters().getDoubleParam("width");
+  //ofx::DoubleParameter h = parameters().getDoubleParam("height");
+  if (pWidth.getValue() <= 0.0 || pHeight.getValue() <= 0.0) {
     args.idClip = "Source";
     args.idTime = args.time;
     return kOfxStatOK;
@@ -431,10 +454,10 @@ OfxStatus SampleEffect::render(ofx::ImageEffect::RenderArgs &args) {
   
   ofx::RGBAColourB *srcPix, *dstPix;
   
-  ofx::Double2Parameter pCenter = parameters().getDouble2Param("center");
-  ofx::DoubleParameter pWidth = parameters().getDoubleParam("width");
-  ofx::DoubleParameter pHeight = parameters().getDoubleParam("height");
-  ofx::BooleanParameter pInvert = parameters().getBooleanParam("invert");
+  //ofx::Double2Parameter pCenter = parameters().getDouble2Param("center");
+  //ofx::DoubleParameter pWidth = parameters().getDoubleParam("width");
+  //ofx::DoubleParameter pHeight = parameters().getDoubleParam("height");
+  //ofx::BooleanParameter pInvert = parameters().getBooleanParam("invert");
   
   double nx, ny;
   pCenter.getValueAtTime(args.time, nx, ny);
@@ -554,6 +577,9 @@ OfxStatus SampleEffect::render(ofx::ImageEffect::RenderArgs &args) {
       }
     }
   }
+  
+  iSrc.release();
+  iOut.release();
   
   if (abort()) {
     return kOfxStatFailed;

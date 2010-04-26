@@ -251,6 +251,8 @@ namespace ofx {
       }
       
     } catch (Exception &e) {
+      Log("*** Caught exception");
+      Log("***   %s", e.what());
       return e.getStatus();
     }
   }

@@ -71,7 +71,8 @@ namespace ofx {
     
     protected:
       
-      void checkStatus(OfxStatus s, const std::string &msg="") throw(Exception);
+      //void checkStatus(OfxStatus s, const std::string &msg="") throw(Exception);
+      void checkStatus(OfxStatus s, const char *prop, const char *msg=0) throw(Exception);
       
     protected:
       

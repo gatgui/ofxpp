@@ -271,7 +271,7 @@ namespace ofx {
               Log("*** Invalid effect");
               return kOfxStatErrUnknown;
             }
-            ImageEffect::SequenceArgs args(inArgs);
+            ImageEffect::BeginSequenceArgs args(inArgs);
             return effect->beginSequenceRender(args);
           }
           case ActionImageEffectEndSequenceRender: {
@@ -281,7 +281,7 @@ namespace ofx {
               Log("*** Invalid effect");
               return kOfxStatErrUnknown;
             }
-            ImageEffect::SequenceArgs args(inArgs);
+            ImageEffect::EndSequenceArgs args(inArgs);
             return effect->endSequenceRender(args);
           }
           case ActionImageEffectGetClipPreferences: {

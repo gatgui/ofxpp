@@ -701,10 +701,16 @@ void ImageEffect::GetFramesNeededArgs::addInputRange(const std::string &name, co
 
 ImageEffect::SequenceArgs::SequenceArgs(PropertySet &inArgs)
   : ImageEffect::RenderScaleArgs(inArgs) {
+  interactive = (inArgs.getInt(kOfxPropIsInteractive, 0) == 1);
+}
+
+// ---
+
+ImageEffect::BeginSequenceArgs::BeginSequenceArgs(PropertySet &inArgs)
+  : ImageEffect::SequenceArgs(inArgs) {
   range.first = inArgs.getDouble(kOfxImageEffectPropFrameRange, 0);
   range.second = inArgs.getDouble(kOfxImageEffectPropFrameRange, 1);
   step = inArgs.getDouble(kOfxImageEffectPropFrameStep, 0);
-  interactive = (inArgs.getInt(kOfxPropIsInteractive, 0) == 1);
 }
 
 // ---
@@ -930,11 +936,11 @@ OfxStatus ImageEffect::render(ImageEffect::RenderArgs &) {
   return kOfxStatFailed;
 }
 
-OfxStatus ImageEffect::beginSequenceRender(ImageEffect::SequenceArgs &) {
+OfxStatus ImageEffect::beginSequenceRender(ImageEffect::BeginSequenceArgs &) {
   return kOfxStatReplyDefault;
 }
 
-OfxStatus ImageEffect::endSequenceRender(ImageEffect::SequenceArgs &) {
+OfxStatus ImageEffect::endSequenceRender(ImageEffect::EndSequenceArgs &) {
   return kOfxStatReplyDefault;
 }
 

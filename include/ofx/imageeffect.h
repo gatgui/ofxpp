@@ -468,12 +468,20 @@ namespace ofx {
       };
       
       struct SequenceArgs : public RenderScaleArgs {
-        FrameRange range;
-        int step;
         bool interactive;
         
         SequenceArgs(PropertySet &props);
       };
+      
+      struct BeginSequenceArgs : public SequenceArgs {
+        FrameRange range;
+        int step;
+        // supposed to be the same in the specs for EndSequence action
+        
+        BeginSequenceArgs(PropertySet &props);
+      };
+      
+      typedef SequenceArgs EndSequenceArgs;
       
       struct GetClipPrefArgs {
         ClipPreferences outPref;
@@ -555,8 +563,8 @@ namespace ofx {
       virtual OfxStatus getFramesNeeded(GetFramesNeededArgs &args);
       virtual OfxStatus isIdentity(IsIdentityArgs &args);
       virtual OfxStatus render(RenderArgs &args);
-      virtual OfxStatus beginSequenceRender(SequenceArgs &args);
-      virtual OfxStatus endSequenceRender(SequenceArgs &args);
+      virtual OfxStatus beginSequenceRender(BeginSequenceArgs &args);
+      virtual OfxStatus endSequenceRender(EndSequenceArgs &args);
       virtual OfxStatus getClipPreferences(GetClipPrefArgs &args);
       virtual OfxStatus getTimeDomain(double &first, double &last);
     

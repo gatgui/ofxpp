@@ -116,7 +116,7 @@ SampleInteract::~SampleInteract() {
 
 OfxStatus SampleInteract::penMotion(ofx::Interact::PenArgs &args) {
   if (mDragOp == DO_NONE) {
-    return kOfxStatOK;
+    return kOfxStatReplyDefault;
   }
 
   ofx::Double2Parameter pC = args.effect->parameters().getDouble2Param("center");

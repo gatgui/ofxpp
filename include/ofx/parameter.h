@@ -1092,6 +1092,8 @@ namespace ofx {
       
       // properties
       
+      // kOfxPluginPropParamPageOrder -> multi string
+      
       // suite
       
       IntParameterDescriptor defineIntParam(const std::string &name) throw(Exception);

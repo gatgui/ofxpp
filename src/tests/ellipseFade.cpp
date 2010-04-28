@@ -354,7 +354,7 @@ OfxStatus EllipseFadeDescriptor::describe() {
   if (host()->supportsOverlays()) {
     setOverlayInteract(ofx::InteractEntryPoint<EllipseFadePlugin, ofx::InteractDescriptor, EllipseFadeInteract>);
   }
-  ofx::Log("Ellipse fade descibed successfully");
+  ofx::Log("=> EllipseFade described successfully");
   return kOfxStatOK;
 }
 

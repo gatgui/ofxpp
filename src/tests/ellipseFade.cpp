@@ -37,11 +37,11 @@ USA.
 
 #define CLAMP(val, minVal, maxVal) (val < minVal ? minVal : (val > maxVal ? maxVal : val))
 
-class SampleInteract : public ofx::Interact {
+class EllipseFadeInteract : public ofx::Interact {
   public:
     
-    SampleInteract(ofx::ImageEffectHost *host, OfxInteractHandle hdl) throw(ofx::Exception);
-    virtual ~SampleInteract();
+    EllipseFadeInteract(ofx::ImageEffectHost *host, OfxInteractHandle hdl) throw(ofx::Exception);
+    virtual ~EllipseFadeInteract();
     
     virtual OfxStatus draw(ofx::Interact::DrawArgs &args);
     virtual OfxStatus penMotion(ofx::Interact::PenArgs &args);
@@ -65,21 +65,21 @@ class SampleInteract : public ofx::Interact {
     double mLastY;
 };
 
-class SampleDescriptor : public ofx::ImageEffectDescriptor {
+class EllipseFadeDescriptor : public ofx::ImageEffectDescriptor {
   public:
     
-    SampleDescriptor(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception);
-    virtual ~SampleDescriptor();
+    EllipseFadeDescriptor(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception);
+    virtual ~EllipseFadeDescriptor();
     
     virtual OfxStatus describe();
     virtual OfxStatus describeInContext(ofx::ImageEffectContext ctx);
 };
 
-class SampleEffect : public ofx::ImageEffect {
+class EllipseFadeEffect : public ofx::ImageEffect {
   public:
     
-    SampleEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception);
-    virtual ~SampleEffect();
+    EllipseFadeEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception);
+    virtual ~EllipseFadeEffect();
     
     double normalisedDistanceToEllipseCenter(double x, double y, double w, double h, double px, double py);
     
@@ -96,17 +96,17 @@ class SampleEffect : public ofx::ImageEffect {
     ofx::BooleanParameter pInvert;
 };
 
-class SamplePlugin : public ofx::ImageEffectPlugin<SampleDescriptor, SampleEffect> {
+class EllipseFadePlugin : public ofx::ImageEffectPlugin<EllipseFadeDescriptor, EllipseFadeEffect> {
   public:
-    SamplePlugin();
-    virtual ~SamplePlugin();
+    EllipseFadePlugin();
+    virtual ~EllipseFadePlugin();
 };
 
 // ---
 
-SampleInteract::SampleInteract(ofx::ImageEffectHost *host, OfxInteractHandle hdl) throw(ofx::Exception)
+EllipseFadeInteract::EllipseFadeInteract(ofx::ImageEffectHost *host, OfxInteractHandle hdl) throw(ofx::Exception)
   : ofx::Interact(host, hdl),
-    mDragOp(SampleInteract::DO_NONE),
+    mDragOp(EllipseFadeInteract::DO_NONE),
     mWidthSelected(false),
     mHeightSelected(false),
     mCenterSelected(false),
@@ -118,17 +118,17 @@ SampleInteract::SampleInteract(ofx::ImageEffectHost *host, OfxInteractHandle hdl
   setSlaveToParam(2, "height");
 }
 
-SampleInteract::~SampleInteract() {
+EllipseFadeInteract::~EllipseFadeInteract() {
 }
 
-OfxStatus SampleInteract::penMotion(ofx::Interact::PenArgs &args) {
+OfxStatus EllipseFadeInteract::penMotion(ofx::Interact::PenArgs &args) {
   if (mDragOp == DO_NONE) {
     return kOfxStatReplyDefault;
   }
 
-  ofx::Double2Parameter pC = ((SampleEffect*) args.effect)->pCenter; //args.effect->parameters().getDouble2Param("center");
-  ofx::DoubleParameter pW = ((SampleEffect*) args.effect)->pWidth; //args.effect->parameters().getDoubleParam("width");
-  ofx::DoubleParameter pH = ((SampleEffect*) args.effect)->pHeight; //args.effect->parameters().getDoubleParam("height");
+  ofx::Double2Parameter pC = ((EllipseFadeEffect*) args.effect)->pCenter; //args.effect->parameters().getDouble2Param("center");
+  ofx::DoubleParameter pW = ((EllipseFadeEffect*) args.effect)->pWidth; //args.effect->parameters().getDoubleParam("width");
+  ofx::DoubleParameter pH = ((EllipseFadeEffect*) args.effect)->pHeight; //args.effect->parameters().getDoubleParam("height");
   
   double ecx, ecy;
   pC.getValueAtTime(args.time, ecx, ecy);
@@ -191,11 +191,11 @@ OfxStatus SampleInteract::penMotion(ofx::Interact::PenArgs &args) {
   return kOfxStatOK;
 }
     
-OfxStatus SampleInteract::penDown(ofx::Interact::PenArgs &args) {
+OfxStatus EllipseFadeInteract::penDown(ofx::Interact::PenArgs &args) {
   
-  ofx::Double2Parameter pC = ((SampleEffect*) args.effect)->pCenter; //args.effect->parameters().getDouble2Param("center");
-  ofx::DoubleParameter pW = ((SampleEffect*) args.effect)->pWidth; //args.effect->parameters().getDoubleParam("width");
-  ofx::DoubleParameter pH = ((SampleEffect*) args.effect)->pHeight; //args.effect->parameters().getDoubleParam("height");
+  ofx::Double2Parameter pC = ((EllipseFadeEffect*) args.effect)->pCenter; //args.effect->parameters().getDouble2Param("center");
+  ofx::DoubleParameter pW = ((EllipseFadeEffect*) args.effect)->pWidth; //args.effect->parameters().getDoubleParam("width");
+  ofx::DoubleParameter pH = ((EllipseFadeEffect*) args.effect)->pHeight; //args.effect->parameters().getDoubleParam("height");
   
   double ecx, ecy;
   pC.getValueAtTime(args.time, ecx, ecy);
@@ -240,7 +240,7 @@ OfxStatus SampleInteract::penDown(ofx::Interact::PenArgs &args) {
   return kOfxStatOK;
 }
 
-OfxStatus SampleInteract::penUp(ofx::Interact::PenArgs &) {
+OfxStatus EllipseFadeInteract::penUp(ofx::Interact::PenArgs &) {
   mCenterSelected = false;
   mWidthSelected = false;
   mHeightSelected = false;
@@ -251,10 +251,10 @@ OfxStatus SampleInteract::penUp(ofx::Interact::PenArgs &) {
   return kOfxStatOK;
 }
 
-OfxStatus SampleInteract::draw(ofx::Interact::DrawArgs &args) {  
-  ofx::Double2Parameter pC = ((SampleEffect*) args.effect)->pCenter; //args.effect->parameters().getDouble2Param("center");
-  ofx::DoubleParameter pW = ((SampleEffect*) args.effect)->pWidth; //args.effect->parameters().getDoubleParam("width");
-  ofx::DoubleParameter pH = ((SampleEffect*) args.effect)->pHeight; //args.effect->parameters().getDoubleParam("height");
+OfxStatus EllipseFadeInteract::draw(ofx::Interact::DrawArgs &args) {  
+  ofx::Double2Parameter pC = ((EllipseFadeEffect*) args.effect)->pCenter; //args.effect->parameters().getDouble2Param("center");
+  ofx::DoubleParameter pW = ((EllipseFadeEffect*) args.effect)->pWidth; //args.effect->parameters().getDoubleParam("width");
+  ofx::DoubleParameter pH = ((EllipseFadeEffect*) args.effect)->pHeight; //args.effect->parameters().getDoubleParam("height");
   
   double ecx, ecy;
   pC.getValueAtTime(args.time, ecx, ecy);
@@ -328,28 +328,37 @@ OfxStatus SampleInteract::draw(ofx::Interact::DrawArgs &args) {
 
 // ---
 
-SampleDescriptor::SampleDescriptor(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception)
+EllipseFadeDescriptor::EllipseFadeDescriptor(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception)
   : ofx::ImageEffectDescriptor(h, hdl) {
 }
 
-SampleDescriptor::~SampleDescriptor() {
+EllipseFadeDescriptor::~EllipseFadeDescriptor() {
 }
 
-OfxStatus SampleDescriptor::describe() {
-  setMultipleClipDepthsSupport(false);
-  setSupportedPixelDepth(0, ofx::BitDepthByte);
-  setSupportedContext(0, ofx::ImageEffectContextFilter);
+OfxStatus EllipseFadeDescriptor::describe() {
   setLabel("ellipseFade");
   setShortLabel("ellipseFade");
   setLongLabel("ellipseFade");
   setGrouping("GGCorp");
+  setSingleInstance(false);
+  setHostFrameThreading(true);
+  setRenderThreadSafety(ofx::RenderThreadFullySafe);
+  setSupportedPixelDepth(0, ofx::BitDepthByte);
+  setSupportedContext(0, ofx::ImageEffectContextFilter);
+  requireTemporalClipAccess(false);
+  setTilesSupport(true);
+  setFieldRenderTwiceAlways(true);
+  setMultipleClipDepthsSupport(false);
+  setMultipleClipPARsSupport(false);
+  setMultiResolutionSupport(false);
   if (host()->supportsOverlays()) {
-    setOverlayInteract(ofx::InteractEntryPoint<SamplePlugin, ofx::InteractDescriptor, SampleInteract>);
+    setOverlayInteract(ofx::InteractEntryPoint<EllipseFadePlugin, ofx::InteractDescriptor, EllipseFadeInteract>);
   }
+  ofx::Log("Ellipse fade descibed successfully");
   return kOfxStatOK;
 }
 
-OfxStatus SampleDescriptor::describeInContext(ofx::ImageEffectContext) {
+OfxStatus EllipseFadeDescriptor::describeInContext(ofx::ImageEffectContext) {
   
   ofx::ClipDescriptor clip;
   
@@ -399,7 +408,7 @@ OfxStatus SampleDescriptor::describeInContext(ofx::ImageEffectContext) {
 
 // ---
 
-SampleEffect::SampleEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception)
+EllipseFadeEffect::EllipseFadeEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception)
   : ofx::ImageEffect(h, hdl) {
   pCenter = parameters().getDouble2Param("center");
   pWidth = parameters().getDoubleParam("width");
@@ -407,16 +416,16 @@ SampleEffect::SampleEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) th
   pInvert = parameters().getBooleanParam("invert");
 }
 
-SampleEffect::~SampleEffect() {
+EllipseFadeEffect::~EllipseFadeEffect() {
 }
 
-double SampleEffect::normalisedDistanceToEllipseCenter(double x, double y, double w, double h, double px, double py) {
+double EllipseFadeEffect::normalisedDistanceToEllipseCenter(double x, double y, double w, double h, double px, double py) {
   double dx = (px - x) / w;
   double dy = (py - y) / h;
   return (dx*dx + dy*dy);
 }
 
-OfxStatus SampleEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args) {
+OfxStatus EllipseFadeEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args) {
   //ofx::DoubleParameter w = parameters().getDoubleParam("width");
   //ofx::DoubleParameter h = parameters().getDoubleParam("height");
   if (pWidth.getValue() <= 0.0 || pHeight.getValue() <= 0.0) {
@@ -429,7 +438,7 @@ OfxStatus SampleEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args) {
 }
 
 /*
-OfxStatus SampleEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args) {
+OfxStatus EllipseFadeEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args) {
   ofx::Rect<double> RoD;
   // -> check center, width, and height
   // -> also apply renderScaleX and renderScaleY
@@ -441,11 +450,11 @@ OfxStatus SampleEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args
   //double projectPixelAspectRatio() throw(Exception);
 }
 
-OfxStatus SampleEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args) {
+OfxStatus EllipseFadeEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args) {
 }
 */
 
-OfxStatus SampleEffect::render(ofx::ImageEffect::RenderArgs &args) { 
+OfxStatus EllipseFadeEffect::render(ofx::ImageEffect::RenderArgs &args) { 
   // renderWindow is in pixels, not canonical coords
   
   ofx::Clip cSrc = getClip("Source");
@@ -593,14 +602,14 @@ OfxStatus SampleEffect::render(ofx::ImageEffect::RenderArgs &args) {
 
 // ---
 
-SamplePlugin::SamplePlugin()
-  : ofx::ImageEffectPlugin<SampleDescriptor, SampleEffect>() {
+EllipseFadePlugin::EllipseFadePlugin()
+  : ofx::ImageEffectPlugin<EllipseFadeDescriptor, EllipseFadeEffect>() {
   setMajorVersion(1);
   setMinorVersion(0);
   setID("ggcorp.filter.ellipseFade");
 }
 
-SamplePlugin::~SamplePlugin() {
+EllipseFadePlugin::~EllipseFadePlugin() {
 }
 
 // ---
@@ -611,7 +620,7 @@ OfxExport int OfxGetNumberOfPlugins(void) {
 
 OfxExport OfxPlugin* OfxGetPlugin(int i) {
   if (i == 0) {
-    SamplePlugin *p = new SamplePlugin();
+    EllipseFadePlugin *p = new EllipseFadePlugin();
     return p->description();
   }
   return NULL;

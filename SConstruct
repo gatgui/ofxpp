@@ -32,10 +32,10 @@ prjs = [
     "install" : {"include/ofx": glob.glob("include/ofx/*.h"),
                  "include"    : glob.glob("include/*.h")}
   },
-  { "name"    : "sample",
+  { "name"    : "ellipseFade",
     "type"    : "dynamicmodule",
     "ext"     : ".ofx",
-    "srcs"    : glob.glob("src/tests/sample.cpp"),
+    "srcs"    : glob.glob("src/tests/ellipseFade.cpp"),
     "libs"    : ["ofxpp"],
     "custom"  : [gl.Require],
     "post"    : openfx.MakeBundle

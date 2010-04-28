@@ -339,8 +339,10 @@ OfxStatus SampleDescriptor::describe() {
   setMultipleClipDepthsSupport(false);
   setSupportedPixelDepth(0, ofx::BitDepthByte);
   setSupportedContext(0, ofx::ImageEffectContextFilter);
-  setGrouping("gatgui");
-  setLabel("sample");
+  setLabel("ellipseFade");
+  setShortLabel("ellipseFade");
+  setLongLabel("ellipseFade");
+  setGrouping("GGCorp");
   if (host()->supportsOverlays()) {
     setOverlayInteract(ofx::InteractEntryPoint<SamplePlugin, ofx::InteractDescriptor, SampleInteract>);
   }
@@ -595,7 +597,7 @@ SamplePlugin::SamplePlugin()
   : ofx::ImageEffectPlugin<SampleDescriptor, SampleEffect>() {
   setMajorVersion(1);
   setMinorVersion(0);
-  setID("gatgui.filter.sample");
+  setID("ggcorp.filter.ellipseFade");
 }
 
 SamplePlugin::~SamplePlugin() {

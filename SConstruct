@@ -45,6 +45,15 @@ prjs = [
     "custom"  : [gl.Require],
     "post"    : openfx.MakeBundle
   }
+  { "name"    : "blur",
+    "type"    : "dynamicmodule",
+    "ext"     : ".ofx",
+    "defs"    : defines,
+    "srcs"    : glob.glob("src/tests/blur.cpp"),
+    "libs"    : ["ofxpp"],
+    "custom"  : [gl.Require],
+    "post"    : openfx.MakeBundle
+  }
 ]
 
 env = excons.MakeBaseEnv()

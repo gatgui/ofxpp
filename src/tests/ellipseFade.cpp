@@ -35,8 +35,6 @@ USA.
 # include <GL/gl.h>
 #endif
 
-#define CLAMP(val, minVal, maxVal) (val < minVal ? minVal : (val > maxVal ? maxVal : val))
-
 class EllipseFadeInteract : public ofx::Interact {
   public:
     
@@ -68,7 +66,7 @@ class EllipseFadeInteract : public ofx::Interact {
 class EllipseFadeDescriptor : public ofx::ImageEffectDescriptor {
   public:
     
-    EllipseFadeDescriptor(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception);
+    EllipseFadeDescriptor(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl);
     virtual ~EllipseFadeDescriptor();
     
     virtual OfxStatus describe();
@@ -334,7 +332,7 @@ OfxStatus EllipseFadeInteract::draw(ofx::Interact::DrawArgs &args) {
 
 // ---
 
-EllipseFadeDescriptor::EllipseFadeDescriptor(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception)
+EllipseFadeDescriptor::EllipseFadeDescriptor(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl)
   : ofx::ImageEffectDescriptor(h, hdl) {
 }
 

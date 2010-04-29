@@ -35,6 +35,10 @@ USA.
 # include <GL/gl.h>
 #endif
 
+#if 0
+# define FORCE_OVERLAY_REDRAW
+#endif
+
 #define CLAMP(val, minVal, maxVal) (val < minVal ? minVal : (val > maxVal ? maxVal : val))
 
 class EllipseFadeInteract : public ofx::Interact {
@@ -157,7 +161,9 @@ OfxStatus EllipseFadeInteract::penMotion(ofx::Interact::PenArgs &args) {
     } else {
       pC.setValue(ecx, ecy);
     }
-    //redraw();
+#ifdef FORCE_OVERLAY_REDRAW
+    redraw();
+#endif
 
   } else if (mDragOp == DO_WIDTH) {
     double dx = args.x - mLastX;
@@ -169,7 +175,9 @@ OfxStatus EllipseFadeInteract::penMotion(ofx::Interact::PenArgs &args) {
     } else {
       pW.setValue(ew);
     }
-    //redraw();
+#ifdef FORCE_OVERLAY_REDRAW
+    redraw();
+#endif
 
   } else if (mDragOp == DO_HEIGHT) {
     double dy = args.y - mLastY;
@@ -181,7 +189,9 @@ OfxStatus EllipseFadeInteract::penMotion(ofx::Interact::PenArgs &args) {
     } else {
       pH.setValue(eh);
     }
-    //redraw();
+#ifdef FORCE_OVERLAY_REDRAW
+    redraw();
+#endif
 
   }
 
@@ -233,9 +243,11 @@ OfxStatus EllipseFadeInteract::penDown(ofx::Interact::PenArgs &args) {
   mWidthSelected = (mDragOp == DO_WIDTH);
   mHeightSelected = (mDragOp == DO_HEIGHT);
   
-  //if (mDragOp != DO_NONE) {
-  //  redraw();
-  //}
+#ifdef FORCE_OVERLAY_REDRAW
+  if (mDragOp != DO_NONE) {
+    redraw();
+  }
+#endif
   
   return kOfxStatOK;
 }
@@ -244,9 +256,11 @@ OfxStatus EllipseFadeInteract::penUp(ofx::Interact::PenArgs &) {
   mCenterSelected = false;
   mWidthSelected = false;
   mHeightSelected = false;
-  //if (mDragOp != DO_NONE) {
-  //  redraw();
-  //}
+#ifdef FORCE_OVERLAY_REDRAW
+  if (mDragOp != DO_NONE) {
+    redraw();
+  }
+#endif
   mDragOp = DO_NONE;
   return kOfxStatOK;
 }

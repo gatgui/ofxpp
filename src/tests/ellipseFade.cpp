@@ -339,11 +339,11 @@ OfxStatus EllipseFadeDescriptor::describe() {
   setLabel("ellipseFade");
   setShortLabel("ellipseFade");
   setLongLabel("ellipseFade");
-  setGrouping("GGCorp");
+  setGrouping("gatgui");
   setSingleInstance(false);
   setHostFrameThreading(true);
   setRenderThreadSafety(ofx::RenderThreadFullySafe);
-  setSupportedPixelDepth(0, ofx::BitDepthByte);
+  setSupportedPixelDepth(0, ofx::BitDepthFloat);
   setSupportedContext(0, ofx::ImageEffectContextFilter);
   requireTemporalClipAccess(false);
   setTilesSupport(true);
@@ -354,7 +354,6 @@ OfxStatus EllipseFadeDescriptor::describe() {
   if (host()->supportsOverlays()) {
     setOverlayInteract(ofx::InteractEntryPoint<EllipseFadePlugin, ofx::InteractDescriptor, EllipseFadeInteract>);
   }
-  ofx::Log("=> EllipseFade described successfully");
   return kOfxStatOK;
 }
 
@@ -463,7 +462,7 @@ OfxStatus EllipseFadeEffect::render(ofx::ImageEffect::RenderArgs &args) {
   ofx::Image iSrc = cSrc.getImage(args.time);
   ofx::Image iOut = cOut.getImage(args.time);
   
-  ofx::RGBAColourB *srcPix, *dstPix;
+  ofx::RGBAColourF *srcPix, *dstPix;
   
   //ofx::Double2Parameter pCenter = parameters().getDouble2Param("center");
   //ofx::DoubleParameter pWidth = parameters().getDoubleParam("width");
@@ -509,30 +508,23 @@ OfxStatus EllipseFadeEffect::render(ofx::ImageEffect::RenderArgs &args) {
         double d = normalisedDistanceToEllipseCenter(cx, cy, cw, ch, pcx, pcy);
         if (d <= 1.0) {
           if (!iSrc.pixelAddress(x, y, srcPix)) {
-            dstPix->r = 0;
-            dstPix->g = 0;
-            dstPix->b = 0;
-            dstPix->a = 255;
+            dstPix->r = 0.0f;
+            dstPix->g = 0.0f;
+            dstPix->b = 0.0f;
+            dstPix->a = 1.0f;
           } else {
-            double tmp;
-            double falloff = d * d;
-            tmp = double(srcPix->r) / 255.0;
-            tmp *= falloff;
-            dstPix->r = (unsigned char) (255 * CLAMP(tmp, 0, 1));
-            tmp = double(srcPix->g) / 255.0;
-            tmp *= falloff;
-            dstPix->g = (unsigned char) (255 * CLAMP(tmp, 0, 1));
-            tmp = double(srcPix->b) / 255.0;
-            tmp *= falloff;
-            dstPix->b = (unsigned char) (255 * CLAMP(tmp, 0, 1));
+            double falloff = (1.0f - float(d * d));
+            dstPix->r = falloff * srcPix->r;
+            dstPix->g = falloff * srcPix->g;
+            dstPix->b = falloff * srcPix->b;
             dstPix->a = srcPix->a;
           }
         } else {
           if (!iSrc.pixelAddress(x, y, srcPix)) {
-            dstPix->r = 0;
-            dstPix->g = 0;
-            dstPix->b = 0;
-            dstPix->a = 255;
+            dstPix->r = 0.0f;
+            dstPix->g = 0.0f;
+            dstPix->b = 0.0f;
+            dstPix->a = 1.0f;
           } else {
             dstPix->r = srcPix->r;
             dstPix->g = srcPix->g;
@@ -556,30 +548,23 @@ OfxStatus EllipseFadeEffect::render(ofx::ImageEffect::RenderArgs &args) {
         double d = normalisedDistanceToEllipseCenter(cx, cy, cw, ch, pcx, pcy);
         if (d <= 1.0) {
           if (!iSrc.pixelAddress(x, y, srcPix)) {
-            dstPix->r = 0;
-            dstPix->g = 0;
-            dstPix->b = 0;
-            dstPix->a = 255;
+            dstPix->r = 0.0f;
+            dstPix->g = 0.0f;
+            dstPix->b = 0.0f;
+            dstPix->a = 1.0f;
           } else {
-            double tmp;
-            double falloff = (1.0 - d * d);
-            tmp = double(srcPix->r) / 255.0;
-            tmp *= falloff;
-            dstPix->r = (unsigned char) (255 * CLAMP(tmp, 0, 1));
-            tmp = double(srcPix->g) / 255.0;
-            tmp *= falloff;
-            dstPix->g = (unsigned char) (255 * CLAMP(tmp, 0, 1));
-            tmp = double(srcPix->b) / 255.0;
-            tmp *= falloff;
-            dstPix->b = (unsigned char) (255 * CLAMP(tmp, 0, 1));
+            float falloff = (1.0f - float(d * d));
+            dstPix->r = falloff * srcPix->r;
+            dstPix->g = falloff * srcPix->g;
+            dstPix->b = falloff * srcPix->b;
             dstPix->a = srcPix->a;
           }
         } else {
-          dstPix->r = 0;
-          dstPix->g = 0;
-          dstPix->b = 0;
+          dstPix->r = 0.0f;
+          dstPix->g = 0.0f;
+          dstPix->b = 0.0f;
           if (!iSrc.pixelAddress(x, y, srcPix)) {
-            dstPix->a = 255;
+            dstPix->a = 1.0f;
           } else {
             dstPix->a = srcPix->a;
           }
@@ -606,7 +591,7 @@ EllipseFadePlugin::EllipseFadePlugin()
   : ofx::ImageEffectPlugin<EllipseFadeDescriptor, EllipseFadeEffect>() {
   setMajorVersion(1);
   setMinorVersion(0);
-  setID("ggcorp.filter.ellipseFade");
+  setID("gatgui.filter.ellipseFade");
 }
 
 EllipseFadePlugin::~EllipseFadePlugin() {

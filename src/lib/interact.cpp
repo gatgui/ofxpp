@@ -82,8 +82,8 @@ Interact::BaseArgs::BaseArgs(PropertySet &args) {
 
 Interact::CommonArgs::CommonArgs(PropertySet &args)
   : Interact::BaseArgs(args) {
-  viewportWidth = args.getInt(kOfxInteractPropViewportSize, 0);
-  viewportHeight = args.getInt(kOfxInteractPropViewportSize, 1);
+  //viewportWidth = args.getInt(kOfxInteractPropViewportSize, 0);
+  //viewportHeight = args.getInt(kOfxInteractPropViewportSize, 1);
   pixelScaleX = args.getDouble(kOfxInteractPropPixelScale, 0);
   pixelScaleY = args.getDouble(kOfxInteractPropPixelScale, 1);
   bgColour.r = args.getDouble(kOfxInteractPropBackgroundColour, 0);

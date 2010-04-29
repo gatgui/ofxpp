@@ -222,7 +222,7 @@ void Log(const char *msg, ...) {
         path = "./ofx.log";
       }
     }
-    gLog = fopen(path.c_str(), "a");
+    gLog = fopen(path.c_str(), "a+");
     fprintf(gLog, "============\n");
     fflush(gLog);
     atexit(CloseLog);

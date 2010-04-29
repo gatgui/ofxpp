@@ -80,8 +80,8 @@ namespace ofx {
       };
       
       struct CommonArgs : public BaseArgs {
-        int viewportWidth;
-        int viewportHeight;
+        //int viewportWidth;
+        //int viewportHeight;
         double pixelScaleX;
         double pixelScaleY;
         RGBAColour<double> bgColour;

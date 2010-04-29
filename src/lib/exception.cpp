@@ -25,6 +25,7 @@ USA.
 
 namespace ofx {
 
+#define STAT_MAX 14
 static const char* gStatString[] = {
   "OK",
   "Failed",
@@ -45,7 +46,7 @@ static const char* gStatString[] = {
 
 Exception::Exception(OfxStatus s, const std::string &msg)
   //: std::runtime_error((msg.length() == 0 ? "OFX Exception" : "OFX Exception: "+msg)),
-  : std::runtime_error(std::string("OFX Exception [") + gStatString[s] + std::string("] ") + msg),
+  : std::runtime_error(std::string("OFX Exception [") + ((s>=0 && s<=STAT_MAX) ? gStatString[s] : "Invalid status") + std::string("] ") + msg),
     mStat(s) {
   
 }

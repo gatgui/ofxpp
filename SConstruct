@@ -25,6 +25,10 @@ import excons.tools
 from excons.tools import gl
 from excons.tools import openfx
 
+defines = []
+if int(ARGUMENTS.get("forceOverlayRedraw", "1")) == 1:
+  defines.append("FORCE_OVERLAY_REDRAW")
+
 prjs = [
   { "name"    : "ofxpp",
     "type"    : "staticlib",
@@ -35,6 +39,7 @@ prjs = [
   { "name"    : "ellipseFade",
     "type"    : "dynamicmodule",
     "ext"     : ".ofx",
+    "defs"    : defines,
     "srcs"    : glob.glob("src/tests/ellipseFade.cpp"),
     "libs"    : ["ofxpp"],
     "custom"  : [gl.Require],

@@ -35,10 +35,6 @@ USA.
 # include <GL/gl.h>
 #endif
 
-#if 0
-# define FORCE_OVERLAY_REDRAW
-#endif
-
 #define CLAMP(val, minVal, maxVal) (val < minVal ? minVal : (val > maxVal ? maxVal : val))
 
 class EllipseFadeInteract : public ofx::Interact {
@@ -116,7 +112,7 @@ EllipseFadeInteract::EllipseFadeInteract(ofx::ImageEffectHost *host, OfxInteract
     mCenterSelected(false),
     mLastX(-1),
     mLastY(-1) {
-  // do I need to call setSlaveToParam? This seems to already be the case in fusion
+  // Is this really needed?
   setSlaveToParam(0, "center");
   setSlaveToParam(1, "width");
   setSlaveToParam(2, "height");
@@ -130,9 +126,9 @@ OfxStatus EllipseFadeInteract::penMotion(ofx::Interact::PenArgs &args) {
     return kOfxStatReplyDefault;
   }
 
-  ofx::Double2Parameter pC = ((EllipseFadeEffect*) args.effect)->pCenter; //args.effect->parameters().getDouble2Param("center");
-  ofx::DoubleParameter pW = ((EllipseFadeEffect*) args.effect)->pWidth; //args.effect->parameters().getDoubleParam("width");
-  ofx::DoubleParameter pH = ((EllipseFadeEffect*) args.effect)->pHeight; //args.effect->parameters().getDoubleParam("height");
+  ofx::Double2Parameter pC = ((EllipseFadeEffect*) args.effect)->pCenter;
+  ofx::DoubleParameter pW = ((EllipseFadeEffect*) args.effect)->pWidth;
+  ofx::DoubleParameter pH = ((EllipseFadeEffect*) args.effect)->pHeight;
   
   double ecx, ecy;
   pC.getValueAtTime(args.time, ecx, ecy);
@@ -161,9 +157,6 @@ OfxStatus EllipseFadeInteract::penMotion(ofx::Interact::PenArgs &args) {
     } else {
       pC.setValue(ecx, ecy);
     }
-#ifdef FORCE_OVERLAY_REDRAW
-    redraw();
-#endif
 
   } else if (mDragOp == DO_WIDTH) {
     double dx = args.x - mLastX;
@@ -175,9 +168,6 @@ OfxStatus EllipseFadeInteract::penMotion(ofx::Interact::PenArgs &args) {
     } else {
       pW.setValue(ew);
     }
-#ifdef FORCE_OVERLAY_REDRAW
-    redraw();
-#endif
 
   } else if (mDragOp == DO_HEIGHT) {
     double dy = args.y - mLastY;
@@ -189,23 +179,24 @@ OfxStatus EllipseFadeInteract::penMotion(ofx::Interact::PenArgs &args) {
     } else {
       pH.setValue(eh);
     }
-#ifdef FORCE_OVERLAY_REDRAW
-    redraw();
-#endif
-
+    
   }
 
   mLastX = args.x;
   mLastY = args.y;
+
+#ifdef FORCE_OVERLAY_REDRAW
+  redraw();
+#endif
   
   return kOfxStatOK;
 }
     
 OfxStatus EllipseFadeInteract::penDown(ofx::Interact::PenArgs &args) {
   
-  ofx::Double2Parameter pC = ((EllipseFadeEffect*) args.effect)->pCenter; //args.effect->parameters().getDouble2Param("center");
-  ofx::DoubleParameter pW = ((EllipseFadeEffect*) args.effect)->pWidth; //args.effect->parameters().getDoubleParam("width");
-  ofx::DoubleParameter pH = ((EllipseFadeEffect*) args.effect)->pHeight; //args.effect->parameters().getDoubleParam("height");
+  ofx::Double2Parameter pC = ((EllipseFadeEffect*) args.effect)->pCenter;
+  ofx::DoubleParameter pW = ((EllipseFadeEffect*) args.effect)->pWidth;
+  ofx::DoubleParameter pH = ((EllipseFadeEffect*) args.effect)->pHeight;
   
   double ecx, ecy;
   pC.getValueAtTime(args.time, ecx, ecy);
@@ -256,19 +247,20 @@ OfxStatus EllipseFadeInteract::penUp(ofx::Interact::PenArgs &) {
   mCenterSelected = false;
   mWidthSelected = false;
   mHeightSelected = false;
+  bool doRedraw = mDragOp != DO_NONE;
+  mDragOp = DO_NONE;
 #ifdef FORCE_OVERLAY_REDRAW
-  if (mDragOp != DO_NONE) {
+  if (doRedraw) {
     redraw();
   }
 #endif
-  mDragOp = DO_NONE;
   return kOfxStatOK;
 }
 
 OfxStatus EllipseFadeInteract::draw(ofx::Interact::DrawArgs &args) {  
-  ofx::Double2Parameter pC = ((EllipseFadeEffect*) args.effect)->pCenter; //args.effect->parameters().getDouble2Param("center");
-  ofx::DoubleParameter pW = ((EllipseFadeEffect*) args.effect)->pWidth; //args.effect->parameters().getDoubleParam("width");
-  ofx::DoubleParameter pH = ((EllipseFadeEffect*) args.effect)->pHeight; //args.effect->parameters().getDoubleParam("height");
+  ofx::Double2Parameter pC = ((EllipseFadeEffect*) args.effect)->pCenter;
+  ofx::DoubleParameter pW = ((EllipseFadeEffect*) args.effect)->pWidth;
+  ofx::DoubleParameter pH = ((EllipseFadeEffect*) args.effect)->pHeight;
   
   double ecx, ecy;
   pC.getValueAtTime(args.time, ecx, ecy);
@@ -439,8 +431,6 @@ double EllipseFadeEffect::normalisedDistanceToEllipseCenter(double x, double y, 
 }
 
 OfxStatus EllipseFadeEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args) {
-  //ofx::DoubleParameter w = parameters().getDoubleParam("width");
-  //ofx::DoubleParameter h = parameters().getDoubleParam("height");
   if (pWidth.getValue() <= 0.0 || pHeight.getValue() <= 0.0) {
     args.idClip = "Source";
     args.idTime = args.time;
@@ -477,11 +467,6 @@ OfxStatus EllipseFadeEffect::render(ofx::ImageEffect::RenderArgs &args) {
   ofx::Image iOut = cOut.getImage(args.time);
   
   ofx::RGBAColourF *srcPix, *dstPix;
-  
-  //ofx::Double2Parameter pCenter = parameters().getDouble2Param("center");
-  //ofx::DoubleParameter pWidth = parameters().getDoubleParam("width");
-  //ofx::DoubleParameter pHeight = parameters().getDoubleParam("height");
-  //ofx::BooleanParameter pInvert = parameters().getBooleanParam("invert");
   
   double nx, ny;
   pCenter.getValueAtTime(args.time, nx, ny);
@@ -527,7 +512,7 @@ OfxStatus EllipseFadeEffect::render(ofx::ImageEffect::RenderArgs &args) {
             dstPix->b = 0.0f;
             dstPix->a = 1.0f;
           } else {
-            double falloff = (1.0f - float(d * d));
+            double falloff = float(d * d);
             dstPix->r = falloff * srcPix->r;
             dstPix->g = falloff * srcPix->g;
             dstPix->b = falloff * srcPix->b;

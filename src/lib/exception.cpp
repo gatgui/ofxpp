@@ -22,6 +22,7 @@ USA.
 */
 
 #include <ofx/exception.h>
+#include <sstream>
 
 namespace ofx {
 
@@ -44,9 +45,19 @@ static const char* gStatString[] = {
   "Reply default"
 };
 
+static std::string InvalidStatusString(int i) {
+  std::ostringstream oss;
+  oss << "Invalid status (";
+  oss << i;
+  oss << ")";
+  return oss.str();
+}
+
 Exception::Exception(OfxStatus s, const std::string &msg)
-  //: std::runtime_error((msg.length() == 0 ? "OFX Exception" : "OFX Exception: "+msg)),
-  : std::runtime_error(std::string("OFX Exception [") + ((s>=0 && s<=STAT_MAX) ? gStatString[s] : "Invalid status") + std::string("] ") + msg),
+  : std::runtime_error(std::string("OFX Exception [") +
+                       ((s>=0 && s<=STAT_MAX) ? gStatString[s] : InvalidStatusString(s)) +
+                       std::string("] ") +
+                       msg),
     mStat(s) {
   
 }
@@ -57,7 +68,6 @@ Exception::~Exception() throw() {
 // ---
 
 FailedError::FailedError(const std::string &msg)
-  //: Exception(kOfxStatFailed, "[Failed] "+msg) {
   : Exception(kOfxStatFailed, msg) {
 }
 
@@ -67,7 +77,6 @@ FailedError::~FailedError() throw() {
 // ---
 
 FatalError::FatalError(const std::string &msg)
-  //: Exception(kOfxStatErrFatal, "[Fatal] "+msg) {
   : Exception(kOfxStatErrFatal, msg) {
 }
 
@@ -77,7 +86,6 @@ FatalError::~FatalError() throw() {
 // ---
 
 UnknownError::UnknownError(const std::string &msg)
-  //: Exception(kOfxStatErrUnknown, "[Unknown] "+msg) {
   : Exception(kOfxStatErrUnknown, msg) {
 }
 
@@ -87,7 +95,6 @@ UnknownError::~UnknownError() throw() {
 // ---
 
 MissingHostFeatureError::MissingHostFeatureError(const std::string &msg)
-  //: Exception(kOfxStatErrMissingHostFeature, "[Missing host feature] "+msg) {
   : Exception(kOfxStatErrMissingHostFeature, msg) {
 }
 
@@ -97,7 +104,6 @@ MissingHostFeatureError::~MissingHostFeatureError() throw() {
 // ---
 
 UnsupportedError::UnsupportedError(const std::string &msg)
-  //: Exception(kOfxStatErrUnsupported, "[Unsupported] "+msg) {
   : Exception(kOfxStatErrUnsupported, msg) {
 }
 
@@ -107,7 +113,6 @@ UnsupportedError::~UnsupportedError() throw() {
 // ---
 
 ExistsError::ExistsError(const std::string &msg)
-  //: Exception(kOfxStatErrExists, "[Already exists] "+msg) {
   : Exception(kOfxStatErrExists, msg) {
 }
 
@@ -117,7 +122,6 @@ ExistsError::~ExistsError() throw() {
 // ---
 
 FormatError::FormatError(const std::string &msg)
-  //: Exception(kOfxStatErrFormat, "[Invalid format] "+msg) {
   : Exception(kOfxStatErrFormat, msg) {
 }
 
@@ -127,7 +131,6 @@ FormatError::~FormatError() throw() {
 // ---
 
 MemoryError::MemoryError(const std::string &msg)
-  //: Exception(kOfxStatErrMemory, "[Memory] "+msg) {
   : Exception(kOfxStatErrMemory, msg) {
 }
 
@@ -137,7 +140,6 @@ MemoryError::~MemoryError() throw() {
 // ---
 
 BadHandleError::BadHandleError(const std::string &msg)
-  //: Exception(kOfxStatErrBadHandle, "[Bad handle] "+msg) {
   : Exception(kOfxStatErrBadHandle, msg) {
 }
 
@@ -147,7 +149,6 @@ BadHandleError::~BadHandleError() throw() {
 // ---
 
 BadIndexError::BadIndexError(const std::string &msg)
-  //: Exception(kOfxStatErrBadIndex, "[Bad index] "+msg) {
   : Exception(kOfxStatErrBadIndex, msg) {
 }
 
@@ -157,7 +158,6 @@ BadIndexError::~BadIndexError() throw() {
 // ---
 
 ValueError::ValueError(const std::string &msg)
-  //: Exception(kOfxStatErrValue, "[Invalid value] "+msg) {
   : Exception(kOfxStatErrValue, msg) {
 }
 

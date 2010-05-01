@@ -212,8 +212,8 @@ OfxStatus EllipseFadeInteract::penDown(ofx::Interact::PenArgs &args) {
   ofx::NormalisedToCanonicalCoords(ecx, ecy, wext, hext, xoff, yoff, true, cecx, cecy);
   ofx::NormalisedToCanonicalCoords(ew, eh, wext, hext, 0, 0, false, cew, ceh);
 
-  double bw = 4.0 * args.pixelScaleX;
-  double bh = 4.0 * args.pixelScaleY;
+  double bw = 4.0 * args.pixelScaleX / args.renderScaleX;
+  double bh = 4.0 * args.pixelScaleY / args.renderScaleY;
   
   if (args.x >= cecx-bw && args.x <= cecx+bw) {
     if (args.y >= cecy-bh && args.y <= cecy+bh) {
@@ -276,9 +276,11 @@ OfxStatus EllipseFadeInteract::draw(ofx::Interact::DrawArgs &args) {
   double cecx, cecy, cew, ceh;
   ofx::NormalisedToCanonicalCoords(ecx, ecy, wext, hext, xoff, yoff, true, cecx, cecy);
   ofx::NormalisedToCanonicalCoords(ew, eh, wext, hext, 0, 0, false, cew, ceh);
-
-  double bw = 2.0 * args.pixelScaleX;
-  double bh = 2.0 * args.pixelScaleY;
+  
+  double pw = args.pixelScaleX / args.renderScaleX;
+  double ph = args.pixelScaleX / args.renderScaleX;
+  double bw = 2.0 * pw;
+  double bh = 2.0 * ph;
   
   // center manipulator
   if (mCenterSelected) {
@@ -286,7 +288,7 @@ OfxStatus EllipseFadeInteract::draw(ofx::Interact::DrawArgs &args) {
   } else {
     glColor3d(0.0, 1.0, 0.0);
   }
-  glBegin(GL_LINE_LOOP);
+  glBegin(GL_QUADS);
   glVertex2d(cecx-bw, cecy-bh);
   glVertex2d(cecx+bw, cecy-bh);
   glVertex2d(cecx+bw, cecy+bh);
@@ -299,7 +301,7 @@ OfxStatus EllipseFadeInteract::draw(ofx::Interact::DrawArgs &args) {
   } else {
     glColor3d(0.0, 1.0, 0.0);
   }
-  glBegin(GL_LINE_LOOP);
+  glBegin(GL_QUADS);
   glVertex2d(cecx+cew-bw, cecy-bh);
   glVertex2d(cecx+cew+bw, cecy-bh);
   glVertex2d(cecx+cew+bw, cecy+bh);
@@ -316,7 +318,7 @@ OfxStatus EllipseFadeInteract::draw(ofx::Interact::DrawArgs &args) {
   } else {
     glColor3d(0.0, 1.0, 0.0);
   }
-  glBegin(GL_LINE_LOOP);
+  glBegin(GL_QUADS);
   glVertex2d(cecx-bw, cecy+ceh-bh);
   glVertex2d(cecx+bw, cecy+ceh-bh);
   glVertex2d(cecx+bw, cecy+ceh+bh);

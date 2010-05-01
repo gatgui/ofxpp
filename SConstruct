@@ -44,8 +44,8 @@ prjs = [
     "libs"    : ["ofxpp"],
     "custom"  : [gl.Require],
     "post"    : openfx.MakeBundle
-  }
-  { "name"    : "blur",
+  },
+  { "name"    : "multiBlur",
     "type"    : "dynamicmodule",
     "ext"     : ".ofx",
     "defs"    : defines,

@@ -268,10 +268,10 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
     
   } else {
     
-    //float wtheta = float((wsamples + 1) / 3);
-    //float htheta = float((hsamples + 1) / 3);
-    float wtheta = (float(wsamples) + 1.0f) / 3.0f;
-    float htheta = (float(hsamples) + 1.0f) / 3.0f;
+    float wtheta = std::max(float((wsamples + 1) / 3), 1.0f);
+    float htheta = std::max(float((hsamples + 1) / 3), 1.0f);
+    //float wtheta = (float(wsamples) + 1.0f) / 3.0f;
+    //float htheta = (float(hsamples) + 1.0f) / 3.0f;
     
     float wInv2ThetaSqr = 1.0f / (2.0f * wtheta * wtheta);
     float hInv2ThetaSqr = 1.0f / (2.0f * htheta * htheta);

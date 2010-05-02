@@ -74,8 +74,9 @@ class BlurEffect : public ofx::ImageEffect {
     
     ofx::ChoiceParameter pType;
     ofx::ChoiceParameter pFilter;
-    ofx::IntParameter pRadius1;
-    ofx::IntParameter pRadius2;
+    //ofx::IntParameter pRadius1;
+    //ofx::IntParameter pRadius2;
+    ofx::Double2Parameter pWidth;
     ofx::DoubleParameter pZoom;
     ofx::DoubleParameter pAngle;
     ofx::Double2Parameter pCenter;
@@ -150,6 +151,7 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext ctx) {
   filter.setChoice(2, "gaussian");
   filter.setDefault(2);
   
+  /*
   ofx::IntParameterDescriptor radius1 = parameters().defineIntParam("radius1");
   radius1.setAnimating(true);
   radius1.setPersistant(true);
@@ -163,6 +165,18 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext ctx) {
   radius2.setMin(0);
   radius2.setMax(100);
   radius2.setDefault(2);
+  */
+  ofx::Double2ParameterDescriptor width = parameters().defineDouble2Param("width");
+  width.setPersistant(true);
+  width.setAnimating(true);
+  width.setDefault(2, 2);
+  width.setMin(0, 0);
+  width.setMax(100, 100);
+  width.setIncrement(1);
+  width.setDigits(0);
+  width.setDoubleType(ofx::DoubleParamScale);
+  width.setDimensionLabel(0, "w");
+  width.setDimensionLabel(1, "h");
   
   // use for directional and radial blur
   ofx::DoubleParameterDescriptor angle = parameters().defineDoubleParam("angle");
@@ -212,8 +226,10 @@ BlurEffect::BlurEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl)
   cMask = getClip("Mask");
   pType = parameters().getChoiceParam("type");
   pFilter = parameters().getChoiceParam("filter");
-  pRadius1 = parameters().getIntParam("radius1");
-  pRadius2 = parameters().getIntParam("radius2");
+  //pRadius1 = parameters().getIntParam("radius1");
+  //pRadius2 = parameters().getIntParam("radius2");
+  //pWidth = parameters().getInt2Param("width");
+  pWidth = parameters().getDouble2Param("width");
   pAngle = parameters().getDoubleParam("angle");
   pZoom = parameters().getDoubleParam("zoom");
   pCenter = parameters().getDouble2Param("center");
@@ -223,9 +239,11 @@ BlurEffect::~BlurEffect() {
 }
 
 OfxStatus BlurEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args) {
-  int wsamples = pRadius1.getValueAtTime(args.time);
-  int hsamples = pRadius2.getValueAtTime(args.time);
-  if (wsamples == 0 && hsamples == 0) {
+  //int wsamples = pRadius1.getValueAtTime(args.time);
+  //int hsamples = pRadius2.getValueAtTime(args.time);
+  double wsamples = 0, hsamples = 0;
+  pWidth.getValueAtTime(args.time, wsamples, hsamples);
+  if (wsamples <= 0 && hsamples <= 0) {
     args.idClip = "Source";
     args.idTime = args.time;
     return kOfxStatOK;
@@ -242,8 +260,13 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
   ofx::RGBAColourF *srcPix, *dstPix;
   
   // filter width = wsamples*2 + 1
-  int wsamples = pRadius1.getValueAtTime(args.time);
-  int hsamples = pRadius2.getValueAtTime(args.time);
+  //int wsamples = pRadius1.getValueAtTime(args.time);
+  //int hsamples = pRadius2.getValueAtTime(args.time);
+  double ws = 0, hs = 0;
+  pWidth.getValueAtTime(args.time, ws, hs);
+  
+  int wsamples = int(ceil(ws));
+  int hsamples = int(ceil(hs));
   
   float *wweights = new float[wsamples + 1];
   float *hweights = new float[hsamples + 1];

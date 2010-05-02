@@ -31,6 +31,8 @@ USA.
 #include <ofxProgress.h>
 #include <ofxProperty.h>
 #include <ofxTimeLine.h>
+#include <ctime>
+#include <iostream>
 
 namespace ofx {
 
@@ -208,6 +210,15 @@ void CloseLog(void) {
 }
 
 void Log(const char *msg, ...) {
+  
+#ifndef _WIN32
+  char timestamp[24];
+  time_t curtime = time(NULL);
+  struct tm *curdate = localtime(&curtime);
+  strftime(timestamp, 24, "%Y/%m/%d %H:%M:%S", curdate);
+#else
+#endif
+  
   if (!gLog) {
     std::string path;
     char *ofxlog = getenv("OFX_LOG");
@@ -228,6 +239,10 @@ void Log(const char *msg, ...) {
     atexit(CloseLog);
   }
   //fprintf(gLog, "%s\n", msg);
+#ifndef _WIN32
+  fprintf(gLog, "%s > ", timestamp);
+#else
+#endif
   va_list args;
   va_start(args, msg);
   vfprintf(gLog, msg, args);

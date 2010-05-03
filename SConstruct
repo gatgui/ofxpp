@@ -53,6 +53,13 @@ prjs = [
     "libs"    : ["ofxpp"],
     "custom"  : [gl.Require],
     "post"    : openfx.MakeBundle
+  },
+  { "name"    : "gaussianBlur",
+    "type"    : "dynamicmodule",
+    "ext"     : ".ofx",
+    "defs"    : defines,
+    "srcs"    : glob.glob("src/tests/gaussianBlur.cpp"),
+    "post"    : openfx.MakeBundle
   }
 ]
 

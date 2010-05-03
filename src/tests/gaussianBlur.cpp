@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <cstdarg>
 #include <ctime>
+#include <cmath>
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -113,15 +114,86 @@ static OfxStatus Unload() {
 }
 
 static OfxStatus Describe(OfxImageEffectHandle effect) {
-  /*
-  */
+  OfxStatus stat;
+  OfxPropertySetHandle props;
+  
+  stat = gEffectSuite->getPropertySet(effect, &props);
+  RETURN_IF_ERROR(stat, "in Describe: Could not get effect descriptor properties");
+  
+  stat = gPropSuite->propSetString(props, kOfxPropLabel, 0, "gaussianBlur");
+  RETURN_IF_ERROR(stat, "in Describe: Could not set label property");
+  
+  stat = gPropSuite->propSetString(props, kOfxPropShortLabel, 0, "gaussianBlur");
+  RETURN_IF_ERROR(stat, "in Describe: Could not set short label property");
+  
+  stat = gPropSuite->propSetString(props, kOfxPropLongLabel, 0, "gaussianBlur");
+  RETURN_IF_ERROR(stat, "in Describe: Could not set long label property");
+  
+  stat = gPropSuite->propSetString(props, kOfxImageEffectPluginPropGrouping, 0, "gatgui");
+  RETURN_IF_ERROR(stat, "in Describe: Could not set grouping property");
+  
+  stat = gPropSuite->propSetString(props, kOfxImageEffectPropSupportedContexts, 0, kOfxImageEffectContextFilter);
+  RETURN_IF_ERROR(stat, "in Describe: Could not set supported contexts property");
+  
+  stat = gPropSuite->propSetString(props, kOfxImageEffectPluginRenderThreadSafety, 0, kOfxImageEffectRenderFullySafe);
+  RETURN_IF_ERROR(stat, "in Describe: Could not set render thread safety property");
+  
+  stat = gPropSuite->propSetInt(props, kOfxImageEffectPluginPropHostFrameThreading, 0, 1);
+  RETURN_IF_ERROR(stat, "in Describe: Could not set frame threading property");
+  
+  stat = gPropSuite->propSetString(props, kOfxImageEffectPropSupportedPixelDepths, 0, kOfxBitDepthFloat);
+  RETURN_IF_ERROR(stat, "in Describe: Could not set pixel depth property");
+  
   return kOfxStatReplyDefault;
 }
 
 static OfxStatus DescribeInContext(OfxImageEffectHandle effect, const char *ctx) {
-  // width -> int x2
-  // link -> bool
-  // in & out clips
+  
+  OfxStatus stat;
+  OfxPropertySetHandle props;
+  OfxParamSetHandle params;
+  
+  stat = gEffectSuite->getParamSet(effect, &params);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not get effect descriptor parameter set")
+  
+  // define clips
+  
+  stat = gEffectSuite->clipDefine(effect, "Source", &props);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not define \"Source\" clip");
+  stat = gPropSuite->propSetString(props, kOfxImageEffectPropSupportedComponents, 0, kOfxImageComponentRGBA);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"Source\" clip supported components");
+  
+  stat = gEffectSuite->clipDefine(effect, "Output", &props);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not define \"Output\" clip");
+  stat = gPropSuite->propSetString(props, kOfxImageEffectPropSupportedComponents, 0, kOfxImageComponentRGBA);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"Output\" clip supported components");
+  
+  // define parameters
+  
+  stat = gParamSuite->paramDefine(params, kOfxParamTypeInteger2D, "width", &props);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not define \"width\" parameter");
+  stat = gPropSuite->propSetInt(props, kOfxParamPropDefault, 0, 2);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter default");
+  stat = gPropSuite->propSetInt(props, kOfxParamPropDefault, 1, 2);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter default");
+  stat = gPropSuite->propSetInt(props, kOfxParamPropMin, 0, 0);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter min");
+  stat = gPropSuite->propSetInt(props, kOfxParamPropMin, 1, 0);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter min");
+  stat = gPropSuite->propSetInt(props, kOfxParamPropMax, 0, 100);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter max");
+  stat = gPropSuite->propSetInt(props, kOfxParamPropMax, 1, 100);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter max");
+  stat = gPropSuite->propSetString(props, kOfxParamPropDimensionLabel, 0, "w");
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter dimension 0 label");
+  stat = gPropSuite->propSetString(props, kOfxParamPropDimensionLabel, 1, "h");
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter dimension 1 label");
+  
+  stat = gParamSuite->paramDefine(params, kOfxParamTypeBoolean, "link", &props);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not define \"link\" parameter");
+  stat = gPropSuite->propSetInt(props, kOfxParamPropDefault, 0, 1);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"link\" parameter default");
+  
   return kOfxStatReplyDefault;
 }
 
@@ -203,7 +275,7 @@ static OfxStatus IsIdentity(OfxImageEffectHandle effect,
   int wsamples = 0, hsamples = 0;
   
   stat = gParamSuite->paramGetValueAtTime(data->pWidth, t, &wsamples, &hsamples);
-  RETURN_IF_ERROR(stat, "in IsIdentity: Could not get \"width\" parameter value");
+  RETURN_IF_ERROR(stat, "in IsIdentity: Could not get \"width\" parameter values");
   
   if (wsamples == 0 && hsamples == 0) {
     idt = t;
@@ -212,6 +284,13 @@ static OfxStatus IsIdentity(OfxImageEffectHandle effect,
   }
   
   return kOfxStatReplyDefault;
+}
+
+inline void* PixelAddress(void *data, const OfxRectI &bounds, int rowSize, int pixSize, int x, int y) {
+  if (x < bounds.x1 || x >= bounds.x2 || y < bounds.y1 || y >= bounds.y2) {
+    return 0;
+  }
+  return (void*)((char*)data + ((y - bounds.y1) * rowSize) + ((x - bounds.x1) * pixSize));
 }
 
 static OfxStatus Render(OfxImageEffectHandle effect,
@@ -224,6 +303,7 @@ static OfxStatus Render(OfxImageEffectHandle effect,
   OfxPropertySetHandle props;
   void *ptr = 0;
   PluginData *data = 0;
+  OfxRGBAColourF *srcPix, *dstPix;
 
   stat = gEffectSuite->getPropertySet(effect, &props);
   RETURN_IF_ERROR(stat, "in Render: Could not retrieve effect properties");
@@ -236,9 +316,151 @@ static OfxStatus Render(OfxImageEffectHandle effect,
     RETURN_IF_ERROR(kOfxStatFailed, "in Render: Invalid effect instance data");
   }
   
-  // apply gaussian blur
+  // build gaussian weights
   
-  return kOfxStatOK;
+  int wsamples = 0, hsamples = 0;
+  
+  stat = gParamSuite->paramGetValueAtTime(data->pWidth, t, &wsamples, &hsamples);
+  RETURN_IF_ERROR(stat, "in Render: Could not get \"width\" parameter values");
+  
+  float *wweights = new float[wsamples + 1];
+  float *hweights = new float[hsamples + 1];
+  
+  float wtheta = std::max(float((wsamples + 1) / 3), 1.0f);
+  float htheta = std::max(float((hsamples + 1) / 3), 1.0f);
+  
+  float wInv2ThetaSqr = 1.0f / (2.0f * wtheta * wtheta);
+  float hInv2ThetaSqr = 1.0f / (2.0f * htheta * htheta);
+  
+  for (int i=0; i<=wsamples; ++i) {
+    wweights[i] = (float) exp(- wInv2ThetaSqr * i * i);
+  }
+  
+  for (int i=0; i<=hsamples; ++i) {
+    hweights[i] = (float) exp(- hInv2ThetaSqr * i * i);
+  }
+  
+  // get source and output image buffers
+  
+  OfxPropertySetHandle iSource, iOutput;
+  void *dSource, *dOutput;
+  OfxRectI bSource, bOutput;
+  int rowSizeSource, rowSizeOutput;
+  int pixSizeSource, pixSizeOutput;
+  
+  stat = gEffectSuite->clipGetImage(data->cSource, t, NULL, &iSource);
+  RETURN_IF_ERROR(stat, "in Render: Could not get \"Source\" clip image");
+  stat = gPropSuite->propGetPointer(iSource, kOfxImagePropData, 0, &dSource);
+  RETURN_IF_ERROR(stat, "in Render: Could not get \"Source\" image data");
+  stat = gPropSuite->propGetIntN(iSource, kOfxImagePropBounds, 4, &(bSource.x1));
+  RETURN_IF_ERROR(stat, "in Render: Could not get \"Source\" image bounds");
+  stat = gPropSuite->propGetInt(iSource, kOfxImagePropRowBytes, 0, &rowSizeSource);
+  RETURN_IF_ERROR(stat, "in Render: Could not get \"Source\" image row size");
+  pixSizeSource = 4 * sizeof(float);
+  //kOfxImageEffectPropPixelDepth, string x1
+  //kOfxImageEffectPropComponents, string x1
+  
+  stat = gEffectSuite->clipGetImage(data->cSource, t, NULL, &iOutput);
+  RETURN_IF_ERROR(stat, "in Render: Could not get \"Output\" clip image");
+  stat = gPropSuite->propGetPointer(iOutput, kOfxImagePropData, 0, &dOutput);
+  RETURN_IF_ERROR(stat, "in Render: Could not get \"Output\" image data");
+  stat = gPropSuite->propGetIntN(iOutput, kOfxImagePropBounds, 4, &(bOutput.x1));
+  RETURN_IF_ERROR(stat, "in Render: Could not get \"Output\" image bounds");
+  stat = gPropSuite->propGetInt(iOutput, kOfxImagePropRowBytes, 0, &rowSizeOutput);
+  RETURN_IF_ERROR(stat, "in Render: Could not get \"Output\" image row size");
+  pixSizeOutput = 4 * sizeof(float);
+  
+  // create temp image
+  
+  int ww = renderWindow.x2 - renderWindow.x1;
+  int wh = renderWindow.y2 - renderWindow.y1;
+  int pixSize = 4 * sizeof(float);
+  int rowSize = wh * pixSize;
+  
+  unsigned char *dTemp = new unsigned char[ww * wh * pixSize];
+  
+  // pass 1: horizontal blur
+  
+  dstPix = (OfxRGBAColourF*) dTemp;
+  
+  for (int y=renderWindow.y1; y<renderWindow.y2; ++y) {
+    if (gEffectSuite->abort(effect)) {
+      break;
+    }
+    for (int x=renderWindow.x1; x<renderWindow.x2; ++x) {
+      dstPix->r = 0.0f;
+      dstPix->g = 0.0f;
+      dstPix->b = 0.0f;
+      dstPix->a = 0.0f;
+      float w = 0.0f;
+      int widx = 0;
+      for (int x2=x-wsamples; x2<=x+wsamples; ++x2) {
+        widx = x2 - x;
+        widx = (widx < 0 ? -widx : widx);
+        srcPix = (OfxRGBAColourF*) PixelAddress(dSource, bSource, rowSizeSource, pixSizeSource, x2, y);
+        if (srcPix != 0) {
+          w += wweights[widx];
+          dstPix->r += wweights[widx] * srcPix->r;
+          dstPix->g += wweights[widx] * srcPix->g;
+          dstPix->b += wweights[widx] * srcPix->b;
+          dstPix->a += wweights[widx] * srcPix->a;
+        }
+      }
+      w = 1.0f / w;
+      dstPix->r *= w;
+      dstPix->g *= w;
+      dstPix->b *= w;
+      dstPix->a *= w;
+      ++dstPix;
+    }
+  }
+  
+  // pass 2: vertical blur
+  
+  for (int x=renderWindow.x1; x<renderWindow.x2; ++x) {
+    if (gEffectSuite->abort(effect)) {
+      break;
+    }
+    for (int y=renderWindow.y1; y<renderWindow.y2; ++y) {
+      dstPix = (OfxRGBAColourF*) PixelAddress(dOutput, bOutput, rowSizeOutput, pixSizeOutput, x, y);
+      if (dstPix == 0) {
+        continue;
+      }
+      srcPix = (OfxRGBAColourF*)(dTemp +
+                                 ((y - hsamples) - renderWindow.y1) * rowSize +
+                                 (x - renderWindow.x1) * pixSize);
+      float w = 0.0f;
+      int widx = 0;
+      for (int y2=y-hsamples; y2<=y+hsamples; ++y2) {
+        widx = y2 - y;
+        widx = (widx < 0 ? -widx : widx);
+        if (y2 >= renderWindow.y1 && y2 < renderWindow.y2) {
+          w += hweights[widx];
+          dstPix->r += hweights[widx] * srcPix->r;
+          dstPix->g += hweights[widx] * srcPix->g;
+          dstPix->b += hweights[widx] * srcPix->b;
+          dstPix->a += hweights[widx] * srcPix->a;
+        }
+        srcPix += ww;
+      }
+      w = 1.0f / w;
+      dstPix->r *= w;
+      dstPix->g *= w;
+      dstPix->b *= w;
+      dstPix->a *= w;
+    }
+  }
+  
+  // cleanup
+  
+  gEffectSuite->clipReleaseImage(iSource);
+  gEffectSuite->clipReleaseImage(iOutput);
+  
+  delete[] dTemp;
+  delete[] wweights;
+  delete[] hweights;
+  
+  return (gEffectSuite->abort(effect) == 0 ? kOfxStatOK : kOfxStatFailed);
 }
 
 // --- OFX entry points

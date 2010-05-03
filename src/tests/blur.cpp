@@ -134,6 +134,7 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext ctx) {
   mClip.setSupportedComponent(0, ofx::ImageComponentRGBA);
   mClip.setSupportedComponent(0, ofx::ImageComponentAlpha);
   mClip.setOptional(true);
+  mClip.setMask(true);
   
   ofx::ChoiceParameterDescriptor type = parameters().defineChoiceParam("type");
   type.setAnimating(false);

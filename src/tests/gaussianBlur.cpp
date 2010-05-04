@@ -19,9 +19,12 @@ OfxPropertySuiteV1 *gPropSuite = 0;
 OfxParameterSuiteV1 *gParamSuite = 0;
 OfxImageEffectSuiteV1 *gEffectSuite = 0;
 
+static const char *ErrorHeader = "Error\n\tin plugin \"gatgui.filter.gaussianBlur\"\n\t";
+static const char *InfoHeader  = "Info\n\tin plugin \"gatgui.filter.gaussianBlur\"\n\t";
+
 #define RETURN_IF_ERROR(s, msg)\
-  if (s >= kOfxStatFailed && s <= kOfxStatErrValue) {\
-    Log("*** Error in plugin \"gatgui.filter.gaussianBlur\"\n%s", msg);\
+  if (s != kOfxStatOK) {\
+    Log("Error\n\tin plugin \"gatgui.filter.gaussianBlur\"\n\t%s", msg);\
     return s;\
   }
 
@@ -170,27 +173,38 @@ static OfxStatus DescribeInContext(OfxImageEffectHandle effect, const char *ctx)
   
   // define parameters
   
-  stat = gParamSuite->paramDefine(params, kOfxParamTypeInteger2D, "width", &props);
+  //stat = gParamSuite->paramDefine(params, kOfxParamTypeInteger2D, "width", &props);
+  stat = gParamSuite->paramDefine(params, kOfxParamTypeDouble2D, "width", &props);
   RETURN_IF_ERROR(stat, "in DescribeInContext: Could not define \"width\" parameter");
-  stat = gPropSuite->propSetInt(props, kOfxParamPropDefault, 0, 2);
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter default");
-  stat = gPropSuite->propSetInt(props, kOfxParamPropDefault, 1, 2);
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter default");
-  stat = gPropSuite->propSetInt(props, kOfxParamPropMin, 0, 0);
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter min");
-  stat = gPropSuite->propSetInt(props, kOfxParamPropMin, 1, 0);
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter min");
-  stat = gPropSuite->propSetInt(props, kOfxParamPropMax, 0, 100);
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter max");
-  stat = gPropSuite->propSetInt(props, kOfxParamPropMax, 1, 100);
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter max");
+  stat = gPropSuite->propSetString(props, kOfxParamPropDoubleType, 0, kOfxParamDoubleTypePlain);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter double type");
+  stat = gPropSuite->propSetDouble(props, kOfxParamPropIncrement, 0, 1);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter increment");
+  stat = gPropSuite->propSetInt(props, kOfxParamPropDigits, 0, 0);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter digits");
   stat = gPropSuite->propSetString(props, kOfxParamPropDimensionLabel, 0, "w");
   RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter dimension 0 label");
   stat = gPropSuite->propSetString(props, kOfxParamPropDimensionLabel, 1, "h");
   RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter dimension 1 label");
+  stat = gPropSuite->propSetInt(props, kOfxParamPropAnimates, 0, 1);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter animates");
+  stat = gPropSuite->propSetDouble(props, kOfxParamPropMin, 0, 0);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter min");
+  stat = gPropSuite->propSetDouble(props, kOfxParamPropMin, 1, 0);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter min");
+  stat = gPropSuite->propSetDouble(props, kOfxParamPropMax, 0, 100);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter max");
+  stat = gPropSuite->propSetDouble(props, kOfxParamPropMax, 1, 100);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter max");
+  stat = gPropSuite->propSetDouble(props, kOfxParamPropDefault, 0, 2);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter default");
+  stat = gPropSuite->propSetDouble(props, kOfxParamPropDefault, 1, 2);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter default");
   
   stat = gParamSuite->paramDefine(params, kOfxParamTypeBoolean, "link", &props);
   RETURN_IF_ERROR(stat, "in DescribeInContext: Could not define \"link\" parameter");
+  stat = gPropSuite->propSetInt(props, kOfxParamPropAnimates, 0, 0);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"link\" parameter animates");
   stat = gPropSuite->propSetInt(props, kOfxParamPropDefault, 0, 1);
   RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"link\" parameter default");
   
@@ -224,6 +238,7 @@ static OfxStatus CreateInstance(OfxImageEffectHandle effect) {
   RETURN_IF_ERROR(stat, "in CreateInstance: Could not retrieve effect \"link\" parameter");
   
   stat = gPropSuite->propSetPointer(props, kOfxPropInstanceData, 0, (void*)data);
+  RETURN_IF_ERROR(stat, "in CreateInstance: Could not set effect instance data");
   
   return stat;
 }
@@ -272,12 +287,12 @@ static OfxStatus IsIdentity(OfxImageEffectHandle effect,
     return kOfxStatFailed;
   }
   
-  int wsamples = 0, hsamples = 0;
+  double wsamples = 0, hsamples = 0;
   
   stat = gParamSuite->paramGetValueAtTime(data->pWidth, t, &wsamples, &hsamples);
   RETURN_IF_ERROR(stat, "in IsIdentity: Could not get \"width\" parameter values");
   
-  if (wsamples == 0 && hsamples == 0) {
+  if (wsamples <= 0 && hsamples <= 0) {
     idt = t;
     idc = "Source";
     return kOfxStatOK;
@@ -318,10 +333,14 @@ static OfxStatus Render(OfxImageEffectHandle effect,
   
   // build gaussian weights
   
+  double ws = -1, hs = -1;
   int wsamples = 0, hsamples = 0;
   
-  stat = gParamSuite->paramGetValueAtTime(data->pWidth, t, &wsamples, &hsamples);
+  stat = gParamSuite->paramGetValueAtTime(data->pWidth, t, &ws, &hs);
   RETURN_IF_ERROR(stat, "in Render: Could not get \"width\" parameter values");
+  
+  wsamples = int(ceil(ws));
+  hsamples = int(ceil(hs));
   
   float *wweights = new float[wsamples + 1];
   float *hweights = new float[hsamples + 1];
@@ -478,12 +497,15 @@ static OfxStatus PluginMain(const char *action,
   OfxImageEffectHandle effect = (OfxImageEffectHandle) handle;
   
   if (!strcmp(action, kOfxActionLoad)) {
+    Log("%sin PluginMain/Load", InfoHeader);
     return Load();
     
   } else if (!strcmp(action, kOfxActionUnload)) {
+    Log("%sin PluginMain/Unload", InfoHeader);
     return Unload();
     
   } else if (!strcmp(action, kOfxActionDescribe)) {
+    Log("%sin PluginMain/Describe", InfoHeader);
     return Describe(effect);
   
   } else if (!strcmp(action, kOfxImageEffectActionDescribeInContext)) {
@@ -492,12 +514,16 @@ static OfxStatus PluginMain(const char *action,
     stat = gPropSuite->propGetString(inArgs, kOfxImageEffectPropContext, 0, &ctx);
     RETURN_IF_ERROR(stat, "in PluginMain/DescribeInContext: Could not get context");
     
+    Log("%sin PluginMain/DescribeInContext\n\t\tcontext = %s", InfoHeader, ctx);
+    
     return DescribeInContext(effect, ctx);
     
   } else if (!strcmp(action, kOfxActionCreateInstance)) {
+    Log("%sin PluginMain/CreateInstance", InfoHeader);
     return CreateInstance(effect);
     
   } else if (!strcmp(action, kOfxActionDestroyInstance)) {
+    Log("%sin PluginMain/DestroyInstance", InfoHeader);
     return DestroyInstance(effect);
     
   } else if (!strcmp(action, kOfxImageEffectActionIsIdentity)) {
@@ -522,8 +548,12 @@ static OfxStatus PluginMain(const char *action,
     stat = gPropSuite->propGetDouble(inArgs, kOfxPropTime, 0, &t);
     RETURN_IF_ERROR(stat, "in PluginMain/IsIdentity: Could not get time");
     
+    Log("%sin PluginMain/IsIdentity\n\t\ttime = %f\n\t\tfield = %s\n\t\trender scale = %f x %f\n\t\trender window = [(%d, %d), (%d, %d)]",
+        InfoHeader, t, f, rsx, rsy, rw.x1, rw.y1, rw.x2, rw.y2);
+    
     stat = IsIdentity(effect, t, f, rw, rsx, rsy, idt, idc);
     if (stat == kOfxStatOK) {
+      Log("%s\tyes: \"%s\" @ %f", InfoHeader, idc.c_str(), idt);
       gPropSuite->propSetDouble(outArgs, kOfxPropTime, 0, idt);
       gPropSuite->propSetString(outArgs, kOfxPropName, 0, idc.c_str());
     }
@@ -551,7 +581,13 @@ static OfxStatus PluginMain(const char *action,
     stat = gPropSuite->propGetDouble(inArgs, kOfxPropTime, 0, &t);
     RETURN_IF_ERROR(stat, "in PluginMain/Render: Could not get time");
     
+    Log("%sin PluginMain/Render\n\t\ttime = %f\n\t\tfield = %s\n\t\trender scale = %f x %f\n\t\trender window = [(%d, %d), (%d, %d)]",
+        InfoHeader, t, f, rsx, rsy, rw.x1, rw.y1, rw.x2, rw.y2);
+    
     return Render(effect, t, f, rw, rsx, rsy);
+  
+  } else {
+    Log("%sin PluginMain\n\t\tUn-handled action \"%s\"", InfoHeader, action);
   }
   
   return kOfxStatReplyDefault;

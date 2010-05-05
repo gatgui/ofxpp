@@ -114,11 +114,12 @@ OfxStatus BlurDescriptor::describe() {
   setSingleInstance(false);
   setRenderThreadSafety(ofx::RenderThreadFullySafe);
   setHostFrameThreading(true);
-  setMultiResolutionSupport(false);
+  setSupportedPixelDepth(0, ofx::BitDepthFloat);
   setTilesSupport(true);
   requireTemporalClipAccess(false);
   setMultipleClipDepthsSupport(false);
-  setSupportedPixelDepth(0, ofx::BitDepthFloat);
+  setMultipleClipPARsSupport(false);
+  setMultiResolutionSupport(false);
   setFieldRenderTwiceAlways(true);
   return kOfxStatOK;
 }
@@ -131,13 +132,16 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext ctx) {
   oClip.setSupportedComponent(0, ofx::ImageComponentRGBA);
   
   ofx::ClipDescriptor mClip = defineClip("Mask");
-  mClip.setSupportedComponent(0, ofx::ImageComponentRGBA);
-  mClip.setSupportedComponent(0, ofx::ImageComponentAlpha);
+  mClip.setLabel("Mask");
+  mClip.setShortLabel("Mask");
+  mClip.setLongLabel("Mask");
+  //mClip.setSupportedComponent(0, ofx::ImageComponentRGBA);
+  mClip.setSupportedComponent(1, ofx::ImageComponentAlpha);
   mClip.setOptional(true);
   mClip.setMask(true);
   
   ofx::ChoiceParameterDescriptor type = parameters().defineChoiceParam("type");
-  type.setAnimating(false);
+  type.setAnimateable(false);
   type.setPersistant(true);
   type.setChoice(0, "standard");
   type.setChoice(1, "directional");
@@ -145,7 +149,7 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext ctx) {
   type.setDefault(0);
   
   ofx::ChoiceParameterDescriptor filter = parameters().defineChoiceParam("filter");
-  filter.setAnimating(false);
+  filter.setAnimateable(false);
   filter.setPersistant(true);
   filter.setChoice(0, "box");
   filter.setChoice(1, "triangle");
@@ -169,20 +173,20 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext ctx) {
   */
   ofx::Double2ParameterDescriptor width = parameters().defineDouble2Param("width");
   width.setPersistant(true);
-  width.setAnimating(true);
+  width.setAnimateable(true);
   width.setDefault(2, 2);
   width.setMin(0, 0);
   width.setMax(100, 100);
   width.setIncrement(1);
   width.setDigits(0);
-  width.setDoubleType(ofx::DoubleParamScale);
+  width.setDoubleType(ofx::DoubleParamPlain);
   width.setDimensionLabel(0, "w");
   width.setDimensionLabel(1, "h");
   
   // use for directional and radial blur
   ofx::DoubleParameterDescriptor angle = parameters().defineDoubleParam("angle");
   angle.setPersistant(true);
-  angle.setAnimating(true);
+  angle.setAnimateable(true);
   angle.setDefault(0);
   angle.setMin(0);
   angle.setMax(360);
@@ -196,7 +200,7 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext ctx) {
   center.setMax(1, 1);
   center.setDefault(0.5, 0.5);
   center.setPersistant(true);
-  center.setAnimating(true);
+  center.setAnimateable(true);
   center.setDimensionLabel(0, "X");
   center.setDimensionLabel(1, "X");
   center.setDigits(3);
@@ -207,7 +211,7 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext ctx) {
   // used for radial blur only
   ofx::DoubleParameterDescriptor zoom = parameters().defineDoubleParam("zoom");
   zoom.setPersistant(true);
-  zoom.setAnimating(true);
+  zoom.setAnimateable(true);
   zoom.setMin(0);
   zoom.setMax(1);
   zoom.setDefault(0.001);
@@ -255,19 +259,23 @@ OfxStatus BlurEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args) {
 
 OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
   
+  //ofx::Log("\tBlurEffect::render");
+  //ofx::Log("\tget source image");
   ofx::Image iSource = cSource.getImage(args.time);
+  //ofx::Log("\tget output image");
   ofx::Image iOutput = cOutput.getImage(args.time);
   
   ofx::RGBAColourF *srcPix, *dstPix;
   
-  // filter width = wsamples*2 + 1
-  //int wsamples = pRadius1.getValueAtTime(args.time);
-  //int hsamples = pRadius2.getValueAtTime(args.time);
   double ws = 0, hs = 0;
   pWidth.getValueAtTime(args.time, ws, hs);
   
-  int wsamples = int(ceil(ws));
-  int hsamples = int(ceil(hs));
+  //ofx::Log("BlurEffect::render");
+  //ofx::Log("\trender window [(%d, %d), (%d, %d)]", args.renderWindow.x1, args.renderWindow.y1, args.renderWindow.x2, args.renderWindow.y2);
+  //ofx::Log("\trender scale %f x %f", args.renderScaleX, args.renderScaleY);
+  
+  int wsamples = int(ceil(ws * args.renderScaleX));
+  int hsamples = int(ceil(hs * args.renderScaleY));
   
   float *wweights = new float[wsamples + 1];
   float *hweights = new float[hsamples + 1];
@@ -292,10 +300,10 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
     
   } else {
     
-    float wtheta = std::max(float((wsamples + 1) / 3), 1.0f);
-    float htheta = std::max(float((hsamples + 1) / 3), 1.0f);
-    //float wtheta = (float(wsamples) + 1.0f) / 3.0f;
-    //float htheta = (float(hsamples) + 1.0f) / 3.0f;
+    //float wtheta = std::max(float((wsamples + 1) / 3), 1.0f);
+    //float htheta = std::max(float((hsamples + 1) / 3), 1.0f);
+    float wtheta = (float(wsamples) + 1.0f) / 3.0f;
+    float htheta = (float(hsamples) + 1.0f) / 3.0f;
     
     float wInv2ThetaSqr = 1.0f / (2.0f * wtheta * wtheta);
     float hInv2ThetaSqr = 1.0f / (2.0f * htheta * htheta);
@@ -312,83 +320,105 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
     // standard blur
     ofx::Log("gatgui.filter.multiBlur: standard, %dx%d samples", wsamples, hsamples);
     
-    // renderScale ?
+    int ww = args.renderWindow.x2 - args.renderWindow.x1;
+    int wh = args.renderWindow.y2 - args.renderWindow.y1;
+    float wsum = 0.0f;
     
-    int tmpw = args.renderWindow.x2 - args.renderWindow.x1;
-    int tmph = args.renderWindow.y2 - args.renderWindow.y1;
-    int pixSize = 4 * sizeof(float);
-    int rowSize = tmpw * pixSize;
+    OfxImageMemoryHandle htmp = alloc(ww * wh * sizeof(ofx::RGBAColourF));
+    ofx::RGBAColourF *tmpImg = (ofx::RGBAColourF*) lock(htmp);
     
-    unsigned char *tmpPix = new unsigned char[tmpw * tmph * pixSize];
-    dstPix = (ofx::RGBAColourF*) tmpPix;
-    
-    // first pass (horizontal)
-    for (int y=args.renderWindow.y1; y<args.renderWindow.y2; ++y) {
+    for (int y0=args.renderWindow.y1, y1=0; y0<args.renderWindow.y2; ++y0, ++y1) {
       if (abort()) {
         break;
       }
-      for (int x=args.renderWindow.x1; x<args.renderWindow.x2; ++x) {
+      dstPix = tmpImg + y1 * ww;
+      for (int x0=args.renderWindow.x1; x0<args.renderWindow.x2; ++x0) {
         dstPix->r = 0.0f;
         dstPix->g = 0.0f;
         dstPix->b = 0.0f;
         dstPix->a = 0.0f;
-        float w = 0.0f;
-        int widx = 0;
-        for (int x2=x-wsamples; x2<=x+wsamples; ++x2) {
-          widx = x2 - x;
-          widx = (widx < 0 ? -widx : widx);
-          if (iSource.pixelAddress(x2, y, srcPix)) {
-            w += wweights[widx];
-            dstPix->r += wweights[widx] * srcPix->r;
-            dstPix->g += wweights[widx] * srcPix->g;
-            dstPix->b += wweights[widx] * srcPix->b;
-            dstPix->a += wweights[widx] * srcPix->a;
+        wsum = 0.0f;
+        for (int x1=-wsamples; x1<=0; ++x1) {
+          if (iSource.pixelAddress(x0+x1, y0, srcPix)) {
+            wsum += wweights[-x1];
+            dstPix->r += wweights[-x1] * srcPix->r;
+            dstPix->g += wweights[-x1] * srcPix->g;
+            dstPix->b += wweights[-x1] * srcPix->b;
+            dstPix->a += wweights[-x1] * srcPix->a;
           }
         }
-        w = 1.0f / w;
-        dstPix->r *= w;
-        dstPix->g *= w;
-        dstPix->b *= w;
-        dstPix->a *= w;
-        ++dstPix;
+        for (int x1=1; x1<=wsamples; ++x1) {
+          if (iSource.pixelAddress(x0+x1, y0, srcPix)) {
+            wsum += wweights[x1];
+            dstPix->r += wweights[x1] * srcPix->r;
+            dstPix->g += wweights[x1] * srcPix->g;
+            dstPix->b += wweights[x1] * srcPix->b;
+            dstPix->a += wweights[x1] * srcPix->a;
+          }
+        }
+        if (wsum > 0) {
+          wsum = 1.0f / wsum;
+          dstPix->r *= wsum;
+          dstPix->g *= wsum;
+          dstPix->b *= wsum;
+          dstPix->a *= wsum;
+        }
+        dstPix++;
       }
     }
     
-    // second pass (vertical)
-    for (int x=args.renderWindow.x1; x<args.renderWindow.x2; ++x) {
-      if (abort()) {
-        break;
-      }
-      for (int y=args.renderWindow.y1; y<args.renderWindow.y2; ++y) {
-        if (!iOutput.pixelAddress(x, y, dstPix)) {
+    if (!abort()) {
+      
+      for (int y0=args.renderWindow.y1, y1=0; y0<args.renderWindow.y2; ++y0, ++y1) {
+        if (abort()) {
+          break;
+        }
+        if (!iOutput.pixelAddress(args.renderWindow.x1, y0, dstPix)) {
           continue;
         }
-        srcPix = (ofx::RGBAColourF*)(tmpPix +
-                                     ((y - hsamples) - args.renderWindow.y1) * rowSize +
-                                     (x - args.renderWindow.x1) * pixSize);
-        float w = 0.0f;
-        int widx = 0;
-        for (int y2=y-hsamples; y2<=y+hsamples; ++y2) {
-          widx = y2 - y;
-          widx = (widx < 0 ? -widx : widx);
-          if (y2 >= args.renderWindow.y1 && y2 < args.renderWindow.y2) {
-            w += hweights[widx];
-            dstPix->r += hweights[widx] * srcPix->r;
-            dstPix->g += hweights[widx] * srcPix->g;
-            dstPix->b += hweights[widx] * srcPix->b;
-            dstPix->a += hweights[widx] * srcPix->a;
+        for (int x0=args.renderWindow.x1, x1=0; x0<args.renderWindow.x2; ++x0, ++x1) {
+          dstPix->r = 0.0f;
+          dstPix->g = 0.0f;
+          dstPix->b = 0.0f;
+          dstPix->a = 0.0f;
+          wsum = 0.0f;
+          for (int y2=-hsamples; y2<=0; ++y2) {
+            int srcY = y1 + y2;
+            if (srcY >= 0 && srcY < wh) {
+              srcPix = tmpImg + (srcY * ww) + x1;
+              wsum += hweights[-y2];
+              dstPix->r += hweights[-y2] * srcPix->r;
+              dstPix->g += hweights[-y2] * srcPix->g;
+              dstPix->b += hweights[-y2] * srcPix->b;
+              dstPix->a += hweights[-y2] * srcPix->a;
+            }
           }
-          srcPix += tmpw;
+          for (int y2=1; y2<=hsamples; ++y2) {
+            int srcY = y1 + y2;
+            if (srcY >= 0 && srcY < wh) {
+              srcPix = tmpImg + (srcY * ww) + x1;
+              wsum += hweights[y2];
+              dstPix->r += hweights[y2] * srcPix->r;
+              dstPix->g += hweights[y2] * srcPix->g;
+              dstPix->b += hweights[y2] * srcPix->b;
+              dstPix->a += hweights[y2] * srcPix->a;
+            }
+          }
+          if (wsum > 0) {
+            wsum = 1.0f / wsum;
+            dstPix->r *= wsum;
+            dstPix->g *= wsum;
+            dstPix->b *= wsum;
+            dstPix->a *= wsum;
+          }
+          dstPix++;
         }
-        w = 1.0f / w;
-        dstPix->r *= w;
-        dstPix->g *= w;
-        dstPix->b *= w;
-        dstPix->a *= w;
       }
+      
     }
     
-    delete[] tmpPix;
+    unlock(htmp);
+    free(htmp);
     
   } else {
     

@@ -197,6 +197,7 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext ctx) {
   angle.enable(false);
   angle.setDoubleType(ofx::DoubleParamAngle);
   
+  /*
   ofx::DoubleParameterDescriptor zoom = parameters().defineDoubleParam("zoom");
   zoom.setPersistant(true);
   zoom.setAnimateable(true);
@@ -219,6 +220,7 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext ctx) {
   length.setIncrement(0.001);
   length.enable(false);
   length.setDoubleType(ofx::DoubleParamScale);
+  */
   
   // used for radial blur only
   ofx::Double2ParameterDescriptor center = parameters().defineDouble2Param("center");
@@ -248,8 +250,8 @@ BlurEffect::BlurEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl)
   pFilter = parameters().getChoiceParam("filter");
   pWidth = parameters().getDouble2Param("width");
   pAngle = parameters().getDoubleParam("angle");
-  pLength = parameters().getDoubleParam("length");
-  pZoom = parameters().getDoubleParam("zoom");
+  //pLength = parameters().getDoubleParam("length");
+  //pZoom = parameters().getDoubleParam("zoom");
   pCenter = parameters().getDouble2Param("center");
 }
 
@@ -262,22 +264,22 @@ OfxStatus BlurEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &arg
       if (pType.getValue() == 1) {
         // directional blur
         pAngle.enable(true);
-        pLength.enable(true);
-        pZoom.enable(true);
+        //pLength.enable(true);
+        //pZoom.enable(true);
         pCenter.enable(false);
         
       } else if (pType.getValue() == 2) {
         // radial blur
         pAngle.enable(true);
-        pLength.enable(false);
-        pZoom.enable(true);
+        //pLength.enable(false);
+        //pZoom.enable(true);
         pCenter.enable(true);
         
       } else {
         // standard blur
         pAngle.enable(false);
-        pLength.enable(false);
-        pZoom.enable(false);
+        //pLength.enable(false);
+        //pZoom.enable(false);
         pCenter.enable(false);
       }
       
@@ -395,13 +397,13 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
         dstPix->b = 0.0f;
         dstPix->a = 0.0f;
         wsum = 0.0f;
-        for (int x1=-wsamples; x1<=0; ++x1) {
-          if (iSource.pixelAddress(x0+x1, y0, srcPix)) {
-            wsum += wweights[-x1];
-            dstPix->r += wweights[-x1] * srcPix->r;
-            dstPix->g += wweights[-x1] * srcPix->g;
-            dstPix->b += wweights[-x1] * srcPix->b;
-            dstPix->a += wweights[-x1] * srcPix->a;
+        for (int x1=0; x1<=wsamples; ++x1) {
+          if (iSource.pixelAddress(x0-x1, y0, srcPix)) {
+            wsum += wweights[x1];
+            dstPix->r += wweights[x1] * srcPix->r;
+            dstPix->g += wweights[x1] * srcPix->g;
+            dstPix->b += wweights[x1] * srcPix->b;
+            dstPix->a += wweights[x1] * srcPix->a;
           }
         }
         for (int x1=1; x1<=wsamples; ++x1) {
@@ -439,15 +441,16 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
           dstPix->b = 0.0f;
           dstPix->a = 0.0f;
           wsum = 0.0f;
-          for (int y2=-hsamples; y2<=0; ++y2) {
-            int srcY = y1 + y2;
+          //for (int y2=-hsamples; y2<=0; ++y2) {
+          for (int y2=0; y2<=hsamples; ++y2) {
+            int srcY = y1 - y2;
             if (srcY >= 0 && srcY < wh) {
               srcPix = tmpImg + (srcY * ww) + x1;
-              wsum += hweights[-y2];
-              dstPix->r += hweights[-y2] * srcPix->r;
-              dstPix->g += hweights[-y2] * srcPix->g;
-              dstPix->b += hweights[-y2] * srcPix->b;
-              dstPix->a += hweights[-y2] * srcPix->a;
+              wsum += hweights[y2];
+              dstPix->r += hweights[y2] * srcPix->r;
+              dstPix->g += hweights[y2] * srcPix->g;
+              dstPix->b += hweights[y2] * srcPix->b;
+              dstPix->a += hweights[y2] * srcPix->a;
             }
           }
           for (int y2=1; y2<=hsamples; ++y2) {
@@ -490,58 +493,31 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
     
     double cx, cy, scx, scy;
     int sx, sy;
-    double wstepx, wstepy, hstepx, hstepy;
-    double angle = pAngle.getValue() * M_PI / 180.0f; // degree -> radians
-    double zoom = pZoom.getValue();
-    double length = pLength.getValue();
     
-    // length and zoom in canonical coords
+    double angle = pAngle.getValueAtTime(args.time) * M_PI / 180.0f;
+    double wstepx = cos(angle) / (args.renderScaleX > 0.0f ? args.renderScaleX : 1.0f);
+    double wstepy = sin(angle) / (args.renderScaleY > 0.0f ? args.renderScaleY : 1.0f);
     
-    wstepx = (length / (2 * wsamples + 1)) * cos(angle);
-    wstepy = (length / (2 * wsamples + 1)) * sin(angle);
-    hstepx = - (zoom / (2 * hsamples + 1)) * sin(angle);
-    hstepy =   (zoom / (2 * hsamples + 1)) * cos(angle);
+    ofx::Log("  wstepx = %f", wstepx);
+    ofx::Log("  wstepy = %f", wstepy);
     
     // first pass, along direction
     for (int y0=args.renderWindow.y1, y1=0; y0<args.renderWindow.y2; ++y0, ++y1) {
-      
       if (abort()) {
         break;
       }
-      
       dstPix = tmpImg + y1 * ww;
-      
       for (int x0=args.renderWindow.x1; x0<args.renderWindow.x2; ++x0) {
-        
         dstPix->r = 0.0f;
         dstPix->g = 0.0f;
         dstPix->b = 0.0f;
         dstPix->a = 0.0f;
         wsum = 0.0f;
-        
         ofx::PixelToCanonicalCoords(x0, y0, PAR, args.renderScaleX, args.renderScaleY, args.field, cx, cy);
-        
-        for (int x1=-wsamples; x1<=0; ++x1) {
-          
-          scx = cx + x1 * wstepx;
-          scy = cy + x1 * wstepy;
+        for (int x1=0; x1<=wsamples; ++x1) {
+          scx = cx - x1 * wstepx;
+          scy = cy - x1 * wstepy;
           ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
-          
-          if (iSource.pixelAddress(sx, sy, srcPix)) {
-            wsum += wweights[-x1];
-            dstPix->r += wweights[-x1] * srcPix->r;
-            dstPix->g += wweights[-x1] * srcPix->g;
-            dstPix->b += wweights[-x1] * srcPix->b;
-            dstPix->a += wweights[-x1] * srcPix->a;
-          }
-        }
-        
-        for (int x1=1; x1<wsamples; ++x1) {
-          
-          scx = cx + x1 * wstepx;
-          scy = cy + x1 * wstepy;
-          ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
-          
           if (iSource.pixelAddress(sx, sy, srcPix)) {
             wsum += wweights[x1];
             dstPix->r += wweights[x1] * srcPix->r;
@@ -550,7 +526,18 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
             dstPix->a += wweights[x1] * srcPix->a;
           }
         }
-        
+        for (int x1=1; x1<wsamples; ++x1) {
+          scx = cx + x1 * wstepx;
+          scy = cy + x1 * wstepy;
+          ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
+          if (iSource.pixelAddress(sx, sy, srcPix)) {
+            wsum += wweights[x1];
+            dstPix->r += wweights[x1] * srcPix->r;
+            dstPix->g += wweights[x1] * srcPix->g;
+            dstPix->b += wweights[x1] * srcPix->b;
+            dstPix->a += wweights[x1] * srcPix->a;
+          }
+        }
         if (wsum > 0.0f) {
           wsum = 1.0f / wsum;
           dstPix->r *= wsum;
@@ -558,7 +545,6 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
           dstPix->b *= wsum;
           dstPix->a *= wsum;
         }
-        
         dstPix++;
       }
     }
@@ -567,63 +553,49 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
     if (!abort()) {
       
       for (int y0=args.renderWindow.y1; y0<args.renderWindow.y2; ++y0) {
-        
         if (abort()) {
           break;
         }
-        
         if (!iOutput.pixelAddress(args.renderWindow.x1, y0, dstPix)) {
           continue;
         }
-        
         for (int x0=args.renderWindow.x1; x0<args.renderWindow.x2; ++x0) {
-          
           dstPix->r = 0.0f;
           dstPix->g = 0.0f;
           dstPix->b = 0.0f;
           dstPix->a = 0.0f;
           wsum = 0.0f;
-
           ofx::PixelToCanonicalCoords(x0, y0, PAR, args.renderScaleX, args.renderScaleY, args.field, cx, cy);
-          
-          for (int y1=-hsamples; y1<=0; ++y1) {
-            
-            scx = cx + y1 * hstepx;
-            scy = cy + y1 * hstepy;
+          for (int y1=0; y1<=hsamples; ++y1) {
+            scx = cx - y1 * wstepy;
+            scy = cy - y1 * wstepx;
             ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
-            
             sx -= args.renderWindow.x1;
             sy -= args.renderWindow.y1;
-            
             if (sx >= 0 && sx < ww && sy >= 0 && sy < wh) {
               srcPix = tmpImg + (sy * ww) + sx;
-              wsum += wweights[-y1];
-              dstPix->r += wweights[-y1] * srcPix->r;
-              dstPix->g += wweights[-y1] * srcPix->g;
-              dstPix->b += wweights[-y1] * srcPix->b;
-              dstPix->a += wweights[-y1] * srcPix->a;
+              wsum += hweights[y1];
+              dstPix->r += hweights[y1] * srcPix->r;
+              dstPix->g += hweights[y1] * srcPix->g;
+              dstPix->b += hweights[y1] * srcPix->b;
+              dstPix->a += hweights[y1] * srcPix->a;
             }
           }
-          
-          for (int y1=1; y1<hsamples; ++y1) {
-            
-            scx = cx + y1 * hstepx;
-            scy = cy + y1 * hstepy;
+          for (int y1=1; y1<=hsamples; ++y1) {
+            scx = cx + y1 * wstepy;
+            scy = cy + y1 * wstepx;
             ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
-            
             sx -= args.renderWindow.x1;
             sy -= args.renderWindow.y1;
-            
             if (sx >= 0 && sx < ww && sy >= 0 && sy < wh) {
               srcPix = tmpImg + (sy * ww) + sx;
-              wsum += wweights[y1];
-              dstPix->r += wweights[y1] * srcPix->r;
-              dstPix->g += wweights[y1] * srcPix->g;
-              dstPix->b += wweights[y1] * srcPix->b;
-              dstPix->a += wweights[y1] * srcPix->a;
+              wsum += hweights[y1];
+              dstPix->r += hweights[y1] * srcPix->r;
+              dstPix->g += hweights[y1] * srcPix->g;
+              dstPix->b += hweights[y1] * srcPix->b;
+              dstPix->a += hweights[y1] * srcPix->a;
             }
           }
-          
           if (wsum > 0.0f) {
             wsum = 1.0f / wsum;
             dstPix->r *= wsum;
@@ -631,11 +603,109 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
             dstPix->b *= wsum;
             dstPix->a *= wsum;
           }
-          
           dstPix++;
         }
       }
       
+    }
+    
+    unlock(htmp);
+    free(htmp);
+  
+  } else if (pType.getValue() == 2) {
+    // radial blur
+    ofx::Log("gatgui.filter.multiBlur: radial, %dx%d samples", wsamples, hsamples);
+    
+    // still use wsamples and hsamples
+    double ncx, ncy, cx, cy;
+    
+    double xoff, yoff;
+    projectOffset(xoff, yoff);
+
+    double wext, hext;
+    projectExtent(wext, hext);
+
+    double PAR = projectPixelAspectRatio();
+    
+    pCenter.getValueAtTime(args.time, ncx, ncy);
+    
+    double angle = pAngle.getValueAtTime(args.time) * M_PI / 180.0f;
+    double astep = (wsamples > 0 ? angle / (2.0f * wsamples) : 0.0f);
+    double cangle;
+    
+    ofx::NormalisedToCanonicalCoords(ncx, ncy, wext, hext, xoff, yoff, true, cx, cy);
+    
+    int ww = args.renderWindow.x2 - args.renderWindow.x1;
+    int wh = args.renderWindow.y2 - args.renderWindow.y1;
+    float wsum = 0.0f;
+    
+    OfxImageMemoryHandle htmp = alloc(ww * wh * sizeof(ofx::RGBAColourF));
+    ofx::RGBAColourF *tmpImg = (ofx::RGBAColourF*) lock(htmp);
+    
+    for (int y0=args.renderWindow.y1, y1=0; y0<args.renderWindow.y2; ++y0, ++y1) {
+      if (abort()) {
+        break;
+      }
+      dstPix = tmpImg + y1 * ww;
+      for (int x0=args.renderWindow.x1; x0<args.renderWindow.x2; ++x0) {
+        dstPix->r = 0.0f;
+        dstPix->g = 0.0f;
+        dstPix->b = 0.0f;
+        dstPix->a = 0.0f;
+        wsum = 0.0f;
+        for (int x1=0; x1<=wsamples; ++x1) {
+          cangle = -x1 * astep;
+          // this is the angle from the line center -> current pixel
+          // -> need to compute new pixel
+          // TODO
+        }
+        for (int x1=1; x1<=wsamples; ++x1) {
+          cangle = x1 * astep;
+          // TODO
+        }
+        if (wsum > 0.0f) {
+          wsum = 1.0f / wsum;
+          dstPix->r *= wsum;
+          dstPix->g *= wsum;
+          dstPix->b *= wsum;
+          dstPix->a *= wsum;
+        }
+        dstPix++;
+      }
+    }
+    
+    if (!abort()) {
+      
+      // second pass [zoom]
+      for (int y0=args.renderWindow.y1; y0<args.renderWindow.y2; ++y0) {
+        if (abort()) {
+          break;
+        }
+        if (!iOutput.pixelAddress(args.renderWindow.x1, y0, dstPix)) {
+          continue;
+        }
+        for (int x0=args.renderWindow.x1; x0<args.renderWindow.x2; ++x0) {
+          dstPix->r = 0.0f;
+          dstPix->g = 0.0f;
+          dstPix->b = 0.0f;
+          dstPix->a = 0.0f;
+          wsum = 0.0f;
+          for (int y1=0; y1<=hsamples; ++y1) {
+            
+          }
+          for (int y1=1; y1<=hsamples; ++y1) {
+            
+          }
+          if (wsum > 0.0f) {
+            wsum = 1.0f / wsum;
+            dstPix->r *= wsum;
+            dstPix->g *= wsum;
+            dstPix->b *= wsum;
+            dstPix->a *= wsum;
+          }
+          dstPix++;
+        }
+      }
     }
     
     unlock(htmp);

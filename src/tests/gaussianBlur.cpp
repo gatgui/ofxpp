@@ -24,13 +24,13 @@ static const char *InfoHeader  = "Info\n\tin plugin \"gatgui.filter.gaussianBlur
 
 #define RETURN_IF_ERROR(s, msg)\
   if (s != kOfxStatOK) {\
-    Log("Error\n\tin plugin \"gatgui.filter.gaussianBlur\"\n\t%s", msg);\
+    Log("%s%s", ErrorHeader, msg);\
     return s;\
   }
 
 struct PluginData {
   // cache parameters and clip
-  OfxParamHandle pWidth;
+  OfxParamHandle pSamples;
   OfxParamHandle pLinkWidth;
   OfxImageClipHandle cSource;
   OfxImageClipHandle cOutput;
@@ -150,7 +150,7 @@ static OfxStatus Describe(OfxImageEffectHandle effect) {
   return kOfxStatReplyDefault;
 }
 
-static OfxStatus DescribeInContext(OfxImageEffectHandle effect, const char *ctx) {
+static OfxStatus DescribeInContext(OfxImageEffectHandle effect, const char *) {
   
   OfxStatus stat;
   OfxPropertySetHandle props;
@@ -173,33 +173,33 @@ static OfxStatus DescribeInContext(OfxImageEffectHandle effect, const char *ctx)
   
   // define parameters
   
-  //stat = gParamSuite->paramDefine(params, kOfxParamTypeInteger2D, "width", &props);
-  stat = gParamSuite->paramDefine(params, kOfxParamTypeDouble2D, "width", &props);
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not define \"width\" parameter");
+  //stat = gParamSuite->paramDefine(params, kOfxParamTypeInteger2D, "samples", &props);
+  stat = gParamSuite->paramDefine(params, kOfxParamTypeDouble2D, "samples", &props);
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not define \"samples\" parameter");
   stat = gPropSuite->propSetString(props, kOfxParamPropDoubleType, 0, kOfxParamDoubleTypePlain);
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter double type");
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"samples\" parameter double type");
   stat = gPropSuite->propSetDouble(props, kOfxParamPropIncrement, 0, 1);
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter increment");
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"samples\" parameter increment");
   stat = gPropSuite->propSetInt(props, kOfxParamPropDigits, 0, 0);
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter digits");
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"samples\" parameter digits");
   stat = gPropSuite->propSetString(props, kOfxParamPropDimensionLabel, 0, "w");
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter dimension 0 label");
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"samples\" parameter dimension 0 label");
   stat = gPropSuite->propSetString(props, kOfxParamPropDimensionLabel, 1, "h");
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter dimension 1 label");
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"samples\" parameter dimension 1 label");
   stat = gPropSuite->propSetInt(props, kOfxParamPropAnimates, 0, 1);
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter animates");
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"samples\" parameter animates");
   stat = gPropSuite->propSetDouble(props, kOfxParamPropMin, 0, 0);
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter min");
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"samples\" parameter min");
   stat = gPropSuite->propSetDouble(props, kOfxParamPropMin, 1, 0);
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter min");
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"samples\" parameter min");
   stat = gPropSuite->propSetDouble(props, kOfxParamPropMax, 0, 100);
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter max");
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"samples\" parameter max");
   stat = gPropSuite->propSetDouble(props, kOfxParamPropMax, 1, 100);
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter max");
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"samples\" parameter max");
   stat = gPropSuite->propSetDouble(props, kOfxParamPropDefault, 0, 2);
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter default");
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"samples\" parameter default");
   stat = gPropSuite->propSetDouble(props, kOfxParamPropDefault, 1, 2);
-  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"width\" parameter default");
+  RETURN_IF_ERROR(stat, "in DescribeInContext: Could not set \"samples\" parameter default");
   
   stat = gParamSuite->paramDefine(params, kOfxParamTypeBoolean, "link", &props);
   RETURN_IF_ERROR(stat, "in DescribeInContext: Could not define \"link\" parameter");
@@ -231,8 +231,8 @@ static OfxStatus CreateInstance(OfxImageEffectHandle effect) {
   stat = gEffectSuite->clipGetHandle(effect, "Output", &(data->cOutput), NULL);
   RETURN_IF_ERROR(stat, "in CreateInstance: Could not retrieve effect \"Output\" clip");
   
-  stat = gParamSuite->paramGetHandle(params, "width", &(data->pWidth), NULL);
-  RETURN_IF_ERROR(stat, "in CreateInstance: Could not retrieve effect \"width\" parameter");
+  stat = gParamSuite->paramGetHandle(params, "samples", &(data->pSamples), NULL);
+  RETURN_IF_ERROR(stat, "in CreateInstance: Could not retrieve effect \"samples\" parameter");
   
   stat = gParamSuite->paramGetHandle(params, "link", &(data->pLinkWidth), NULL);
   RETURN_IF_ERROR(stat, "in CreateInstance: Could not retrieve effect \"link\" parameter");
@@ -265,10 +265,10 @@ static OfxStatus DestroyInstance(OfxImageEffectHandle effect) {
 
 static OfxStatus IsIdentity(OfxImageEffectHandle effect,
                             OfxTime t,
-                            const char *field,
-                            const OfxRectI &renderWindow,
-                            double renderScaleX,
-                            double renderScaleY,
+                            const char * /*field*/,
+                            const OfxRectI & /*renderWindow*/,
+                            double /*renderScaleX*/,
+                            double /*renderScaleY*/,
                             OfxTime &idt,
                             std::string &idc) {
   OfxStatus stat;
@@ -289,8 +289,8 @@ static OfxStatus IsIdentity(OfxImageEffectHandle effect,
   
   double wsamples = 0, hsamples = 0;
   
-  stat = gParamSuite->paramGetValueAtTime(data->pWidth, t, &wsamples, &hsamples);
-  RETURN_IF_ERROR(stat, "in IsIdentity: Could not get \"width\" parameter values");
+  stat = gParamSuite->paramGetValueAtTime(data->pSamples, t, &wsamples, &hsamples);
+  RETURN_IF_ERROR(stat, "in IsIdentity: Could not get \"samples\" parameter values");
   
   if (wsamples <= 0 && hsamples <= 0) {
     idt = t;
@@ -310,10 +310,10 @@ inline void* PixelAddress(void *data, const OfxRectI &bounds, int rowSize, int p
 
 static OfxStatus Render(OfxImageEffectHandle effect,
                         OfxTime t,
-                        const char *field,
+                        const char * /*field*/,
                         const OfxRectI &renderWindow,
-                        double renderScaleX,
-                        double renderScaleY) {
+                        double /*renderScaleX*/,
+                        double /*renderScaleY*/) {
   OfxStatus stat;
   OfxPropertySetHandle props;
   void *ptr = 0;
@@ -336,8 +336,8 @@ static OfxStatus Render(OfxImageEffectHandle effect,
   double ws = -1, hs = -1;
   int wsamples = 0, hsamples = 0;
   
-  stat = gParamSuite->paramGetValueAtTime(data->pWidth, t, &ws, &hs);
-  RETURN_IF_ERROR(stat, "in Render: Could not get \"width\" parameter values");
+  stat = gParamSuite->paramGetValueAtTime(data->pSamples, t, &ws, &hs);
+  RETURN_IF_ERROR(stat, "in Render: Could not get \"samples\" parameter values");
   
   wsamples = int(ceil(ws));
   hsamples = int(ceil(hs));
@@ -345,8 +345,8 @@ static OfxStatus Render(OfxImageEffectHandle effect,
   float *wweights = new float[wsamples + 1];
   float *hweights = new float[hsamples + 1];
   
-  float wtheta = std::max(float((wsamples + 1) / 3), 1.0f);
-  float htheta = std::max(float((hsamples + 1) / 3), 1.0f);
+  float wtheta = (float(wsamples) + 1.0f) / 3.0f;
+  float htheta = (float(hsamples) + 1.0f) / 3.0f;
   
   float wInv2ThetaSqr = 1.0f / (2.0f * wtheta * wtheta);
   float hInv2ThetaSqr = 1.0f / (2.0f * htheta * htheta);
@@ -358,6 +358,8 @@ static OfxStatus Render(OfxImageEffectHandle effect,
   for (int i=0; i<=hsamples; ++i) {
     hweights[i] = (float) exp(- hInv2ThetaSqr * i * i);
   }
+  
+  Log("%sin Render: samples = %dx%d", InfoHeader, wsamples, hsamples);
   
   // get source and output image buffers
   

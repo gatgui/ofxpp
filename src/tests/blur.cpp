@@ -126,7 +126,7 @@ OfxStatus BlurDescriptor::describe() {
   return kOfxStatOK;
 }
 
-OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext ctx) {
+OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext /*ctx*/) {
   ofx::ClipDescriptor iClip = defineClip("Source");
   iClip.setSupportedComponent(0, ofx::ImageComponentRGBA);
   
@@ -184,6 +184,7 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext ctx) {
   width.setDoubleType(ofx::DoubleParamPlain);
   width.setDimensionLabel(0, "w");
   width.setDimensionLabel(1, "h");
+  width.setHint("Blur samples");
   
   // use for directional and radial blur
   ofx::DoubleParameterDescriptor angle = parameters().defineDoubleParam("angle");
@@ -194,8 +195,9 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext ctx) {
   angle.setMax(180);
   angle.setIncrement(0.001);
   angle.setDigits(3);
-  angle.enable(false);
+  //angle.enable(false);
   angle.setDoubleType(ofx::DoubleParamAngle);
+  angle.setHint("Direction or blur angle");
   
   /*
   // used for directional blur only
@@ -223,7 +225,8 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext ctx) {
   center.setDigits(3);
   center.setIncrement(0.001);
   center.setDoubleType(ofx::DoubleParamNormalisedXY);
-  center.enable(false);
+  center.setHint("Radial blur center");
+  //center.enable(false);
   
   ofx::DoubleParameterDescriptor zoom = parameters().defineDoubleParam("zoom");
   zoom.setPersistant(true);
@@ -234,7 +237,8 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext ctx) {
   zoom.setDigits(3);
   zoom.setIncrement(0.001);
   zoom.setDoubleType(ofx::DoubleParamScale);
-  zoom.enable(false);
+  zoom.setHint("Zoom scale");
+  //zoom.enable(false);
   
   return kOfxStatOK;
 }
@@ -258,8 +262,8 @@ BlurEffect::BlurEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl)
 BlurEffect::~BlurEffect() {
 }
 
-OfxStatus BlurEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &args) {
-  //if (args.reason == ofx::ChangeUserEdited) {
+OfxStatus BlurEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &/*args*/) {
+  /*
   if (args.name == "type") {
     if (pType.getValue() == 1) {
       // directional blur
@@ -282,7 +286,7 @@ OfxStatus BlurEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &arg
     
     return kOfxStatOK;
   }
-  
+  */
   return kOfxStatReplyDefault;
 }
 

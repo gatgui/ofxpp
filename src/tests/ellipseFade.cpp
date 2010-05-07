@@ -382,6 +382,7 @@ OfxStatus EllipseFadeDescriptor::describeInContext(ofx::ImageEffectContext) {
   c.setDimensionLabel(1, "Y");
   c.setPersistant(true);
   c.setAnimateable(true);
+  c.setDoubleType(ofx::DoubleParamNormalisedXY);
   
   ofx::DoubleParameterDescriptor w = parameters().defineDoubleParam("width");
   w.setDefault(0.5);

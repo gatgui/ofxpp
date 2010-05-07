@@ -259,32 +259,31 @@ BlurEffect::~BlurEffect() {
 }
 
 OfxStatus BlurEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &args) {
-  if (args.reason == ofx::ChangeUserEdited) {
-    if (args.name == "type") {
-      if (pType.getValue() == 1) {
-        // directional blur
-        pAngle.enable(true);
-        //pLength.enable(true);
-        //pZoom.enable(true);
-        pCenter.enable(false);
-        
-      } else if (pType.getValue() == 2) {
-        // radial blur
-        pAngle.enable(true);
-        //pLength.enable(false);
-        //pZoom.enable(true);
-        pCenter.enable(true);
-        
-      } else {
-        // standard blur
-        pAngle.enable(false);
-        //pLength.enable(false);
-        //pZoom.enable(false);
-        pCenter.enable(false);
-      }
+  //if (args.reason == ofx::ChangeUserEdited) {
+  if (args.name == "type") {
+    if (pType.getValue() == 1) {
+      // directional blur
+      pAngle.enable(true);
+      //pLength.enable(true);
+      //pZoom.enable(true);
+      pCenter.enable(false);
       
-      return kOfxStatOK;
+    } else if (pType.getValue() == 2) {
+      // radial blur
+      pAngle.enable(true);
+      //pLength.enable(false);
+      //pZoom.enable(true);
+      pCenter.enable(true);
+      
+    } else {
+      // standard blur
+      pAngle.enable(false);
+      //pLength.enable(false);
+      //pZoom.enable(false);
+      pCenter.enable(false);
     }
+    
+    return kOfxStatOK;
   }
   
   return kOfxStatReplyDefault;
@@ -306,10 +305,7 @@ OfxStatus BlurEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args) {
 
 OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
   
-  //ofx::Log("\tBlurEffect::render");
-  //ofx::Log("\tget source image");
   ofx::Image iSource = cSource.getImage(args.time);
-  //ofx::Log("\tget output image");
   ofx::Image iOutput = cOutput.getImage(args.time);
   
   ofx::RGBAColourF *srcPix, *dstPix;
@@ -319,17 +315,11 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
   
   // Project format
   
-  double xoff, yoff;
+  double xoff, yoff, wext, hext, PAR;
+  
   projectOffset(xoff, yoff);
-  
-  double wext, hext;
   projectExtent(wext, hext);
-  
-  double PAR = projectPixelAspectRatio();
-  
-  //ofx::Log("BlurEffect::render");
-  //ofx::Log("\trender window [(%d, %d), (%d, %d)]", args.renderWindow.x1, args.renderWindow.y1, args.renderWindow.x2, args.renderWindow.y2);
-  //ofx::Log("\trender scale %f x %f", args.renderScaleX, args.renderScaleY);
+  PAR = projectPixelAspectRatio();
   
   // note: clip must be pre-multipled
   
@@ -617,23 +607,21 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
     ofx::Log("gatgui.filter.multiBlur: radial, %dx%d samples", wsamples, hsamples);
     
     // still use wsamples and hsamples
-    double ncx, ncy, cx, cy;
-    
-    double xoff, yoff;
-    projectOffset(xoff, yoff);
-
-    double wext, hext;
-    projectExtent(wext, hext);
-
-    double PAR = projectPixelAspectRatio();
+    double ncx, ncy, ccx, ccy, pcx, pcy, vcx, vcy, scx, scy, ca, sa, lv;
+    int sx, sy;
     
     pCenter.getValueAtTime(args.time, ncx, ncy);
     
     double angle = pAngle.getValueAtTime(args.time) * M_PI / 180.0f;
     double astep = (wsamples > 0 ? angle / (2.0f * wsamples) : 0.0f);
-    double cangle;
+    double cangle = 0.0f;
     
-    ofx::NormalisedToCanonicalCoords(ncx, ncy, wext, hext, xoff, yoff, true, cx, cy);
+    ofx::NormalisedToCanonicalCoords(ncx, ncy, wext, hext, xoff, yoff, true, ccx, ccy);
+    
+    ofx::Log("Angle: %f", angle);
+    ofx::Log("Angular step: %f", astep);
+    ofx::Log("Center: (%f, %f) [normalised]", ncx, ncy);
+    ofx::Log("Center: (%f, %f) [canonical]", ccx, ccy);
     
     int ww = args.renderWindow.x2 - args.renderWindow.x1;
     int wh = args.renderWindow.y2 - args.renderWindow.y1;
@@ -653,15 +641,38 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
         dstPix->b = 0.0f;
         dstPix->a = 0.0f;
         wsum = 0.0f;
+        ofx::PixelToCanonicalCoords(x0, y0, PAR, args.renderScaleX, args.renderScaleY, args.field, pcx, pcy);
+        vcx = pcx - ccx;
+        vcy = pcy - ccy;
         for (int x1=0; x1<=wsamples; ++x1) {
           cangle = -x1 * astep;
-          // this is the angle from the line center -> current pixel
-          // -> need to compute new pixel
-          // TODO
+          ca = cos(cangle);
+          sa = sin(cangle);
+          scx = ccx + vcx * ca - vcy * sa;
+          scy = ccy + vcy * ca + vcx * sa;
+          ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
+          if (iSource.pixelAddress(sx, sy, srcPix)) {
+            wsum += wweights[x1];
+            dstPix->r += wweights[x1] * srcPix->r;
+            dstPix->g += wweights[x1] * srcPix->g;
+            dstPix->b += wweights[x1] * srcPix->b;
+            dstPix->a += wweights[x1] * srcPix->a;
+          }
         }
         for (int x1=1; x1<=wsamples; ++x1) {
           cangle = x1 * astep;
-          // TODO
+          ca = cos(cangle);
+          sa = sin(cangle);
+          scx = ccx + vcx * ca - vcy * sa;
+          scy = ccy + vcy * ca + vcx * sa;
+          ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
+          if (iSource.pixelAddress(sx, sy, srcPix)) {
+            wsum += wweights[x1];
+            dstPix->r += wweights[x1] * srcPix->r;
+            dstPix->g += wweights[x1] * srcPix->g;
+            dstPix->b += wweights[x1] * srcPix->b;
+            dstPix->a += wweights[x1] * srcPix->a;
+          }
         }
         if (wsum > 0.0f) {
           wsum = 1.0f / wsum;
@@ -677,6 +688,7 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
     if (!abort()) {
       
       // second pass [zoom]
+      // this sucks in fact, should take distance from center into account
       for (int y0=args.renderWindow.y1; y0<args.renderWindow.y2; ++y0) {
         if (abort()) {
           break;
@@ -690,11 +702,44 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
           dstPix->b = 0.0f;
           dstPix->a = 0.0f;
           wsum = 0.0f;
+          ofx::PixelToCanonicalCoords(x0, y0, PAR, args.renderScaleX, args.renderScaleY, args.field, pcx, pcy);
+          vcx = pcx - ccx;
+          vcy = pcy - ccy;
+          lv = sqrt(vcx*vcx + vcy*vcy);
+          if (lv > 0.0f) {
+            lv = 1.0f / lv;
+            vcx *= lv;
+            vcy *= lv;
+          }
           for (int y1=0; y1<=hsamples; ++y1) {
-            
+            scx = pcx - y1 * vcx;
+            scy = pcy - y1 * vcy;
+            ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
+            sx -= args.renderWindow.x1;
+            sy -= args.renderWindow.y1;
+            if (sx >= 0 && sx < ww && sy >= 0 && sy < wh) {
+              srcPix = tmpImg + sy * ww + sx;
+              wsum += hweights[y1];
+              dstPix->r += hweights[y1] * srcPix->r;
+              dstPix->g += hweights[y1] * srcPix->g;
+              dstPix->b += hweights[y1] * srcPix->b;
+              dstPix->a += hweights[y1] * srcPix->a;
+            }
           }
           for (int y1=1; y1<=hsamples; ++y1) {
-            
+            scx = pcx + y1 * vcx;
+            scy = pcy + y1 * vcy;
+            ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
+            sx -= args.renderWindow.x1;
+            sy -= args.renderWindow.y1;
+            if (sx >= 0 && sx < ww && sy >= 0 && sy < wh) {
+              srcPix = tmpImg + sy * ww + sx;
+              wsum += hweights[y1];
+              dstPix->r += hweights[y1] * srcPix->r;
+              dstPix->g += hweights[y1] * srcPix->g;
+              dstPix->b += hweights[y1] * srcPix->b;
+              dstPix->a += hweights[y1] * srcPix->a;
+            }
           }
           if (wsum > 0.0f) {
             wsum = 1.0f / wsum;

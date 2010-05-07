@@ -190,25 +190,14 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext ctx) {
   angle.setPersistant(true);
   angle.setAnimateable(true);
   angle.setDefault(0);
-  angle.setMin(0);
-  angle.setMax(360);
+  angle.setMin(-180);
+  angle.setMax(180);
   angle.setIncrement(0.001);
   angle.setDigits(3);
   angle.enable(false);
   angle.setDoubleType(ofx::DoubleParamAngle);
   
   /*
-  ofx::DoubleParameterDescriptor zoom = parameters().defineDoubleParam("zoom");
-  zoom.setPersistant(true);
-  zoom.setAnimateable(true);
-  //zoom.setMin(0);
-  //zoom.setMax(1);
-  zoom.setDefault(0.001);
-  zoom.setDigits(3);
-  zoom.setIncrement(0.001);
-  zoom.enable(false);
-  zoom.setDoubleType(ofx::DoubleParamScale);
-  
   // used for directional blur only
   ofx::DoubleParameterDescriptor length = parameters().defineDoubleParam("length");
   length.setPersistant(true);
@@ -236,6 +225,17 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext ctx) {
   center.setDoubleType(ofx::DoubleParamNormalisedXY);
   center.enable(false);
   
+  ofx::DoubleParameterDescriptor zoom = parameters().defineDoubleParam("zoom");
+  zoom.setPersistant(true);
+  zoom.setAnimateable(true);
+  zoom.setMin(0);
+  zoom.setMax(10);
+  zoom.setDefault(0);
+  zoom.setDigits(3);
+  zoom.setIncrement(0.001);
+  zoom.setDoubleType(ofx::DoubleParamScale);
+  zoom.enable(false);
+  
   return kOfxStatOK;
 }
 
@@ -251,7 +251,7 @@ BlurEffect::BlurEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl)
   pWidth = parameters().getDouble2Param("width");
   pAngle = parameters().getDoubleParam("angle");
   //pLength = parameters().getDoubleParam("length");
-  //pZoom = parameters().getDoubleParam("zoom");
+  pZoom = parameters().getDoubleParam("zoom");
   pCenter = parameters().getDouble2Param("center");
 }
 
@@ -264,22 +264,19 @@ OfxStatus BlurEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &arg
     if (pType.getValue() == 1) {
       // directional blur
       pAngle.enable(true);
-      //pLength.enable(true);
-      //pZoom.enable(true);
+      pZoom.enable(false);
       pCenter.enable(false);
       
     } else if (pType.getValue() == 2) {
       // radial blur
       pAngle.enable(true);
-      //pLength.enable(false);
-      //pZoom.enable(true);
+      pZoom.enable(true);
       pCenter.enable(true);
       
     } else {
       // standard blur
       pAngle.enable(false);
-      //pLength.enable(false);
-      //pZoom.enable(false);
+      pZoom.enable(false);
       pCenter.enable(false);
     }
     
@@ -290,8 +287,7 @@ OfxStatus BlurEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &arg
 }
 
 OfxStatus BlurEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args) {
-  //int wsamples = pRadius1.getValueAtTime(args.time);
-  //int hsamples = pRadius2.getValueAtTime(args.time);
+  // review that
   double wsamples = 0, hsamples = 0;
   pWidth.getValueAtTime(args.time, wsamples, hsamples);
   if (wsamples <= 0 && hsamples <= 0) {
@@ -607,7 +603,7 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
     ofx::Log("gatgui.filter.multiBlur: radial, %dx%d samples", wsamples, hsamples);
     
     // still use wsamples and hsamples
-    double ncx, ncy, ccx, ccy, pcx, pcy, vcx, vcy, scx, scy, ca, sa, lv;
+    double ncx, ncy, ccx, ccy, pcx, pcy, vcx, vcy, scx, scy, ca, sa;
     int sx, sy;
     
     pCenter.getValueAtTime(args.time, ncx, ncy);
@@ -688,7 +684,9 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
     if (!abort()) {
       
       // second pass [zoom]
-      // this sucks in fact, should take distance from center into account
+      double zoom = pZoom.getValueAtTime(args.time);
+      double fromx, fromy, tox, toy, stepx, stepy;
+      
       for (int y0=args.renderWindow.y1; y0<args.renderWindow.y2; ++y0) {
         if (abort()) {
           break;
@@ -705,15 +703,15 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
           ofx::PixelToCanonicalCoords(x0, y0, PAR, args.renderScaleX, args.renderScaleY, args.field, pcx, pcy);
           vcx = pcx - ccx;
           vcy = pcy - ccy;
-          lv = sqrt(vcx*vcx + vcy*vcy);
-          if (lv > 0.0f) {
-            lv = 1.0f / lv;
-            vcx *= lv;
-            vcy *= lv;
-          }
+          fromx = ccx - vcx * 0.5 * zoom;
+          fromy = ccy - vcy * 0.5 * zoom;
+          tox = ccx + vcx * 0.5 * zoom;
+          toy = ccy + vcy * 0.5 * zoom;
+          stepx = (hsamples > 0 ? (tox - fromx) / (hsamples * 2.0f) : 0.0f);
+          stepy = (hsamples > 0 ? (toy - fromy) / (hsamples * 2.0f) : 0.0f);
           for (int y1=0; y1<=hsamples; ++y1) {
-            scx = pcx - y1 * vcx;
-            scy = pcy - y1 * vcy;
+            scx = pcx - y1 * stepx;
+            scy = pcy - y1 * stepy;
             ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
             sx -= args.renderWindow.x1;
             sy -= args.renderWindow.y1;
@@ -727,8 +725,8 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
             }
           }
           for (int y1=1; y1<=hsamples; ++y1) {
-            scx = pcx + y1 * vcx;
-            scy = pcy + y1 * vcy;
+            scx = pcx + y1 * stepx;
+            scy = pcy + y1 * stepy;
             ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
             sx -= args.renderWindow.x1;
             sy -= args.renderWindow.y1;

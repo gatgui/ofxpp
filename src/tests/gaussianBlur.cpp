@@ -381,7 +381,7 @@ static OfxStatus Render(OfxImageEffectHandle effect,
   //kOfxImageEffectPropPixelDepth, string x1
   //kOfxImageEffectPropComponents, string x1
   
-  stat = gEffectSuite->clipGetImage(data->cSource, t, NULL, &iOutput);
+  stat = gEffectSuite->clipGetImage(data->cOutput, t, NULL, &iOutput);
   RETURN_IF_ERROR(stat, "in Render: Could not get \"Output\" clip image");
   stat = gPropSuite->propGetPointer(iOutput, kOfxImagePropData, 0, &dOutput);
   RETURN_IF_ERROR(stat, "in Render: Could not get \"Output\" image data");
@@ -391,12 +391,39 @@ static OfxStatus Render(OfxImageEffectHandle effect,
   RETURN_IF_ERROR(stat, "in Render: Could not get \"Output\" image row size");
   pixSizeOutput = 4 * sizeof(float);
   
+  /*
+  for (int y=renderWindow.y1; y<renderWindow.y2; ++y) {
+    if (gEffectSuite->abort(effect)) {
+      break;
+    }
+    dstPix = (OfxRGBAColourF*) PixelAddress(dOutput, bOutput, rowSizeOutput, pixSizeOutput, renderWindow.x1, y);
+    if (dstPix == 0) {
+      continue;
+    }
+    for (int x=renderWindow.x1; x<renderWindow.x2; ++x) {
+      srcPix = (OfxRGBAColourF*) PixelAddress(dSource, bSource, rowSizeSource, pixSizeSource, x, y);
+      if (srcPix) {
+        dstPix->r = srcPix->r;
+        dstPix->g = srcPix->g;
+        dstPix->b = srcPix->b;
+        dstPix->a = srcPix->a;
+      } else {
+        dstPix->r = 0.0f;
+        dstPix->g = 0.0f;
+        dstPix->b = 0.0f;
+        dstPix->a = 1.0f;
+      }
+      dstPix++;
+    }
+  }
+  */
+  
   // create temp image
   
   int ww = renderWindow.x2 - renderWindow.x1;
   int wh = renderWindow.y2 - renderWindow.y1;
   int pixSize = 4 * sizeof(float);
-  int rowSize = wh * pixSize;
+  int rowSize = ww * pixSize;
   
   unsigned char *dTemp = new unsigned char[ww * wh * pixSize];
   
@@ -432,21 +459,21 @@ static OfxStatus Render(OfxImageEffectHandle effect,
       dstPix->g *= w;
       dstPix->b *= w;
       dstPix->a *= w;
-      ++dstPix;
+      dstPix++;
     }
   }
   
   // pass 2: vertical blur
   
-  for (int x=renderWindow.x1; x<renderWindow.x2; ++x) {
+  for (int y=renderWindow.y1; y<renderWindow.y2; ++y) {
     if (gEffectSuite->abort(effect)) {
       break;
     }
-    for (int y=renderWindow.y1; y<renderWindow.y2; ++y) {
-      dstPix = (OfxRGBAColourF*) PixelAddress(dOutput, bOutput, rowSizeOutput, pixSizeOutput, x, y);
-      if (dstPix == 0) {
-        continue;
-      }
+    dstPix = (OfxRGBAColourF*) PixelAddress(dOutput, bOutput, rowSizeOutput, pixSizeOutput, renderWindow.x1, y);
+    if (dstPix == 0) {
+      continue;
+    }
+    for (int x=renderWindow.x1; x<renderWindow.x2; ++x) {
       srcPix = (OfxRGBAColourF*)(dTemp +
                                  ((y - hsamples) - renderWindow.y1) * rowSize +
                                  (x - renderWindow.x1) * pixSize);
@@ -469,6 +496,7 @@ static OfxStatus Render(OfxImageEffectHandle effect,
       dstPix->g *= w;
       dstPix->b *= w;
       dstPix->a *= w;
+      dstPix++;
     }
   }
   

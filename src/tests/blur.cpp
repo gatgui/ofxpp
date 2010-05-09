@@ -68,8 +68,10 @@ class BlurInteract : public ofx::Interact {
   protected:
     
     DragOp mOp;
-    int mLastX;
-    int mLastY;
+    double mLastX;
+    double mLastY;
+    double mAccumX;
+    double mAccumY;
 };
 
 // Descriptor
@@ -802,7 +804,8 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
 // ---
 
 BlurInteract::BlurInteract(ofx::ImageEffectHost *h, OfxInteractHandle hdl)
-  : ofx::Interact(h, hdl), mOp(BlurInteract::DO_NONE), mLastX(-1), mLastY(-1) {
+  : ofx::Interact(h, hdl), mOp(BlurInteract::DO_NONE), mLastX(-1), mLastY(-1),
+    mAccumX(0), mAccumY(0) {
 }
 
 BlurInteract::~BlurInteract() {
@@ -828,29 +831,16 @@ OfxStatus BlurInteract::draw(ofx::Interact::DrawArgs &args) {
   blur->pCenter.getValueAtTime(args.time, ncx, ncy);
   blur->pWidth.getValueAtTime(args.time, ws, hs);
   zoom = blur->pZoom.getValueAtTime(args.time);
-  angle = blur->pAngle.getValueAtTime(args.time);
-  
-  // Draw center
+  angle = blur->pAngle.getValueAtTime(args.time) * M_PI / 180.0;
   ofx::NormalisedToCanonicalCoords(ncx, ncy, wext, hext, xoff, yoff, true, ccx, ccy);
-  if (mOp == DO_MOVE_CENTER) {
-    glColor3f(1.0f, 0.0f, 0.0f);
-  } else {
-    glColor3f(0.0f, 1.0f, 0.0f);
-  }
-  glBegin(GL_QUADS);
-  glVertex2f(ccx-bw, ccy-bh);
-  glVertex2f(ccx+bw, ccy-bh);
-  glVertex2f(ccx+bw, ccy+bh);
-  glVertex2f(ccx-bw, ccy+bh);
-  glEnd();
   
   // Draw axis from center
   glColor3f(0.0f, 1.0f, 0.0f);
   glBegin(GL_LINES);
   glVertex2f(ccx, ccy);
-  glVertex2f(ccx+50*pw, ccy);
+  glVertex2f(ccx+55*pw, ccy);
   glVertex2f(ccx, ccy);
-  glVertex2f(ccx, ccy+50*ph);
+  glVertex2f(ccx, ccy+55*ph);
   glEnd();
   
   // Draw blur width and height
@@ -869,18 +859,33 @@ OfxStatus BlurInteract::draw(ofx::Interact::DrawArgs &args) {
   glEnd();
   
   // Draw angle
+  double cax = ccx + pw * 50 * cos(angle);
+  double cay = ccy + ph * 50 * sin(angle);
+  double dangle = angle / 64;
   if (mOp == DO_MOVE_ANGLE) {
     glColor3f(1.0f, 0.0f, 0.0f);
   } else {
     glColor3f(0.0f, 1.0f, 0.0f);
   }
-  double cax, cay, dangle = 2.0 * M_PI / 64.0;
-  glBegin(GL_LINE_LOOP);
+  glEnable(GL_LINE_STIPPLE);
+  glLineStipple(1, 0x00FF);
+  glBegin(GL_LINES);
+  glVertex2f(ccx, ccy);
+  glVertex2f(cax, cay);
+  glEnd();
+  glBegin(GL_LINE_STRIP);
   for (int i=0; i<64; ++i) {
     cax = ccx + pw * 50 * cos(i*dangle);
     cay = ccy + ph * 50 * sin(i*dangle);
     glVertex2f(cax, cay);
   }
+  glEnd();
+  glDisable(GL_LINE_STIPPLE);
+  glBegin(GL_QUADS);
+  glVertex2f(cax-bw, cay-bh);
+  glVertex2f(cax+bw, cay-bh);
+  glVertex2f(cax+bw, cay+bh);
+  glVertex2f(cax-bw, cay+bh);
   glEnd();
   
   // Draw zoom
@@ -898,18 +903,116 @@ OfxStatus BlurInteract::draw(ofx::Interact::DrawArgs &args) {
   glVertex2f(czx-bw, czy+bh);
   glEnd();
   
+  // Draw center
+  if (mOp == DO_MOVE_CENTER) {
+    glColor3f(1.0f, 0.0f, 0.0f);
+  } else {
+    glColor3f(0.0f, 1.0f, 0.0f);
+  }
+  glBegin(GL_QUADS);
+  glVertex2f(ccx-bw, ccy-bh);
+  glVertex2f(ccx+bw, ccy-bh);
+  glVertex2f(ccx+bw, ccy+bh);
+  glVertex2f(ccx-bw, ccy+bh);
+  glEnd();
+  
   return kOfxStatOK;
 }
 
 OfxStatus BlurInteract::penMotion(ofx::Interact::PenArgs &args) {
+  if (mOp != DO_NONE) {
+    mAccumX += args.x - mLastX;
+    mAccumY += args.y - mLastY;
+    
+    if (mOp == DO_MOVE_CENTER) {
+    
+    } else if (mOp == DO_MOVE_WIDTH) {
+      
+    } else if (mOp == DO_MOVE_ZOOM) {
+      
+    } else if (mOp == DO_MOVE_ANGLE) {
+      
+    }
+    
+    mLastX = args.x;
+    mLastY = args.y;
+    return kOfxStatOK;
+  }
   return kOfxStatReplyDefault;
 }
 
 OfxStatus BlurInteract::penDown(ofx::Interact::PenArgs &args) {
+  //args.x
+  //args.y
+  double xoff, yoff, wext, hext, ncx, ncy, ccx, ccy, ws, hs, zoom, angle;
+  
+  BlurEffect *blur = (BlurEffect*) args.effect;
+  
+  blur->projectOffset(xoff, yoff);
+  blur->projectExtent(wext, hext);
+  
+  // size of a pixel
+  double pw = args.pixelScaleX / args.renderScaleX;
+  double ph = args.pixelScaleX / args.renderScaleX;
+  
+  // get effect parameters
+  blur->pCenter.getValueAtTime(args.time, ncx, ncy);
+  blur->pWidth.getValueAtTime(args.time, ws, hs);
+  zoom = blur->pZoom.getValueAtTime(args.time);
+  angle = blur->pAngle.getValueAtTime(args.time) * M_PI / 180.0;
+  
+  ofx::NormalisedToCanonicalCoords(ncx, ncy, wext, hext, xoff, yoff, true, ccx, ccy);
+  
+  mAccumX = 0;
+  mAccumY = 0;
+  mLastX = args.x;
+  mLastY = args.y;
+  mOp = DO_NONE;
+  
+  double bw = 4.0 * pw;
+  double bh = 4.0 * ph;
+  
+  // width?
+  double cbx = ccx + pw*ws;
+  double cby = ccy + ph*hs;
+  if (args.x >= cbx-bw && args.x <= cbx+bw && args.y >= cby-bh && args.y <= cby+bh) {
+    mOp = DO_MOVE_WIDTH;
+    return kOfxStatOK;
+  }
+  
+  // center?
+  if (args.x >= ccx-bw && args.x <= ccx+bw && args.y >= ccy-bh && args.y <= ccy+bh) {
+    mOp = DO_MOVE_CENTER;
+    return kOfxStatOK;
+  }
+  
+  // angle?
+  double cax = ccx + 50 * pw * cos(angle);
+  double cay = ccy + 50 * ph * sin(angle);
+  if (args.x >= cax-bw && args.x <= cax+bw && args.y >= cay-bh && args.y <= cay+bh) {
+    mOp = DO_MOVE_ANGLE;
+    return kOfxStatOK;
+  }
+  
+  // zoom?
+  double czx = ccx + 50 * pw * (1 + zoom) * cos(angle);
+  double czy = ccy + 50 * ph * (1 + zoom) * sin(angle);
+  if (args.x >= czx-bw && args.x <= czx+bw && args.y >= czy-bh && args.y <= czy+bh) {
+    mOp = DO_MOVE_ZOOM;
+    return kOfxStatOK;
+  }
+  
   return kOfxStatReplyDefault;
 }
 
 OfxStatus BlurInteract::penUp(ofx::Interact::PenArgs &args) {
+  if (mOp != DO_NONE) {
+    mOp = DO_NONE;
+#ifdef FORCE_OVERLAY_REDRAW
+    redraw();
+#endif
+    return kOfxStatOK;
+  }
   return kOfxStatReplyDefault;
 }
 

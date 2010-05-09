@@ -848,9 +848,9 @@ OfxStatus BlurInteract::draw(ofx::Interact::DrawArgs &args) {
   glColor3f(0.0f, 1.0f, 0.0f);
   glBegin(GL_LINES);
   glVertex2f(ccx, ccy);
-  glVertex2f(ccx+100*pw, ccy);
+  glVertex2f(ccx+50*pw, ccy);
   glVertex2f(ccx, ccy);
-  glVertex2f(ccx, ccy+100*ph);
+  glVertex2f(ccx, ccy+50*ph);
   glEnd();
   
   // Draw blur width and height
@@ -874,7 +874,14 @@ OfxStatus BlurInteract::draw(ofx::Interact::DrawArgs &args) {
   } else {
     glColor3f(0.0f, 1.0f, 0.0f);
   }
-  // TODO
+  double cax, cay, dangle = 2.0 * M_PI / 64.0;
+  glBegin(GL_LINE_LOOP);
+  for (int i=0; i<64; ++i) {
+    cax = ccx + 50*pw * cos(i*dangle);
+    cay = ccy + 50*ph * cos(i*dangle);
+    glVertex2f(cax, cay);
+  }
+  glEnd();
   
   // Draw zoom
   if (mOp == DO_MOVE_ZOOM) {

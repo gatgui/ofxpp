@@ -854,8 +854,8 @@ OfxStatus BlurInteract::draw(ofx::Interact::DrawArgs &args) {
   glEnd();
   
   // Draw blur width and height
-  double cbx = ccx + ws;
-  double cby = ccy + hs;
+  double cbx = ccx + pw*ws;
+  double cby = ccy + ph*hs;
   if (mOp == DO_MOVE_WIDTH) {
     glColor3f(1.0f, 0.0f, 0.0f);
   } else {
@@ -877,8 +877,8 @@ OfxStatus BlurInteract::draw(ofx::Interact::DrawArgs &args) {
   double cax, cay, dangle = 2.0 * M_PI / 64.0;
   glBegin(GL_LINE_LOOP);
   for (int i=0; i<64; ++i) {
-    cax = ccx + 50*pw * cos(i*dangle);
-    cay = ccy + 50*ph * cos(i*dangle);
+    cax = ccx + pw * 50 * cos(i*dangle);
+    cay = ccy + ph * 50 * sin(i*dangle);
     glVertex2f(cax, cay);
   }
   glEnd();
@@ -889,7 +889,14 @@ OfxStatus BlurInteract::draw(ofx::Interact::DrawArgs &args) {
   } else {
     glColor3f(0.0f, 1.0f, 0.0f);
   }
-  // TODO
+  double czx = ccx + pw * 50 * (1 + zoom) * cos(angle);
+  double czy = ccy + ph * 50 * (1 + zoom) * sin(angle);
+  glBegin(GL_QUADS);
+  glVertex2f(czx-bw, czy-bh);
+  glVertex2f(czx+bw, czy-bh);
+  glVertex2f(czx+bw, czy+bh);
+  glVertex2f(czx-bw, czy+bh);
+  glEnd();
   
   return kOfxStatOK;
 }

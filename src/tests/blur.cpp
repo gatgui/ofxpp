@@ -38,6 +38,40 @@ USA.
 
 // Interact
 
+class BlurInteract : public ofx::Interact {
+  public:
+    
+    enum DragOp {
+      DO_NONE,
+      DO_MOVE_CENTER,
+      DO_MOVE_ANGLE,
+      DO_MOVE_ZOOM,
+      DO_MOVE_WIDTH
+    };
+    
+  public:
+    
+    BlurInteract(ofx::ImageEffectHost *h, OfxInteractHandle hdl);
+    virtual ~BlurInteract();
+    
+    virtual OfxStatus draw(ofx::Interact::DrawArgs &args);
+    virtual OfxStatus penMotion(ofx::Interact::PenArgs &args);
+    virtual OfxStatus penDown(ofx::Interact::PenArgs &args);
+    virtual OfxStatus penUp(ofx::Interact::PenArgs &args);
+    
+    //virtual OfxStatus keyDown(ofx::Interact::KeyArgs &args);
+    //virtual OfxStatus keyUp(ofx::Interact::KeyArgs &args);
+    //virtual OfxStatus keyRepeat(ofx::Interact::KeyArgs &args);
+    //virtual OfxStatus gainFocus(ofx::Interact::FocusArgs &args);
+    //virtual OfxStatus loseFocus(ofx::Interact::FocusArgs &args);
+    
+  protected:
+    
+    DragOp mOp;
+    int mLastX;
+    int mLastY;
+};
+
 // Descriptor
 
 class BlurDescriptor : public ofx::ImageEffectDescriptor {
@@ -60,27 +94,27 @@ class BlurEffect : public ofx::ImageEffect {
     
     virtual OfxStatus isIdentity(ofx::ImageEffect::IsIdentityArgs &args);
     virtual OfxStatus render(ofx::ImageEffect::RenderArgs &args);
+    virtual OfxStatus instanceChanged(ofx::ImageEffect::InstanceChangedArgs &args);
+    
     // getRegionOfDefinition
     // getRegionsOfInterest
     // beginInstanceChanged
-    // instanceChanged
     // endInstanceChanged
-    virtual OfxStatus instanceChanged(ofx::ImageEffect::InstanceChangedArgs &args);
     
   protected:
     
     ofx::Clip cSource;
     ofx::Clip cOutput;
     ofx::Clip cMask;
+  
+  public:
     
-    ofx::ChoiceParameter pType;
-    ofx::ChoiceParameter pFilter;
-    //ofx::IntParameter pRadius1;
-    //ofx::IntParameter pRadius2;
+    ofx::ChoiceParameter  pType;
+    ofx::ChoiceParameter  pFilter;
     ofx::Double2Parameter pWidth;
-    ofx::DoubleParameter pZoom;
-    ofx::DoubleParameter pLength;
-    ofx::DoubleParameter pAngle;
+    ofx::DoubleParameter  pZoom;
+    ofx::DoubleParameter  pLength;
+    ofx::DoubleParameter  pAngle;
     ofx::Double2Parameter pCenter;
 };
 
@@ -123,6 +157,9 @@ OfxStatus BlurDescriptor::describe() {
   setMultipleClipPARsSupport(false);
   setMultiResolutionSupport(false);
   setFieldRenderTwiceAlways(true);
+  if (host()->supportsOverlays()) {
+    setOverlayInteract(ofx::InteractEntryPoint<BlurPlugin, ofx::InteractDescriptor, BlurInteract>);
+  }
   return kOfxStatOK;
 }
 
@@ -137,7 +174,6 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext /*ctx*/) {
   mClip.setLabel("Mask");
   mClip.setShortLabel("Mask");
   mClip.setLongLabel("Mask");
-  //mClip.setSupportedComponent(0, ofx::ImageComponentRGBA);
   mClip.setSupportedComponent(1, ofx::ImageComponentAlpha);
   mClip.setOptional(true);
   mClip.setMask(true);
@@ -158,21 +194,6 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext /*ctx*/) {
   filter.setChoice(2, "gaussian");
   filter.setDefault(2);
   
-  /*
-  ofx::IntParameterDescriptor radius1 = parameters().defineIntParam("radius1");
-  radius1.setAnimating(true);
-  radius1.setPersistant(true);
-  radius1.setMin(0);
-  radius1.setMax(100);
-  radius1.setDefault(2);
-  
-  ofx::IntParameterDescriptor radius2 = parameters().defineIntParam("radius2");
-  radius2.setAnimating(true);
-  radius2.setPersistant(true);
-  radius2.setMin(0);
-  radius2.setMax(100);
-  radius2.setDefault(2);
-  */
   ofx::Double2ParameterDescriptor width = parameters().defineDouble2Param("width");
   width.setPersistant(true);
   width.setAnimateable(true);
@@ -195,23 +216,8 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext /*ctx*/) {
   angle.setMax(180);
   angle.setIncrement(0.001);
   angle.setDigits(3);
-  //angle.enable(false);
   angle.setDoubleType(ofx::DoubleParamAngle);
   angle.setHint("Direction or blur angle");
-  
-  /*
-  // used for directional blur only
-  ofx::DoubleParameterDescriptor length = parameters().defineDoubleParam("length");
-  length.setPersistant(true);
-  length.setAnimateable(true);
-  //length.setMin(0);
-  //length.setMax(100);
-  length.setDefault(0.001);
-  length.setDigits(3);
-  length.setIncrement(0.001);
-  length.enable(false);
-  length.setDoubleType(ofx::DoubleParamScale);
-  */
   
   // used for radial blur only
   ofx::Double2ParameterDescriptor center = parameters().defineDouble2Param("center");
@@ -226,7 +232,6 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext /*ctx*/) {
   center.setIncrement(0.001);
   center.setDoubleType(ofx::DoubleParamNormalisedXY);
   center.setHint("Radial blur center");
-  //center.enable(false);
   
   ofx::DoubleParameterDescriptor zoom = parameters().defineDoubleParam("zoom");
   zoom.setPersistant(true);
@@ -238,7 +243,6 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext /*ctx*/) {
   zoom.setIncrement(0.001);
   zoom.setDoubleType(ofx::DoubleParamScale);
   zoom.setHint("Zoom scale");
-  //zoom.enable(false);
   
   return kOfxStatOK;
 }
@@ -793,6 +797,106 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
   iOutput.release();
   
   return (abort() ? kOfxStatFailed : kOfxStatOK);
+}
+
+// ---
+
+BlurInteract::BlurInteract(ofx::ImageEffectHost *h, OfxInteractHandle hdl)
+  : ofx::Interact(h, hdl), mOp(BlurInteract::DO_NONE), mLastX(-1), mLastY(-1) {
+}
+
+BlurInteract::~BlurInteract() {
+}
+
+OfxStatus BlurInteract::draw(ofx::Interact::DrawArgs &args) {
+  double xoff, yoff, wext, hext, ncx, ncy, ccx, ccy, ws, hs, zoom, angle;
+  
+  BlurEffect *blur = (BlurEffect*) args.effect;
+  
+  blur->projectOffset(xoff, yoff);
+  blur->projectExtent(wext, hext);
+  
+  // size of a pixel
+  double pw = args.pixelScaleX / args.renderScaleX;
+  double ph = args.pixelScaleX / args.renderScaleX;
+  
+  // box size
+  double bw = 2.0 * pw;
+  double bh = 2.0 * ph;
+  
+  // get effect parameters
+  blur->pCenter.getValueAtTime(args.time, ncx, ncy);
+  blur->pWidth.getValueAtTime(args.time, ws, hs);
+  zoom = blur->pZoom.getValueAtTime(args.time);
+  angle = blur->pAngle.getValueAtTime(args.time);
+  
+  // Draw center
+  ofx::NormalisedToCanonicalCoords(ncx, ncy, wext, hext, xoff, yoff, true, ccx, ccy);
+  if (mOp == DO_MOVE_CENTER) {
+    glColor3f(1.0f, 0.0f, 0.0f);
+  } else {
+    glColor3f(0.0f, 1.0f, 0.0f);
+  }
+  glBegin(GL_QUADS);
+  glVertex2f(ccx-bw, ccy-bh);
+  glVertex2f(ccx+bw, ccy-bh);
+  glVertex2f(ccx+bw, ccy+bh);
+  glVertex2f(ccx-bw, ccy+bh);
+  glEnd();
+  
+  // Draw axis from center
+  glColor3f(0.0f, 1.0f, 0.0f);
+  glBegin(GL_LINES);
+  glVertex2f(ccx, ccy);
+  glVertex2f(ccx+100*pw, ccy);
+  glVertex2f(ccx, ccy);
+  glVertex2f(ccx, ccy+100*ph);
+  glEnd();
+  
+  // Draw blur width and height
+  double cbx = ccx + ws;
+  double cby = ccy + hs;
+  if (mOp == DO_MOVE_WIDTH) {
+    glColor3f(1.0f, 0.0f, 0.0f);
+  } else {
+    glColor3f(0.0f, 1.0f, 0.0f);
+  }
+  glBegin(GL_QUADS);
+  glVertex2f(cbx-bw, cby-bh);
+  glVertex2f(cbx+bw, cby-bh);
+  glVertex2f(cbx+bw, cby+bh);
+  glVertex2f(cbx-bw, cby+bh);
+  glEnd();
+  
+  // Draw angle
+  if (mOp == DO_MOVE_ANGLE) {
+    glColor3f(1.0f, 0.0f, 0.0f);
+  } else {
+    glColor3f(0.0f, 1.0f, 0.0f);
+  }
+  // TODO
+  
+  // Draw zoom
+  if (mOp == DO_MOVE_ZOOM) {
+    glColor3f(1.0f, 0.0f, 0.0f);
+  } else {
+    glColor3f(0.0f, 1.0f, 0.0f);
+  }
+  // TODO
+  
+  return kOfxStatOK;
+}
+
+OfxStatus BlurInteract::penMotion(ofx::Interact::PenArgs &args) {
+  return kOfxStatReplyDefault;
+}
+
+OfxStatus BlurInteract::penDown(ofx::Interact::PenArgs &args) {
+  return kOfxStatReplyDefault;
+}
+
+OfxStatus BlurInteract::penUp(ofx::Interact::PenArgs &args) {
+  return kOfxStatReplyDefault;
 }
 
 // ---

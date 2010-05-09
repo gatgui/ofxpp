@@ -921,23 +921,85 @@ OfxStatus BlurInteract::draw(ofx::Interact::DrawArgs &args) {
 
 OfxStatus BlurInteract::penMotion(ofx::Interact::PenArgs &args) {
   if (mOp != DO_NONE) {
-    mAccumX += args.x - mLastX;
-    mAccumY += args.y - mLastY;
+    
+    double dx = args.x - mLastX;
+    double dy = args.y - mLastY;
+    
+    mAccumX += dx;
+    mAccumY += dy;
+    
+    double zoom, angle, ncx, ncy, ccx, ccy, wext, hext, xoff, yoff, ws, hs;
+    
+    double pw = args.pixelScaleX / args.renderScaleX;
+    double ph = args.pixelScaleX / args.renderScaleX;
+    
+    BlurEffect *blur = (BlurEffect*) args.effect;
+
+    blur->projectOffset(xoff, yoff);
+    blur->projectExtent(wext, hext);
+    
+    blur->pCenter.getValueAtTime(args.time, ncx, ncy);
+    blur->pWidth.getValueAtTime(args.time, ws, hs);
+    zoom = blur->pZoom.getValueAtTime(args.time);
+    angle = blur->pAngle.getValueAtTime(args.time) * M_PI / 180.0;
+    ofx::NormalisedToCanonicalCoords(ncx, ncy, wext, hext, xoff, yoff, true, ccx, ccy);
     
     if (mOp == DO_MOVE_CENTER) {
+      ccx += dx;
+      ccy += dy;
+      ofx::CanonicalToNormalisedCoords(ccx, ccy, wext, hext, xoff, yoff, true, ncx, ncy);
+      if (blur->pCenter.isAutoKeying()) {
+        blur->pCenter.setValueAtTime(args.time, ncx, ncy);
+      } else {
+        blur->pCenter.setValue(ncx, ncy);
+      }
     
     } else if (mOp == DO_MOVE_WIDTH) {
+      int iws = int(mAccumX > 0 ? floor(mAccumX) : ceil(mAccumX));
+      int ihs = int(mAccumY > 0 ? floor(mAccumY) : ceil(mAccumY));
+      ws += iws;
+      hs += ihs;
+      if (blur->pWidth.isAutoKeying()) {
+        blur->pWidth.setValueAtTime(args.time, ws, hs);
+      } else {
+        blur->pWidth.setValue(ws, hs);
+      }
+      mAccumX -= iws;
+      mAccumY -= ihs;
       
     } else if (mOp == DO_MOVE_ZOOM) {
+      double ca = cos(angle);
+      double sa = sin(angle);
+      double czx = 50 * pw * ca * (1 + zoom);
+      double czy = 50 * ph * sa * (1 + zoom);
+      ofx::Log("Center: %f, %f", ccx, ccy);
+      ofx::Log("Zoom point: %f, %f", ccx+czx, ccy+czy);
+      czx += dx;
+      czy += dy;
+      ofx::Log("Zoom point: -> %f, %f", ccx+czx, ccy+czy);
+      double dot = czx * ca + czy * sa;
+      ofx::Log("Dot product = %f", dot);
+      zoom = (dot / 50) - 1;
+      if (zoom < 0) {
+        zoom = 0;
+      }
+      if (blur->pZoom.isAutoKeying()) {
+        blur->pZoom.setValueAtTime(args.time, zoom);
+      } else {
+        blur->pZoom.setValue(zoom);
+      }
       
     } else if (mOp == DO_MOVE_ANGLE) {
+      // TODO
       
     }
     
     mLastX = args.x;
     mLastY = args.y;
+    
     return kOfxStatOK;
   }
+  
   return kOfxStatReplyDefault;
 }
 

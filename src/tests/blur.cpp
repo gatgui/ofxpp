@@ -992,8 +992,9 @@ OfxStatus BlurInteract::penMotion(ofx::Interact::PenArgs &args) {
       }
     
     } else if (mOp == DO_MOVE_WIDTH) {
-      ws = floor(args.x - ccx) / pw;
-      hs = floor(args.y - ccy) / ph;
+      // why do I need to divide by pw and ph?
+      ws = floor((args.x - ccx) / pw);
+      hs = floor((args.y - ccy) / ph);
       if (ws < 0) {
         ws = 0;
       }

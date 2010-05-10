@@ -303,8 +303,16 @@ OfxStatus EllipseFadeInteract::draw(ofx::Interact::DrawArgs &args) {
   ofx::NormalisedToCanonicalCoords(ecx, ecy, wext, hext, xoff, yoff, true, cecx, cecy);
   ofx::NormalisedToCanonicalCoords(ew, eh, wext, hext, 0, 0, false, cew, ceh);
   
-  double pw = args.pixelScaleX / args.renderScaleX;
-  double ph = args.pixelScaleX / args.renderScaleX;
+  double pw, ph;
+  
+  pw = args.pixelScaleX;
+  ph = args.pixelScaleY;
+  
+  if (mApp == HA_NUKE) {
+    pw /= args.renderScaleX;
+    ph /= args.renderScaleY;
+  }
+  
   double bw = 2.0 * pw;
   double bh = 2.0 * ph;
   

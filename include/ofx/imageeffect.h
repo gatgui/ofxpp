@@ -475,7 +475,7 @@ namespace ofx {
       
       struct BeginSequenceArgs : public SequenceArgs {
         FrameRange range;
-        int step;
+        double step;
         // supposed to be the same in the specs for EndSequence action
         
         BeginSequenceArgs(PropertySet &props);

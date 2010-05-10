@@ -220,7 +220,7 @@ void Log(const char *msg, ...) {
 #endif
   
   if (!gLog) {
-    std::string path;
+    ::std::string path;
     char *ofxlog = getenv("OFX_LOG");
     if (ofxlog) {
       path = ofxlog;

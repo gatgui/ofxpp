@@ -65,7 +65,8 @@ int InteractDescriptor::bitDepth() {
 }
 
 OfxStatus InteractDescriptor::describe() {
-  return kOfxStatReplyDefault;
+  //return kOfxStatReplyDefault;
+  return kOfxStatOK;
 }
   
 // ---

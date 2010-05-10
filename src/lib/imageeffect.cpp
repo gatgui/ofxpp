@@ -49,8 +49,8 @@ Image::Image(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception)
   
   mSuite = h->imageEffectSuite();
   
-  static size_t byteSize[] = {0, 1, 2, 4};
-  static size_t compCount[] = {0, 4, 1};
+  static int byteSize[] = {0, 1, 2, 4};
+  static int compCount[] = {0, 4, 1};
 
   mBitDepth = StringToBitDepth(mProps.getString(kOfxImageEffectPropPixelDepth, 0));
   mComponents = StringToImageComponent(mProps.getString(kOfxImageEffectPropComponents, 0));

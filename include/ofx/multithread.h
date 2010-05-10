@@ -29,6 +29,10 @@ USA.
 #include <ofx/exception.h>
 #include <vector>
 
+#ifdef _MSC_VER
+# pragma warning(disable:4290)
+#endif
+
 namespace ofx {
   
   class Host;

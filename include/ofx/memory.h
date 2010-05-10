@@ -28,6 +28,10 @@ USA.
 #include <ofxMemory.h>
 #include <ofx/exception.h>
 
+#ifdef _MSC_VER
+# pragma warning(disable:4290)
+#endif
+
 namespace ofx {
   
   class Host;

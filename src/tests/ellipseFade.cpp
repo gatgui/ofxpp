@@ -38,6 +38,16 @@ USA.
 class EllipseFadeInteract : public ofx::Interact {
   public:
     
+    enum HostApp {
+      HA_GENERIC = 0,
+      HA_NUKE,
+      HA_RAMEN,
+      HA_FUSION,
+      HA_TOXIK
+    };
+    
+  public:
+    
     EllipseFadeInteract(ofx::ImageEffectHost *host, OfxInteractHandle hdl) throw(ofx::Exception);
     virtual ~EllipseFadeInteract();
     
@@ -61,6 +71,7 @@ class EllipseFadeInteract : public ofx::Interact {
     bool mCenterSelected;
     double mLastX;
     double mLastY;
+    HostApp mApp;
 };
 
 class EllipseFadeDescriptor : public ofx::ImageEffectDescriptor {
@@ -109,7 +120,15 @@ EllipseFadeInteract::EllipseFadeInteract(ofx::ImageEffectHost *host, OfxInteract
     mHeightSelected(false),
     mCenterSelected(false),
     mLastX(-1),
-    mLastY(-1) {
+    mLastY(-1),
+    mApp(EllipseFadeInteract::HA_GENERIC) {
+  if (host->name() == "uk.co.thefoundry.nuke") {
+    mApp = HA_NUKE;
+  } else if (host->name() == "Ramen") {
+    mApp = HA_RAMEN;
+  } else if (host->name() == "Autodesk Toxik") {
+    mApp = HA_TOXIK;
+  }
   // Is this really needed?
   setSlaveToParam(0, "center");
   setSlaveToParam(1, "width");
@@ -211,9 +230,16 @@ OfxStatus EllipseFadeInteract::penDown(ofx::Interact::PenArgs &args) {
   double cecx, cecy, cew, ceh;
   ofx::NormalisedToCanonicalCoords(ecx, ecy, wext, hext, xoff, yoff, true, cecx, cecy);
   ofx::NormalisedToCanonicalCoords(ew, eh, wext, hext, 0, 0, false, cew, ceh);
-
-  double bw = 4.0 * args.pixelScaleX / args.renderScaleX;
-  double bh = 4.0 * args.pixelScaleY / args.renderScaleY;
+  
+  double bw, bh;
+  
+  bw = 4.0 * args.pixelScaleX;
+  bh = 4.0 * args.pixelScaleY;
+  
+  if (mApp == HA_NUKE) {
+    bw /= args.renderScaleX;
+    bh /= args.renderScaleY;
+  }
   
   if (args.x >= cecx-bw && args.x <= cecx+bw) {
     if (args.y >= cecy-bh && args.y <= cecy+bh) {
@@ -513,7 +539,7 @@ OfxStatus EllipseFadeEffect::render(ofx::ImageEffect::RenderArgs &args) {
             dstPix->b = 0.0f;
             dstPix->a = 1.0f;
           } else {
-            double falloff = float(d * d);
+            float falloff = float(d * d);
             dstPix->r = falloff * srcPix->r;
             dstPix->g = falloff * srcPix->g;
             dstPix->b = falloff * srcPix->b;

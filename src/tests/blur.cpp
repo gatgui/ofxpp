@@ -49,6 +49,14 @@ class BlurInteract : public ofx::Interact {
       DO_MOVE_WIDTH
     };
     
+    enum HostApp {
+      HA_GENERIC = 0,
+      HA_NUKE,
+      HA_RAMEN,
+      HA_FUSION,
+      HA_TOXIK
+    };
+    
   public:
     
     BlurInteract(ofx::ImageEffectHost *h, OfxInteractHandle hdl);
@@ -70,8 +78,7 @@ class BlurInteract : public ofx::Interact {
     DragOp mOp;
     double mLastX;
     double mLastY;
-    double mAccumX;
-    double mAccumY;
+    HostApp mApp;
 };
 
 // Descriptor
@@ -144,6 +151,11 @@ BlurDescriptor::~BlurDescriptor() {
 }
 
 OfxStatus BlurDescriptor::describe() {
+  // Host name, label
+  // Nuke      : uk.co.thefoundry.nuke, nuke
+  // Ramen     : Ramen, Ramen
+  // Composite : Autodesk Toxik, Autodesk Toxik 2011
+  ofx::Log("Host: name = %s, label = %s", host()->name().c_str(), host()->label().c_str());
   setLabel("multiBlur");
   setShortLabel("multiBlur");
   setLongLabel("multiBlur");
@@ -166,6 +178,7 @@ OfxStatus BlurDescriptor::describe() {
 }
 
 OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext /*ctx*/) {
+  
   ofx::ClipDescriptor iClip = defineClip("Source");
   iClip.setSupportedComponent(0, ofx::ImageComponentRGBA);
   
@@ -228,8 +241,8 @@ OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext /*ctx*/) {
   center.setDefault(0.5, 0.5);
   center.setPersistant(true);
   center.setAnimateable(true);
-  center.setDimensionLabel(0, "X");
-  center.setDimensionLabel(1, "X");
+  center.setDimensionLabel(0, "x");
+  center.setDimensionLabel(1, "y");
   center.setDigits(3);
   center.setIncrement(0.001);
   center.setDoubleType(ofx::DoubleParamNormalisedXY);
@@ -260,7 +273,6 @@ BlurEffect::BlurEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl)
   pFilter = parameters().getChoiceParam("filter");
   pWidth = parameters().getDouble2Param("width");
   pAngle = parameters().getDoubleParam("angle");
-  //pLength = parameters().getDoubleParam("length");
   pZoom = parameters().getDoubleParam("zoom");
   pCenter = parameters().getDouble2Param("center");
 }
@@ -798,14 +810,27 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
   iSource.release();
   iOutput.release();
   
-  return (abort() ? kOfxStatFailed : kOfxStatOK);
+  //return (abort() ? kOfxStatFailed : kOfxStatOK);
+  return kOfxStatOK;
 }
 
 // ---
 
 BlurInteract::BlurInteract(ofx::ImageEffectHost *h, OfxInteractHandle hdl)
   : ofx::Interact(h, hdl), mOp(BlurInteract::DO_NONE), mLastX(-1), mLastY(-1),
-    mAccumX(0), mAccumY(0) {
+    mApp(BlurInteract::HA_GENERIC) {
+  // Host      : name, label
+  // Nuke      : uk.co.thefoundry.nuke, nuke
+  // Ramen     : Ramen, Ramen
+  // Composite : Autodesk Toxik, Autodesk Toxik 2011
+  // Fusion    : ?, ?
+  if (h->name() == "uk.co.thefoundry.nuke") {
+    mApp = HA_NUKE;
+  } else if (h->name() == "Ramen") {
+    mApp = HA_RAMEN;
+  } else if (h->name() == "Autodesk Toxik") {
+    mApp = HA_TOXIK;
+  }
 }
 
 BlurInteract::~BlurInteract() {
@@ -820,8 +845,16 @@ OfxStatus BlurInteract::draw(ofx::Interact::DrawArgs &args) {
   blur->projectExtent(wext, hext);
   
   // size of a pixel
-  double pw = args.pixelScaleX / args.renderScaleX;
-  double ph = args.pixelScaleX / args.renderScaleX;
+  double pw, ph;
+  
+  // Ramen doesn't seem to set pixelScale properly
+  pw = args.pixelScaleX;
+  ph = args.pixelScaleY;
+  
+  if (mApp == HA_NUKE) {
+    pw /= args.renderScaleX;
+    ph /= args.renderScaleY;
+  }
   
   // box size
   double bw = 2.0 * pw;
@@ -835,27 +868,27 @@ OfxStatus BlurInteract::draw(ofx::Interact::DrawArgs &args) {
   ofx::NormalisedToCanonicalCoords(ncx, ncy, wext, hext, xoff, yoff, true, ccx, ccy);
   
   // Draw axis from center
-  glColor3f(0.0f, 1.0f, 0.0f);
+  glColor3d(0.0, 1.0, 0.0);
   glBegin(GL_LINES);
-  glVertex2f(ccx, ccy);
-  glVertex2f(ccx+55*pw, ccy);
-  glVertex2f(ccx, ccy);
-  glVertex2f(ccx, ccy+55*ph);
+  glVertex2d(ccx, ccy);
+  glVertex2d(ccx+55*pw, ccy);
+  glVertex2d(ccx, ccy);
+  glVertex2d(ccx, ccy+55*ph);
   glEnd();
   
   // Draw blur width and height
   double cbx = ccx + pw*ws;
   double cby = ccy + ph*hs;
   if (mOp == DO_MOVE_WIDTH) {
-    glColor3f(1.0f, 0.0f, 0.0f);
+    glColor3d(1.0, 0.0, 0.0);
   } else {
-    glColor3f(0.0f, 1.0f, 0.0f);
+    glColor3d(0.0, 1.0, 0.0);
   }
   glBegin(GL_QUADS);
-  glVertex2f(cbx-bw, cby-bh);
-  glVertex2f(cbx+bw, cby-bh);
-  glVertex2f(cbx+bw, cby+bh);
-  glVertex2f(cbx-bw, cby+bh);
+  glVertex2d(cbx-bw, cby-bh);
+  glVertex2d(cbx+bw, cby-bh);
+  glVertex2d(cbx+bw, cby+bh);
+  glVertex2d(cbx-bw, cby+bh);
   glEnd();
   
   // Draw angle
@@ -863,57 +896,57 @@ OfxStatus BlurInteract::draw(ofx::Interact::DrawArgs &args) {
   double cay = ccy + ph * 50 * sin(angle);
   double dangle = angle / 64;
   if (mOp == DO_MOVE_ANGLE) {
-    glColor3f(1.0f, 0.0f, 0.0f);
+    glColor3d(1.0, 0.0, 0.0);
   } else {
-    glColor3f(0.0f, 1.0f, 0.0f);
+    glColor3d(0.0, 1.0, 0.0);
   }
   glEnable(GL_LINE_STIPPLE);
   glLineStipple(1, 0x00FF);
   glBegin(GL_LINES);
-  glVertex2f(ccx, ccy);
-  glVertex2f(cax, cay);
+  glVertex2d(ccx, ccy);
+  glVertex2d(cax, cay);
   glEnd();
   glBegin(GL_LINE_STRIP);
   for (int i=0; i<64; ++i) {
     cax = ccx + pw * 50 * cos(i*dangle);
     cay = ccy + ph * 50 * sin(i*dangle);
-    glVertex2f(cax, cay);
+    glVertex2d(cax, cay);
   }
   glEnd();
   glDisable(GL_LINE_STIPPLE);
   glBegin(GL_QUADS);
-  glVertex2f(cax-bw, cay-bh);
-  glVertex2f(cax+bw, cay-bh);
-  glVertex2f(cax+bw, cay+bh);
-  glVertex2f(cax-bw, cay+bh);
+  glVertex2d(cax-bw, cay-bh);
+  glVertex2d(cax+bw, cay-bh);
+  glVertex2d(cax+bw, cay+bh);
+  glVertex2d(cax-bw, cay+bh);
   glEnd();
   
   // Draw zoom
   if (mOp == DO_MOVE_ZOOM) {
-    glColor3f(1.0f, 0.0f, 0.0f);
+    glColor3d(1.0, 0.0, 0.0);
   } else {
-    glColor3f(0.0f, 1.0f, 0.0f);
+    glColor3d(0.0, 1.0, 0.0);
   }
   double czx = ccx + pw * 50 * (1 + zoom) * cos(angle);
   double czy = ccy + ph * 50 * (1 + zoom) * sin(angle);
   glBegin(GL_QUADS);
-  glVertex2f(czx-bw, czy-bh);
-  glVertex2f(czx+bw, czy-bh);
-  glVertex2f(czx+bw, czy+bh);
-  glVertex2f(czx-bw, czy+bh);
+  glVertex2d(czx-bw, czy-bh);
+  glVertex2d(czx+bw, czy-bh);
+  glVertex2d(czx+bw, czy+bh);
+  glVertex2d(czx-bw, czy+bh);
   glEnd();
   
   // Draw center
   if (mOp == DO_MOVE_CENTER) {
-    glColor3f(1.0f, 0.0f, 0.0f);
+    glColor3d(1.0, 0.0, 0.0);
   } else {
-    glColor3f(0.0f, 1.0f, 0.0f);
+    glColor3d(0.0, 1.0, 0.0);
   }
   glBegin(GL_QUADS);
-  glVertex2f(ccx-bw, ccy-bh);
-  glVertex2f(ccx+bw, ccy-bh);
-  glVertex2f(ccx+bw, ccy+bh);
-  glVertex2f(ccx-bw, ccy+bh);
+  glVertex2d(ccx-bw, ccy-bh);
+  glVertex2d(ccx+bw, ccy-bh);
+  glVertex2d(ccx+bw, ccy+bh);
+  glVertex2d(ccx-bw, ccy+bh);
   glEnd();
   
   return kOfxStatOK;
@@ -925,16 +958,20 @@ OfxStatus BlurInteract::penMotion(ofx::Interact::PenArgs &args) {
     double dx = args.x - mLastX;
     double dy = args.y - mLastY;
     
-    mAccumX += dx;
-    mAccumY += dy;
-    
     double zoom, angle, ncx, ncy, ccx, ccy, wext, hext, xoff, yoff, ws, hs;
     
-    double pw = args.pixelScaleX / args.renderScaleX;
-    double ph = args.pixelScaleX / args.renderScaleX;
+    double pw, ph;
+    
+    pw = args.pixelScaleX;
+    ph = args.pixelScaleY;
+    
+    if (mApp == HA_NUKE) {
+      pw /= args.renderScaleX;
+      ph /= args.renderScaleY;
+    }
     
     BlurEffect *blur = (BlurEffect*) args.effect;
-
+    
     blur->projectOffset(xoff, yoff);
     blur->projectExtent(wext, hext);
     
@@ -955,47 +992,69 @@ OfxStatus BlurInteract::penMotion(ofx::Interact::PenArgs &args) {
       }
     
     } else if (mOp == DO_MOVE_WIDTH) {
-      int iws = int(mAccumX > 0 ? floor(mAccumX) : ceil(mAccumX));
-      int ihs = int(mAccumY > 0 ? floor(mAccumY) : ceil(mAccumY));
-      ws += iws;
-      hs += ihs;
+      ws = floor(args.x - ccx) / pw;
+      hs = floor(args.y - ccy) / ph;
+      if (ws < 0) {
+        ws = 0;
+      }
+      if (hs < 0) {
+        hs = 0;
+      }
+      // divide by pw and ph?
       if (blur->pWidth.isAutoKeying()) {
         blur->pWidth.setValueAtTime(args.time, ws, hs);
       } else {
         blur->pWidth.setValue(ws, hs);
       }
-      mAccumX -= iws;
-      mAccumY -= ihs;
       
     } else if (mOp == DO_MOVE_ZOOM) {
-      double ca = cos(angle);
-      double sa = sin(angle);
-      double czx = 50 * pw * ca * (1 + zoom);
-      double czy = 50 * ph * sa * (1 + zoom);
-      ofx::Log("Center: %f, %f", ccx, ccy);
-      ofx::Log("Zoom point: %f, %f", ccx+czx, ccy+czy);
-      czx += dx;
-      czy += dy;
-      ofx::Log("Zoom point: -> %f, %f", ccx+czx, ccy+czy);
-      double dot = czx * ca + czy * sa;
-      ofx::Log("Dot product = %f", dot);
-      zoom = (dot / 50) - 1;
-      if (zoom < 0) {
-        zoom = 0;
+      double ca = pw * cos(angle);
+      double sa = ph * sin(angle);
+      double len = sqrt(ca*ca + sa*sa);
+      if (len <= 0.0) {
+        return kOfxStatReplyDefault;
+      }
+      double ilen = 1.0 / len;
+      ca *= ilen;
+      sa *= ilen;
+      double czx = args.x - ccx;
+      double czy = args.y - ccy;
+      double dot = czx*ca + czy*sa;
+      len *= 50; 
+      dot -= len;
+      dot /= len;
+      if (dot < 0) {
+        dot = 0;
       }
       if (blur->pZoom.isAutoKeying()) {
-        blur->pZoom.setValueAtTime(args.time, zoom);
+        blur->pZoom.setValueAtTime(args.time, dot);
       } else {
-        blur->pZoom.setValue(zoom);
+        blur->pZoom.setValue(dot);
       }
       
     } else if (mOp == DO_MOVE_ANGLE) {
-      // TODO
-      
+      double cax = args.x - ccx;
+      double cay = args.y - ccy;
+      double hyp = sqrt(cax*cax + cay*cay);
+      double a = 0.0;
+      if (hyp > 0) {
+        a = (cay > 0 ? 1 : -1) * acos(cax / hyp);
+        a = a * 180.0 / M_PI;
+      }
+      if (blur->pAngle.isAutoKeying()) {
+        blur->pAngle.setValueAtTime(args.time, a);
+      } else {
+        blur->pAngle.setValue(a);
+      }
+        
     }
     
     mLastX = args.x;
     mLastY = args.y;
+    
+#ifdef FORCE_OVERLAY_REDRAW
+    redraw();
+#endif
     
     return kOfxStatOK;
   }
@@ -1014,8 +1073,15 @@ OfxStatus BlurInteract::penDown(ofx::Interact::PenArgs &args) {
   blur->projectExtent(wext, hext);
   
   // size of a pixel
-  double pw = args.pixelScaleX / args.renderScaleX;
-  double ph = args.pixelScaleX / args.renderScaleX;
+  double pw, ph;
+  
+  pw = args.pixelScaleX;
+  ph = args.pixelScaleY;
+  
+  if (mApp == HA_NUKE) {
+    pw /= args.renderScaleX;
+    ph /= args.renderScaleY;
+  }
   
   // get effect parameters
   blur->pCenter.getValueAtTime(args.time, ncx, ncy);
@@ -1025,8 +1091,6 @@ OfxStatus BlurInteract::penDown(ofx::Interact::PenArgs &args) {
   
   ofx::NormalisedToCanonicalCoords(ncx, ncy, wext, hext, xoff, yoff, true, ccx, ccy);
   
-  mAccumX = 0;
-  mAccumY = 0;
   mLastX = args.x;
   mLastY = args.y;
   mOp = DO_NONE;
@@ -1039,20 +1103,18 @@ OfxStatus BlurInteract::penDown(ofx::Interact::PenArgs &args) {
   double cby = ccy + ph*hs;
   if (args.x >= cbx-bw && args.x <= cbx+bw && args.y >= cby-bh && args.y <= cby+bh) {
     mOp = DO_MOVE_WIDTH;
+#ifdef FORCE_OVERLAY_REDRAW
+    redraw();
+#endif
     return kOfxStatOK;
   }
   
   // center?
   if (args.x >= ccx-bw && args.x <= ccx+bw && args.y >= ccy-bh && args.y <= ccy+bh) {
     mOp = DO_MOVE_CENTER;
-    return kOfxStatOK;
-  }
-  
-  // angle?
-  double cax = ccx + 50 * pw * cos(angle);
-  double cay = ccy + 50 * ph * sin(angle);
-  if (args.x >= cax-bw && args.x <= cax+bw && args.y >= cay-bh && args.y <= cay+bh) {
-    mOp = DO_MOVE_ANGLE;
+#ifdef FORCE_OVERLAY_REDRAW
+    redraw();
+#endif
     return kOfxStatOK;
   }
   
@@ -1061,6 +1123,20 @@ OfxStatus BlurInteract::penDown(ofx::Interact::PenArgs &args) {
   double czy = ccy + 50 * ph * (1 + zoom) * sin(angle);
   if (args.x >= czx-bw && args.x <= czx+bw && args.y >= czy-bh && args.y <= czy+bh) {
     mOp = DO_MOVE_ZOOM;
+#ifdef FORCE_OVERLAY_REDRAW
+    redraw();
+#endif
+    return kOfxStatOK;
+  }
+  
+  // angle?
+  double cax = ccx + 50 * pw * cos(angle);
+  double cay = ccy + 50 * ph * sin(angle);
+  if (args.x >= cax-bw && args.x <= cax+bw && args.y >= cay-bh && args.y <= cay+bh) {
+    mOp = DO_MOVE_ANGLE;
+#ifdef FORCE_OVERLAY_REDRAW
+    redraw();
+#endif
     return kOfxStatOK;
   }
   

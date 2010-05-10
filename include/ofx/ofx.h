@@ -30,6 +30,10 @@ USA.
 #include <string>
 #include <limits>
 
+#ifdef _MSC_VER
+# pragma warning(disable:4290)
+#endif
+
 #define DECLARE_ENUM_MAP(Enum)\
   extern const char* Enum##ToString(Enum e);\
   extern Enum StringTo##Enum(const char *s);\

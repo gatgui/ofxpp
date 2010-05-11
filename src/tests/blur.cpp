@@ -830,6 +830,8 @@ BlurInteract::BlurInteract(ofx::ImageEffectHost *h, OfxInteractHandle hdl)
     mApp = HA_RAMEN;
   } else if (h->name() == "Autodesk Toxik") {
     mApp = HA_TOXIK;
+  } else if (h->name() == "com.eyeonline.Fusion") {
+    mApp = HA_FUSION;
   }
 }
 

@@ -128,6 +128,8 @@ EllipseFadeInteract::EllipseFadeInteract(ofx::ImageEffectHost *host, OfxInteract
     mApp = HA_RAMEN;
   } else if (host->name() == "Autodesk Toxik") {
     mApp = HA_TOXIK;
+  } else if (host->name() == "com.eyeonline.Fusion") {
+    mApp = HA_FUSION;
   }
   // Is this really needed?
   setSlaveToParam(0, "center");

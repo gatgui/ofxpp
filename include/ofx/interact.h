@@ -76,7 +76,7 @@ namespace ofx {
         double renderScaleX;
         double renderScaleY;
         
-        BaseArgs(PropertySet &args);
+        BaseArgs(ImageEffectHost *h, PropertySet &args);
       };
       
       struct CommonArgs : public BaseArgs {
@@ -86,7 +86,7 @@ namespace ofx {
         double pixelScaleY;
         RGBAColour<double> bgColour;
         
-        CommonArgs(PropertySet &args);
+        CommonArgs(ImageEffectHost *h, PropertySet &args);
       };
       
       typedef CommonArgs DrawArgs;
@@ -97,15 +97,19 @@ namespace ofx {
         double x;
         double y;
         double pressure;
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+        int viewportx;
+        int viewporty;
+#endif
         
-        PenArgs(PropertySet &args);
+        PenArgs(ImageEffectHost *h, PropertySet &args);
       };
       
       struct KeyArgs : public BaseArgs {
         int sym;
         std::string string;
         
-        KeyArgs(PropertySet &args);
+        KeyArgs(ImageEffectHost *h, PropertySet &args);
       };
       
     public:
@@ -140,6 +144,9 @@ namespace ofx {
       std::string getSlaveToParam(int i);
       void setSlaveToParam(int i, const std::string &pn);
       
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      RGBAColour<double> suggestedColour();
+#endif
       
       // Interact actions
       
@@ -203,47 +210,47 @@ namespace ofx {
       }
       case ActionInteractDraw: {
         Log("OFX Overlay Interact: Draw");
-        Interact::DrawArgs args(inArgs);
+        Interact::DrawArgs args(host, inArgs);
         return ic->draw(args);
       }
       case ActionInteractPenMotion: {
         Log("OFX Overlay Interact: Pen motion");
-        Interact::PenArgs args(inArgs);
+        Interact::PenArgs args(host, inArgs);
         return ic->penMotion(args);
       }
       case ActionInteractPenUp: {
         Log("OFX Overlay Interact: Pen up");
-        Interact::PenArgs args(inArgs);
+        Interact::PenArgs args(host, inArgs);
         return ic->penUp(args);
       }
       case ActionInteractPenDown: {
         Log("OFX Overlay Interact: Pen down");
-        Interact::PenArgs args(inArgs);
+        Interact::PenArgs args(host, inArgs);
         return ic->penDown(args);
       }
       case ActionInteractKeyDown: {
         Log("OFX Overlay Interact: Key down");
-        Interact::KeyArgs args(inArgs);
+        Interact::KeyArgs args(host, inArgs);
         return ic->keyDown(args);
       }
       case ActionInteractKeyUp: {
         Log("OFX Overlay Interact: Key up");
-        Interact::KeyArgs args(inArgs);
+        Interact::KeyArgs args(host, inArgs);
         return ic->keyUp(args);
       }
       case ActionInteractKeyRepeat: {
         Log("OFX Overlay Interact: Key repeat");
-        Interact::KeyArgs args(inArgs);
+        Interact::KeyArgs args(host, inArgs);
         return ic->keyRepeat(args);
       }
       case ActionInteractGainFocus: {
         Log("OFX Overlay Interact: Gain focus");
-        Interact::FocusArgs args(inArgs);
+        Interact::FocusArgs args(host, inArgs);
         return ic->gainFocus(args);
       }
       case ActionInteractLoseFocus: {
         Log("OFX Overlay Interact: Lose focus");
-        Interact::FocusArgs args(inArgs);
+        Interact::FocusArgs args(host, inArgs);
         return ic->loseFocus(args);
       }
       default:

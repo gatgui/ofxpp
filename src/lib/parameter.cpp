@@ -282,6 +282,22 @@ void ValueParameterDescriptor::setCacheInvalidation(ParamInvalidate i) {
   setString(kOfxParamPropCacheInvalidation, 0, ParamInvalidateToString(i));
 }
 
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+
+bool ValueParameterDescriptor::hasHostOverlayHandle() {
+  return (getInt(kOfxParamPropHasHostOverlayHandle, 0) != 0);
+}
+
+bool ValueParameterDescriptor::useHostOverlayHandle() {
+  return (getInt(kOfxParamPropUseHostOverlayHandle, 0) != 0);
+}
+
+void ValueParameterDescriptor::setUseHostOverlayHandle(bool v) {
+  setInt(kOfxParamPropUseHostOverlayHandle, 0, (v ? 1 : 0));
+}
+
+#endif
+
 // --
 
 IntParameterDescriptor::IntParameterDescriptor()
@@ -608,6 +624,16 @@ void DoubleParameterDescriptor::setDoubleType(DoubleParamType t) {
   setString(kOfxParamPropDoubleType, 0, DoubleParamTypeToString(t));
 }
 
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+Coordinates DoubleParameterDescriptor::defaultCoordinateSystem() {
+  return StringToCoordinates(getString(kOfxParamPropDefaultCoordinateSystem, 0));
+}
+
+void DoubleParameterDescriptor::setDefaultCoordinateSystem(Coordinates cs) {
+  setString(kOfxParamPropDefaultCoordinateSystem, 0, CoordinatesToString(cs));
+}
+#endif
+
 // ---
 
 Double2ParameterDescriptor::Double2ParameterDescriptor()
@@ -711,6 +737,16 @@ void Double2ParameterDescriptor::setDimensionLabel(int i, const std::string &nam
 std::string Double2ParameterDescriptor::getDimensionLabel(int i) {
   return getString(kOfxParamPropDimensionLabel, i);
 }
+
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+Coordinates Double2ParameterDescriptor::defaultCoordinateSystem() {
+  return StringToCoordinates(getString(kOfxParamPropDefaultCoordinateSystem, 0));
+}
+
+void Double2ParameterDescriptor::setDefaultCoordinateSystem(Coordinates cs) {
+  setString(kOfxParamPropDefaultCoordinateSystem, 0, CoordinatesToString(cs));
+}
+#endif
 
 // ---
 
@@ -825,6 +861,16 @@ void Double3ParameterDescriptor::setDimensionLabel(int i, const std::string &nam
 std::string Double3ParameterDescriptor::getDimensionLabel(int i) {
   return getString(kOfxParamPropDimensionLabel, i);
 }
+
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+Coordinates Double3ParameterDescriptor::defaultCoordinateSystem() {
+  return StringToCoordinates(getString(kOfxParamPropDefaultCoordinateSystem, 0));
+}
+
+void Double3ParameterDescriptor::setDefaultCoordinateSystem(Coordinates cs) {
+  setString(kOfxParamPropDefaultCoordinateSystem, 0, CoordinatesToString(cs));
+}
+#endif
 
 // ---
 
@@ -1012,6 +1058,30 @@ void GroupParameterDescriptor::setInitiallyOpened(bool o) {
   setInt(kOfxParamPropGroupOpen, 0, (o ? 1 : 0));
 }
 
+// ---
+
+ParametricParameterDescriptor::ParametricParameterDescriptor()
+  : ValueParameterDescriptor() {
+}
+
+ParametricParameterDescriptor::ParametricParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
+  : ValueParameterDescriptor(h, hdl) {
+}
+
+ParametricParameterDescriptor::ParametricParameterDescriptor(const ParametricParameterDescriptor &rhs)
+  : ValueParameterDescriptor(rhs) {
+}
+
+ParametricParameterDescriptor::~ParametricParameterDescriptor() {
+}
+
+ParametricParameterDescriptor& ParametricParameterDescriptor::operator=(const ParametricParameterDescriptor &rhs) {
+  ValueParameterDescriptor::operator=(rhs);
+  return *this;
+}
+
+// TODO
+
 #endif
 
 // ---
@@ -1180,6 +1250,22 @@ void PushButtonParameterDescriptor::setInteractPreferedSize(int w, int h) {
   setInt(kOfxParamPropInteractPreferedSize, 0, w);
   setInt(kOfxParamPropInteractPreferedSize, 1, h);
 }
+
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+
+bool PushButtonParameterDescriptor::hasHostOverlayHandle() {
+  return (getInt(kOfxParamPropHasHostOverlayHandle, 0) != 0);
+}
+
+bool PushButtonParameterDescriptor::useHostOverlayHandle() {
+  return (getInt(kOfxParamPropUseHostOverlayHandle, 0) != 0);
+}
+
+void PushButtonParameterDescriptor::setUseHostOverlayHandle(bool v) {
+  setInt(kOfxParamPropUseHostOverlayHandle, 0, (v ? 1 : 0));
+}
+
+#endif
 
 // ---
 
@@ -1361,6 +1447,14 @@ bool ValueParameter::pluginMayWrite() {
 ParamInvalidate ValueParameter::cacheInvalidation() {
   return StringToParamInvalidate(mProps.getString(kOfxParamPropCacheInvalidation, 0));
 }
+
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+
+bool ValueParameter::useHostOverlayHandle() {
+  return (mProps.getInt(kOfxParamPropUseHostOverlayHandle, 0) != 0);
+}
+
+#endif
 
 unsigned int ValueParameter::getNumKeys() throw(Exception) {
   unsigned int nkeys = 0;
@@ -1852,6 +1946,12 @@ DoubleParamType DoubleParameter::doubleType() {
   return StringToDoubleParamType(mProps.getString(kOfxParamPropDoubleType, 0));
 }
 
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+Coordinates DoubleParameter::defaultCoordinateSystem() {
+  return StringToCoordinates(mProps.getString(kOfxParamPropDefaultCoordinateSystem, 0));
+}
+#endif
+
 double DoubleParameter::getValue() throw(Exception) {
   double val;
   OfxStatus stat = mSuite->paramGetValue(mHandle, &val);
@@ -1992,6 +2092,12 @@ DoubleParamType Double2Parameter::doubleType() {
 std::string Double2Parameter::getDimensionLabel(int i) {
   return mProps.getString(kOfxParamPropDimensionLabel, i);
 }
+
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+Coordinates Double2Parameter::defaultCoordinateSystem() {
+  return StringToCoordinates(mProps.getString(kOfxParamPropDefaultCoordinateSystem, 0));
+}
+#endif
 
 void Double2Parameter::getValue(double &v0, double &v1) throw(Exception) {
   OfxStatus stat = mSuite->paramGetValue(mHandle, &v0, &v1);
@@ -2134,6 +2240,12 @@ DoubleParamType Double3Parameter::doubleType() {
 std::string Double3Parameter::getDimensionLabel(int i) {
   return mProps.getString(kOfxParamPropDimensionLabel, i);
 }
+
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+Coordinates Double3Parameter::defaultCoordinateSystem() {
+  return StringToCoordinates(mProps.getString(kOfxParamPropDefaultCoordinateSystem, 0));
+}
+#endif
 
 void Double3Parameter::getValue(double &v0, double &v1, double &v2) throw(Exception) {
   OfxStatus stat = mSuite->paramGetValue(mHandle, &v0, &v1, &v2);
@@ -2680,6 +2792,14 @@ void PushButtonParameter::interactPreferedSize(int &w, int &h) {
   h = mProps.getInt(kOfxParamPropInteractPreferedSize, 1);
 }
 
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+
+bool PushButtonParameter::useHostOverlayHandle() {
+  return (mProps.getInt(kOfxParamPropUseHostOverlayHandle, 0) != 0);
+}
+
+#endif
+
 // ---
 
 #if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
@@ -2707,6 +2827,35 @@ GroupParameter& GroupParameter::operator=(const GroupParameter &rhs) {
 bool GroupParameter::initiallyOpened() {
   return (mProps.getInt(kOfxParamPropGroupOpen, 0) == 1);
 }
+
+// ---
+
+ParametricParameter::ParametricParameter()
+  : ValueParameter() {
+}
+
+ParametricParameter::ParametricParameter(Host *h, OfxParamHandle hdl)
+  : ValueParameter(h, hdl) {
+  mParametricSuite = h->parametricParameterSuite();
+  if (!mParametricSuite) {
+    throw MissingHostFeatureError("parametric parameter suite");
+  }
+}
+
+ParametricParameter::ParametricParameter(const ParametricParameter &rhs)
+  : ValueParameter(rhs), mParametricSuite(rhs.mParametricSuite) {
+}
+
+ParametricParameter::~ParametricParameter() {
+}
+
+ParametricParameter& ParametricParameter::operator=(const ParametricParameter &rhs) {
+  ValueParameter::operator=(rhs);
+  mParametricSuite = rhs.mParametricSuite;
+  return *this;
+}
+
+// suite functions
 
 #endif
 
@@ -2876,6 +3025,17 @@ PushButtonParameterDescriptor ParameterSetDescriptor::definePushButtonParam(cons
   }
   return PushButtonParameterDescriptor(mHost, hParam);
 }
+
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+ParametricParameterDescriptor ParameterSetDescriptor::defineParametricParam(const std::string &name) throw(Exception) {
+  OfxPropertySetHandle hParam;
+  OfxStatus stat = mHost->parameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeParametric), name.c_str(), &hParam);
+  if (stat != kOfxStatOK) {
+    throw Exception(stat, "ofx::ParameterSetDescriptor::defineParametricParam");
+  }
+  return ParametricParameterDescriptor(mHost, hParam);
+}
+#endif
 
 // ---
 
@@ -3102,6 +3262,21 @@ PushButtonParameter ParameterSet::getPushButtonParam(const std::string &name) th
   }
   return param;
 }
+
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+ParametricParameter ParameterSet::getParametricParam(const std::string &name) throw(Exception) {
+  OfxParamHandle hParam;
+  OfxStatus stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
+  if (stat != kOfxStatOK) {
+    throw Exception(stat, "ofx::ParameterSet::getParametricParam");
+  }
+  ParametricParameter param(mHost, hParam);
+  if (param.type() != ParamTypeParametric) {
+    throw Exception(kOfxStatFailed, "ofx::ParameterSet::getParametricParam: type mismatch");
+  }
+  return param;
+}
+#endif
 
 void ParameterSet::beginEdit(const std::string &label) {
   mHost->parameterSuite()->paramEditBegin(mHandle, label.c_str());

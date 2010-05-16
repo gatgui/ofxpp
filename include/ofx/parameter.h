@@ -26,6 +26,9 @@ USA.
 
 #include <ofxCore.h>
 #include <ofxParam.h>
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#include <ofxParametricParam.h>
+#endif
 #include <ofx/ofx.h>
 #include <ofx/exception.h>
 #include <ofx/property.h>
@@ -172,6 +175,12 @@ namespace ofx {
       
       ParamInvalidate cacheInvalidation();
       void setCacheInvalidation(ParamInvalidate i);
+      
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      bool hasHostOverlayHandle();
+      bool useHostOverlayHandle();
+      void setUseHostOverlayHandle(bool b);
+#endif
   };
   
   class IntParameterDescriptor : public ValueParameterDescriptor {
@@ -298,6 +307,11 @@ namespace ofx {
       
       DoubleParamType doubleType();
       void setDoubleType(DoubleParamType t);
+      
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      Coordinates defaultCoordinateSystem();
+      void setDefaultCoordinateSystem(Coordinates cs);
+#endif
   };
   
   class Double2ParameterDescriptor : public ValueParameterDescriptor {
@@ -337,6 +351,11 @@ namespace ofx {
       
       void setDimensionLabel(int i, const std::string &name);
       std::string getDimensionLabel(int i);
+      
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      Coordinates defaultCoordinateSystem();
+      void setDefaultCoordinateSystem(Coordinates cs);
+#endif
   };
   
   class Double3ParameterDescriptor : public ValueParameterDescriptor {
@@ -376,6 +395,11 @@ namespace ofx {
       
       void setDimensionLabel(int i, const std::string &name);
       std::string getDimensionLabel(int i);
+      
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      Coordinates defaultCoordinateSystem();
+      void setDefaultCoordinateSystem(Coordinates cs);
+#endif
   };
   
   class ChoiceParameterDescriptor : public ValueParameterDescriptor {
@@ -529,6 +553,12 @@ namespace ofx {
       
       void interactPreferedSize(int &w, int &h);
       void setInteractPreferedSize(int w, int h);
+      
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      bool hasHostOverlayHandle();
+      bool useHostOverlayHandle();
+      void setUseHostOverlayHandle(bool b);
+#endif
   };
   
 #if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
@@ -547,6 +577,21 @@ namespace ofx {
       
       bool initiallyOpened();
       void setInitiallyOpened(bool o);
+  };
+  
+  class ParametricParameterDescriptor : public ValueParameterDescriptor {
+    public:
+      
+      ParametricParameterDescriptor();
+      ParametricParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
+      ParametricParameterDescriptor(const ParametricParameterDescriptor &rhs);
+      virtual ~ParametricParameterDescriptor();
+      
+      ParametricParameterDescriptor& operator=(const ParametricParameterDescriptor &rhs);
+      
+      // properties
+      
+      // TODO
   };
   
 #else
@@ -646,6 +691,10 @@ namespace ofx {
       bool pluginMayWrite();
       
       ParamInvalidate cacheInvalidation();
+      
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      bool useHostOverlayHandle();
+#endif
       
       // suite
       
@@ -810,6 +859,9 @@ namespace ofx {
       
       DoubleParamType doubleType();
       
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      Coordinates defaultCoordinateSystem();
+#endif
       // suite
       
       double getValue() throw(Exception);
@@ -856,6 +908,10 @@ namespace ofx {
       
       std::string getDimensionLabel(int i);
       
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      Coordinates defaultCoordinateSystem();
+#endif
+      
       // suite
       
       void getValue(double &v0, double &v1) throw(Exception);
@@ -901,6 +957,10 @@ namespace ofx {
       DoubleParamType doubleType();
       
       std::string getDimensionLabel(int i);
+      
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      Coordinates defaultCoordinateSystem();
+#endif
       
       // suite
       
@@ -1095,6 +1155,10 @@ namespace ofx {
       void interactMinimumSize(int &w, int &h);
       
       void interactPreferedSize(int &w, int &h);
+      
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      bool useHostOverlayHandle();
+#endif
   };
   
 #if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
@@ -1112,6 +1176,25 @@ namespace ofx {
       // properties
       
       bool initiallyOpened();
+  };
+  
+  class ParametricParameter : public ValueParameter {
+    protected:
+      
+      OfxParametricParameterSuiteV1 *mParametricSuite;
+      
+    public:
+      
+      ParametricParameter();
+      ParametricParameter(Host *h, OfxParamHandle hdl);
+      ParametricParameter(const ParametricParameter &rhs);
+      virtual ~ParametricParameter();
+      
+      ParametricParameter& operator=(const ParametricParameter &rhs);
+      
+      // suite
+      
+      // TODO
   };
   
 #else
@@ -1163,6 +1246,9 @@ namespace ofx {
       GroupParameterDescriptor defineGroupParam(const std::string &name) throw(Exception);
       PageParameterDescriptor definePageParam(const std::string &name) throw(Exception);
       PushButtonParameterDescriptor definePushButtonParam(const std::string &name) throw(Exception);
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      ParametricParameterDescriptor defineParametricParam(const std::string &name) throw(Exception);
+#endif
   };
   
   class ParameterSet {
@@ -1204,6 +1290,9 @@ namespace ofx {
       GroupParameter getGroupParam(const std::string &name) throw(Exception);
       PageParameter getPageParam(const std::string &name) throw(Exception);
       PushButtonParameter getPushButtonParam(const std::string &name) throw(Exception);
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      ParametricParameter getParametricParam(const std::string &name) throw(Exception);
+#endif
       
       void beginEdit(const std::string &label);
       void endEdit();

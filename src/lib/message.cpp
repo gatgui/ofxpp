@@ -35,7 +35,7 @@ Message::Message(Host *h) throw(Exception) {
     throw MissingHostFeatureError("Message suite");
   }
 #if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
-  if (h->APIVersion() >= 1.2) {
+  if (h->APIMajorVersion() > 1 || h->APIMinorVersion() >= 2) {
     mSuite2 = h->fetchSuite<OfxMessageSuiteV2>(kOfxMessageSuite, 2);
     if (!mSuite2) {
       throw MissingHostFeatureError("Message suite v2");

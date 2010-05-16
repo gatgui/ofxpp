@@ -26,7 +26,7 @@ from excons.tools import gl
 from excons.tools import openfx
 
 ofxVersion = ARGUMENTS.get("ofxVersion", "1.1")
-ofxNewPackaging = (int(ARGUMENTS.get("ofxNewPackaging", "1")) != 0)
+ofxNewMacPackaging = (int(ARGUMENTS.get("ofxNewMacPackaging", "0")) != 0)
 
 defines = []
 if int(ARGUMENTS.get("forceOverlayRedraw", "1")) == 1:
@@ -69,6 +69,6 @@ prjs = [
 ]
 
 env = excons.MakeBaseEnv()
-if float(ofxVersion) >= 1.2 and ofxNewPackaging:
+if float(ofxVersion) >= 1.2 and ofxNewMacPackaging:
   env["OFX_VERSION"] = float(ofxVersion)
 excons.DeclareTargets(env, prjs)

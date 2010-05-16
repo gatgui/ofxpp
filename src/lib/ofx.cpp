@@ -31,6 +31,9 @@ USA.
 #include <ofxProgress.h>
 #include <ofxProperty.h>
 #include <ofxTimeLine.h>
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#include <ofxParametricParam.h>
+#endif
 #include <ctime>
 #include <iostream>
 
@@ -116,6 +119,9 @@ BEGIN_ENUM_MAP(ParamType)
   ADD_ENUM_MAPPING(ParamType, Group)
   ADD_ENUM_MAPPING(ParamType, Page)
   ADD_ENUM_MAPPING(ParamType, PushButton)
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+  ADD_ENUM_MAPPING(ParamType, Parametric)
+#endif
 END_ENUM_MAP(ParamType)
 
 BEGIN_ENUM_MAP(ParamInvalidate)
@@ -144,7 +150,22 @@ BEGIN_ENUM_MAP(DoubleParamType)
   ADD_ENUM_MAPPING_CUSTOM(DoubleParamType, DoubleParamNormalisedYAbsolute, kOfxParamDoubleTypeNormalisedYAbsolute)
   ADD_ENUM_MAPPING_CUSTOM(DoubleParamType, DoubleParamNormalisedXY, kOfxParamDoubleTypeNormalisedXY)
   ADD_ENUM_MAPPING_CUSTOM(DoubleParamType, DoubleParamNormalisedXYAbsolute, kOfxParamDoubleTypeNormalisedXYAbsolute)
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+  ADD_ENUM_MAPPING_CUSTOM(DoubleParamType, DoubleParamX, kOfxParamDoubleTypeX)
+  ADD_ENUM_MAPPING_CUSTOM(DoubleParamType, DoubleParamXAbsolute, kOfxParamDoubleTypeXAbsolute)
+  ADD_ENUM_MAPPING_CUSTOM(DoubleParamType, DoubleParamY, kOfxParamDoubleTypeY)
+  ADD_ENUM_MAPPING_CUSTOM(DoubleParamType, DoubleParamYAbsolute, kOfxParamDoubleTypeYAbsolute)
+  ADD_ENUM_MAPPING_CUSTOM(DoubleParamType, DoubleParamXY, kOfxParamDoubleTypeXY)
+  ADD_ENUM_MAPPING_CUSTOM(DoubleParamType, DoubleParamXYAbsolute, kOfxParamDoubleTypeXYAbsolute)
+#endif
 END_ENUM_MAP(DoubleParamType)
+
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+BEGIN_ENUM_MAP(Coordinates)
+  ADD_ENUM_MAPPING_CUSTOM(Coordinates, CoordinatesCanonical, kOfxParamCoordinatesCanonical)
+  ADD_ENUM_MAPPING_CUSTOM(Coordinates, CoordinatesNormalised, kOfxParamCoordinatesNormalised)
+END_ENUM_MAP(Coordinates)
+#endif
 
 BEGIN_ENUM_MAP(Action)
   ADD_ENUM_MAPPING_CUSTOM(Action, ActionLoad, kOfxActionLoad)

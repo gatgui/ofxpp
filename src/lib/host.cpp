@@ -77,11 +77,22 @@ void Host::init() throw(Exception) {
   }
   // this member comes from PropertySet
   mSuite = mPropSuite;
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+  mParametricParamSuite = fetchSuite<OfxParametricParameterSuiteV1>(kOfxParametricParameterSuite, 1);
+  if ((APIMajorVersion() > 1 || APIMinorVersion() >= 2) && !mParametricParamSuite) {
+    throw MissingHostFeatureError("Parametric parameter suite");
+  }
+#endif
 }
 
 int Host::APIVersion(int level) {
 #if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
-  return (size(kOfxPropAPIVersion) > level ? getInt(kOfxPropAPIVersion, level) : (level < 2 ? 1 : 0));
+  //return (size(kOfxPropAPIVersion) > level ? getInt(kOfxPropAPIVersion, level) : (level < 2 ? 1 : 0));
+  try {
+    return getInt(kOfxPropAPIVersion, level);
+  } catch (...) {
+    return (level < 2 ? 1 : 0);
+  }
 #else
   return (level == 0 ? 1 : (level == 1 ? 1 : 0));
 #endif
@@ -89,7 +100,12 @@ int Host::APIVersion(int level) {
 
 int Host::APIMajorVersion() {
 #if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
-  return (size(kOfxPropAPIVersion) > 0 ? getInt(kOfxPropAPIVersion, 0) : 1);
+  //return (size(kOfxPropAPIVersion) > 0 ? getInt(kOfxPropAPIVersion, 0) : 1);
+  try {
+    return getInt(kOfxPropAPIVersion, 0);
+  } catch (...) {
+    return 1;
+  }
 #else
   return 1;
 #endif
@@ -97,7 +113,12 @@ int Host::APIMajorVersion() {
 
 int Host::APIMinorVersion() {
 #if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
-  return (size(kOfxPropAPIVersion) > 1 ? getInt(kOfxPropAPIVersion, 1) : 1);
+  //return (size(kOfxPropAPIVersion) > 1 ? getInt(kOfxPropAPIVersion, 1) : 1);
+  try {
+    return getInt(kOfxPropAPIVersion, 1);
+  } catch (...) {
+    return 1;
+  }
 #else
   return 1;
 #endif

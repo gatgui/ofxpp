@@ -159,7 +159,7 @@ namespace ofx {
               Log("*** Invalid effect");
               return kOfxStatErrUnknown;
             }
-            ImageEffect::InstanceChangedArgs args(inArgs);
+            ImageEffect::InstanceChangedArgs args(host, inArgs);
             return effect->instanceChanged(args);
           }
           case ActionPurgeCaches: {
@@ -205,7 +205,7 @@ namespace ofx {
               Log("*** Invalid effect");
               return kOfxStatErrUnknown;
             }
-            ImageEffect::GetRoDArgs args(inArgs);
+            ImageEffect::GetRoDArgs args(host, inArgs);
             OfxStatus stat = effect->getRegionOfDefinition(args);
             if (stat == kOfxStatOK) {
               args.setOutputs(outArgs);
@@ -219,7 +219,7 @@ namespace ofx {
               Log("*** Invalid effect");
               return kOfxStatErrUnknown;
             }
-            ImageEffect::GetRoIArgs args(inArgs);
+            ImageEffect::GetRoIArgs args(host, inArgs);
             OfxStatus stat = effect->getRegionsOfInterest(args);
             if (stat == kOfxStatOK) {
               args.setOutputs(outArgs);
@@ -233,7 +233,7 @@ namespace ofx {
               Log("*** Invalid effect");
               return kOfxStatErrUnknown;
             }
-            ImageEffect::GetFramesNeededArgs args(inArgs);
+            ImageEffect::GetFramesNeededArgs args(host, inArgs);
             OfxStatus stat = effect->getFramesNeeded(args);
             if (stat == kOfxStatOK) {
               args.setOutputs(outArgs);
@@ -247,7 +247,7 @@ namespace ofx {
               Log("*** Invalid effect");
               return kOfxStatErrUnknown;
             }
-            ImageEffect::IsIdentityArgs args(inArgs);
+            ImageEffect::IsIdentityArgs args(host, inArgs);
             OfxStatus stat =  effect->isIdentity(args);
             if (stat == kOfxStatOK) {
               args.setOutputs(outArgs);
@@ -261,7 +261,7 @@ namespace ofx {
               Log("*** Invalid effect");
               return kOfxStatErrUnknown;
             }
-            ImageEffect::RenderArgs args(inArgs);
+            ImageEffect::RenderArgs args(host, inArgs);
             return effect->render(args);
           }
           case ActionImageEffectBeginSequenceRender: {
@@ -271,7 +271,7 @@ namespace ofx {
               Log("*** Invalid effect");
               return kOfxStatErrUnknown;
             }
-            ImageEffect::BeginSequenceArgs args(inArgs);
+            ImageEffect::BeginSequenceArgs args(host, inArgs);
             return effect->beginSequenceRender(args);
           }
           case ActionImageEffectEndSequenceRender: {
@@ -281,7 +281,7 @@ namespace ofx {
               Log("*** Invalid effect");
               return kOfxStatErrUnknown;
             }
-            ImageEffect::EndSequenceArgs args(inArgs);
+            ImageEffect::EndSequenceArgs args(host, inArgs);
             return effect->endSequenceRender(args);
           }
           case ActionImageEffectGetClipPreferences: {
@@ -291,7 +291,7 @@ namespace ofx {
               Log("*** Invalid effect");
               return kOfxStatErrUnknown;
             }
-            ImageEffect::GetClipPrefArgs args;
+            ImageEffect::GetClipPrefArgs args(host);
             OfxStatus stat = effect->getClipPreferences(args);
             if (stat == kOfxStatOK) {
               args.setOutputs(outArgs);

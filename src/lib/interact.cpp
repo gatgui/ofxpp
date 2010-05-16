@@ -71,7 +71,7 @@ OfxStatus InteractDescriptor::describe() {
   
 // ---
 
-Interact::BaseArgs::BaseArgs(PropertySet &args) {
+Interact::BaseArgs::BaseArgs(ImageEffectHost *, PropertySet &args) {
   OfxImageEffectHandle hEffect = (OfxImageEffectHandle) args.getPointer(kOfxPropEffectInstance, 0);
   effect = ImageEffect::GetEffect(hEffect);
   time = args.getDouble(kOfxPropTime, 0);
@@ -81,8 +81,8 @@ Interact::BaseArgs::BaseArgs(PropertySet &args) {
 
 // ---
 
-Interact::CommonArgs::CommonArgs(PropertySet &args)
-  : Interact::BaseArgs(args) {
+Interact::CommonArgs::CommonArgs(ImageEffectHost *host, PropertySet &args)
+  : Interact::BaseArgs(host, args) {
   //viewportWidth = args.getInt(kOfxInteractPropViewportSize, 0);
   //viewportHeight = args.getInt(kOfxInteractPropViewportSize, 1);
   pixelScaleX = args.getDouble(kOfxInteractPropPixelScale, 0);
@@ -95,17 +95,26 @@ Interact::CommonArgs::CommonArgs(PropertySet &args)
 
 // ---
 
-Interact::PenArgs::PenArgs(PropertySet &args)
-  : Interact::CommonArgs(args) {
+Interact::PenArgs::PenArgs(ImageEffectHost *host, PropertySet &args)
+  : Interact::CommonArgs(host, args) {
   x = args.getDouble(kOfxInteractPropPenPosition, 0);
   y = args.getDouble(kOfxInteractPropPenPosition, 1);
-  pressure = args.getDouble(kOfxInteractPropPenPressure, 0);  
+  pressure = args.getDouble(kOfxInteractPropPenPressure, 0);
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+  if (host->APIMajorVersion() > 1 || host->APIMinorVersion() >= 2) {
+    viewportx = args.getInt(kOfxInteractPropPenViewportPosition, 0);
+    viewporty = args.getInt(kOfxInteractPropPenViewportPosition, 1);
+  } else {
+    viewportx = -1;
+    viewporty = -1;
+  }
+#endif
 }
 
 // ---
 
-Interact::KeyArgs::KeyArgs(PropertySet &args)
-  : Interact::BaseArgs(args) {
+Interact::KeyArgs::KeyArgs(ImageEffectHost *host, PropertySet &args)
+  : Interact::BaseArgs(host, args) {
   sym = args.getInt(kOfxPropKeySym, 0);
   string = args.getString(kOfxPropKeyString, 0);
 }
@@ -213,6 +222,17 @@ std::string Interact::getSlaveToParam(int i) {
 void Interact::setSlaveToParam(int i, const std::string &pn) {
   mProps.setString(kOfxInteractPropSlaveToParam, i, pn);
 }
+
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+RGBAColour<double> Interact::suggestedColour() {
+  RGBAColour<double> sc;
+  sc.a = 1.0;
+  sc.r = mProps.getDouble(kOfxInteractPropSuggestedColour, 0);
+  sc.g = mProps.getDouble(kOfxInteractPropSuggestedColour, 1);
+  sc.b = mProps.getDouble(kOfxInteractPropSuggestedColour, 2);
+  return sc;
+}
+#endif
 
 OfxStatus Interact::draw(Interact::DrawArgs &) {
   return kOfxStatReplyDefault;

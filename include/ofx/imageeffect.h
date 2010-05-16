@@ -427,13 +427,13 @@ namespace ofx {
         double renderScaleX;
         double renderScaleY;
         
-        RenderScaleArgs(PropertySet &props);
+        RenderScaleArgs(ImageEffectHost *host, PropertySet &props);
       };
       
       struct TimeArgs {
         Time time;
         
-        TimeArgs(PropertySet &props);
+        TimeArgs(ImageEffectHost *host, PropertySet &props);
       };
       
       struct InstanceChangedArgs : public RenderScaleArgs, public TimeArgs {
@@ -441,28 +441,32 @@ namespace ofx {
         std::string name;
         ChangeReason reason;
         
-        InstanceChangedArgs(PropertySet &props);
+        InstanceChangedArgs(ImageEffectHost *host, PropertySet &props);
       };
       
       struct GetRoDArgs : public RenderScaleArgs, public TimeArgs {
         Rect<double> RoD;
         
-        GetRoDArgs(PropertySet &in);
+        GetRoDArgs(ImageEffectHost *host, PropertySet &in);
         void setOutputs(PropertySet &out);
       };
       
       struct RenderArgs : public RenderScaleArgs, public TimeArgs {
         ImageField field;
         Rect<int> renderWindow;
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+        bool sequentialRender;
+        bool interactiveRender;
+#endif
         
-        RenderArgs(PropertySet &props);
+        RenderArgs(ImageEffectHost *host, PropertySet &props);
       };
       
       struct IsIdentityArgs : public RenderArgs {
         std::string idClip;
         Time idTime;
         
-        IsIdentityArgs(PropertySet &in);
+        IsIdentityArgs(ImageEffectHost *host, PropertySet &in);
         void setOutputs(PropertySet &out);
       };
       
@@ -470,7 +474,7 @@ namespace ofx {
         Rect<double> outRoI;
         std::map<std::string, Rect<double> > inRoIs;
         
-        GetRoIArgs(PropertySet &in);
+        GetRoIArgs(ImageEffectHost *host, PropertySet &in);
         void setOutputs(PropertySet &out);
         void setInputRoI(const std::string &name, const Rect<double> &RoI);
       };
@@ -478,15 +482,19 @@ namespace ofx {
       struct GetFramesNeededArgs : public TimeArgs {
         std::map<std::string, FrameRangeList> inRanges;
         
-        GetFramesNeededArgs(PropertySet &in);
+        GetFramesNeededArgs(ImageEffectHost *host, PropertySet &in);
         void setOutputs(PropertySet &out);
         void addInputRange(const std::string &name, const FrameRange &range);
       };
       
       struct SequenceArgs : public RenderScaleArgs {
         bool interactive;
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+        bool sequentialRender;
+        bool interactiveRender;
+#endif
         
-        SequenceArgs(PropertySet &props);
+        SequenceArgs(ImageEffectHost *host, PropertySet &props);
       };
       
       struct BeginSequenceArgs : public SequenceArgs {
@@ -494,7 +502,7 @@ namespace ofx {
         double step;
         // supposed to be the same in the specs for EndSequence action
         
-        BeginSequenceArgs(PropertySet &props);
+        BeginSequenceArgs(ImageEffectHost *host, PropertySet &props);
       };
       
       typedef SequenceArgs EndSequenceArgs;
@@ -503,7 +511,7 @@ namespace ofx {
         ClipPreferences outPref;
         std::map<std::string, PixelPreferences> inPrefs;
         
-        GetClipPrefArgs();
+        GetClipPrefArgs(ImageEffectHost *host);
         void setOutputs(PropertySet &out);
         void setInputPref(const std::string &name, const PixelPreferences &prefs);
       };

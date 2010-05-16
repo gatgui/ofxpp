@@ -645,21 +645,21 @@ OfxStatus ImageEffectDescriptor::describeInContext(ImageEffectContext) {
 
 // ---
 
-ImageEffect::RenderScaleArgs::RenderScaleArgs(PropertySet &inArgs) {
+ImageEffect::RenderScaleArgs::RenderScaleArgs(ImageEffectHost *, PropertySet &inArgs) {
   renderScaleX = inArgs.getDouble(kOfxImageEffectPropRenderScale, 0);
   renderScaleY = inArgs.getDouble(kOfxImageEffectPropRenderScale, 1);
 }
 
 // ---
 
-ImageEffect::TimeArgs::TimeArgs(PropertySet &inArgs) {
+ImageEffect::TimeArgs::TimeArgs(ImageEffectHost *, PropertySet &inArgs) {
   time = inArgs.getDouble(kOfxPropTime, 0);
 }
 
 // ---
 
-ImageEffect::InstanceChangedArgs::InstanceChangedArgs(PropertySet &inArgs)
-  : ImageEffect::RenderScaleArgs(inArgs), ImageEffect::TimeArgs(inArgs) {
+ImageEffect::InstanceChangedArgs::InstanceChangedArgs(ImageEffectHost *host, PropertySet &inArgs)
+  : ImageEffect::RenderScaleArgs(host, inArgs), ImageEffect::TimeArgs(host, inArgs) {
   type = StringToType(inArgs.getString(kOfxPropType, 0));
   name = inArgs.getString(kOfxPropName, 0);
   reason = StringToChangeReason(inArgs.getString(kOfxPropChangeReason, 0));
@@ -667,8 +667,8 @@ ImageEffect::InstanceChangedArgs::InstanceChangedArgs(PropertySet &inArgs)
 
 // ---
 
-ImageEffect::GetRoDArgs::GetRoDArgs(PropertySet &inArgs)
-  : ImageEffect::RenderScaleArgs(inArgs), ImageEffect::TimeArgs(inArgs) {
+ImageEffect::GetRoDArgs::GetRoDArgs(ImageEffectHost *host, PropertySet &inArgs)
+  : ImageEffect::RenderScaleArgs(host, inArgs), ImageEffect::TimeArgs(host, inArgs) {
 }
 
 void ImageEffect::GetRoDArgs::setOutputs(PropertySet &outArgs) {
@@ -677,16 +677,25 @@ void ImageEffect::GetRoDArgs::setOutputs(PropertySet &outArgs) {
 
 // ---
 
-ImageEffect::RenderArgs::RenderArgs(PropertySet &inArgs)
-  : ImageEffect::RenderScaleArgs(inArgs), ImageEffect::TimeArgs(inArgs) {
+ImageEffect::RenderArgs::RenderArgs(ImageEffectHost *host, PropertySet &inArgs)
+  : ImageEffect::RenderScaleArgs(host, inArgs), ImageEffect::TimeArgs(host, inArgs) {
   field = StringToImageField(inArgs.getString(kOfxImageEffectPropFieldToRender, 0));
   inArgs.getInts(kOfxImageEffectPropRenderWindow, 4, &(renderWindow.x1));
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+  if (host->APIMajorVersion() > 1 || host->APIMinorVersion() >= 2) {
+    sequentialRender = inArgs.getInt(kOfxImageEffectPropSequentialRenderStatus, 0);
+    interactiveRender = inArgs.getInt(kOfxImageEffectPropInteractiveRenderStatus, 0);
+  } else {
+    sequentialRender = false;
+    interactiveRender = false;
+  }
+#endif
 }
 
 // ---
 
-ImageEffect::IsIdentityArgs::IsIdentityArgs(PropertySet &inArgs)
-  : ImageEffect::RenderArgs(inArgs) {
+ImageEffect::IsIdentityArgs::IsIdentityArgs(ImageEffectHost *host, PropertySet &inArgs)
+  : ImageEffect::RenderArgs(host, inArgs) {
 }
 
 void ImageEffect::IsIdentityArgs::setOutputs(PropertySet &outArgs) {
@@ -696,8 +705,8 @@ void ImageEffect::IsIdentityArgs::setOutputs(PropertySet &outArgs) {
 
 // ---
 
-ImageEffect::GetRoIArgs::GetRoIArgs(PropertySet &inArgs)
-  : ImageEffect::RenderScaleArgs(inArgs), ImageEffect::TimeArgs(inArgs) {
+ImageEffect::GetRoIArgs::GetRoIArgs(ImageEffectHost *host, PropertySet &inArgs)
+  : ImageEffect::RenderScaleArgs(host, inArgs), ImageEffect::TimeArgs(host, inArgs) {
   inArgs.getDoubles(kOfxImageEffectPropRegionOfInterest, 4, &(outRoI.x1));
 }
 
@@ -718,8 +727,8 @@ void ImageEffect::GetRoIArgs::setInputRoI(const std::string &name, const Rect<do
 
 // ---
 
-ImageEffect::GetFramesNeededArgs::GetFramesNeededArgs(PropertySet &inArgs)
-  : ImageEffect::TimeArgs(inArgs) {
+ImageEffect::GetFramesNeededArgs::GetFramesNeededArgs(ImageEffectHost *host, PropertySet &inArgs)
+  : ImageEffect::TimeArgs(host, inArgs) {
 }
 
 void ImageEffect::GetFramesNeededArgs::setOutputs(PropertySet &outArgs) {
@@ -744,15 +753,24 @@ void ImageEffect::GetFramesNeededArgs::addInputRange(const std::string &name, co
 
 // ---
 
-ImageEffect::SequenceArgs::SequenceArgs(PropertySet &inArgs)
-  : ImageEffect::RenderScaleArgs(inArgs) {
+ImageEffect::SequenceArgs::SequenceArgs(ImageEffectHost *host, PropertySet &inArgs)
+  : ImageEffect::RenderScaleArgs(host, inArgs) {
   interactive = (inArgs.getInt(kOfxPropIsInteractive, 0) == 1);
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+  if (host->APIMajorVersion() > 1 || host->APIMinorVersion() >= 2) {
+    sequentialRender = inArgs.getInt(kOfxImageEffectPropSequentialRenderStatus, 0);
+    interactiveRender = inArgs.getInt(kOfxImageEffectPropInteractiveRenderStatus, 0);
+  } else {
+    sequentialRender = false;
+    interactiveRender = false;
+  }
+#endif
 }
 
 // ---
 
-ImageEffect::BeginSequenceArgs::BeginSequenceArgs(PropertySet &inArgs)
-  : ImageEffect::SequenceArgs(inArgs) {
+ImageEffect::BeginSequenceArgs::BeginSequenceArgs(ImageEffectHost *host, PropertySet &inArgs)
+  : ImageEffect::SequenceArgs(host, inArgs) {
   range.first = inArgs.getDouble(kOfxImageEffectPropFrameRange, 0);
   range.second = inArgs.getDouble(kOfxImageEffectPropFrameRange, 1);
   step = inArgs.getDouble(kOfxImageEffectPropFrameStep, 0);
@@ -760,7 +778,7 @@ ImageEffect::BeginSequenceArgs::BeginSequenceArgs(PropertySet &inArgs)
 
 // ---
 
-ImageEffect::GetClipPrefArgs::GetClipPrefArgs() {
+ImageEffect::GetClipPrefArgs::GetClipPrefArgs(ImageEffectHost *) {
 }
 
 void ImageEffect::GetClipPrefArgs::setOutputs(PropertySet &outArgs) {

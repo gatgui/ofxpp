@@ -27,6 +27,9 @@ USA.
 #include <ofxCore.h>
 #include <ofxKeySyms.h>
 #include <ofxParam.h>
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#include <ofxParametricParam.h>
+#endif
 #include <ofxInteract.h>
 #include <ofxImageEffect.h>
 #include <ofx/ofx.h>
@@ -81,6 +84,8 @@ namespace ofx {
       
       void* OSHandle();
       
+      OfxParametricParameterSuiteV1 *parametricParameterSuite() {return mParametricParamSuite;}
+      
 #endif
       
     protected:
@@ -95,6 +100,10 @@ namespace ofx {
       
       OfxPropertySuiteV1 *mPropSuite;
       OfxParameterSuiteV1 *mParamSuite;
+      
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      OfxParametricParameterSuiteV1 *mParametricParamSuite;
+#endif
   };
   
   class ImageEffectHost : public Host {

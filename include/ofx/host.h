@@ -67,6 +67,22 @@ namespace ofx {
       OfxPropertySuiteV1 *propertySuite() {return mPropSuite;}
       OfxParameterSuiteV1 *parameterSuite() {return mParamSuite;}
       
+      // host OpenFX version
+      int APIVersion(int level=0);
+      int APIMajorVersion();
+      int APIMinorVersion();
+      
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      
+      int version(int level=0);
+      int majorVersion();
+      int minorVersion();
+      std::string versionLabel();
+      
+      void* OSHandle();
+      
+#endif
+      
     protected:
       
       OfxHost *mHost;
@@ -112,6 +128,12 @@ namespace ofx {
       bool supportsMultipleClipPARs();
       bool setableFramerate();
       bool setableFielding();
+      
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      
+      SequentialRender sequentialRender();
+      
+#endif
       
       // parameter properties
       bool supportsCustomParamAnimation();

@@ -41,10 +41,10 @@ namespace ofx {
       ~Message();
       
       template <class Receiver>
-      void sendTo(Receiver *recv,
-                  MessageType type,
-                  const char *id,
-                  const char *format, ...) throw(Exception) {
+      void message(Receiver *recv,
+                   MessageType type,
+                   const char *id,
+                   const char *format, ...) throw(Exception) {
         va_list args;
         char dummy;
         char buffer[8192];
@@ -56,13 +56,62 @@ namespace ofx {
         OfxStatus stat = mSuite->message(recv->handle(), MessageTypeToString(type), id, buffer);  
         
         if (stat != kOfxStatOK) {
-          throw Exception(stat, "ofx::Message::sendTo");
+          throw Exception(stat, "ofx::Message::message");
         }
       }
+      
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      
+      template <class Receiver>
+      void setPersistentMessage(Receiver *recv,
+                                MessageType type,
+                                const char *id,
+                                const char *format, ...) throw(Exception) {
+        
+        if (!mSuite2) {
+          // client built using OpenFX api 1.2 or above doesn't necessarily means
+          // the host supports it
+          throw MissingHostFeatureError("Message suite v2");
+        }
+        
+        va_list args;
+        char dummy;
+        char buffer[8192];
+        
+        va_start(args, format);
+        vsnprintf(buffer, 8192, format, args);
+        va_end(args);
+        
+        OfxStatus stat = mSuite2->setPersistentMessage(recv->handle(), MessageTypeToString(type), id, buffer);
+        
+        if (stat != kOfxStatOK) {
+          throw Exception(stat, "ofx::Message::setPersistentMessage");
+        }
+      }
+      
+      template <class Receiver>
+      void clearPersistentMessage(Receiver *recv) {
+        if (!mSuite2) {
+          throw MissingHostFeatureError("Message suite v2");
+        }
+        
+        OfxStatus stat = mSuite2->clearPersistentMessage(recv->handle());
+        
+        if (stat != kOfxStatOK) {
+          throw Exception(stat, "ofx::Message::clearPersistentMessage");
+        }
+      }
+      
+#endif
       
     protected:
       
       OfxMessageSuiteV1 *mSuite;
+      
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      // Starting OpenFX 1.2 [if you're using prior headers, don't declare that]
+      OfxMessageSuiteV2 *mSuite2;
+#endif
   };
   
 }

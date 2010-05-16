@@ -23,6 +23,7 @@ USA.
 
 #include <ofx/imageeffect.h>
 #include <ofx/host.h>
+#include <cmath>
 
 namespace ofx {
 
@@ -590,6 +591,50 @@ void ImageEffectDescriptor::setOverlayInteract(EntryPoint func) {
   mProps.setPointer(kOfxImageEffectPluginPropOverlayInteractV1, 0, (void*)func);
 }
 
+SequentialRender ImageEffectDescriptor::sequentialRender() {
+  return SequentialRender(mProps.getInt(kOfxImageEffectInstancePropSequentialRender, 0));
+}
+
+void ImageEffectDescriptor::setSequentialRender(SequentialRender sr) {
+  mProps.setInt(kOfxImageEffectInstancePropSequentialRender, 0, int(sr));
+}
+
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+
+int ImageEffectDescriptor::version(int level) {
+  return (mProps.size(kOfxPropVersion) > level ? mProps.getInt(kOfxPropVersion, level) : 0);
+}
+
+int ImageEffectDescriptor::majorVersion() {
+  return (mProps.size(kOfxPropVersion) > 0 ? mProps.getInt(kOfxPropVersion, 0) : 0);
+}
+
+int ImageEffectDescriptor::minorVersion() {
+  return (mProps.size(kOfxPropVersion) > 1 ? mProps.getInt(kOfxPropVersion, 1) : 0);
+}
+
+void ImageEffectDescriptor::setVersion(int level, int v) {
+  mProps.setInt(kOfxPropVersion, level, v);
+}
+
+std::string ImageEffectDescriptor::versionLabel() {
+  return mProps.getString(kOfxPropVersionLabel, 0);
+}
+
+void ImageEffectDescriptor::setVersionLabel(const std::string &vl) {
+  mProps.setString(kOfxPropVersionLabel, 0, vl);
+}
+
+std::string ImageEffectDescriptor::description() {
+  return mProps.getString(kOfxPropPluginDescription, 0);
+}
+
+void ImageEffectDescriptor::setDescription(const std::string &d) {
+  mProps.setString(kOfxPropPluginDescription, 0, d);
+}
+
+#endif
+
 OfxStatus ImageEffectDescriptor::describe() {
   return kOfxStatFailed;
 }
@@ -827,12 +872,12 @@ double ImageEffect::duration() {
   return mProps.getDouble(kOfxImageEffectInstancePropEffectDuration, 0);
 }
 
-bool ImageEffect::needsSequentialRender() {
-  return (mProps.getInt(kOfxImageEffectInstancePropSequentialRender, 0) == 1);
+SequentialRender ImageEffect::sequentialRender() {
+  return SequentialRender(mProps.getInt(kOfxImageEffectInstancePropSequentialRender, 0));
 }
 
-void ImageEffect::requireSequentialRender(bool yes) {
-  mProps.setInt(kOfxImageEffectInstancePropSequentialRender, 0, (yes ? 1 : 0));
+void ImageEffect::setSequentialRender(SequentialRender sr) {
+  mProps.setInt(kOfxImageEffectInstancePropSequentialRender, 0, int(sr));
 }
 
 double ImageEffect::frameRate() {
@@ -842,6 +887,14 @@ double ImageEffect::frameRate() {
 bool ImageEffect::isInteractive() {
   return (mProps.getInt(kOfxPropIsInteractive, 0) == 1);
 }
+
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+
+std::string ImageEffect::description() {
+  return mProps.getString(kOfxPropPluginDescription, 0);
+}
+
+#endif
 
 Clip ImageEffect::getClip(const std::string &name) throw(Exception) {
   OfxImageClipHandle hClip;

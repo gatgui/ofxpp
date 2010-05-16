@@ -138,6 +138,27 @@ void ParameterDescriptor::setData(void *d) {
   setPointer(kOfxParamPropDataPtr, 0, d);
 }
 
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      
+std::string ParameterDescriptor::PNGIcon() {
+  return getString(kOfxPropIcon, 1);
+}
+
+std::string ParameterDescriptor::SVGIcon() {
+  return getString(kOfxPropIcon, 0);
+}
+
+void ParameterDescriptor::setPNGIcon(const std::string &resPath) {
+  setString(kOfxPropIcon, 1, resPath);
+}
+
+void ParameterDescriptor::setSVGIcon(const std::string &resPath) {
+  setString(kOfxPropIcon, 0, resPath);
+}
+      
+#endif
+
+
 // ---
 
 ValueParameterDescriptor::ValueParameterDescriptor()
@@ -958,6 +979,40 @@ bool BooleanParameterDescriptor::getDefault() {
 void BooleanParameterDescriptor::setDefault(bool v) {
   setInt(kOfxParamPropDefault, 0, (v ? 1 : 0));
 }
+
+// ---
+
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+
+GroupParameterDescriptor::GroupParameterDescriptor()
+  : ParameterDescriptor() {
+}
+
+GroupParameterDescriptor::GroupParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
+  : ParameterDescriptor(h, hdl) {
+}
+
+GroupParameterDescriptor::GroupParameterDescriptor(const GroupParameterDescriptor &rhs)
+  : ParameterDescriptor(rhs) {
+}
+
+GroupParameterDescriptor::~GroupParameterDescriptor() {
+}
+
+GroupParameterDescriptor& GroupParameterDescriptor::operator=(const GroupParameterDescriptor &rhs) {
+  ParameterDescriptor::operator=(rhs);
+  return *this;
+}
+
+bool GroupParameterDescriptor::initiallyOpened() {
+  return (getInt(kOfxParamPropGroupOpen, 0) == 1);
+}
+
+void GroupParameterDescriptor::setInitiallyOpened(bool o) {
+  setInt(kOfxParamPropGroupOpen, 0, (o ? 1 : 0));
+}
+
+#endif
 
 // ---
 
@@ -2624,6 +2679,36 @@ void PushButtonParameter::interactPreferedSize(int &w, int &h) {
   w = mProps.getInt(kOfxParamPropInteractPreferedSize, 0);
   h = mProps.getInt(kOfxParamPropInteractPreferedSize, 1);
 }
+
+// ---
+
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+
+GroupParameter::GroupParameter()
+  : Parameter() {
+}
+
+GroupParameter::GroupParameter(Host *h, OfxParamHandle hdl)
+  : Parameter(h, hdl) {
+}
+
+GroupParameter::GroupParameter(const GroupParameter &rhs)
+  : Parameter(rhs) {
+}
+
+GroupParameter::~GroupParameter() {
+}
+
+GroupParameter& GroupParameter::operator=(const GroupParameter &rhs) {
+  Parameter::operator=(rhs);
+  return *this;
+}
+
+bool GroupParameter::initiallyOpened() {
+  return (mProps.getInt(kOfxParamPropGroupOpen, 0) == 1);
+}
+
+#endif
 
 // ---
 

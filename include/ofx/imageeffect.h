@@ -394,6 +394,22 @@ namespace ofx {
       
       std::string pluginFilePath();
       
+      SequentialRender sequentialRender();
+      void setSequentialRender(SequentialRender sr);
+      
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      int version(int level);
+      int majorVersion();
+      int minorVersion();
+      void setVersion(int level, int v);
+      
+      std::string versionLabel();
+      void setVersionLabel(const std::string &vl);
+      
+      std::string description();
+      void setDescription(const std::string &vl);
+#endif
+      
       // Image effect actions
       
       virtual OfxStatus describe();
@@ -542,12 +558,16 @@ namespace ofx {
       
       double duration();
       
-      bool needsSequentialRender();
-      void requireSequentialRender(bool);
+      SequentialRender sequentialRender();
+      void setSequentialRender(SequentialRender sr);
       
       double frameRate();
       
       bool isInteractive();
+      
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      std::string description();
+#endif
       
       // Image effect actions
       

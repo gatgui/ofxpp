@@ -25,16 +25,21 @@ import excons.tools
 from excons.tools import gl
 from excons.tools import openfx
 
+ofxVersion = ARGUMENTS.get("ofxVersion", "1.1")
+ofxNewPackaging = (int(ARGUMENTS.get("ofxNewPackaging", "1")) != 0)
+
 defines = []
 if int(ARGUMENTS.get("forceOverlayRedraw", "1")) == 1:
   defines.append("FORCE_OVERLAY_REDRAW")
+
+# Add openfx version define
 
 prjs = [
   { "name"    : "ofxpp",
     "type"    : "staticlib",
     "srcs"    : glob.glob("src/lib/*.cpp"),
     "install" : {"include/ofx": glob.glob("include/ofx/*.h"),
-                 "include"    : glob.glob("include/*.h")}
+                 "include"    : glob.glob("include/%s/*.h" % ofxVersion)}
   },
   { "name"    : "ellipseFade",
     "type"    : "dynamicmodule",
@@ -64,4 +69,6 @@ prjs = [
 ]
 
 env = excons.MakeBaseEnv()
+if float(ofxVersion) >= 1.2 and ofxNewPackaging:
+  env["OFX_VERSION"] = float(ofxVersion)
 excons.DeclareTargets(env, prjs)

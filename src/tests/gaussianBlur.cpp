@@ -2,6 +2,9 @@
 #include <ofxImageEffect.h>
 #include <ofxParam.h>
 #include <ofxProperty.h>
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#include <ofxPixels.h>
+#endif
 #include <cstdio>
 #include <cstdlib>
 #include <cstdarg>

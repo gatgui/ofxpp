@@ -276,7 +276,16 @@ namespace ofx {
   DECLARE_ENUM_MAP(Action);
   DECLARE_ENUM_MAP(ChangeReason);
   DECLARE_ENUM_MAP(MessageType);
-    
+  
+  enum SequentialRender {
+    SequentialRenderNotNeeded = 0,
+    SequentialRenderRequired = 1,
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+    SequentialRenderIfPossible = 2,
+#endif
+    MaxSequentialRender
+  };
+  
   typedef OfxTime Time;
   
   typedef OfxStatus (*EntryPoint)(const char*, const void*, OfxPropertySetHandle, OfxPropertySetHandle);

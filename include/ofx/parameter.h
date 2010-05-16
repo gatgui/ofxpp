@@ -114,6 +114,15 @@ namespace ofx {
       
       void* data();
       void setData(void *);
+      
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+      
+      std::string PNGIcon();
+      std::string SVGIcon();
+      void setPNGIcon(const std::string &resPath);
+      void setSVGIcon(const std::string &resPath);
+      
+#endif
   };
   
   class ValueParameterDescriptor : public ParameterDescriptor {
@@ -522,8 +531,30 @@ namespace ofx {
       void setInteractPreferedSize(int w, int h);
   };
   
-  typedef ParameterDescriptor GroupParameterDescriptor;
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
   
+  class GroupParameterDescriptor : public ParameterDescriptor {
+    public:
+      
+      GroupParameterDescriptor();
+      GroupParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
+      GroupParameterDescriptor(const GroupParameterDescriptor &rhs);
+      virtual ~GroupParameterDescriptor();
+      
+      GroupParameterDescriptor& operator=(const GroupParameterDescriptor &rhs);
+      
+      // properties
+      
+      bool initiallyOpened();
+      void setInitiallyOpened(bool o);
+  };
+  
+#else
+  
+  typedef ParameterDescriptor GroupParameterDescriptor;
+
+#endif
+
   class Parameter {
     protected:
       
@@ -1066,7 +1097,28 @@ namespace ofx {
       void interactPreferedSize(int &w, int &h);
   };
   
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+  
+  class GroupParameter : public Parameter {
+    public:
+      
+      GroupParameter();
+      GroupParameter(Host *h, OfxParamHandle hdl);
+      GroupParameter(const GroupParameter &rhs);
+      virtual ~GroupParameter();
+      
+      GroupParameter& operator=(const GroupParameter &rhs);
+      
+      // properties
+      
+      bool initiallyOpened();
+  };
+  
+#else
+  
   typedef Parameter GroupParameter;
+  
+#endif
   
   // ---
   

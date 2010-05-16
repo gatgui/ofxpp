@@ -79,6 +79,54 @@ void Host::init() throw(Exception) {
   mSuite = mPropSuite;
 }
 
+int Host::APIVersion(int level) {
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+  return (size(kOfxPropAPIVersion) > level ? getInt(kOfxPropAPIVersion, level) : (level < 2 ? 1 : 0));
+#else
+  return (level == 0 ? 1 : (level == 1 ? 1 : 0));
+#endif
+}
+
+int Host::APIMajorVersion() {
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+  return (size(kOfxPropAPIVersion) > 0 ? getInt(kOfxPropAPIVersion, 0) : 1);
+#else
+  return 1;
+#endif
+}
+
+int Host::APIMinorVersion() {
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+  return (size(kOfxPropAPIVersion) > 1 ? getInt(kOfxPropAPIVersion, 1) : 1);
+#else
+  return 1;
+#endif
+}
+
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+
+int Host::version(int level) {
+  return (size(kOfxPropVersion) > level ? getInt(kOfxPropVersion, level) : 0);
+}
+
+int Host::majorVersion() {
+  return (size(kOfxPropVersion) > 0 ? getInt(kOfxPropVersion, 0) : 0);
+}
+
+int Host::minorVersion() {
+  return (size(kOfxPropVersion) > 1 ? getInt(kOfxPropVersion, 1) : 0);
+}
+
+std::string Host::versionLabel() {
+  return getString(kOfxPropVersionLabel, 0);
+}
+
+void* Host::OSHandle() {
+  return getPointer(kOfxPropHostOSHandle, 0);
+}
+
+#endif
+
 // ---
 
 ImageEffectHost::ImageEffectHost(OfxHost *h)
@@ -200,6 +248,14 @@ void ImageEffectHost::parameterPageRowColumnCount(int &rowCount, int &columnCoun
   columnCount = getInt(kOfxParamHostPropPageRowColumnCount, 0);
   rowCount = getInt(kOfxParamHostPropPageRowColumnCount, 1);
 }
+
+#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+
+SequentialRender ImageEffectHost::sequentialRender() {
+  return SequentialRender(getInt(kOfxImageEffectInstancePropSequentialRender, 0));
+}
+
+#endif
 
 }
 

@@ -28,7 +28,7 @@ USA.
 #include <ofx/ofx.h>
 #include <ofx/exception.h>
 #include <ofx/property.h>
-#include <ofx/parameter.h>
+#include <ofx/parameterset.h>
 #include <map>
 
 namespace ofx {
@@ -397,7 +397,7 @@ namespace ofx {
       SequentialRender sequentialRender();
       void setSequentialRender(SequentialRender sr);
       
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#ifdef OFX_API_1_2
       int version(int level);
       int majorVersion();
       int minorVersion();
@@ -454,7 +454,7 @@ namespace ofx {
       struct RenderArgs : public RenderScaleArgs, public TimeArgs {
         ImageField field;
         Rect<int> renderWindow;
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#ifdef OFX_API_1_2
         bool sequentialRender;
         bool interactiveRender;
 #endif
@@ -489,7 +489,7 @@ namespace ofx {
       
       struct SequenceArgs : public RenderScaleArgs {
         bool interactive;
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#ifdef OFX_API_1_2
         bool sequentialRender;
         bool interactiveRender;
 #endif
@@ -573,7 +573,7 @@ namespace ofx {
       
       bool isInteractive();
       
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#ifdef OFX_API_1_2
       std::string description();
 #endif
       

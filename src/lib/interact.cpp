@@ -100,8 +100,8 @@ Interact::PenArgs::PenArgs(ImageEffectHost *host, PropertySet &args)
   x = args.getDouble(kOfxInteractPropPenPosition, 0);
   y = args.getDouble(kOfxInteractPropPenPosition, 1);
   pressure = args.getDouble(kOfxInteractPropPenPressure, 0);
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
-  if (host->APIMajorVersion() > 1 || host->APIMinorVersion() >= 2) {
+#ifdef OFX_API_1_2
+  if (host->checkAPIVersion(1, 2)) {
     viewportx = args.getInt(kOfxInteractPropPenViewportPosition, 0);
     viewporty = args.getInt(kOfxInteractPropPenViewportPosition, 1);
   } else {
@@ -223,7 +223,7 @@ void Interact::setSlaveToParam(int i, const std::string &pn) {
   mProps.setString(kOfxInteractPropSlaveToParam, i, pn);
 }
 
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#ifdef OFX_API_1_2
 RGBAColour<double> Interact::suggestedColour() {
   RGBAColour<double> sc;
   sc.a = 1.0;

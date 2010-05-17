@@ -27,7 +27,7 @@ USA.
 #include <ofxCore.h>
 #include <ofxKeySyms.h>
 #include <ofxParam.h>
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#ifdef OFX_API_1_2
 #include <ofxParametricParam.h>
 #endif
 #include <ofxInteract.h>
@@ -74,9 +74,9 @@ namespace ofx {
       int APIVersion(int level=0);
       int APIMajorVersion();
       int APIMinorVersion();
+      bool checkAPIVersion(int major, int minor);
       
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
-      
+#ifdef OFX_API_1_2
       int version(int level=0);
       int majorVersion();
       int minorVersion();
@@ -85,7 +85,6 @@ namespace ofx {
       void* OSHandle();
       
       OfxParametricParameterSuiteV1 *parametricParameterSuite() {return mParametricParamSuite;}
-      
 #endif
       
     protected:
@@ -101,7 +100,7 @@ namespace ofx {
       OfxPropertySuiteV1 *mPropSuite;
       OfxParameterSuiteV1 *mParamSuite;
       
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#ifdef OFX_API_1_2
       OfxParametricParameterSuiteV1 *mParametricParamSuite;
 #endif
   };
@@ -138,10 +137,9 @@ namespace ofx {
       bool setableFramerate();
       bool setableFielding();
       
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
-      
+#ifdef OFX_API_1_2
       SequentialRender sequentialRender();
-      
+      bool supportsParametricParamAnimation();
 #endif
       
       // parameter properties

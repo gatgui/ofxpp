@@ -62,32 +62,39 @@ Host::~Host() {
 }
 
 void Host::init() throw(Exception) {
-  mTimeLine = new TimeLine(this);
-  mMultiThread = new MultiThread(this);
-  mMemory = new Memory(this);
-  mMessage = new Message(this);
-  mProgress = new Progress(this);
   mPropSuite = fetchSuite<OfxPropertySuiteV1>(kOfxPropertySuite, 1);
   if (!mPropSuite) {
     throw MissingHostFeatureError("Property suite");
   }
+  
+  mSuite = mPropSuite;
+  
+  mTimeLine = new TimeLine(this);
+  
+  mMultiThread = new MultiThread(this);
+  
+  mMemory = new Memory(this);
+  
+  mMessage = new Message(this);
+  
+  mProgress = new Progress(this);
+  
   mParamSuite = fetchSuite<OfxParameterSuiteV1>(kOfxParameterSuite, 1);
   if (!mParamSuite) {
     throw MissingHostFeatureError("Parameter suite");
   }
-  // this member comes from PropertySet
-  mSuite = mPropSuite;
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+  
+#ifdef OFX_API_1_2
   mParametricParamSuite = fetchSuite<OfxParametricParameterSuiteV1>(kOfxParametricParameterSuite, 1);
-  if ((APIMajorVersion() > 1 || APIMinorVersion() >= 2) && !mParametricParamSuite) {
+  if (!mParametricParamSuite && checkAPIVersion(1, 2)) {
+    // Host supporting OpenFX API 1.2 or above MUST provide this suite
     throw MissingHostFeatureError("Parametric parameter suite");
   }
 #endif
 }
 
 int Host::APIVersion(int level) {
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
-  //return (size(kOfxPropAPIVersion) > level ? getInt(kOfxPropAPIVersion, level) : (level < 2 ? 1 : 0));
+#ifdef OFX_API_1_2
   try {
     return getInt(kOfxPropAPIVersion, level);
   } catch (...) {
@@ -99,8 +106,7 @@ int Host::APIVersion(int level) {
 }
 
 int Host::APIMajorVersion() {
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
-  //return (size(kOfxPropAPIVersion) > 0 ? getInt(kOfxPropAPIVersion, 0) : 1);
+#ifdef OFX_API_1_2
   try {
     return getInt(kOfxPropAPIVersion, 0);
   } catch (...) {
@@ -112,8 +118,7 @@ int Host::APIMajorVersion() {
 }
 
 int Host::APIMinorVersion() {
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
-  //return (size(kOfxPropAPIVersion) > 1 ? getInt(kOfxPropAPIVersion, 1) : 1);
+#ifdef OFX_API_1_2
   try {
     return getInt(kOfxPropAPIVersion, 1);
   } catch (...) {
@@ -124,7 +129,13 @@ int Host::APIMinorVersion() {
 #endif
 }
 
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+bool Host::checkAPIVersion(int major, int minor) {
+  int apiMaj = APIMajorVersion();
+  int apiMin = APIMinorVersion();
+  return (apiMaj > major || (apiMaj == major && apiMin >= minor));
+}
+
+#ifdef OFX_API_1_2
 
 int Host::version(int level) {
   return (size(kOfxPropVersion) > level ? getInt(kOfxPropVersion, level) : 0);
@@ -270,10 +281,14 @@ void ImageEffectHost::parameterPageRowColumnCount(int &rowCount, int &columnCoun
   rowCount = getInt(kOfxParamHostPropPageRowColumnCount, 1);
 }
 
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#ifdef OFX_API_1_2
 
 SequentialRender ImageEffectHost::sequentialRender() {
   return SequentialRender(getInt(kOfxImageEffectInstancePropSequentialRender, 0));
+}
+
+bool ImageEffectHost::supportsParametricParamAnimation() {
+  return (getInt(kOfxParamHostPropSupportsParametricAnimation, 0) == 1);
 }
 
 #endif

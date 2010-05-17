@@ -169,7 +169,7 @@ namespace ofx {
     ParamTypeGroup,
     ParamTypePage,
     ParamTypePushButton,
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#ifdef OFX_API_1_2
     ParamTypeParametric,
 #endif
     MaxParamType
@@ -203,7 +203,7 @@ namespace ofx {
     DoubleParamNormalisedYAbsolute,
     DoubleParamNormalisedXY,
     DoubleParamNormalisedXYAbsolute,
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#ifdef OFX_API_1_2
     DoubleParamX,
     DoubleParamXAbsolute,
     DoubleParamY,
@@ -214,7 +214,7 @@ namespace ofx {
     MaxDoubleParamType
   };
 
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#ifdef OFX_API_1_2
   enum Coordinates {
     CoordinatesCanonical = 0,
     CoordinatesNormalised,
@@ -295,14 +295,14 @@ namespace ofx {
   DECLARE_ENUM_MAP(Action);
   DECLARE_ENUM_MAP(ChangeReason);
   DECLARE_ENUM_MAP(MessageType);
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#ifdef OFX_API_1_2
   DECLARE_ENUM_MAP(Coordinates);
 #endif
   
   enum SequentialRender {
     SequentialRenderNotNeeded = 0,
     SequentialRenderRequired = 1,
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#ifdef OFX_API_1_2
     SequentialRenderIfPossible = 2,
 #endif
     MaxSequentialRender

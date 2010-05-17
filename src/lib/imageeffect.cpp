@@ -599,7 +599,7 @@ void ImageEffectDescriptor::setSequentialRender(SequentialRender sr) {
   mProps.setInt(kOfxImageEffectInstancePropSequentialRender, 0, int(sr));
 }
 
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#ifdef OFX_API_1_2
 
 int ImageEffectDescriptor::version(int level) {
   return (mProps.size(kOfxPropVersion) > level ? mProps.getInt(kOfxPropVersion, level) : 0);
@@ -681,10 +681,10 @@ ImageEffect::RenderArgs::RenderArgs(ImageEffectHost *host, PropertySet &inArgs)
   : ImageEffect::RenderScaleArgs(host, inArgs), ImageEffect::TimeArgs(host, inArgs) {
   field = StringToImageField(inArgs.getString(kOfxImageEffectPropFieldToRender, 0));
   inArgs.getInts(kOfxImageEffectPropRenderWindow, 4, &(renderWindow.x1));
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
-  if (host->APIMajorVersion() > 1 || host->APIMinorVersion() >= 2) {
-    sequentialRender = inArgs.getInt(kOfxImageEffectPropSequentialRenderStatus, 0);
-    interactiveRender = inArgs.getInt(kOfxImageEffectPropInteractiveRenderStatus, 0);
+#ifdef OFX_API_1_2
+  if (host->checkAPIVersion(1, 2)) {
+    sequentialRender = (inArgs.getInt(kOfxImageEffectPropSequentialRenderStatus, 0) != 0);
+    interactiveRender = (inArgs.getInt(kOfxImageEffectPropInteractiveRenderStatus, 0) != 0);
   } else {
     sequentialRender = false;
     interactiveRender = false;
@@ -756,10 +756,10 @@ void ImageEffect::GetFramesNeededArgs::addInputRange(const std::string &name, co
 ImageEffect::SequenceArgs::SequenceArgs(ImageEffectHost *host, PropertySet &inArgs)
   : ImageEffect::RenderScaleArgs(host, inArgs) {
   interactive = (inArgs.getInt(kOfxPropIsInteractive, 0) == 1);
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
-  if (host->APIMajorVersion() > 1 || host->APIMinorVersion() >= 2) {
-    sequentialRender = inArgs.getInt(kOfxImageEffectPropSequentialRenderStatus, 0);
-    interactiveRender = inArgs.getInt(kOfxImageEffectPropInteractiveRenderStatus, 0);
+#ifdef OFX_API_1_2
+  if (host->checkAPIVersion(1, 2)) {
+    sequentialRender = (inArgs.getInt(kOfxImageEffectPropSequentialRenderStatus, 0) != 0);
+    interactiveRender = (inArgs.getInt(kOfxImageEffectPropInteractiveRenderStatus, 0) != 0);
   } else {
     sequentialRender = false;
     interactiveRender = false;
@@ -906,7 +906,7 @@ bool ImageEffect::isInteractive() {
   return (mProps.getInt(kOfxPropIsInteractive, 0) == 1);
 }
 
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#ifdef OFX_API_1_2
 
 std::string ImageEffect::description() {
   return mProps.getString(kOfxPropPluginDescription, 0);

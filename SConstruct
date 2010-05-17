@@ -37,9 +37,10 @@ if int(ARGUMENTS.get("forceOverlayRedraw", "1")) == 1:
 prjs = [
   { "name"    : "ofxpp",
     "type"    : "staticlib",
-    "srcs"    : glob.glob("src/lib/*.cpp"),
-    "install" : {"include/ofx": glob.glob("include/ofx/*.h"),
-                 "include"    : glob.glob("include/%s/*.h" % ofxVersion)}
+    "srcs"    : glob.glob("src/lib/*.cpp") + glob.glob("src/lib/parameter/*.cpp"),
+    "install" : {"include"               : glob.glob("include/%s/*.h" % ofxVersion),
+                 "include/ofx"           : glob.glob("include/ofx/*.h"),
+                 "include/ofx/parameter" : glob.glob("include/ofx/parameter/*.h")}
   },
   { "name"    : "ellipseFade",
     "type"    : "dynamicmodule",

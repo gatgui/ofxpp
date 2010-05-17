@@ -97,7 +97,7 @@ namespace ofx {
         double x;
         double y;
         double pressure;
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#ifdef OFX_API_1_2
         int viewportx;
         int viewporty;
 #endif
@@ -144,7 +144,7 @@ namespace ofx {
       std::string getSlaveToParam(int i);
       void setSlaveToParam(int i, const std::string &pn);
       
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
+#ifdef OFX_API_1_2
       RGBAColour<double> suggestedColour();
 #endif
       

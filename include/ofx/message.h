@@ -60,8 +60,7 @@ namespace ofx {
         }
       }
       
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
-      
+#ifdef OFX_API_1_2
       template <class Receiver>
       void setPersistentMessage(Receiver *recv,
                                 MessageType type,
@@ -101,15 +100,13 @@ namespace ofx {
           throw Exception(stat, "ofx::Message::clearPersistentMessage");
         }
       }
-      
 #endif
       
     protected:
       
       OfxMessageSuiteV1 *mSuite;
       
-#if OFX_VERSION_MAJOR > 1 || OFX_VERSION_MINOR >= 2
-      // Starting OpenFX 1.2 [if you're using prior headers, don't declare that]
+#ifdef OFX_API_1_2
       OfxMessageSuiteV2 *mSuite2;
 #endif
   };

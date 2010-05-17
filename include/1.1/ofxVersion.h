@@ -5,4 +5,6 @@
 #define OFX_VERSION_MINOR 1
 #define OFX_VERSION_STR   "1.1"
 
+#define OFX_API_1_1
+
 #endif

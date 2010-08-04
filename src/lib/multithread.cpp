@@ -35,7 +35,7 @@ Thread::~Thread() {
 // ---
 
 
-MultiThread::MultiThread(Host *h) throw(Exception) {
+MultiThreadSuite::MultiThreadSuite(Host *h) throw(Exception) {
   if (!h) {
     throw BadHandleError("Cannot initialize ofx::Threads: invalid host");
   }
@@ -46,10 +46,10 @@ MultiThread::MultiThread(Host *h) throw(Exception) {
   }
 }
 
-MultiThread::~MultiThread() {
+MultiThreadSuite::~MultiThreadSuite() {
 }
 
-unsigned int MultiThread::numCPUs() throw(Exception) {
+unsigned int MultiThreadSuite::numCPUs() throw(Exception) {
   unsigned int n;
   OfxStatus stat = mSuite->multiThreadNumCPUs(&n);
   if (stat != kOfxStatOK) {
@@ -58,7 +58,7 @@ unsigned int MultiThread::numCPUs() throw(Exception) {
   return n;
 }
 
-unsigned int MultiThread::index() throw(Exception) {
+unsigned int MultiThreadSuite::index() throw(Exception) {
   unsigned int i;
   OfxStatus stat = mSuite->multiThreadIndex(&i);
   if (stat != kOfxStatOK) {
@@ -67,22 +67,22 @@ unsigned int MultiThread::index() throw(Exception) {
   return i;
 }
 
-bool MultiThread::isSpawned() {
+bool MultiThreadSuite::isSpawned() {
   return (mSuite->multiThreadIsSpawnedThread() == 1);
 }
 
-void MultiThread::run(ThreadFunction func, unsigned int nThreads, void *userData) throw(Exception) {
+void MultiThreadSuite::run(ThreadFunction func, unsigned int nThreads, void *userData) throw(Exception) {
   OfxStatus stat = mSuite->multiThread(func, nThreads, userData);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::Threads::run");
   }
 }
 
-void MultiThread::run(Thread **threads, unsigned int nThreads) throw(Exception) {
+void MultiThreadSuite::run(Thread **threads, unsigned int nThreads) throw(Exception) {
   run(Thread::Main, nThreads, (void*)threads);
 }
 
-Mutex MultiThread::createMutex(int lockCount) throw(Exception) {
+Mutex MultiThreadSuite::createMutex(int lockCount) throw(Exception) {
   Mutex m = 0;
   OfxStatus stat = mSuite->mutexCreate(&m, lockCount);
   if (stat != kOfxStatOK) {
@@ -91,21 +91,21 @@ Mutex MultiThread::createMutex(int lockCount) throw(Exception) {
   return m;
 }
 
-void MultiThread::lock(Mutex mutex) throw(Exception) {
+void MultiThreadSuite::lock(Mutex mutex) throw(Exception) {
   OfxStatus stat = mSuite->mutexLock(mutex);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::MultiThread::lock");
   }
 }
 
-void MultiThread::unlock(Mutex mutex) throw(Exception) {
+void MultiThreadSuite::unlock(Mutex mutex) throw(Exception) {
   OfxStatus stat = mSuite->mutexUnLock(mutex);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::MultiThread::unLock");
   }
 }
 
-bool MultiThread::tryLock(Mutex mutex) throw(Exception) {
+bool MultiThreadSuite::tryLock(Mutex mutex) throw(Exception) {
   OfxStatus stat = mSuite->mutexTryLock(mutex);
   if (stat == kOfxStatFailed) {
     return false;
@@ -115,7 +115,7 @@ bool MultiThread::tryLock(Mutex mutex) throw(Exception) {
   return true;
 }
 
-void MultiThread::destroyMutex(Mutex mutex) {
+void MultiThreadSuite::destroyMutex(Mutex mutex) {
   mSuite->mutexDestroy(mutex);
 }
 

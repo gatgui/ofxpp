@@ -26,7 +26,7 @@ USA.
 
 namespace ofx {
 
-Message::Message(Host *h) throw(Exception) {
+MessageSuite::MessageSuite(Host *h) throw(Exception) {
   if (!h) {
     throw BadHandleError("Cannot initialize ofx::Message: invalid host");
   }
@@ -44,7 +44,7 @@ Message::Message(Host *h) throw(Exception) {
 #endif
 }
 
-Message::~Message() {
+MessageSuite::~MessageSuite() {
 }
 
 }

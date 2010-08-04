@@ -37,15 +37,15 @@ namespace ofx {
   class Host;
   class ImageEffect;
   
-  class TimeLine {
+  class TimeLineSuite {
     protected:
       
       OfxTimeLineSuiteV1 *mSuite;
       
     public:
       
-      TimeLine(Host *h) throw(Exception);
-      ~TimeLine();
+      TimeLineSuite(Host *h) throw(Exception);
+      ~TimeLineSuite();
       
       template <class Receiver>
       double getTime(Receiver *recv) throw(Exception) {

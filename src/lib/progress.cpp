@@ -26,7 +26,7 @@ USA.
 
 namespace ofx {
 
-Progress::Progress(Host *h) throw(Exception) {
+ProgressSuite::ProgressSuite(Host *h) throw(Exception) {
   if (!h) {
     throw BadHandleError("Cannot initialize ofx::Progress: invalid host");
   }
@@ -36,7 +36,7 @@ Progress::Progress(Host *h) throw(Exception) {
   }
 }
 
-Progress::~Progress() {
+ProgressSuite::~ProgressSuite() {
 }
 
 

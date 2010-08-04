@@ -57,15 +57,15 @@ namespace ofx {
       virtual void run() = 0;
   };
   
-  class MultiThread {
+  class MultiThreadSuite {
     protected:
       
       OfxMultiThreadSuiteV1 *mSuite;
       
     public:
       
-      MultiThread(Host *h) throw(Exception);
-      ~MultiThread();
+      MultiThreadSuite(Host *h) throw(Exception);
+      ~MultiThreadSuite();
       
       unsigned int numCPUs() throw(Exception);
       unsigned int index() throw(Exception);

@@ -26,7 +26,7 @@ USA.
 
 namespace ofx {
 
-Memory::Memory(Host *h) throw(Exception) {
+MemorySuite::MemorySuite(Host *h) throw(Exception) {
   if (!h) {
     throw BadHandleError("Cannot initialize ofx::Memory: invalid host");
   }
@@ -36,10 +36,10 @@ Memory::Memory(Host *h) throw(Exception) {
   }
 }
 
-Memory::~Memory() {
+MemorySuite::~MemorySuite() {
 }
 
-void Memory::free(void *mem) throw(Exception) {
+void MemorySuite::free(void *mem) throw(Exception) {
   OfxStatus stat = mSuite->memoryFree(mem);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::Memory::free");

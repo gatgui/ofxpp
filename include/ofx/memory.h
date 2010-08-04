@@ -36,7 +36,7 @@ namespace ofx {
   
   class Host;
   
-  class Memory {
+  class MemorySuite {
     
     protected:
       
@@ -44,8 +44,8 @@ namespace ofx {
       
     public:
       
-      Memory(Host *h) throw(Exception);
-      ~Memory();
+      MemorySuite(Host *h) throw(Exception);
+      ~MemorySuite();
       
       template <class Receiver>
       void* alloc(Receiver *recv, size_t nbytes) throw(Exception) {

@@ -69,15 +69,15 @@ void Host::init() throw(Exception) {
   
   mSuite = mPropSuite;
   
-  mTimeLine = new TimeLine(this);
+  mTimeLine = new TimeLineSuite(this);
   
-  mMultiThread = new MultiThread(this);
+  mMultiThread = new MultiThreadSuite(this);
   
-  mMemory = new Memory(this);
+  mMemory = new MemorySuite(this);
   
-  mMessage = new Message(this);
+  mMessage = new MessageSuite(this);
   
-  mProgress = new Progress(this);
+  mProgress = new ProgressSuite(this);
   
   mParamSuite = fetchSuite<OfxParameterSuiteV1>(kOfxParameterSuite, 1);
   if (!mParamSuite) {

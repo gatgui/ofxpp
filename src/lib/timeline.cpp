@@ -27,7 +27,7 @@ USA.
 
 namespace ofx {
 
-TimeLine::TimeLine(Host *h) throw(Exception) {
+TimeLineSuite::TimeLineSuite(Host *h) throw(Exception) {
   if (!h) {
     throw BadHandleError("ofx::TimeLine: invalid host");
   }
@@ -37,7 +37,7 @@ TimeLine::TimeLine(Host *h) throw(Exception) {
   }
 }
 
-TimeLine::~TimeLine() {
+TimeLineSuite::~TimeLineSuite() {
 }
 
 }

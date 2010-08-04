@@ -39,11 +39,11 @@ USA.
 namespace ofx {
   
   
-  class TimeLine;
-  class Progress;
-  class Message;
-  class Memory;
-  class MultiThread;
+  class TimeLineSuite;
+  class ProgressSuite;
+  class MessageSuite;
+  class MemorySuite;
+  class MultiThreadSuite;
   
   
   
@@ -64,15 +64,15 @@ namespace ofx {
         return mHost;
       }
       
-      inline TimeLine* getTimeLineSuite() {return mTimeLine;}
+      inline TimeLineSuite* getTimeLineSuite() {return mTimeLine;}
       
-      inline Progress* getProgressSuite() {return mProgress;}
+      inline ProgressSuite* getProgressSuite() {return mProgress;}
       
-      inline Message* getMessageSuite() {return mMessage;}
+      inline MessageSuite* getMessageSuite() {return mMessage;}
       
-      inline Memory* getMemorySuite() {return mMemory;}
+      inline MemorySuite* getMemorySuite() {return mMemory;}
       
-      inline MultiThread* getMultiThreadSuite() {return mMultiThread;}
+      inline MultiThreadSuite* getMultiThreadSuite() {return mMultiThread;}
       
       OfxPropertySuiteV1 *getPropertySuite() {return mPropSuite;}
       
@@ -106,11 +106,11 @@ namespace ofx {
     protected:
       
       OfxHost *mHost;
-      TimeLine *mTimeLine;
-      Progress *mProgress;
-      Message *mMessage;
-      Memory *mMemory;
-      MultiThread *mMultiThread;
+      TimeLineSuite *mTimeLine;
+      ProgressSuite *mProgress;
+      MessageSuite *mMessage;
+      MemorySuite *mMemory;
+      MultiThreadSuite *mMultiThread;
       OfxPropertySuiteV1 *mPropSuite;
       OfxParameterSuiteV1 *mParamSuite;
 #ifdef OFX_API_1_2

@@ -36,15 +36,15 @@ namespace ofx {
   
   class Host;
   
-  class Progress {
+  class ProgressSuite {
     protected:
       
       OfxProgressSuiteV1 *mSuite;
       
     public:
       
-      Progress(Host *h) throw(Exception);
-      ~Progress();
+      ProgressSuite(Host *h) throw(Exception);
+      ~ProgressSuite();
       
       template <class Receiver>
       void start(Receiver *recv, const std::string &label) throw(Exception) {

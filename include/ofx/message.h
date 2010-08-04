@@ -34,11 +34,11 @@ namespace ofx {
   
   class Host;
   
-  class Message {
+  class MessageSuite {
     public:
       
-      Message(Host *h) throw(Exception);
-      ~Message();
+      MessageSuite(Host *h) throw(Exception);
+      ~MessageSuite();
       
       template <class Receiver>
       void message(Receiver *recv,

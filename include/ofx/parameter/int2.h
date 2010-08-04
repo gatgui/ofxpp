@@ -55,7 +55,7 @@ namespace ofx {
       void setDisplayMax(int max0, int max1);
       
       void setDimensionLabel(int i, const std::string &name);
-      std::string dimensionLabel(int i);
+      std::string getDimensionLabel(int i);
   };
   
   class Int2Parameter : public ValueParameter {
@@ -83,7 +83,7 @@ namespace ofx {
       void getDisplayMax(int &max0, int &max1);
       void setDisplayMax(int max0, int max1);
       
-      std::string dimensionLabel(int i);
+      std::string getDimensionLabel(int i);
       
       // suite
       

@@ -42,11 +42,11 @@ namespace ofx {
       std::string getDefault();
       void setDefault(const std::string &v);
       
-      StringParamMode mode();
+      StringParamMode getMode();
       void setMode(StringParamMode m);
       
-      bool filePathExists();
-      void setFilePathExists(bool);
+      bool requireExistingFilePath();
+      void setRequireExistingFilePath(bool);
   };
   
   class StringParameter : public ValueParameter {
@@ -62,9 +62,9 @@ namespace ofx {
       
       std::string getDefault();
       
-      StringParamMode mode();
+      StringParamMode getMode();
       
-      bool filePathExists();
+      bool requireExistingFilePath();
       
       // suite
       

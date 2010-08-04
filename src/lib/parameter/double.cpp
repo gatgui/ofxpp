@@ -86,7 +86,7 @@ void DoubleParameterDescriptor::setDisplayMax(double max0) {
   setDouble(kOfxParamPropDisplayMax, 0, max0);
 }
 
-double DoubleParameterDescriptor::increment() {
+double DoubleParameterDescriptor::getIncrement() {
   return getDouble(kOfxParamPropIncrement, 0);
 }
 
@@ -94,7 +94,7 @@ void DoubleParameterDescriptor::setIncrement(double i) {
   setDouble(kOfxParamPropIncrement, 0, i);
 }
 
-int DoubleParameterDescriptor::digits() {
+int DoubleParameterDescriptor::getDigits() {
   return getInt(kOfxParamPropDigits, 0);
 }
 
@@ -110,7 +110,7 @@ void DoubleParameterDescriptor::setShowTimeMarker(bool yes) {
   setInt(kOfxParamPropShowTimeMarker, 0, (yes ? 1 : 0));
 }
 
-DoubleParamType DoubleParameterDescriptor::doubleType() {
+DoubleParamType DoubleParameterDescriptor::getDoubleType() {
   return StringToDoubleParamType(getString(kOfxParamPropDoubleType, 0));
 }
 
@@ -120,7 +120,7 @@ void DoubleParameterDescriptor::setDoubleType(DoubleParamType t) {
 
 #ifdef OFX_API_1_2
 
-Coordinates DoubleParameterDescriptor::defaultCoordinateSystem() {
+Coordinates DoubleParameterDescriptor::getDefaultCoordinateSystem() {
   return StringToCoordinates(getString(kOfxParamPropDefaultCoordinateSystem, 0));
 }
 
@@ -188,7 +188,7 @@ void DoubleParameter::setDisplayMax(double max0) {
   mProps.setDouble(kOfxParamPropDisplayMax, 0, max0);
 }
 
-double DoubleParameter::increment() {
+double DoubleParameter::getIncrement() {
   return mProps.getDouble(kOfxParamPropIncrement, 0);
 }
 
@@ -196,7 +196,7 @@ void DoubleParameter::setIncrement(double i) {
   mProps.setDouble(kOfxParamPropIncrement, 0, i);
 }
 
-int DoubleParameter::digits() {
+int DoubleParameter::getDigits() {
   return mProps.getInt(kOfxParamPropDigits, 0);
 }
 
@@ -212,13 +212,13 @@ void DoubleParameter::setShowTimeMarker(bool yes) {
   mProps.setInt(kOfxParamPropShowTimeMarker, 0, (yes ? 1 : 0));
 }
 
-DoubleParamType DoubleParameter::doubleType() {
+DoubleParamType DoubleParameter::getDoubleType() {
   return StringToDoubleParamType(mProps.getString(kOfxParamPropDoubleType, 0));
 }
 
 #ifdef OFX_API_1_2
 
-Coordinates DoubleParameter::defaultCoordinateSystem() {
+Coordinates DoubleParameter::getDefaultCoordinateSystem() {
   return StringToCoordinates(mProps.getString(kOfxParamPropDefaultCoordinateSystem, 0));
 }
 

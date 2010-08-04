@@ -38,11 +38,14 @@ USA.
 
 namespace ofx {
   
+  
   class TimeLine;
   class Progress;
   class Message;
   class Memory;
   class MultiThread;
+  
+  
   
   class Host : public PropertySet {
     public:
@@ -61,49 +64,61 @@ namespace ofx {
         return mHost;
       }
       
-      inline TimeLine* timeLine() {return mTimeLine;}
-      inline Progress* progress() {return mProgress;}
-      inline Message* message() {return mMessage;}
-      inline Memory* memory() {return mMemory;}
-      inline MultiThread* multiThread() {return mMultiThread;}
+      inline TimeLine* getTimeLineSuite() {return mTimeLine;}
       
-      OfxPropertySuiteV1 *propertySuite() {return mPropSuite;}
-      OfxParameterSuiteV1 *parameterSuite() {return mParamSuite;}
+      inline Progress* getProgressSuite() {return mProgress;}
+      
+      inline Message* getMessageSuite() {return mMessage;}
+      
+      inline Memory* getMemorySuite() {return mMemory;}
+      
+      inline MultiThread* getMultiThreadSuite() {return mMultiThread;}
+      
+      OfxPropertySuiteV1 *getPropertySuite() {return mPropSuite;}
+      
+      OfxParameterSuiteV1 *getParameterSuite() {return mParamSuite;}
       
       // host OpenFX version
-      int APIVersion(int level=0);
-      int APIMajorVersion();
-      int APIMinorVersion();
+      int getAPIVersion(int level=0);
+      
+      int getAPIMajorVersion();
+      
+      int getAPIMinorVersion();
+      
       bool checkAPIVersion(int major, int minor);
       
 #ifdef OFX_API_1_2
-      int version(int level=0);
-      int majorVersion();
-      int minorVersion();
-      std::string versionLabel();
       
-      void* OSHandle();
+      int getVersion(int level=0);
       
-      OfxParametricParameterSuiteV1 *parametricParameterSuite() {return mParametricParamSuite;}
+      int getMajorVersion();
+      
+      int getMinorVersion();
+      
+      std::string getVersionLabel();
+      
+      void* getOSHandle();
+      
+      OfxParametricParameterSuiteV1 *getParametricParameterSuite() {return mParametricParamSuite;}
+      
 #endif
       
     protected:
       
       OfxHost *mHost;
-      
       TimeLine *mTimeLine;
       Progress *mProgress;
       Message *mMessage;
       Memory *mMemory;
       MultiThread *mMultiThread;
-      
       OfxPropertySuiteV1 *mPropSuite;
       OfxParameterSuiteV1 *mParamSuite;
-      
 #ifdef OFX_API_1_2
       OfxParametricParameterSuiteV1 *mParametricParamSuite;
 #endif
   };
+  
+  
   
   class ImageEffectHost : public Host {
     public:
@@ -113,44 +128,70 @@ namespace ofx {
       
       virtual void init() throw(Exception);
       
-      inline OfxInteractSuiteV1* interactSuite() {return mInteractSuite;}
-      inline OfxImageEffectSuiteV1 *imageEffectSuite() {return mImageEffectSuite;}
+      inline OfxInteractSuiteV1* getInteractSuite() {return mInteractSuite;}
+      
+      inline OfxImageEffectSuiteV1 *getImageEffectSuite() {return mImageEffectSuite;}
       
       // general properties
-      std::string name();
-      std::string label();
+      std::string getName();
+      
+      std::string getLabel();
       
       // image effect properties
       bool isBackground();
-      bool supportsOverlays();
-      bool supportsMultiResolution();
-      bool supportsTiles();
-      bool supportsTemporalClipAccess();
-      int supportedComponentsCount();
+      
+      bool supportOverlays();
+      
+      bool supportMultiResolution();
+      
+      bool supportTiles();
+      
+      bool supportTemporalClipAccess();
+      
+      int getSupportedComponentsCount();
+      
       ImageComponent getSupportedComponent(int idx);
-      int supportedContextsCount();
+      
+      int getSupportedContextsCount();
+      
       ImageEffectContext getSupportedContext(int idx);
-      int supportedPixelDepthsCount();
+      
+      int getSupportedPixelDepthsCount();
+      
       BitDepth getSupportedPixelDepth(int idx);
-      bool supportsMultipleClipDepths();
-      bool supportsMultipleClipPARs();
-      bool setableFramerate();
-      bool setableFielding();
+      
+      bool supportMultipleClipDepths();
+      
+      bool supportMultipleClipPARs();
+      
+      bool isFramerateSetable();
+      
+      bool isFieldingSetable();
       
 #ifdef OFX_API_1_2
-      SequentialRender sequentialRender();
-      bool supportsParametricParamAnimation();
+      
+      SequentialRender getSequentialRender();
+      
+      bool supportParametricParamAnimation();
+      
 #endif
       
       // parameter properties
-      bool supportsCustomParamAnimation();
-      bool supportsStringParamAnimation();
-      bool supportsChoiceParamAnimation();
-      bool supportsBooleanParamAnimation();
-      bool supportsParamCustomInteract();
-      int maxParameters();
-      int maxParameterPages();
-      void parameterPageRowColumnCount(int &rowCount, int &columnCount);
+      bool supportCustomParamAnimation();
+      
+      bool supportStringParamAnimation();
+      
+      bool supportChoiceParamAnimation();
+      
+      bool supportBooleanParamAnimation();
+      
+      bool supportParamCustomInteract();
+      
+      int getMaxParameters();
+      
+      int getMaxParameterPages();
+      
+      void getParameterPageRowColumnCount(int &rowCount, int &columnCount);
     
     protected:
       

@@ -56,7 +56,7 @@ void StringParameterDescriptor::setDefault(const std::string &v) {
   setString(kOfxParamPropDefault, 0, v);
 }
 
-StringParamMode StringParameterDescriptor::mode() {
+StringParamMode StringParameterDescriptor::getMode() {
   return StringToStringParamMode(getString(kOfxParamPropStringMode, 0));
 }
 
@@ -64,11 +64,11 @@ void StringParameterDescriptor::setMode(StringParamMode m) {
   setString(kOfxParamPropStringMode, 0, StringParamModeToString(m));
 }
 
-bool StringParameterDescriptor::filePathExists() {
+bool StringParameterDescriptor::requireExistingFilePath() {
   return (getInt(kOfxParamPropStringFilePathExists, 0) == 1);
 }
 
-void StringParameterDescriptor::setFilePathExists(bool yes) {
+void StringParameterDescriptor::setRequireExistingFilePath(bool yes) {
   setInt(kOfxParamPropStringFilePathExists, 0, (yes ? 1 : 0));
 }
 
@@ -100,11 +100,11 @@ std::string StringParameter::getDefault() {
   return mProps.getString(kOfxParamPropDefault, 0);
 }
 
-StringParamMode StringParameter::mode() {
+StringParamMode StringParameter::getMode() {
   return StringToStringParamMode(mProps.getString(kOfxParamPropStringMode, 0));
 }
 
-bool StringParameter::filePathExists() {
+bool StringParameter::requireExistingFilePath() {
   return (mProps.getInt(kOfxParamPropStringFilePathExists, 0) == 1);
 }
 

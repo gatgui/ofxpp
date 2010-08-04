@@ -42,7 +42,7 @@ namespace ofx {
       
       // properties
       
-      bool initiallyOpened();
+      bool isInitiallyOpened();
       void setInitiallyOpened(bool o);
   };
   
@@ -58,7 +58,7 @@ namespace ofx {
       
       // properties
       
-      bool initiallyOpened();
+      bool isInitiallyOpened();
   };
   
 #else

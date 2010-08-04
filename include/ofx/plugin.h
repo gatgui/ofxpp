@@ -39,7 +39,7 @@ namespace ofx {
       Plugin();
       virtual ~Plugin();
       
-      inline OfxPlugin* description() {
+      inline OfxPlugin* getDescription() {
         return &mPlugin;
       }
       
@@ -84,7 +84,7 @@ namespace ofx {
           Log("*** Invalid plugin");
           return kOfxStatErrBadHandle;
         }
-        ImageEffectHost *host = plugin->host();
+        ImageEffectHost *host = plugin->getHost();
         if (!host) {
           Log("*** Invalid host");
           return kOfxStatErrBadHandle;
@@ -129,7 +129,7 @@ namespace ofx {
           }
           case ActionDestroyInstance: {
             Log("OFX Image Effect Plugin: Destroy instance");
-            plugin->remEffect(hEffect);
+            plugin->removeEffect(hEffect);
             return kOfxStatOK;
           }
           case ActionBeginInstanceChanged: {
@@ -351,7 +351,7 @@ namespace ofx {
         return kOfxStatReplyDefault;
       }
       
-      inline ImageEffectHost* host() {
+      inline ImageEffectHost* getHost() {
         return mHost;
       }
       
@@ -370,7 +370,7 @@ namespace ofx {
         }
       }
       
-      inline void remEffect(OfxImageEffectHandle handle) {
+      inline void removeEffect(OfxImageEffectHandle handle) {
         typename EffectMap::iterator it = mEffects.find(handle);
         if (it != mEffects.end()) {
           delete it->second;

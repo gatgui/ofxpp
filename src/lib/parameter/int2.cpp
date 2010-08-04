@@ -100,7 +100,7 @@ void Int2ParameterDescriptor::setDimensionLabel(int i, const std::string &l) {
   setString(kOfxParamPropDimensionLabel, i, l);
 }
 
-std::string Int2ParameterDescriptor::dimensionLabel(int i) {
+std::string Int2ParameterDescriptor::getDimensionLabel(int i) {
   return getString(kOfxParamPropDimensionLabel, i);
 }
 
@@ -171,7 +171,7 @@ void Int2Parameter::setDisplayMax(int v0, int v1) {
   mProps.setInt(kOfxParamPropDisplayMax, 1, v1);
 }
 
-std::string Int2Parameter::dimensionLabel(int i) {
+std::string Int2Parameter::getDimensionLabel(int i) {
   return mProps.getString(kOfxParamPropDimensionLabel, i);
 }
 

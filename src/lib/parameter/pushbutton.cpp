@@ -46,7 +46,7 @@ PushButtonParameterDescriptor& PushButtonParameterDescriptor::operator=(const Pu
   return *this;
 }
 
-EntryPoint PushButtonParameterDescriptor::interact() {
+EntryPoint PushButtonParameterDescriptor::getInteract() {
   return ((EntryPoint) getPointer(kOfxParamPropInteractV1, 0));
 }
 
@@ -54,7 +54,7 @@ void PushButtonParameterDescriptor::setInteract(EntryPoint func) {
   setPointer(kOfxParamPropInteractV1, 0, (void*)func);
 }
 
-void PushButtonParameterDescriptor::interactSize(double &w, double &h) {
+void PushButtonParameterDescriptor::getInteractSize(double &w, double &h) {
   w = getDouble(kOfxParamPropInteractSize, 0);
   h = getDouble(kOfxParamPropInteractSize, 1);
 }
@@ -64,7 +64,7 @@ void PushButtonParameterDescriptor::setInteractSize(double w, double h) {
   setDouble(kOfxParamPropInteractSize, 1, h);
 }
 
-double PushButtonParameterDescriptor::interactSizeAspect() {
+double PushButtonParameterDescriptor::getInteractSizeAspect() {
   return getDouble(kOfxParamPropInteractSizeAspect, 0);
 }
 
@@ -72,17 +72,17 @@ void PushButtonParameterDescriptor::setInteractSizeAspect(double a) {
   setDouble(kOfxParamPropInteractSizeAspect, 0, a);
 }
 
-void PushButtonParameterDescriptor::interactMinimumSize(int &w, int &h) {
+void PushButtonParameterDescriptor::getInteractMinSize(int &w, int &h) {
   w = getInt(kOfxParamPropInteractMinimumSize, 0);
   h = getInt(kOfxParamPropInteractMinimumSize, 1);
 }
 
-void PushButtonParameterDescriptor::setMinimumInteractSize(int w, int h) {
+void PushButtonParameterDescriptor::setInteractMinSize(int w, int h) {
   setInt(kOfxParamPropInteractMinimumSize, 0, w);
   setInt(kOfxParamPropInteractMinimumSize, 1, h);
 }
 
-void PushButtonParameterDescriptor::interactPreferedSize(int &w, int &h) {
+void PushButtonParameterDescriptor::getInteractPreferedSize(int &w, int &h) {
   w = getInt(kOfxParamPropInteractPreferedSize, 0);
   h = getInt(kOfxParamPropInteractPreferedSize, 1);
 }
@@ -130,25 +130,25 @@ PushButtonParameter& PushButtonParameter::operator=(const PushButtonParameter &r
   return *this;
 }
 
-EntryPoint PushButtonParameter::interact() {
+EntryPoint PushButtonParameter::getInteract() {
   return ((EntryPoint) mProps.getPointer(kOfxParamPropInteractV1, 0));
 }
 
-void PushButtonParameter::interactSize(double &w, double &h) {
+void PushButtonParameter::getInteractSize(double &w, double &h) {
   w = mProps.getDouble(kOfxParamPropInteractSize, 0);
   h = mProps.getDouble(kOfxParamPropInteractSize, 1);
 }
 
-double PushButtonParameter::interactSizeAspect() {
+double PushButtonParameter::getInteractSizeAspect() {
   return mProps.getDouble(kOfxParamPropInteractSizeAspect, 0);
 }
 
-void PushButtonParameter::interactMinimumSize(int &w, int &h) {
+void PushButtonParameter::getInteractMinSize(int &w, int &h) {
   w = mProps.getInt(kOfxParamPropInteractMinimumSize, 0);
   h = mProps.getInt(kOfxParamPropInteractMinimumSize, 1);
 }
 
-void PushButtonParameter::interactPreferedSize(int &w, int &h) {
+void PushButtonParameter::getInteractPreferedSize(int &w, int &h) {
   w = mProps.getInt(kOfxParamPropInteractPreferedSize, 0);
   h = mProps.getInt(kOfxParamPropInteractPreferedSize, 1);
 }

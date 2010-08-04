@@ -37,7 +37,7 @@ ParameterSetDescriptor::ParameterSetDescriptor(Host *h, OfxParamSetHandle hdl) t
   }
   OfxPropertySetHandle hProps;
   // unchecked?
-  mHost->parameterSuite()->paramSetGetPropertySet(mHandle, &hProps);
+  mHost->getParameterSuite()->paramSetGetPropertySet(mHandle, &hProps);
   mProps = PropertySet(mHost, hProps);
 }
 
@@ -58,7 +58,7 @@ ParameterSetDescriptor& ParameterSetDescriptor::operator=(const ParameterSetDesc
 
 IntParameterDescriptor ParameterSetDescriptor::defineIntParam(const std::string &name) throw(Exception) {
   OfxPropertySetHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeInteger), name.c_str(), &hParam);
+  OfxStatus stat = mHost->getParameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeInteger), name.c_str(), &hParam);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSetDescriptor::defineIntParam");
   }
@@ -67,7 +67,7 @@ IntParameterDescriptor ParameterSetDescriptor::defineIntParam(const std::string 
 
 Int2ParameterDescriptor ParameterSetDescriptor::defineInt2Param(const std::string &name) throw(Exception) {
   OfxPropertySetHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeInteger2D), name.c_str(), &hParam);
+  OfxStatus stat = mHost->getParameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeInteger2D), name.c_str(), &hParam);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSetDescriptor::defineInt2Param");
   }
@@ -76,7 +76,7 @@ Int2ParameterDescriptor ParameterSetDescriptor::defineInt2Param(const std::strin
 
 Int3ParameterDescriptor ParameterSetDescriptor::defineInt3Param(const std::string &name) throw(Exception) {
   OfxPropertySetHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeInteger3D), name.c_str(), &hParam);
+  OfxStatus stat = mHost->getParameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeInteger3D), name.c_str(), &hParam);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSetDescriptor::defineInt3Param");
   }
@@ -85,7 +85,7 @@ Int3ParameterDescriptor ParameterSetDescriptor::defineInt3Param(const std::strin
 
 DoubleParameterDescriptor ParameterSetDescriptor::defineDoubleParam(const std::string &name) throw(Exception) {
   OfxPropertySetHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeDouble), name.c_str(), &hParam);
+  OfxStatus stat = mHost->getParameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeDouble), name.c_str(), &hParam);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSetDescriptor::defineDoubleParam");
   }
@@ -94,7 +94,7 @@ DoubleParameterDescriptor ParameterSetDescriptor::defineDoubleParam(const std::s
 
 Double2ParameterDescriptor ParameterSetDescriptor::defineDouble2Param(const std::string &name) throw(Exception) {
   OfxPropertySetHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeDouble2D), name.c_str(), &hParam);
+  OfxStatus stat = mHost->getParameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeDouble2D), name.c_str(), &hParam);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSetDescriptor::defineDouble2Param");
   }
@@ -103,7 +103,7 @@ Double2ParameterDescriptor ParameterSetDescriptor::defineDouble2Param(const std:
 
 Double3ParameterDescriptor ParameterSetDescriptor::defineDouble3Param(const std::string &name) throw(Exception) {
   OfxPropertySetHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeDouble3D), name.c_str(), &hParam);
+  OfxStatus stat = mHost->getParameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeDouble3D), name.c_str(), &hParam);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSetDescriptor::defineDouble3Param");
   }
@@ -112,7 +112,7 @@ Double3ParameterDescriptor ParameterSetDescriptor::defineDouble3Param(const std:
 
 RGBParameterDescriptor ParameterSetDescriptor::defineRGBParam(const std::string &name) throw(Exception) {
   OfxPropertySetHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeRGB), name.c_str(), &hParam);
+  OfxStatus stat = mHost->getParameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeRGB), name.c_str(), &hParam);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSetDescriptor::defineRGBParam");
   }
@@ -121,7 +121,7 @@ RGBParameterDescriptor ParameterSetDescriptor::defineRGBParam(const std::string 
 
 RGBAParameterDescriptor ParameterSetDescriptor::defineRGBAParam(const std::string &name) throw(Exception) {
   OfxPropertySetHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeRGBA), name.c_str(), &hParam);
+  OfxStatus stat = mHost->getParameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeRGBA), name.c_str(), &hParam);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSetDescriptor::defineRGBAParam");
   }
@@ -130,7 +130,7 @@ RGBAParameterDescriptor ParameterSetDescriptor::defineRGBAParam(const std::strin
 
 BooleanParameterDescriptor ParameterSetDescriptor::defineBooleanParam(const std::string &name) throw(Exception) {
   OfxPropertySetHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeBoolean), name.c_str(), &hParam);
+  OfxStatus stat = mHost->getParameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeBoolean), name.c_str(), &hParam);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSetDescriptor::defineBooleanParam");
   }
@@ -139,7 +139,7 @@ BooleanParameterDescriptor ParameterSetDescriptor::defineBooleanParam(const std:
 
 ChoiceParameterDescriptor ParameterSetDescriptor::defineChoiceParam(const std::string &name) throw(Exception) {
   OfxPropertySetHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeChoice), name.c_str(), &hParam);
+  OfxStatus stat = mHost->getParameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeChoice), name.c_str(), &hParam);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSetDescriptor::defineChoiceParam");
   }
@@ -148,7 +148,7 @@ ChoiceParameterDescriptor ParameterSetDescriptor::defineChoiceParam(const std::s
 
 StringParameterDescriptor ParameterSetDescriptor::defineStringParam(const std::string &name) throw(Exception) {
   OfxPropertySetHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeString), name.c_str(), &hParam);
+  OfxStatus stat = mHost->getParameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeString), name.c_str(), &hParam);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSetDescriptor::defineStringParam");
   }
@@ -157,7 +157,7 @@ StringParameterDescriptor ParameterSetDescriptor::defineStringParam(const std::s
 
 CustomParameterDescriptor ParameterSetDescriptor::defineCustomParam(const std::string &name) throw(Exception) {
   OfxPropertySetHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeCustom), name.c_str(), &hParam);
+  OfxStatus stat = mHost->getParameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeCustom), name.c_str(), &hParam);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSetDescriptor::defineCustomParam");
   }
@@ -166,7 +166,7 @@ CustomParameterDescriptor ParameterSetDescriptor::defineCustomParam(const std::s
 
 GroupParameterDescriptor ParameterSetDescriptor::defineGroupParam(const std::string &name) throw(Exception) {
   OfxPropertySetHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeGroup), name.c_str(), &hParam);
+  OfxStatus stat = mHost->getParameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeGroup), name.c_str(), &hParam);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSetDescriptor::defineGroupParam");
   }
@@ -175,7 +175,7 @@ GroupParameterDescriptor ParameterSetDescriptor::defineGroupParam(const std::str
 
 PageParameterDescriptor ParameterSetDescriptor::definePageParam(const std::string &name) throw(Exception) {
   OfxPropertySetHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypePage), name.c_str(), &hParam);
+  OfxStatus stat = mHost->getParameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypePage), name.c_str(), &hParam);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSetDescriptor::definePageParam");
   }
@@ -184,7 +184,7 @@ PageParameterDescriptor ParameterSetDescriptor::definePageParam(const std::strin
 
 PushButtonParameterDescriptor ParameterSetDescriptor::definePushButtonParam(const std::string &name) throw(Exception) {
   OfxPropertySetHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypePushButton), name.c_str(), &hParam);
+  OfxStatus stat = mHost->getParameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypePushButton), name.c_str(), &hParam);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSetDescriptor::definePushButtonParam");
   }
@@ -195,7 +195,7 @@ PushButtonParameterDescriptor ParameterSetDescriptor::definePushButtonParam(cons
 
 ParametricParameterDescriptor ParameterSetDescriptor::defineParametricParam(const std::string &name) throw(Exception) {
   OfxPropertySetHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeParametric), name.c_str(), &hParam);
+  OfxStatus stat = mHost->getParameterSuite()->paramDefine(mHandle, ParamTypeToString(ParamTypeParametric), name.c_str(), &hParam);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSetDescriptor::defineParametricParam");
   }
@@ -217,7 +217,7 @@ ParameterSet::ParameterSet(Host *h, OfxParamSetHandle hdl) throw(Exception)
   }
   OfxPropertySetHandle hProps;
   // unchecked?
-  mHost->parameterSuite()->paramSetGetPropertySet(mHandle, &hProps);
+  mHost->getParameterSuite()->paramSetGetPropertySet(mHandle, &hProps);
   mProps = PropertySet(h, hProps);
 }
 
@@ -237,12 +237,12 @@ ParameterSet& ParameterSet::operator=(const ParameterSet &rhs) {
 
 IntParameter ParameterSet::getIntParam(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
+  OfxStatus stat = mHost->getParameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSet::getIntParam");
   }
   IntParameter param(mHost, hParam);
-  if (param.type() != ParamTypeInteger) {
+  if (param.getType() != ParamTypeInteger) {
     throw Exception(kOfxStatFailed, "ofx::ParameterSet::getIntParam: type mismatch");
   }
   return param;
@@ -250,12 +250,12 @@ IntParameter ParameterSet::getIntParam(const std::string &name) throw(Exception)
 
 Int2Parameter ParameterSet::getInt2Param(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
+  OfxStatus stat = mHost->getParameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSet::getInt2Param");
   }
   Int2Parameter param(mHost, hParam);
-  if (param.type() != ParamTypeInteger2D) {
+  if (param.getType() != ParamTypeInteger2D) {
     throw Exception(kOfxStatFailed, "ofx::ParameterSet::getInt2Param: type mismatch");
   }
   return param;
@@ -263,12 +263,12 @@ Int2Parameter ParameterSet::getInt2Param(const std::string &name) throw(Exceptio
 
 Int3Parameter ParameterSet::getInt3Param(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
+  OfxStatus stat = mHost->getParameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSet::getInt3Param");
   }
   Int3Parameter param(mHost, hParam);
-  if (param.type() != ParamTypeInteger3D) {
+  if (param.getType() != ParamTypeInteger3D) {
     throw Exception(kOfxStatFailed, "ofx::ParameterSet::getInt3Param: type mismatch");
   }
   return param;
@@ -276,12 +276,12 @@ Int3Parameter ParameterSet::getInt3Param(const std::string &name) throw(Exceptio
 
 DoubleParameter ParameterSet::getDoubleParam(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
+  OfxStatus stat = mHost->getParameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSet::getDoubleParam");
   }
   DoubleParameter param(mHost, hParam);
-  if (param.type() != ParamTypeDouble) {
+  if (param.getType() != ParamTypeDouble) {
     throw Exception(kOfxStatFailed, "ofx::ParameterSet::getDoubleParam: type mismatch");
   }
   return param;
@@ -289,12 +289,12 @@ DoubleParameter ParameterSet::getDoubleParam(const std::string &name) throw(Exce
 
 Double2Parameter ParameterSet::getDouble2Param(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
+  OfxStatus stat = mHost->getParameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSet::getDouble2Param");
   }
   Double2Parameter param(mHost, hParam);
-  if (param.type() != ParamTypeDouble2D) {
+  if (param.getType() != ParamTypeDouble2D) {
     throw Exception(kOfxStatFailed, "ofx::ParameterSet::getDouble2Param: type mismatch");
   }
   return param;
@@ -302,12 +302,12 @@ Double2Parameter ParameterSet::getDouble2Param(const std::string &name) throw(Ex
 
 Double3Parameter ParameterSet::getDouble3Param(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
+  OfxStatus stat = mHost->getParameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSet::getDouble3Param");
   }
   Double3Parameter param(mHost, hParam);
-  if (param.type() != ParamTypeDouble3D) {
+  if (param.getType() != ParamTypeDouble3D) {
     throw Exception(kOfxStatFailed, "ofx::ParameterSet::getDouble3Param: type mismatch");
   }
   return param;
@@ -315,12 +315,12 @@ Double3Parameter ParameterSet::getDouble3Param(const std::string &name) throw(Ex
 
 RGBParameter ParameterSet::getRGBParam(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
+  OfxStatus stat = mHost->getParameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSet::getRGBParam");
   }
   RGBParameter param(mHost, hParam);
-  if (param.type() != ParamTypeRGB) {
+  if (param.getType() != ParamTypeRGB) {
     throw Exception(kOfxStatFailed, "ofx::ParameterSet::getRGBParam: type mismatch");
   }
   return param;
@@ -328,12 +328,12 @@ RGBParameter ParameterSet::getRGBParam(const std::string &name) throw(Exception)
 
 RGBAParameter ParameterSet::getRGBAParam(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
+  OfxStatus stat = mHost->getParameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSet::getRGBAParam");
   }
   RGBAParameter param(mHost, hParam);
-  if (param.type() != ParamTypeRGBA) {
+  if (param.getType() != ParamTypeRGBA) {
     throw Exception(kOfxStatFailed, "ofx::ParameterSet::getRGBAParam: type mismatch");
   }
   return param;
@@ -341,12 +341,12 @@ RGBAParameter ParameterSet::getRGBAParam(const std::string &name) throw(Exceptio
 
 BooleanParameter ParameterSet::getBooleanParam(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
+  OfxStatus stat = mHost->getParameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSet::getBooleanParam");
   }
   BooleanParameter param(mHost, hParam);
-  if (param.type() != ParamTypeBoolean) {
+  if (param.getType() != ParamTypeBoolean) {
     throw Exception(kOfxStatFailed, "ofx::ParameterSet::getBooleanParam: type mismatch");
   }
   return param;
@@ -354,12 +354,12 @@ BooleanParameter ParameterSet::getBooleanParam(const std::string &name) throw(Ex
 
 ChoiceParameter ParameterSet::getChoiceParam(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
+  OfxStatus stat = mHost->getParameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSet::getChoiceParam");
   }
   ChoiceParameter param(mHost, hParam);
-  if (param.type() != ParamTypeChoice) {
+  if (param.getType() != ParamTypeChoice) {
     throw Exception(kOfxStatFailed, "ofx::ParameterSet::getChoiceParam: type mismatch");
   }
   return param;
@@ -367,12 +367,12 @@ ChoiceParameter ParameterSet::getChoiceParam(const std::string &name) throw(Exce
 
 StringParameter ParameterSet::getStringParam(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
+  OfxStatus stat = mHost->getParameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSet::getStringParam");
   }
   StringParameter param(mHost, hParam);
-  if (param.type() != ParamTypeString) {
+  if (param.getType() != ParamTypeString) {
     throw Exception(kOfxStatFailed, "ofx::ParameterSet::getStringParam: type mismatch");
   }
   return param;
@@ -380,12 +380,12 @@ StringParameter ParameterSet::getStringParam(const std::string &name) throw(Exce
 
 CustomParameter ParameterSet::getCustomParam(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
+  OfxStatus stat = mHost->getParameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSet::getCustomParam");
   }
   CustomParameter param(mHost, hParam);
-  if (param.type() != ParamTypeCustom) {
+  if (param.getType() != ParamTypeCustom) {
     throw Exception(kOfxStatFailed, "ofx::ParameterSet::getCustomParam: type mismatch");
   }
   return param;
@@ -393,12 +393,12 @@ CustomParameter ParameterSet::getCustomParam(const std::string &name) throw(Exce
 
 GroupParameter ParameterSet::getGroupParam(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
+  OfxStatus stat = mHost->getParameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSet::getGroupParam");
   }
   GroupParameter param(mHost, hParam);
-  if (param.type() != ParamTypeGroup) {
+  if (param.getType() != ParamTypeGroup) {
     throw Exception(kOfxStatFailed, "ofx::ParameterSet::getGroupParam: type mismatch");
   }
   return param;
@@ -406,12 +406,12 @@ GroupParameter ParameterSet::getGroupParam(const std::string &name) throw(Except
 
 PageParameter ParameterSet::getPageParam(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
+  OfxStatus stat = mHost->getParameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSet::getPageParam");
   }
   PageParameter param(mHost, hParam);
-  if (param.type() != ParamTypePage) {
+  if (param.getType() != ParamTypePage) {
     throw Exception(kOfxStatFailed, "ofx::ParameterSet::getPageParam: type mismatch");
   }
   return param;
@@ -419,12 +419,12 @@ PageParameter ParameterSet::getPageParam(const std::string &name) throw(Exceptio
 
 PushButtonParameter ParameterSet::getPushButtonParam(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
+  OfxStatus stat = mHost->getParameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSet::getPushButtonParam");
   }
   PushButtonParameter param(mHost, hParam);
-  if (param.type() != ParamTypePushButton) {
+  if (param.getType() != ParamTypePushButton) {
     throw Exception(kOfxStatFailed, "ofx::ParameterSet::getPushButtonParam: type mismatch");
   }
   return param;
@@ -434,12 +434,12 @@ PushButtonParameter ParameterSet::getPushButtonParam(const std::string &name) th
 
 ParametricParameter ParameterSet::getParametricParam(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;
-  OfxStatus stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
+  OfxStatus stat = mHost->getParameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParam, NULL);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSet::getParametricParam");
   }
   ParametricParameter param(mHost, hParam);
-  if (param.type() != ParamTypeParametric) {
+  if (param.getType() != ParamTypeParametric) {
     throw Exception(kOfxStatFailed, "ofx::ParameterSet::getParametricParam: type mismatch");
   }
   return param;
@@ -448,11 +448,11 @@ ParametricParameter ParameterSet::getParametricParam(const std::string &name) th
 #endif
 
 void ParameterSet::beginEdit(const std::string &label) {
-  mHost->parameterSuite()->paramEditBegin(mHandle, label.c_str());
+  mHost->getParameterSuite()->paramEditBegin(mHandle, label.c_str());
 }
 
 void ParameterSet::endEdit() {
-  mHost->parameterSuite()->paramEditEnd(mHandle);
+  mHost->getParameterSuite()->paramEditEnd(mHandle);
 }
 
 }

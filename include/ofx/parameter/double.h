@@ -54,20 +54,20 @@ namespace ofx {
       double getDisplayMax();
       void setDisplayMax(double max0);
       
-      double increment();
+      double getIncrement();
       void setIncrement(double i);
       
-      int digits();
+      int getDigits();
       void setDigits(int d);
       
       bool showTimeMarker();
       void setShowTimeMarker(bool);
       
-      DoubleParamType doubleType();
+      DoubleParamType getDoubleType();
       void setDoubleType(DoubleParamType t);
       
 #ifdef OFX_API_1_2
-      Coordinates defaultCoordinateSystem();
+      Coordinates getDefaultCoordinateSystem();
       void setDefaultCoordinateSystem(Coordinates cs);
 #endif
   };
@@ -97,19 +97,19 @@ namespace ofx {
       double getDisplayMax();
       void setDisplayMax(double max0);
       
-      double increment();
+      double getIncrement();
       void setIncrement(double i);
       
-      int digits();
+      int getDigits();
       void setDigits(int d);
       
       bool showTimeMarker();
       void setShowTimeMarker(bool);
       
-      DoubleParamType doubleType();
+      DoubleParamType getDoubleType();
       
 #ifdef OFX_API_1_2
-      Coordinates defaultCoordinateSystem();
+      Coordinates getDefaultCoordinateSystem();
 #endif
       // suite
       

@@ -96,7 +96,7 @@ void Double2ParameterDescriptor::setDisplayMax(double max0, double max1) {
   setDouble(kOfxParamPropDisplayMax, 1, max1);
 }
 
-double Double2ParameterDescriptor::increment() {
+double Double2ParameterDescriptor::getIncrement() {
   return getDouble(kOfxParamPropIncrement, 0);
 }
 
@@ -104,7 +104,7 @@ void Double2ParameterDescriptor::setIncrement(double i) {
   setDouble(kOfxParamPropIncrement, 0, i);
 }
 
-int Double2ParameterDescriptor::digits() {
+int Double2ParameterDescriptor::getDigits() {
   return getInt(kOfxParamPropDigits, 0);
 }
 
@@ -112,7 +112,7 @@ void Double2ParameterDescriptor::setDigits(int d) {
   setInt(kOfxParamPropDigits, 0, d);
 }
 
-DoubleParamType Double2ParameterDescriptor::doubleType() {
+DoubleParamType Double2ParameterDescriptor::getDoubleType() {
   return StringToDoubleParamType(getString(kOfxParamPropDoubleType, 0));
 }
 
@@ -124,13 +124,13 @@ void Double2ParameterDescriptor::setDimensionLabel(int i, const std::string &nam
   setString(kOfxParamPropDimensionLabel, i, name);
 }
 
-std::string Double2ParameterDescriptor::dimensionLabel(int i) {
+std::string Double2ParameterDescriptor::getDimensionLabel(int i) {
   return getString(kOfxParamPropDimensionLabel, i);
 }
 
 #ifdef OFX_API_1_2
 
-Coordinates Double2ParameterDescriptor::defaultCoordinateSystem() {
+Coordinates Double2ParameterDescriptor::getDefaultCoordinateSystem() {
   return StringToCoordinates(getString(kOfxParamPropDefaultCoordinateSystem, 0));
 }
 
@@ -207,7 +207,7 @@ void Double2Parameter::setDisplayMax(double max0, double max1) {
   mProps.setDouble(kOfxParamPropDisplayMax, 1, max1);
 }
 
-double Double2Parameter::increment() {
+double Double2Parameter::getIncrement() {
   return mProps.getDouble(kOfxParamPropIncrement, 0);
 }
 
@@ -215,7 +215,7 @@ void Double2Parameter::setIncrement(double i) {
   mProps.setDouble(kOfxParamPropIncrement, 0, i);
 }
 
-int Double2Parameter::digits() {
+int Double2Parameter::getDigits() {
   return mProps.getInt(kOfxParamPropDigits, 0);
 }
 
@@ -223,17 +223,17 @@ void Double2Parameter::setDigits(int d) {
   mProps.setInt(kOfxParamPropDigits, 0, d);
 }
 
-DoubleParamType Double2Parameter::doubleType() {
+DoubleParamType Double2Parameter::getDoubleType() {
   return StringToDoubleParamType(mProps.getString(kOfxParamPropDoubleType, 0));
 }
 
-std::string Double2Parameter::dimensionLabel(int i) {
+std::string Double2Parameter::getDimensionLabel(int i) {
   return mProps.getString(kOfxParamPropDimensionLabel, i);
 }
 
 #ifdef OFX_API_1_2
 
-Coordinates Double2Parameter::defaultCoordinateSystem() {
+Coordinates Double2Parameter::getDefaultCoordinateSystem() {
   return StringToCoordinates(mProps.getString(kOfxParamPropDefaultCoordinateSystem, 0));
 }
 

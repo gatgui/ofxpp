@@ -46,7 +46,7 @@ ParameterDescriptor& ParameterDescriptor::operator=(const ParameterDescriptor &r
   return *this;
 }
 
-std::string ParameterDescriptor::name() {
+std::string ParameterDescriptor::getName() {
   return getString(kOfxPropName, 0);
 }
 
@@ -54,7 +54,7 @@ void ParameterDescriptor::setName(const std::string &name) {
   setString(kOfxPropName, 0, name);
 }
 
-std::string ParameterDescriptor::label() {
+std::string ParameterDescriptor::getLabel() {
   return getString(kOfxPropLabel, 0);
 }
 
@@ -62,7 +62,7 @@ void ParameterDescriptor::setLabel(const std::string &lbl) {
   setString(kOfxPropLabel, 0, lbl);
 }
 
-std::string ParameterDescriptor::shortLabel() {
+std::string ParameterDescriptor::getShortLabel() {
   return getString(kOfxPropShortLabel, 0);
 }
 
@@ -70,7 +70,7 @@ void ParameterDescriptor::setShortLabel(const std::string &lbl) {
   setString(kOfxPropShortLabel, 0, lbl);
 }
 
-std::string ParameterDescriptor::longLabel() {
+std::string ParameterDescriptor::getLongLabel() {
   return getString(kOfxPropLongLabel, 0);
 }
 
@@ -78,7 +78,7 @@ void ParameterDescriptor::setLongLabel(const std::string &lbl) {
   setString(kOfxPropLongLabel, 0, lbl);
 }
 
-ParamType ParameterDescriptor::type() {
+ParamType ParameterDescriptor::getType() {
   return StringToParamType(getString(kOfxParamPropType, 0));
 }
 
@@ -98,7 +98,7 @@ void ParameterDescriptor::setCanUndo(bool yes) {
   setInt(kOfxParamPropCanUndo, 0, (yes ? 1 : 0));
 }
 
-std::string ParameterDescriptor::hint() {
+std::string ParameterDescriptor::getHint() {
   return getString(kOfxParamPropHint, 0);
 }
 
@@ -106,7 +106,7 @@ void ParameterDescriptor::setHint(const std::string &h) {
   setString(kOfxParamPropHint, 0, h);
 }
 
-std::string ParameterDescriptor::scriptName() {
+std::string ParameterDescriptor::getScriptName() {
   return getString(kOfxParamPropScriptName, 0);
 }
 
@@ -114,7 +114,7 @@ void ParameterDescriptor::setScriptName(const std::string &h) {
   setString(kOfxParamPropScriptName, 0, h);
 }
 
-std::string ParameterDescriptor::parent() {
+std::string ParameterDescriptor::getParent() {
   return getString(kOfxParamPropParent, 0);
 }
 
@@ -130,7 +130,7 @@ void ParameterDescriptor::enable(bool yes) {
   setInt(kOfxParamPropEnabled, 0, (yes ? 1 : 0));
 }
 
-void* ParameterDescriptor::data() {
+void* ParameterDescriptor::getData() {
   return getPointer(kOfxParamPropDataPtr, 0);
 }
 
@@ -140,11 +140,11 @@ void ParameterDescriptor::setData(void *d) {
 
 #ifdef OFX_API_1_2
       
-std::string ParameterDescriptor::PNGIcon() {
+std::string ParameterDescriptor::getPNGIcon() {
   return getString(kOfxPropIcon, 1);
 }
 
-std::string ParameterDescriptor::SVGIcon() {
+std::string ParameterDescriptor::getSVGIcon() {
   return getString(kOfxPropIcon, 0);
 }
 
@@ -181,7 +181,7 @@ ValueParameterDescriptor& ValueParameterDescriptor::operator=(const ValueParamet
   return *this;
 }
 
-EntryPoint ValueParameterDescriptor::interact() {
+EntryPoint ValueParameterDescriptor::getInteract() {
   return ((EntryPoint) getPointer(kOfxParamPropInteractV1, 0));
 }
 
@@ -189,7 +189,7 @@ void ValueParameterDescriptor::setInteract(EntryPoint func) {
   setPointer(kOfxParamPropInteractV1, 0, (void*)func);
 }
 
-void ValueParameterDescriptor::interactSize(double &w, double &h) {
+void ValueParameterDescriptor::getInteractSize(double &w, double &h) {
   w = getDouble(kOfxParamPropInteractSize, 0);
   h = getDouble(kOfxParamPropInteractSize, 1);
 }
@@ -199,7 +199,7 @@ void ValueParameterDescriptor::setInteractSize(double w, double h) {
   setDouble(kOfxParamPropInteractSize, 1, h);
 }
 
-double ValueParameterDescriptor::interactSizeAspect() {
+double ValueParameterDescriptor::getInteractSizeAspect() {
   return getDouble(kOfxParamPropInteractSizeAspect, 0);
 }
 
@@ -207,17 +207,17 @@ void ValueParameterDescriptor::setInteractSizeAspect(double a) {
   setDouble(kOfxParamPropInteractSizeAspect, 0, a);
 }
 
-void ValueParameterDescriptor::interactMinimumSize(int &w, int &h) {
+void ValueParameterDescriptor::getInteractMinSize(int &w, int &h) {
   w = getInt(kOfxParamPropInteractMinimumSize, 0);
   h = getInt(kOfxParamPropInteractMinimumSize, 1);
 }
 
-void ValueParameterDescriptor::setMinimumInteractSize(int w, int h) {
+void ValueParameterDescriptor::setInteractMinSize(int w, int h) {
   setInt(kOfxParamPropInteractMinimumSize, 0, w);
   setInt(kOfxParamPropInteractMinimumSize, 1, h);
 }
 
-void ValueParameterDescriptor::interactPreferedSize(int &w, int &h) {
+void ValueParameterDescriptor::getInteractPreferedSize(int &w, int &h) {
   w = getInt(kOfxParamPropInteractPreferedSize, 0);
   h = getInt(kOfxParamPropInteractPreferedSize, 1);
 }
@@ -267,14 +267,14 @@ void ValueParameterDescriptor::setEvaluateOnChange(bool yes) {
   setInt(kOfxParamPropEvaluateOnChange, 0, (yes ? 1 : 0));
 }
 
-bool ValueParameterDescriptor::pluginMayWrite() {
+bool ValueParameterDescriptor::mayPluginWrite() {
   return (getInt(kOfxParamPropPluginMayWrite, 0) == 1);
 }
 void ValueParameterDescriptor::setPluginMayWrite(bool yes) {
   setInt(kOfxParamPropPluginMayWrite, 0, (yes ? 1 : 0));
 }
 
-ParamInvalidate ValueParameterDescriptor::cacheInvalidation() {
+ParamInvalidate ValueParameterDescriptor::getCacheInvalidation() {
   return StringToParamInvalidate(getString(kOfxParamPropCacheInvalidation, 0));
 }
 
@@ -309,7 +309,7 @@ Parameter::Parameter(Host *h, OfxParamHandle hdl) throw(Exception)
   if (!h) {
     throw BadHandleError("ofx::Parameter::Parameter: invalid host");
   }
-  mSuite = h->parameterSuite();
+  mSuite = h->getParameterSuite();
   OfxPropertySetHandle hProps;
   mSuite->paramGetPropertySet(mHandle, &hProps);
   mProps = PropertySet(h, hProps);
@@ -330,11 +330,11 @@ Parameter& Parameter::operator=(const Parameter &rhs) {
   return *this;
 }
 
-std::string Parameter::name() {
+std::string Parameter::getName() {
   return mProps.getString(kOfxPropName, 0);
 }
 
-std::string Parameter::label() {
+std::string Parameter::getLabel() {
   return mProps.getString(kOfxPropLabel, 0);
 }
 
@@ -342,7 +342,7 @@ void Parameter::setLabel(const std::string &lbl) {
   mProps.setString(kOfxPropLabel, 0, lbl);
 }
 
-std::string Parameter::shortLabel() {
+std::string Parameter::getShortLabel() {
   return mProps.getString(kOfxPropShortLabel, 0);
 }
 
@@ -350,7 +350,7 @@ void Parameter::setShortLabel(const std::string &lbl) {
   mProps.setString(kOfxPropShortLabel, 0, lbl);
 }
 
-std::string Parameter::longLabel() {
+std::string Parameter::getLongLabel() {
   return mProps.getString(kOfxPropLongLabel, 0);
 }
 
@@ -358,7 +358,7 @@ void Parameter::setLongLabel(const std::string &lbl) {
   mProps.setString(kOfxPropLongLabel, 0, lbl);
 }
 
-ParamType Parameter::type() {
+ParamType Parameter::getType() {
   return StringToParamType(mProps.getString(kOfxParamPropType, 0));
 }
 
@@ -374,7 +374,7 @@ bool Parameter::canUndo() {
   return (mProps.getInt(kOfxParamPropCanUndo, 0) == 1);
 }
 
-std::string Parameter::hint() {
+std::string Parameter::getHint() {
   return mProps.getString(kOfxParamPropHint, 0);
 }
 
@@ -382,11 +382,11 @@ void Parameter::setHint(const std::string &h) {
   mProps.setString(kOfxParamPropHint, 0, h);
 }
 
-std::string Parameter::scriptName() {
+std::string Parameter::getScriptName() {
   return mProps.getString(kOfxParamPropScriptName, 0);
 }
 
-std::string Parameter::parent() {
+std::string Parameter::getParent() {
   return mProps.getString(kOfxParamPropParent, 0);
 }
 
@@ -398,7 +398,7 @@ void Parameter::enable(bool yes) {
   mProps.setInt(kOfxParamPropEnabled, 0, (yes ? 1 : 0));
 }
 
-void* Parameter::data() {
+void* Parameter::getData() {
   return mProps.getPointer(kOfxParamPropDataPtr, 0);
 }
 
@@ -408,11 +408,11 @@ void Parameter::setData(void *d) {
 
 #ifdef OFX_API_1_2
       
-std::string Parameter::PNGIcon() {
+std::string Parameter::getPNGIcon() {
   return mProps.getString(kOfxPropIcon, 1);
 }
 
-std::string Parameter::SVGIcon() {
+std::string Parameter::getSVGIcon() {
   return mProps.getString(kOfxPropIcon, 0);
 }
 
@@ -440,25 +440,25 @@ ValueParameter& ValueParameter::operator=(const ValueParameter &rhs) {
   return *this;
 }
 
-EntryPoint ValueParameter::interact() {
+EntryPoint ValueParameter::getInteract() {
   return ((EntryPoint) mProps.getPointer(kOfxParamPropInteractV1, 0));
 }
 
-void ValueParameter::interactSize(double &w, double &h) {
+void ValueParameter::getInteractSize(double &w, double &h) {
   w = mProps.getDouble(kOfxParamPropInteractSize, 0);
   h = mProps.getDouble(kOfxParamPropInteractSize, 1);
 }
 
-double ValueParameter::interactSizeAspect() {
+double ValueParameter::getInteractSizeAspect() {
   return mProps.getDouble(kOfxParamPropInteractSizeAspect, 0);
 }
 
-void ValueParameter::interactMinimumSize(int &w, int &h) {
+void ValueParameter::getInteractMinSize(int &w, int &h) {
   w = mProps.getInt(kOfxParamPropInteractMinimumSize, 0);
   h = mProps.getInt(kOfxParamPropInteractMinimumSize, 1);
 }
 
-void ValueParameter::interactPreferedSize(int &w, int &h) {
+void ValueParameter::getInteractPreferedSize(int &w, int &h) {
   w = mProps.getInt(kOfxParamPropInteractPreferedSize, 0);
   h = mProps.getInt(kOfxParamPropInteractPreferedSize, 1);
 }
@@ -483,11 +483,11 @@ bool ValueParameter::evaluateOnChange() {
   return (mProps.getInt(kOfxParamPropEvaluateOnChange, 0) == 1);
 }
 
-bool ValueParameter::pluginMayWrite() {
+bool ValueParameter::mayPluginWrite() {
   return (mProps.getInt(kOfxParamPropPluginMayWrite, 0) == 1);
 }
 
-ParamInvalidate ValueParameter::cacheInvalidation() {
+ParamInvalidate ValueParameter::getCacheInvalidation() {
   return StringToParamInvalidate(mProps.getString(kOfxParamPropCacheInvalidation, 0));
 }
 
@@ -551,9 +551,9 @@ void ValueParameter::copy(ValueParameter &from, Time offset, FrameRange *range) 
     OfxRangeD frameRange;
     frameRange.min = range->first;
     frameRange.max = range->second;
-    stat = mSuite->paramCopy(handle(), from.handle(), offset, &frameRange);
+    stat = mSuite->paramCopy(getHandle(), from.getHandle(), offset, &frameRange);
   } else {
-    stat = mSuite->paramCopy(handle(), from.handle(), offset, NULL);
+    stat = mSuite->paramCopy(getHandle(), from.getHandle(), offset, NULL);
   }
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ValueParameter::copy");

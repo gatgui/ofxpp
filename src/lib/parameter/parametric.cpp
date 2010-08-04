@@ -48,7 +48,7 @@ ParametricParameterDescriptor& ParametricParameterDescriptor::operator=(const Pa
   return *this;
 }
 
-int ParametricParameterDescriptor::dimension() {
+int ParametricParameterDescriptor::getDimension() {
   return getInt(kOfxParamPropParametricDimension, 0);
 }
 
@@ -56,7 +56,7 @@ void ParametricParameterDescriptor::setDimension(int n) {
   setInt(kOfxParamPropParametricDimension, 0, n);
 }
 
-RGBAColour<double> ParametricParameterDescriptor::UIColour(int d) {
+RGBAColour<double> ParametricParameterDescriptor::getUIColour(int d) {
   int offset = 3 * d;
   RGBAColour<double> rv;
   rv.r = getDouble(kOfxParamPropParametricUIColour, offset+0);
@@ -73,7 +73,7 @@ void ParametricParameterDescriptor::setUIColour(int d, const RGBAColour<double> 
   setDouble(kOfxParamPropParametricUIColour, offset+2, c.b);
 }
 
-EntryPoint ParametricParameterDescriptor::interactBackground() {
+EntryPoint ParametricParameterDescriptor::getInteractBackground() {
   return (EntryPoint) getPointer(kOfxParamPropParametricInteractBackground, 0);
 }
 
@@ -81,7 +81,7 @@ void ParametricParameterDescriptor::setInteractBackground(EntryPoint ep) {
   setPointer(kOfxParamPropParametricInteractBackground, 0, (void*)ep);
 }
 
-void ParametricParameterDescriptor::range(double &pmin, double &pmax) {
+void ParametricParameterDescriptor::getRange(double &pmin, double &pmax) {
   pmin = getDouble(kOfxParamPropParametricRange, 0);
   pmax = getDouble(kOfxParamPropParametricRange, 1);
 }
@@ -91,7 +91,7 @@ void ParametricParameterDescriptor::setRange(double pmin, double pmax) {
   setDouble(kOfxParamPropParametricRange, 1, pmax);
 }
 
-std::string ParametricParameterDescriptor::dimensionLabel(int d) {
+std::string ParametricParameterDescriptor::getDimensionLabel(int d) {
   return getString(kOfxParamPropDimensionLabel, d);
 }
 
@@ -107,7 +107,7 @@ ParametricParameter::ParametricParameter()
 
 ParametricParameter::ParametricParameter(Host *h, OfxParamHandle hdl)
   : ValueParameter(h, hdl) {
-  mParametricSuite = h->parametricParameterSuite();
+  mParametricSuite = h->getParametricParameterSuite();
   if (!mParametricSuite) {
     throw MissingHostFeatureError("Parametric parameter suite");
   }
@@ -126,11 +126,11 @@ ParametricParameter& ParametricParameter::operator=(const ParametricParameter &r
   return *this;
 }
 
-int ParametricParameter::dimension() {
+int ParametricParameter::getDimension() {
   return mProps.getInt(kOfxParamPropParametricDimension, 0);
 }
 
-RGBAColour<double> ParametricParameter::UIColour(int d) {
+RGBAColour<double> ParametricParameter::getUIColour(int d) {
   int offset = 3 * d;
   RGBAColour<double> rv;
   rv.r = mProps.getDouble(kOfxParamPropParametricUIColour, offset+0);
@@ -140,20 +140,20 @@ RGBAColour<double> ParametricParameter::UIColour(int d) {
   return rv;
 }
 
-EntryPoint ParametricParameter::interactBackground() {
+EntryPoint ParametricParameter::getInteractBackground() {
   return (EntryPoint) mProps.getPointer(kOfxParamPropParametricInteractBackground, 0);
 }
 
-void ParametricParameter::range(double &pmin, double &pmax) {
+void ParametricParameter::getRange(double &pmin, double &pmax) {
   pmin = mProps.getDouble(kOfxParamPropParametricRange, 0);
   pmax = mProps.getDouble(kOfxParamPropParametricRange, 1);
 }
 
-std::string ParametricParameter::dimensionLabel(int d) {
+std::string ParametricParameter::getDimensionLabel(int d) {
   return mProps.getString(kOfxParamPropDimensionLabel, d);
 }
 
-int ParametricParameter::controlPointsCount(int curveIndex, Time t) {
+int ParametricParameter::getControlPointsCount(int curveIndex, Time t) {
   int rv = 0;
   OfxStatus stat = mParametricSuite->parametricParamGetNControlPoints(mHandle, curveIndex, t, &rv);
   if (stat != kOfxStatOK) {

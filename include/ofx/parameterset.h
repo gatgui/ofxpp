@@ -63,7 +63,7 @@ namespace ofx {
       
       ParameterSetDescriptor& operator=(const ParameterSetDescriptor &rhs);
       
-      inline Host* host() {
+      inline Host* getHost() {
         return mHost;
       }
       
@@ -109,7 +109,7 @@ namespace ofx {
       
       ParameterSet& operator=(const ParameterSet &rhs);
       
-      inline Host* host() {
+      inline Host* getHost() {
         return mHost;
       }
       

@@ -300,12 +300,21 @@ namespace ofx {
 #endif
   
   enum SequentialRender {
+    // Those are the meaning on the plugin side
     SequentialRenderNotNeeded = 0,
     SequentialRenderRequired = 1,
 #ifdef OFX_API_1_2
     SequentialRenderIfPossible = 2,
 #endif
-    MaxSequentialRender
+    MaxSequentialRender,
+    // Those are the meaning on the host side
+    SequentialRenderUnknown = 0,// not guarantied
+    SequentialRenderAlways = 1, // always supported if plugin requires so
+#ifdef OFX_API_1_2
+    // -> plugin will have to watch the kOfxImageEffectPropSequenceRenderStatus property
+    //    for the BeginSequenceRender, Render and EndSequenceRender actions
+    SequentialRenderSometimes = 2
+#endif
   };
   
   typedef OfxTime Time;

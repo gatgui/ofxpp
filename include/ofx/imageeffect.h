@@ -38,11 +38,13 @@ namespace ofx {
   
   class Interaction;
   
+  
   struct PixelPreferences {
     ImageComponent components;
     BitDepth bitDepth;
     double pixelAspectRatio;
   };
+  
   
   struct ClipPreferences { // derive from PixelPreferences?
     double frameRate;
@@ -51,7 +53,8 @@ namespace ofx {
     bool continuousSamples;
     bool frameVarying;
   };
-    
+  
+  
   class Image {
     public:
       
@@ -62,68 +65,68 @@ namespace ofx {
       
       Image& operator=(const Image &rhs);
       
-      inline OfxPropertySetHandle handle() {
-        return mProps.handle();
+      inline OfxPropertySetHandle getHandle() {
+        return mProps.getHandle();
       }
       
-      inline void* data() {
+      inline void* getData() {
         return mData;
       }
       
-      inline BitDepth pixelDepth() const {
+      inline BitDepth getPixelDepth() const {
         return mBitDepth;
       }
       
-      inline ImageComponent components() const {
+      inline ImageComponent getComponents() const {
         return mComponents;
       }
       
-      inline ImagePreMult preMultiplication() const {
+      inline ImagePreMult getPreMultiplication() const {
         return mPreMult;
       }
       
-      inline void renderScale(double &sx, double &sy) const {
+      inline void getRenderScale(double &sx, double &sy) const {
         sx = mRenderScaleX;
         sy = mRenderScaleY;
       }
       
-      inline double pixelAspectRatio() const {
+      inline double getPixelAspectRatio() const {
         return mPixelAspectRatio;
       }
       
-      const Rect<int>& regionOfDefinition() const {
+      const Rect<int>& getRegionOfDefinition() const {
         return mRoD;
       }
       
-      inline ImageField field() const {
+      inline ImageField getField() const {
         return mField;
       }
       
-      inline const std::string& uniqueIdentifier() const {
+      inline const std::string& getUniqueID() const {
         return mUID;
       }
       
-      inline int componentBytes() const {
+      inline int getComponentBytes() const {
         return mCompBytes;
       }
       
-      inline int numComponents() const {
+      inline int getComponentsCount() const {
         return mNumComps;
       }
       
-      inline int pixelBytes() const {
+      inline int getPixelBytes() const {
         return mPixelBytes;
       }
       
-      inline int rowBytes() {
+      inline int getRowBytes() {
         return mRowBytes;
       }
       
-      inline const Rect<int>& bounds() {
+      inline const Rect<int>& getBounds() {
         return mBounds;
       }
       
-      inline void* pixelAddress(int x, int y) {
+      inline void* getPixelAddress(int x, int y) {
         if (x < mBounds.x1 || x >= mBounds.x2 || y < mBounds.y1 || y >= mBounds.y2) {
           return 0;
         }
@@ -131,8 +134,8 @@ namespace ofx {
       }
       
       template <typename ComponentType>
-      inline bool pixelAddress(int x, int y, RGBAColour<ComponentType> *&adr) {
-        adr = (RGBAColour<ComponentType>*) pixelAddress(x, y);
+      inline bool getPixelAddress(int x, int y, RGBAColour<ComponentType> *&adr) {
+        adr = (RGBAColour<ComponentType>*) getPixelAddress(x, y);
         return (adr != 0);
       }
       
@@ -144,7 +147,6 @@ namespace ofx {
       
       PropertySet mProps;
       OfxImageEffectSuiteV1 *mSuite;
-      
       BitDepth mBitDepth;
       ImageComponent mComponents;
       ImagePreMult mPreMult;
@@ -154,7 +156,6 @@ namespace ofx {
       Rect<int> mRoD;
       ImageField mField;
       std::string mUID;
-      
       int mCompBytes;
       int mNumComps;
       int mPixelBytes;
@@ -173,40 +174,40 @@ namespace ofx {
       
       ClipDescriptor& operator=(const ClipDescriptor &rhs);
       
-      inline OfxPropertySetHandle handle() {
-        return mProps.handle();
+      inline OfxPropertySetHandle getHandle() {
+        return mProps.getHandle();
       }
       
       // properties
       
-      std::string name();
+      std::string getName();
       
-      std::string label();
+      std::string getLabel();
       void setLabel(const std::string &l);
       
-      std::string shortLabel();
+      std::string getShortLabel();
       void setShortLabel(const std::string &l);
       
-      std::string longLabel();
+      std::string getLongLabel();
       void setLongLabel(const std::string &l);
       
-      int supportedComponentsCount();
+      int getSupportedComponentsCount();
       ImageComponent getSupportedComponent(int i);
       void setSupportedComponent(int i, ImageComponent ic);
       
-      bool needsTemporalClipAccess();
-      void requireTemporalClipAccess(bool);
+      bool requireTemporalClipAccess();
+      void setTemporalClipAccess(bool);
       
       bool isOptional();
       void setOptional(bool);
       
-      ImageFieldExtract fieldExtraction();
+      ImageFieldExtract getFieldExtraction();
       void setFieldExtraction(ImageFieldExtract f);
       
       bool isMask();
       void setMask(bool);
       
-      bool supportsTiles();
+      bool supportTiles();
       void setTilesSupport(bool);
     
     protected:
@@ -224,11 +225,11 @@ namespace ofx {
       
       Clip& operator=(const Clip &rhs);
       
-      inline ImageEffectHost* host() {
+      inline ImageEffectHost* getHost() {
         return mHost;
       }
       
-      inline OfxImageClipHandle handle() {
+      inline OfxImageClipHandle getHandle() {
         return mHandle;
       }
       
@@ -242,52 +243,53 @@ namespace ofx {
       
       // properties
       
-      std::string name();
+      std::string getName();
       
-      std::string label();
+      std::string getLabel();
       
-      std::string shortLabel();
+      std::string getShortLabel();
       
-      std::string longLabel();
+      std::string getLongLabel();
       
-      int supportedComponentsCount();
+      int getSupportedComponentsCount();
       ImageComponent getSupportedComponent(int i);
       
-      bool needsTemporalClipAccess();
+      bool requireTemporalClipAccess();
       
       bool isOptional();
       
-      ImageFieldExtract fieldExtraction();
+      ImageFieldExtract getFieldExtraction();
       
       bool isMask();
       
-      bool supportsTiles();
+      bool supportTiles();
       
-      BitDepth pixelDepth();
+      BitDepth getPixelDepth();
       
-      ImageComponent components();
+      ImageComponent getComponents();
       
-      BitDepth unmappedPixelDepth();
+      ImagePreMult getPreMultiplication();
       
-      ImageComponent unmappedComponents();
+      double getPixelAspectRatio();
       
-      ImagePreMult preMultiplication();
+      double getFrameRate();
       
-      double pixelAspectRatio();
+      void getFrameRange(double &from, double &to);
       
-      double frameRate();
-      
-      void frameRange(double &from, double &to);
-      
-      ImageFieldOrder fieldOrder();
+      ImageFieldOrder getFieldOrder();
       
       bool isConnected();
       
-      void unmappedFrameRange(double &from, double &to);
+      bool supportContinuousSampling();
       
-      double unmappedFrameRate();
+      BitDepth getUnmappedPixelDepth();
       
-      bool continuousSamples();
+      ImageComponent getUnmappedComponents();
+      
+      void getUnmappedFrameRange(double &from, double &to);
+      
+      double getUnmappedFrameRate();
+      
       
     protected:
       
@@ -295,6 +297,7 @@ namespace ofx {
       PropertySet mProps;
       ImageEffectHost *mHost;
   };
+  
   
   class ImageEffectDescriptor {
     protected:
@@ -314,19 +317,19 @@ namespace ofx {
       
       ImageEffectDescriptor& operator=(const ImageEffectDescriptor &rhs);
       
-      inline ImageEffectHost* host() {
+      inline ImageEffectHost* getHost() {
         return mHost;
       }
       
-      inline OfxImageEffectHandle handle() {
+      inline OfxImageEffectHandle getHandle() {
         return mHandle;
       }
       
-      inline PropertySet& properties() {
+      inline PropertySet& getProperties() {
         return mProps;
       }
       
-      inline ParameterSetDescriptor& parameters() {
+      inline ParameterSetDescriptor& getParameters() {
         return mParams;
       }
       
@@ -336,77 +339,78 @@ namespace ofx {
       
       // properties
       
-      std::string label();
+      std::string getLabel();
       void setLabel(const std::string &s);
       
-      std::string shortLabel();
+      std::string getShortLabel();
       void setShortLabel(const std::string &s);
       
-      std::string longLabel();
+      std::string getLongLabel();
       void setLongLabel(const std::string &s);
       
-      int supportedContextsCount();
+      int getSupportedContextsCount();
       ImageEffectContext getSupportedContext(int i);
       void setSupportedContext(int i, ImageEffectContext ctx);
       
-      std::string grouping();
-      void setGrouping(const std::string &g);
+      std::string getGroup();
+      void setGroup(const std::string &g);
       
-      bool singleInstance();
+      bool isSingleInstance();
       void setSingleInstance(bool);
       
-      RenderThreadSafety renderThreadSafety();
+      RenderThreadSafety getRenderThreadSafety();
       void setRenderThreadSafety(RenderThreadSafety rts);
       
-      bool hostFrameThreading();
+      // indicates whether plugin relies on host for frame threading or not
+      bool requireHostFrameThreading();
       void setHostFrameThreading(bool);
       
       // Use this way:
       //   effectDesc->setOverlayInteract(InteractEntryPoint<MyPluginClass, MyInteractDescriptionClass, MyInteractClass>)
-      EntryPoint overlayInteract();
+      EntryPoint getOverlayInteract();
       void setOverlayInteract(EntryPoint func);
       
-      bool supportsMultiResolution();
+      bool supportMultiResolution();
       void setMultiResolutionSupport(bool);
       
-      bool supportsTiles();
+      bool supportTiles();
       void setTilesSupport(bool);
       
-      bool needsTemporalClipAccess();
-      void requireTemporalClipAccess(bool);
+      bool requireTemporalClipAccess();
+      void setTemporalClipAccess(bool);
       
-      int supportedPixelDepthsCount();
+      int getSupportedPixelDepthsCount();
       void setSupportedPixelDepth(int i, BitDepth bd);
       BitDepth getSupportedPixelDepth(int i);
       
-      bool fieldRenderTwiceAlways();
-      void setFieldRenderTwiceAlways(bool);
+      bool alwaysRenderFieldTwice();
+      void setAlwaysRenderFieldTwice(bool);
       
-      bool supportsMultipleClipDepths();
+      bool supportMultipleClipDepths();
       void setMultipleClipDepthsSupport(bool);
       
-      bool supportsMultipleClipPARs();
+      bool supportMultipleClipPARs();
       void setMultipleClipPARsSupport(bool);  
       
-      int clipPreferencesSlaveParamCount();
+      int getClipPreferencesSlaveParamCount();
       std::string getClipPreferencesSlaveParam(int i);
       void setClipPreferencesSlaveParam(int i, const std::string &n);
       
-      std::string pluginFilePath();
+      std::string getPluginFilePath();
       
-      SequentialRender sequentialRender();
+      SequentialRender getSequentialRender();
       void setSequentialRender(SequentialRender sr);
       
 #ifdef OFX_API_1_2
-      int version(int level);
-      int majorVersion();
-      int minorVersion();
+      int getVersion(int level);
+      int getMajorVersion();
+      int getMinorVersion();
       void setVersion(int level, int v);
       
-      std::string versionLabel();
+      std::string getVersionLabel();
       void setVersionLabel(const std::string &vl);
       
-      std::string description();
+      std::string getDescription();
       void setDescription(const std::string &vl);
 #endif
       
@@ -415,6 +419,7 @@ namespace ofx {
       virtual OfxStatus describe();
       virtual OfxStatus describeInContext(ImageEffectContext ctx);
   };
+  
   
   class ImageEffect {
     public:
@@ -521,19 +526,19 @@ namespace ofx {
       ImageEffect(ImageEffectHost *h, OfxImageEffectHandle hdl);
       virtual ~ImageEffect();
       
-      inline ImageEffectHost* host() {
+      inline ImageEffectHost* getHost() {
         return mHost;
       }
       
-      inline PropertySet& properties() {
+      inline PropertySet& getProperties() {
         return mProps;
       }
       
-      inline ParameterSet& parameters() {
+      inline ParameterSet& getParameters() {
         return mParams;
       }
       
-      inline OfxImageEffectHandle handle() {
+      inline OfxImageEffectHandle getHandle() {
         return mHandle;
       }
       
@@ -551,30 +556,30 @@ namespace ofx {
       
       // properties
       
-      ImageEffectContext context();
+      ImageEffectContext getContext();
       
-      void* instanceData();
+      void* getInstanceData();
       void setInstanceData(void *data);
       
-      void projectSize(double &w, double &h);
+      void getProjectSize(double &w, double &h);
       
-      void projectOffset(double &x, double &y);
+      void getProjectOffset(double &x, double &y);
       
-      void projectExtent(double &w, double &h);
+      void getProjectExtent(double &w, double &h);
       
-      double projectPixelAspectRatio();
+      double getProjectPixelAspectRatio();
       
-      double duration();
+      double getDuration();
       
-      SequentialRender sequentialRender();
+      SequentialRender getSequentialRender();
       void setSequentialRender(SequentialRender sr);
       
-      double frameRate();
+      double getFrameRate();
       
       bool isInteractive();
       
 #ifdef OFX_API_1_2
-      std::string description();
+      std::string getDescription();
 #endif
       
       // Image effect actions

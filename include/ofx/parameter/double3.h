@@ -54,20 +54,20 @@ namespace ofx {
       void getDisplayMax(double &max0, double &max1, double &max2);
       void setDisplayMax(double max0, double max1, double max2);
       
-      double increment();
+      double getIncrement();
       void setIncrement(double i);
       
-      int digits();
+      int getDigits();
       void setDigits(int d);
       
-      DoubleParamType doubleType();
+      DoubleParamType getDoubleType();
       void setDoubleType(DoubleParamType t);
       
       void setDimensionLabel(int i, const std::string &name);
-      std::string dimensionLabel(int i);
+      std::string getDimensionLabel(int i);
       
 #ifdef OFX_API_1_2
-      Coordinates defaultCoordinateSystem();
+      Coordinates getDefaultCoordinateSystem();
       void setDefaultCoordinateSystem(Coordinates cs);
 #endif
   };
@@ -97,18 +97,18 @@ namespace ofx {
       void getDisplayMax(double &max0, double &max1, double &max2);
       void setDisplayMax(double max0, double max1, double max2);
       
-      double increment();
+      double getIncrement();
       void setIncrement(double i);
       
-      int digits();
+      int getDigits();
       void setDigits(int d);
       
-      DoubleParamType doubleType();
+      DoubleParamType getDoubleType();
       
-      std::string dimensionLabel(int i);
+      std::string getDimensionLabel(int i);
       
 #ifdef OFX_API_1_2
-      Coordinates defaultCoordinateSystem();
+      Coordinates getDefaultCoordinateSystem();
 #endif
       
       // suite

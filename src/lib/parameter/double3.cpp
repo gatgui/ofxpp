@@ -106,7 +106,7 @@ void Double3ParameterDescriptor::setDisplayMax(double max0, double max1, double 
   setDouble(kOfxParamPropDisplayMax, 2, max2);
 }
 
-double Double3ParameterDescriptor::increment() {
+double Double3ParameterDescriptor::getIncrement() {
   return getDouble(kOfxParamPropIncrement, 0);
 }
 
@@ -114,7 +114,7 @@ void Double3ParameterDescriptor::setIncrement(double i) {
   setDouble(kOfxParamPropIncrement, 0, i);
 }
 
-int Double3ParameterDescriptor::digits() {
+int Double3ParameterDescriptor::getDigits() {
   return getInt(kOfxParamPropDigits, 0);
 }
 
@@ -122,7 +122,7 @@ void Double3ParameterDescriptor::setDigits(int d) {
   setInt(kOfxParamPropDigits, 0, d);
 }
 
-DoubleParamType Double3ParameterDescriptor::doubleType() {
+DoubleParamType Double3ParameterDescriptor::getDoubleType() {
   return StringToDoubleParamType(getString(kOfxParamPropDoubleType, 0));
 }
 
@@ -134,13 +134,13 @@ void Double3ParameterDescriptor::setDimensionLabel(int i, const std::string &nam
   setString(kOfxParamPropDimensionLabel, i, name);
 }
 
-std::string Double3ParameterDescriptor::dimensionLabel(int i) {
+std::string Double3ParameterDescriptor::getDimensionLabel(int i) {
   return getString(kOfxParamPropDimensionLabel, i);
 }
 
 #ifdef OFX_API_1_2
 
-Coordinates Double3ParameterDescriptor::defaultCoordinateSystem() {
+Coordinates Double3ParameterDescriptor::getDefaultCoordinateSystem() {
   return StringToCoordinates(getString(kOfxParamPropDefaultCoordinateSystem, 0));
 }
 
@@ -226,7 +226,7 @@ void Double3Parameter::setDisplayMax(double max0, double max1, double max2) {
   mProps.setDouble(kOfxParamPropDisplayMax, 2, max2);
 }
 
-double Double3Parameter::increment() {
+double Double3Parameter::getIncrement() {
   return mProps.getDouble(kOfxParamPropIncrement, 0);
 }
 
@@ -234,7 +234,7 @@ void Double3Parameter::setIncrement(double i) {
   mProps.setDouble(kOfxParamPropIncrement, 0, i);
 }
 
-int Double3Parameter::digits() {
+int Double3Parameter::getDigits() {
   return mProps.getInt(kOfxParamPropDigits, 0);
 }
 
@@ -242,17 +242,17 @@ void Double3Parameter::setDigits(int d) {
   mProps.setInt(kOfxParamPropDigits, 0, d);
 }
 
-DoubleParamType Double3Parameter::doubleType() {
+DoubleParamType Double3Parameter::getDoubleType() {
   return StringToDoubleParamType(mProps.getString(kOfxParamPropDoubleType, 0));
 }
 
-std::string Double3Parameter::dimensionLabel(int i) {
+std::string Double3Parameter::getDimensionLabel(int i) {
   return mProps.getString(kOfxParamPropDimensionLabel, i);
 }
 
 #ifdef OFX_API_1_2
 
-Coordinates Double3Parameter::defaultCoordinateSystem() {
+Coordinates Double3Parameter::getDefaultCoordinateSystem() {
   return StringToCoordinates(mProps.getString(kOfxParamPropDefaultCoordinateSystem, 0));
 }
 

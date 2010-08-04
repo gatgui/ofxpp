@@ -51,7 +51,7 @@ namespace ofx {
       
       bool hasAlpha();
       
-      int bitDepth();
+      int getBitDepth();
       
       // Interact actions
       
@@ -62,6 +62,7 @@ namespace ofx {
       OfxInteractHandle mHandle;
       PropertySet mProps;
   };
+  
   
   class Interact {
     public:
@@ -125,27 +126,27 @@ namespace ofx {
       
       // properties
       
-      ImageEffect* effectInstance();
+      ImageEffect* getEffectInstance();
       
-      void* instanceData();
+      void* getInstanceData();
       void setInstanceData(void *d);
       
-      void pixelScale(double &sx, double &sy);
+      void getPixelScale(double &sx, double &sy);
       
-      RGBAColour<double> backgroundColor();
+      RGBAColour<double> getBackgroundColor();
       
-      void viewportSize(int &w, int &h);
+      void getViewportSize(int &w, int &h);
       
       bool hasAlpha();
       
-      int bitDepth();
+      int getBitDepth();
       
-      int slaveToParamCount();
+      int getSlaveToParamCount();
       std::string getSlaveToParam(int i);
       void setSlaveToParam(int i, const std::string &pn);
       
 #ifdef OFX_API_1_2
-      RGBAColour<double> suggestedColour();
+      RGBAColour<double> getSuggestedColour();
 #endif
       
       // Interact actions
@@ -179,7 +180,7 @@ namespace ofx {
                                OfxPropertySetHandle hInArgs,
                                OfxPropertySetHandle) {
     
-    ImageEffectHost *host = PluginClass::Instance()->host();
+    ImageEffectHost *host = PluginClass::Instance()->getHost();
     
     OfxInteractHandle hInteract = (OfxInteractHandle) handle;
     

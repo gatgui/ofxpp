@@ -69,7 +69,7 @@ namespace ofx {
       
       int size(const char * prop);
       
-      inline OfxPropertySetHandle handle() {
+      inline OfxPropertySetHandle getHandle() {
         return mHandle;
       }
     

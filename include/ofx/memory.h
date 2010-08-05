@@ -50,7 +50,7 @@ namespace ofx {
       template <class Receiver>
       void* alloc(Receiver *recv, size_t nbytes) throw(Exception) {
         void *rv = 0;
-        OfxStatus stat = mSuite->memoryAlloc(recv->handle(), nbytes, &rv);
+        OfxStatus stat = mSuite->memoryAlloc(recv->getHandle(), nbytes, &rv);
         if (stat != kOfxStatOK) {
           throw Exception(stat, "ofx::Memory::alloc");
         }

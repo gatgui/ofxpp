@@ -46,14 +46,13 @@ namespace ofx {
                    const char *id,
                    const char *format, ...) throw(Exception) {
         va_list args;
-        char dummy;
         char buffer[8192];
         
         va_start(args, format);
         vsnprintf(buffer, 8192, format, args);
         va_end(args);
         
-        OfxStatus stat = mSuite->message(recv->handle(), MessageTypeToString(type), id, buffer);  
+        OfxStatus stat = mSuite->message(recv->getHandle(), MessageTypeToString(type), id, buffer);  
         
         if (stat != kOfxStatOK) {
           throw Exception(stat, "ofx::Message::message");
@@ -74,14 +73,13 @@ namespace ofx {
         }
         
         va_list args;
-        char dummy;
         char buffer[8192];
         
         va_start(args, format);
         vsnprintf(buffer, 8192, format, args);
         va_end(args);
         
-        OfxStatus stat = mSuite2->setPersistentMessage(recv->handle(), MessageTypeToString(type), id, buffer);
+        OfxStatus stat = mSuite2->setPersistentMessage(recv->getHandle(), MessageTypeToString(type), id, buffer);
         
         if (stat != kOfxStatOK) {
           throw Exception(stat, "ofx::Message::setPersistentMessage");
@@ -94,7 +92,7 @@ namespace ofx {
           throw MissingHostFeatureError("Message suite v2");
         }
         
-        OfxStatus stat = mSuite2->clearPersistentMessage(recv->handle());
+        OfxStatus stat = mSuite2->clearPersistentMessage(recv->getHandle());
         
         if (stat != kOfxStatOK) {
           throw Exception(stat, "ofx::Message::clearPersistentMessage");

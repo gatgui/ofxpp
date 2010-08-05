@@ -48,7 +48,7 @@ namespace ofx {
       
       template <class Receiver>
       void start(Receiver *recv, const std::string &label) throw(Exception) {
-        OfxStatus stat = mSuite->progressStart(recv->handle(), label.c_str());
+        OfxStatus stat = mSuite->progressStart(recv->getHandle(), label.c_str());
         if (stat != kOfxStatOK) {
           throw Exception(stat, "ofx::Progress::start");
         }
@@ -56,7 +56,7 @@ namespace ofx {
       
       template <class Receiver>
       void update(Receiver *recv, double progress) throw(Exception) {
-        OfxStatus stat = mSuite->progressUpdate(recv->handle(), progress);
+        OfxStatus stat = mSuite->progressUpdate(recv->getHandle(), progress);
         if (stat != kOfxStatOK) {
           throw Exception(stat, "ofx::Progress::Update");
         }
@@ -64,7 +64,7 @@ namespace ofx {
       
       template <class Receiver>
       void end(Receiver *recv) throw(Exception) {
-        OfxStatus stat = mSuite->progressEnd(recv->handle());
+        OfxStatus stat = mSuite->progressEnd(recv->getHandle());
         if (stat != kOfxStatOK) {
           throw Exception(stat, "ofx::Progress::End");
         }

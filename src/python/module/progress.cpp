@@ -24,14 +24,6 @@ USA.
 #include "common.h"
 
 PyTypeObject PyOFXProgressSuiteType;
-/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.ProgressSuite",
-  sizeof(PyOFXProgressSuite),
-  0
-};*/
 
 static PyObject* PyOFXProgressSuite_New(PyTypeObject *type, PyObject *, PyObject *)
 {

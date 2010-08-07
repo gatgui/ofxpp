@@ -24,14 +24,6 @@ USA.
 #include "common.h"
 
 PyTypeObject PyOFXMemorySuiteType;
-/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.MemorySuite",
-  sizeof(PyOFXMemorySuite),
-  0
-};*/
 
 static PyObject* PyOFXMemorySuite_New(PyTypeObject *type, PyObject *, PyObject *)
 {

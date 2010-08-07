@@ -24,26 +24,7 @@ USA.
 #include "common.h"
 
 PyTypeObject PyOFXHostType;
-/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.Host",
-  sizeof(PyOFXHost),
-  0
-};
-*/
-
 PyTypeObject PyOFXImageEffectHostType;
-/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.ImageEffectHost",
-  sizeof(PyOFXImageEffectHost),
-  0
-};
-*/
 
 // ---
 

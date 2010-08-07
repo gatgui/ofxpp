@@ -24,16 +24,6 @@ USA.
 #include "common.h"
 
 PyTypeObject PyOFXHandleType;
-/*
- =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.Handle",
-  sizeof(PyOFXHandle),
-  0
-};
-*/
 
 static PyObject* PyOFXHandle_New(PyTypeObject *type, PyObject *, PyObject *)
 {

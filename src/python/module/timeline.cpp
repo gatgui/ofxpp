@@ -24,14 +24,6 @@ USA.
 #include "common.h"
 
 PyTypeObject PyOFXTimeLineSuiteType;
-/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.TimeLineSuite",
-  sizeof(PyOFXTimeLineSuite),
-  0
-};*/
 
 static PyObject* PyOFXTimeLineSuite_New(PyTypeObject *type, PyObject *, PyObject *)
 {

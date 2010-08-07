@@ -24,28 +24,9 @@ USA.
 #include "common.h"
 
 PyTypeObject PyOFXParameterDescriptorType;
-/*
- =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.ParameterDescriptor",
-  sizeof(PyOFXParameterDescriptor),
-  0
-};
-*/
-
 PyTypeObject PyOFXValueParameterDescriptorType;
-/*
- =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.ValueParameterDescriptor",
-  sizeof(PyOFXValueParameterDescriptor),
-  0
-};
-*/
+PyTypeObject PyOFXParameterType;
+PyTypeObject PyOFXValueParameterType;
 
 // ---
 
@@ -81,7 +62,18 @@ PyObject* PyOFXParameterDescriptor_GetName(PyObject *self, void*)
     return NULL;
   }
   
-  return PyString_FromString(pdesc->desc->getName().c_str());
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pdesc->desc->getName();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  return PyString_FromString(rv.c_str());
 }
 
 PyObject* PyOFXParameterDescriptor_GetLabel(PyObject *self, void*)
@@ -94,7 +86,18 @@ PyObject* PyOFXParameterDescriptor_GetLabel(PyObject *self, void*)
     return NULL;
   }
   
-  return PyString_FromString(pdesc->desc->getLabel().c_str());
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pdesc->desc->getLabel();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  return PyString_FromString(rv.c_str());
 }
 
 PyObject* PyOFXParameterDescriptor_GetShortLabel(PyObject *self, void*)
@@ -107,7 +110,18 @@ PyObject* PyOFXParameterDescriptor_GetShortLabel(PyObject *self, void*)
     return NULL;
   }
   
-  return PyString_FromString(pdesc->desc->getShortLabel().c_str());
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pdesc->desc->getShortLabel();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  return PyString_FromString(rv.c_str());
 }
 
 PyObject* PyOFXParameterDescriptor_GetLongLabel(PyObject *self, void*)
@@ -120,7 +134,18 @@ PyObject* PyOFXParameterDescriptor_GetLongLabel(PyObject *self, void*)
     return NULL;
   }
   
-  return PyString_FromString(pdesc->desc->getLongLabel().c_str());
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pdesc->desc->getLongLabel();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  return PyString_FromString(rv.c_str());
 }
 
 PyObject* PyOFXParameterDescriptor_GetType(PyObject *self, void*)
@@ -133,7 +158,18 @@ PyObject* PyOFXParameterDescriptor_GetType(PyObject *self, void*)
     return NULL;
   }
   
-  return PyInt_FromLong(pdesc->desc->getType());
+  bool failed = false;
+  
+  ofx::ParamType rv;
+  
+  CATCH({rv = pdesc->desc->getType();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  return PyInt_FromLong(long(rv));
 }
 
 PyObject* PyOFXParameterDescriptor_GetSecret(PyObject *self, void*)
@@ -146,7 +182,18 @@ PyObject* PyOFXParameterDescriptor_GetSecret(PyObject *self, void*)
     return NULL;
   }
   
-  if (pdesc->desc->isSecret())
+  bool failed = false;
+  
+  bool rv;
+  
+  CATCH({rv = pdesc->desc->isSecret();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  if (rv)
   {
     Py_INCREF(Py_True);
     return Py_True;
@@ -168,7 +215,18 @@ PyObject* PyOFXParameterDescriptor_GetCanUndo(PyObject *self, void*)
     return NULL;
   }
   
-  if (pdesc->desc->canUndo())
+  bool failed = false;
+  
+  bool rv;
+  
+  CATCH({rv = pdesc->desc->canUndo();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  if (rv)
   {
     Py_INCREF(Py_True);
     return Py_True;
@@ -190,7 +248,18 @@ PyObject* PyOFXParameterDescriptor_GetHint(PyObject *self, void*)
     return NULL;
   }
   
-  return PyString_FromString(pdesc->desc->getHint().c_str());
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pdesc->desc->getHint();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  return PyString_FromString(rv.c_str());
 }
 
 PyObject* PyOFXParameterDescriptor_GetScriptName(PyObject *self, void*)
@@ -203,7 +272,18 @@ PyObject* PyOFXParameterDescriptor_GetScriptName(PyObject *self, void*)
     return NULL;
   }
   
-  return PyString_FromString(pdesc->desc->getScriptName().c_str());
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pdesc->desc->getScriptName();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  return PyString_FromString(rv.c_str());
 }
 
 PyObject* PyOFXParameterDescriptor_GetParent(PyObject *self, void*)
@@ -216,7 +296,18 @@ PyObject* PyOFXParameterDescriptor_GetParent(PyObject *self, void*)
     return NULL;
   }
   
-  return PyString_FromString(pdesc->desc->getParent().c_str());
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pdesc->desc->getParent();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  return PyString_FromString(rv.c_str());
 }
 
 PyObject* PyOFXParameterDescriptor_GetEnable(PyObject *self, void*)
@@ -229,7 +320,18 @@ PyObject* PyOFXParameterDescriptor_GetEnable(PyObject *self, void*)
     return NULL;
   }
   
-  if (pdesc->desc->isEnable())
+  bool failed = false;
+  
+  bool rv;
+  
+  CATCH({rv = pdesc->desc->isEnable();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  if (rv)
   {
     Py_INCREF(Py_True);
     return Py_True;
@@ -251,7 +353,18 @@ PyObject* PyOFXParameterDescriptor_GetData(PyObject *self, void*)
     return NULL;
   }
   
-  return ((PyObject*) pdesc->desc->getData());
+  bool failed = false;
+  
+  void *rv;
+  
+  CATCH({rv = pdesc->desc->getData();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  return ((PyObject*) rv);
 }
 
 #ifdef OFX_API_1_2
@@ -266,7 +379,18 @@ PyObject* PyOFXParameterDescriptor_GetPNGIcon(PyObject *self, void*)
     return NULL;
   }
   
-  return PyString_FromString(pdesc->desc->getPNGIcon().c_str());
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pdesc->desc->getPNGIcon();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  return PyString_FromString(rv.c_str());
 }
 
 PyObject* PyOFXParameterDescriptor_GetSVGIcon(PyObject *self, void*)
@@ -279,7 +403,18 @@ PyObject* PyOFXParameterDescriptor_GetSVGIcon(PyObject *self, void*)
     return NULL;
   }
   
-  return PyString_FromString(pdesc->desc->getSVGIcon().c_str());
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pdesc->desc->getSVGIcon();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  return PyString_FromString(rv.c_str());
 }
 
 #endif
@@ -300,7 +435,14 @@ int PyOFXParameterDescriptor_SetName(PyObject *self, PyObject *val, void*)
     return -1;
   }
   
-  pdesc->desc->setName(PyString_AsString(val));
+  bool failed = false;
+  
+  CATCH({pdesc->desc->setName(PyString_AsString(val));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -321,7 +463,14 @@ int PyOFXParameterDescriptor_SetLabel(PyObject *self, PyObject *val, void*)
     return -1;
   }
   
-  pdesc->desc->setLabel(PyString_AsString(val));
+  bool failed = false;
+  
+  CATCH({pdesc->desc->setLabel(PyString_AsString(val));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -342,7 +491,14 @@ int PyOFXParameterDescriptor_SetShortLabel(PyObject *self, PyObject *val, void*)
     return -1;
   }
   
-  pdesc->desc->setShortLabel(PyString_AsString(val));
+  bool failed = false;
+  
+  CATCH({pdesc->desc->setShortLabel(PyString_AsString(val));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -363,7 +519,14 @@ int PyOFXParameterDescriptor_SetLongLabel(PyObject *self, PyObject *val, void*)
     return -1;
   }
   
-  pdesc->desc->setLongLabel(PyString_AsString(val));
+  bool failed = false;
+  
+  CATCH({pdesc->desc->setLongLabel(PyString_AsString(val));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -384,7 +547,14 @@ int PyOFXParameterDescriptor_SetHint(PyObject *self, PyObject *val, void*)
     return -1;
   }
   
-  pdesc->desc->setHint(PyString_AsString(val));
+  bool failed = false;
+  
+  CATCH({pdesc->desc->setHint(PyString_AsString(val));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -405,7 +575,14 @@ int PyOFXParameterDescriptor_SetScriptName(PyObject *self, PyObject *val, void*)
     return -1;
   }
   
-  pdesc->desc->setScriptName(PyString_AsString(val));
+  bool failed = false;
+  
+  CATCH({pdesc->desc->setScriptName(PyString_AsString(val));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -426,7 +603,14 @@ int PyOFXParameterDescriptor_SetParent(PyObject *self, PyObject *val, void*)
     return -1;
   }
   
-  pdesc->desc->setParent(PyString_AsString(val));
+  bool failed = false;
+  
+  CATCH({pdesc->desc->setParent(PyString_AsString(val));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -441,7 +625,14 @@ int PyOFXParameterDescriptor_SetData(PyObject *self, PyObject *val, void*)
     return -1;
   }
   
-  pdesc->desc->setData((void*)val);
+  bool failed = false;
+  
+  CATCH({pdesc->desc->setData((void*)val);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -456,7 +647,14 @@ int PyOFXParameterDescriptor_SetEnable(PyObject *self, PyObject *val, void*)
     return -1;
   }
   
-  pdesc->desc->enable(val == Py_True);
+  bool failed = false;
+  
+  CATCH({pdesc->desc->enable(val == Py_True);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -471,7 +669,14 @@ int PyOFXParameterDescriptor_SetCanUndo(PyObject *self, PyObject *val, void*)
     return -1;
   }
   
-  pdesc->desc->setCanUndo(val == Py_True);
+  bool failed = false;
+  
+  CATCH({pdesc->desc->setCanUndo(val == Py_True);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -486,7 +691,14 @@ int PyOFXParameterDescriptor_SetSecret(PyObject *self, PyObject *val, void*)
     return -1;
   }
   
-  pdesc->desc->setSecret(val == Py_True);
+  bool failed = false;
+  
+  CATCH({pdesc->desc->setSecret(val == Py_True);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -509,7 +721,14 @@ int PyOFXParameterDescriptor_SetPNGIcon(PyObject *self, PyObject *val, void*)
     return -1;
   }
   
-  pdesc->desc->setPNGIcon(PyString_AsString(val));
+  bool failed = false;
+  
+  CATCH({pdesc->desc->setPNGIcon(PyString_AsString(val));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -530,7 +749,14 @@ int PyOFXParameterDescriptor_SetSVGIcon(PyObject *self, PyObject *val, void*)
     return -1;
   }
   
-  pdesc->desc->setSVGIcon(PyString_AsString(val));
+  bool failed = false;
+  
+  CATCH({pdesc->desc->setSVGIcon(PyString_AsString(val));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -543,6 +769,7 @@ static PyGetSetDef PyOFXParameterDescriptor_GetSeters[] =
   {(char*)"label", PyOFXParameterDescriptor_GetLabel, PyOFXParameterDescriptor_SetLabel, NULL, NULL},
   {(char*)"shortLabel", PyOFXParameterDescriptor_GetShortLabel, PyOFXParameterDescriptor_SetShortLabel, NULL, NULL},
   {(char*)"longLabel", PyOFXParameterDescriptor_GetLongLabel, PyOFXParameterDescriptor_SetLongLabel, NULL, NULL},
+  {(char*)"type", PyOFXParameterDescriptor_GetType, NULL, NULL, NULL},
   {(char*)"hint", PyOFXParameterDescriptor_GetHint, PyOFXParameterDescriptor_SetHint, NULL, NULL},
   {(char*)"parent", PyOFXParameterDescriptor_GetParent, PyOFXParameterDescriptor_SetParent, NULL, NULL},
   {(char*)"scriptName", PyOFXParameterDescriptor_GetScriptName, PyOFXParameterDescriptor_SetScriptName, NULL, NULL},
@@ -607,7 +834,15 @@ PyObject* PyOFXValueParameterDescriptor_GetInteractSize(PyObject *self, void*)
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
   double w, h;
-  desc->getInteractSize(w, h);
+  
+  bool failed = false;
+  
+  CATCH({desc->getInteractSize(w, h);}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
   
   PyObject *rv = PyTuple_New(2);
   PyTuple_SetItem(rv, 0, PyFloat_FromDouble(w));
@@ -627,7 +862,18 @@ PyObject* PyOFXValueParameterDescriptor_GetInteractSizeAspect(PyObject *self, vo
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  return PyFloat_FromDouble(desc->getInteractSizeAspect());
+  bool failed = false;
+  
+  double rv;
+  
+  CATCH({rv = desc->getInteractSizeAspect();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  return PyFloat_FromDouble(rv);
 }
 
 PyObject* PyOFXValueParameterDescriptor_GetInteractMinSize(PyObject *self, void*)
@@ -643,7 +889,15 @@ PyObject* PyOFXValueParameterDescriptor_GetInteractMinSize(PyObject *self, void*
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
   int w, h;
-  desc->getInteractMinSize(w, h);
+  
+  bool failed = false;
+  
+  CATCH({desc->getInteractMinSize(w, h);}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
   
   PyObject *rv = PyTuple_New(2);
   PyTuple_SetItem(rv, 0, PyInt_FromLong(w));
@@ -664,7 +918,15 @@ PyObject* PyOFXValueParameterDescriptor_GetInteractPreferedSize(PyObject *self, 
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
   int w, h;
-  desc->getInteractPreferedSize(w, h);
+  
+  bool failed = false;
+  
+  CATCH({desc->getInteractPreferedSize(w, h);}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
   
   PyObject *rv = PyTuple_New(2);
   PyTuple_SetItem(rv, 0, PyInt_FromLong(w));
@@ -684,9 +946,27 @@ PyObject* PyOFXValueParameterDescriptor_GetAnimateable(PyObject *self, void*)
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  PyObject *rv = (desc->isAnimateable() ? Py_True : Py_False);
-  Py_INCREF(rv);
-  return rv;
+  bool failed = false;
+  
+  bool rv;
+  
+  CATCH({rv = desc->isAnimateable();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  if (rv)
+  {
+    Py_INCREF(Py_True);
+    return Py_True;
+  }
+  else
+  {
+    Py_INCREF(Py_False);
+    return Py_False;
+  }
 }
 
 PyObject* PyOFXValueParameterDescriptor_GetAnimating(PyObject *self, void*)
@@ -701,9 +981,27 @@ PyObject* PyOFXValueParameterDescriptor_GetAnimating(PyObject *self, void*)
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  PyObject *rv = (desc->isAnimating() ? Py_True : Py_False);
-  Py_INCREF(rv);
-  return rv;
+  bool failed = false;
+  
+  bool rv;
+  
+  CATCH({rv = desc->isAnimating();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  if (rv)
+  {
+    Py_INCREF(Py_True);
+    return Py_True;
+  }
+  else
+  {
+    Py_INCREF(Py_False);
+    return Py_False;
+  }
 }
 
 PyObject* PyOFXValueParameterDescriptor_GetAutoKeying(PyObject *self, void*)
@@ -718,9 +1016,27 @@ PyObject* PyOFXValueParameterDescriptor_GetAutoKeying(PyObject *self, void*)
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  PyObject *rv = (desc->isAutoKeying() ? Py_True : Py_False);
-  Py_INCREF(rv);
-  return rv;
+  bool failed = false;
+  
+  bool rv;
+  
+  CATCH({rv = desc->isAutoKeying();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  if (rv)
+  {
+    Py_INCREF(Py_True);
+    return Py_True;
+  }
+  else
+  {
+    Py_INCREF(Py_False);
+    return Py_False;
+  }
 }
 
 PyObject* PyOFXValueParameterDescriptor_GetPersistant(PyObject *self, void*)
@@ -735,9 +1051,27 @@ PyObject* PyOFXValueParameterDescriptor_GetPersistant(PyObject *self, void*)
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  PyObject *rv = (desc->isPersistant() ? Py_True : Py_False);
-  Py_INCREF(rv);
-  return rv;
+  bool failed = false;
+  
+  bool rv;
+  
+  CATCH({rv = desc->isPersistant();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  if (rv)
+  {
+    Py_INCREF(Py_True);
+    return Py_True;
+  }
+  else
+  {
+    Py_INCREF(Py_False);
+    return Py_False;
+  }
 }
 
 PyObject* PyOFXValueParameterDescriptor_GetEvaluateOnChange(PyObject *self, void*)
@@ -752,9 +1086,27 @@ PyObject* PyOFXValueParameterDescriptor_GetEvaluateOnChange(PyObject *self, void
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  PyObject *rv = (desc->evaluateOnChange() ? Py_True : Py_False);
-  Py_INCREF(rv);
-  return rv;
+  bool failed = false;
+  
+  bool rv;
+  
+  CATCH({rv = desc->evaluateOnChange();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  if (rv)
+  {
+    Py_INCREF(Py_True);
+    return Py_True;
+  }
+  else
+  {
+    Py_INCREF(Py_False);
+    return Py_False;
+  }
 }
 
 PyObject* PyOFXValueParameterDescriptor_GetPluginMayWrite(PyObject *self, void*)
@@ -769,9 +1121,27 @@ PyObject* PyOFXValueParameterDescriptor_GetPluginMayWrite(PyObject *self, void*)
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  PyObject *rv = (desc->mayPluginWrite() ? Py_True : Py_False);
-  Py_INCREF(rv);
-  return rv;
+  bool failed = false;
+  
+  bool rv;
+  
+  CATCH({rv = desc->mayPluginWrite();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  if (rv)
+  {
+    Py_INCREF(Py_True);
+    return Py_True;
+  }
+  else
+  {
+    Py_INCREF(Py_False);
+    return Py_False;
+  }
 }
 
 PyObject* PyOFXValueParameterDescriptor_GetCacheInvalidation(PyObject *self, void*)
@@ -786,7 +1156,18 @@ PyObject* PyOFXValueParameterDescriptor_GetCacheInvalidation(PyObject *self, voi
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  return PyInt_FromLong(desc->getCacheInvalidation());
+  bool failed = false;
+  
+  ofx::ParamInvalidate rv;
+  
+  CATCH({rv = desc->getCacheInvalidation();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  return PyInt_FromLong(long(rv));
 }
 
 #ifdef OFX_API_1_2
@@ -803,9 +1184,27 @@ PyObject* PyOFXValueParameterDescriptor_GetHasHostOverlayHandle(PyObject *self, 
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  PyObject *rv = (desc->hasHostOverlayHandle() ? Py_True : Py_False);
-  Py_INCREF(rv);
-  return rv;
+  bool failed = false;
+  
+  bool rv;
+  
+  CATCH({rv = desc->hasHostOverlayHandle();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  if (rv)
+  {
+    Py_INCREF(Py_True);
+    return Py_True;
+  }
+  else
+  {
+    Py_INCREF(Py_False);
+    return Py_False;
+  }
 }
 
 PyObject* PyOFXValueParameterDescriptor_GetUseHostOverlayHandle(PyObject *self, void*)
@@ -820,9 +1219,27 @@ PyObject* PyOFXValueParameterDescriptor_GetUseHostOverlayHandle(PyObject *self, 
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  PyObject *rv = (desc->useHostOverlayHandle() ? Py_True : Py_False);
-  Py_INCREF(rv);
-  return rv;
+  bool failed = false;
+  
+  bool rv;
+  
+  CATCH({rv = desc->useHostOverlayHandle();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  if (rv)
+  {
+    Py_INCREF(Py_True);
+    return Py_True;
+  }
+  else
+  {
+    Py_INCREF(Py_False);
+    return Py_False;
+  }
 }
 
 #endif
@@ -854,7 +1271,14 @@ int PyOFXValueParameterDescriptor_SetInteractSize(PyObject *self, PyObject *val,
   double w = PyFloat_AsDouble(PyTuple_GetItem(val, 0));
   double h = PyFloat_AsDouble(PyTuple_GetItem(val, 1));
   
-  desc->setInteractSize(w, h);
+  bool failed = false;
+  
+  CATCH({desc->setInteractSize(w, h);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -871,7 +1295,14 @@ int PyOFXValueParameterDescriptor_SetInteractSizeAspect(PyObject *self, PyObject
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  desc->setInteractSizeAspect(PyFloat_AsDouble(val));
+  bool failed = false;
+  
+  CATCH({desc->setInteractSizeAspect(PyFloat_AsDouble(val));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -903,7 +1334,14 @@ int PyOFXValueParameterDescriptor_SetInteractMinSize(PyObject *self, PyObject *v
   int w = PyInt_AsLong(PyTuple_GetItem(val, 0));
   int h = PyInt_AsLong(PyTuple_GetItem(val, 1));
   
-  desc->setInteractMinSize(w, h);
+  bool failed = false;
+  
+  CATCH({desc->setInteractMinSize(w, h);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -935,7 +1373,14 @@ int PyOFXValueParameterDescriptor_SetInteractPreferedSize(PyObject *self, PyObje
   int w = PyInt_AsLong(PyTuple_GetItem(val, 0));
   int h = PyInt_AsLong(PyTuple_GetItem(val, 1));
   
-  desc->setInteractPreferedSize(w, h);
+  bool failed = false;
+  
+  CATCH({desc->setInteractPreferedSize(w, h);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -952,7 +1397,14 @@ int PyOFXValueParameterDescriptor_SetAnimateable(PyObject *self, PyObject *val, 
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  desc->setAnimateable(val == Py_True);
+  bool failed = false;
+  
+  CATCH({desc->setAnimateable(val == Py_True);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -969,7 +1421,14 @@ int PyOFXValueParameterDescriptor_SetAnimating(PyObject *self, PyObject *val, vo
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  desc->setAnimating(val == Py_True);
+  bool failed = false;
+  
+  CATCH({desc->setAnimating(val == Py_True);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -986,7 +1445,14 @@ int PyOFXValueParameterDescriptor_SetAutoKeying(PyObject *self, PyObject *val, v
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  desc->setAutoKeying(val == Py_True);
+  bool failed = false;
+  
+  CATCH({desc->setAutoKeying(val == Py_True);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -1003,7 +1469,14 @@ int PyOFXValueParameterDescriptor_SetPersistant(PyObject *self, PyObject *val, v
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  desc->setPersistant(val == Py_True);
+  bool failed = false;
+  
+  CATCH({desc->setPersistant(val == Py_True);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -1020,7 +1493,14 @@ int PyOFXValueParameterDescriptor_SetEvaluateOnChange(PyObject *self, PyObject *
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  desc->setEvaluateOnChange(val == Py_True);
+  bool failed = false;
+  
+  CATCH({desc->setEvaluateOnChange(val == Py_True);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -1037,7 +1517,14 @@ int PyOFXValueParameterDescriptor_SetPluginMayWrite(PyObject *self, PyObject *va
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  desc->setPluginMayWrite(val == Py_True);
+  bool failed = false;
+  
+  CATCH({desc->setPluginMayWrite(val == Py_True);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -1054,7 +1541,14 @@ int PyOFXValueParameterDescriptor_SetCacheInvalidation(PyObject *self, PyObject 
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  desc->setCacheInvalidation(ofx::ParamInvalidate(PyInt_AsLong(val)));
+  bool failed = false;
+  
+  CATCH({desc->setCacheInvalidation(ofx::ParamInvalidate(PyInt_AsLong(val)));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -1073,7 +1567,14 @@ int PyOFXValueParameterDescriptor_SetUseHostOverlayHandle(PyObject *self, PyObje
   
   ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
   
-  desc->setUseHostOverlayHandle(val == Py_True);
+  bool failed = false;
+  
+  CATCH({desc->setUseHostOverlayHandle(val == Py_True);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -1119,6 +1620,627 @@ static PyGetSetDef PyOFXValueParameterDescriptor_GetSeters[] =
 
 // ---
 
+PyObject* PyOFXParameter_New(PyTypeObject *t, PyObject *, PyObject *)
+{
+  PyObject *self = t->tp_alloc(t, 0);
+  ((PyOFXParameter*)self)->param = 0;
+  return self;
+}
+
+int PyOFXParameter_Init(PyObject *, PyObject *, PyObject *)
+{
+  return 0;
+}
+
+void PyOFXParameter_Delete(PyObject *self)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  if (pparam->param)
+  {
+    delete pparam->param;
+  }
+  self->ob_type->tp_free(self);
+}
+
+PyObject* PyOFXParameter_GetHandle(PyObject *self, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return 0;
+  }
+  
+  bool failed = false;
+  
+  OfxParamHandle handle;
+  
+  CATCH({handle = pparam->param->getHandle();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  PyObject *rv = PyObject_CallObject((PyObject*)&PyOFXHandleType, NULL);
+  ((PyOFXHandle*)rv)->handle = (void*) handle;
+  return rv;
+}
+
+PyObject* PyOFXParameter_GetName(PyObject *self, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return 0;
+  }
+  
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pparam->param->getName();}, failed);
+  
+  if (failed)
+  {
+    return 0;
+  }
+  
+  return PyString_FromString(rv.c_str());
+}
+
+PyObject* PyOFXParameter_GetLabel(PyObject *self, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return 0;
+  }
+  
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pparam->param->getLabel();}, failed);
+  
+  if (failed)
+  {
+    return 0;
+  }
+  
+  return PyString_FromString(rv.c_str());
+}
+
+PyObject* PyOFXParameter_GetShortLabel(PyObject *self, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return 0;
+  }
+  
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pparam->param->getShortLabel();}, failed);
+  
+  if (failed)
+  {
+    return 0;
+  }
+  
+  return PyString_FromString(rv.c_str());
+}
+
+PyObject* PyOFXParameter_GetLongLabel(PyObject *self, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return 0;
+  }
+  
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pparam->param->getLongLabel();}, failed);
+  
+  if (failed)
+  {
+    return 0;
+  }
+  
+  return PyString_FromString(rv.c_str());
+}
+
+PyObject* PyOFXParameter_GetHint(PyObject *self, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return 0;
+  }
+  
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pparam->param->getHint();}, failed);
+  
+  if (failed)
+  {
+    return 0;
+  }
+  
+  return PyString_FromString(rv.c_str());
+}
+
+PyObject* PyOFXParameter_GetScriptName(PyObject *self, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return 0;
+  }
+  
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pparam->param->getScriptName();}, failed);
+  
+  if (failed)
+  {
+    return 0;
+  }
+  
+  return PyString_FromString(rv.c_str());
+}
+
+PyObject* PyOFXParameter_GetParent(PyObject *self, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return 0;
+  }
+  
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pparam->param->getParent();}, failed);
+  
+  if (failed)
+  {
+    return 0;
+  }
+  
+  return PyString_FromString(rv.c_str());
+}
+
+#ifdef OFX_API_1_2
+
+PyObject* PyOFXParameter_GetPNGIcon(PyObject *self, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return 0;
+  }
+  
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pparam->param->getPNGIcon();}, failed);
+  
+  if (failed)
+  {
+    return 0;
+  }
+  
+  return PyString_FromString(rv.c_str());
+}
+
+PyObject* PyOFXParameter_GetSVGIcon(PyObject *self, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return 0;
+  }
+  
+  bool failed = false;
+  
+  std::string rv;
+  
+  CATCH({rv = pparam->param->getSVGIcon();}, failed);
+  
+  if (failed)
+  {
+    return 0;
+  }
+  
+  return PyString_FromString(rv.c_str());
+}
+
+#endif
+
+PyObject* PyOFXParameter_GetData(PyObject *self, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return 0;
+  }
+  
+  bool failed = false;
+  
+  void *rv;
+  
+  CATCH({rv = pparam->param->getData();}, failed);
+  
+  if (failed)
+  {
+    return 0;
+  }
+  
+  return (PyObject*)rv;
+}
+
+PyObject* PyOFXParameter_GetType(PyObject *self, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return 0;
+  }
+  
+  bool failed = false;
+  
+  ofx::ParamType rv;
+  
+  CATCH({rv = pparam->param->getType();}, failed);
+  
+  if (failed)
+  {
+    return 0;
+  }
+  
+  return PyInt_FromLong(long(rv));
+}
+
+PyObject* PyOFXParameter_GetSecret(PyObject *self, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return 0;
+  }
+  
+  bool failed = false;
+  
+  bool rv;
+  
+  CATCH({rv = pparam->param->isSecret();}, failed);
+  
+  if (failed)
+  {
+    return 0;
+  }
+  
+  if (rv)
+  {
+    Py_INCREF(Py_True);
+    return Py_True;
+  }
+  else
+  {
+    Py_INCREF(Py_False);
+    return Py_False;
+  }
+}
+
+PyObject* PyOFXParameter_GetCanUndo(PyObject *self, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return 0;
+  }
+  
+  bool failed = false;
+  
+  bool rv;
+  
+  CATCH({rv = pparam->param->canUndo();}, failed);
+  
+  if (failed)
+  {
+    return 0;
+  }
+  
+  if (rv)
+  {
+    Py_INCREF(Py_True);
+    return Py_True;
+  }
+  else
+  {
+    Py_INCREF(Py_False);
+    return Py_False;
+  }
+}
+
+PyObject* PyOFXParameter_GetEnable(PyObject *self, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return 0;
+  }
+  
+  bool failed = false;
+  
+  bool rv;
+  
+  CATCH({rv = pparam->param->isEnable();}, failed);
+  
+  if (failed)
+  {
+    return 0;
+  }
+  
+  if (rv)
+  {
+    Py_INCREF(Py_True);
+    return Py_True;
+  }
+  else
+  {
+    Py_INCREF(Py_False);
+    return Py_False;
+  }
+}
+
+int PyOFXParameter_SetLabel(PyObject *self, PyObject *val, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return -1;
+  }
+  
+  if (!PyString_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a string");
+    return -1;
+  }
+  
+  bool failed = false;
+  
+  CATCH({pparam->param->setLabel(PyString_AsString(val));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
+  
+  return 0;
+}
+
+int PyOFXParameter_SetShortLabel(PyObject *self, PyObject *val, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return -1;
+  }
+  
+  if (!PyString_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a string");
+    return -1;
+  }
+  
+  bool failed = false;
+  
+  CATCH({pparam->param->setShortLabel(PyString_AsString(val));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
+  
+  return 0;
+}
+
+int PyOFXParameter_SetLongLabel(PyObject *self, PyObject *val, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return -1;
+  }
+  
+  if (!PyString_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a string");
+    return -1;
+  }
+  
+  bool failed = false;
+  
+  CATCH({pparam->param->setLongLabel(PyString_AsString(val));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
+  
+  return 0;
+}
+
+int PyOFXParameter_SetHint(PyObject *self, PyObject *val, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return -1;
+  }
+  
+  if (!PyString_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a string");
+    return -1;
+  }
+  
+  bool failed = false;
+  
+  CATCH({pparam->param->setHint(PyString_AsString(val));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
+  
+  return 0;
+}
+
+int PyOFXParameter_SetEnable(PyObject *self, PyObject *val, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return -1;
+  }
+  
+  bool failed = false;
+  
+  CATCH({pparam->param->enable(val == Py_True);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
+  
+  return 0;
+}
+
+int PyOFXParameter_SetSecret(PyObject *self, PyObject *val, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return -1;
+  }
+  
+  bool failed = false;
+  
+  CATCH({pparam->param->setSecret(val == Py_True);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
+  
+  return 0;
+}
+
+int PyOFXParameter_SetData(PyObject *self, PyObject *val, void*)
+{
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
+  
+  if (!pparam->param)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return -1;
+  }
+  
+  bool failed = false;
+  
+  CATCH({pparam->param->setData((void*)val);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
+  
+  return 0;
+}
+
+static PyGetSetDef PyOFXParameter_GetSeters[] = 
+{
+  {(char*)"name", PyOFXParameter_GetName, NULL, NULL, NULL},
+  {(char*)"type", PyOFXParameter_GetType, NULL, NULL, NULL},
+  {(char*)"parent", PyOFXParameter_GetParent, NULL, NULL, NULL},
+  {(char*)"handle", PyOFXParameter_GetHandle, NULL, NULL, NULL},
+  {(char*)"scriptName", PyOFXParameter_GetScriptName, NULL, NULL, NULL},
+  {(char*)"canUndo", PyOFXParameter_GetCanUndo, NULL, NULL, NULL},
+  {(char*)"label", PyOFXParameter_GetLabel, PyOFXParameter_SetLabel, NULL, NULL},
+  {(char*)"shortLabel", PyOFXParameter_GetShortLabel, PyOFXParameter_SetShortLabel, NULL, NULL},
+  {(char*)"longLabel", PyOFXParameter_GetLongLabel, PyOFXParameter_SetLongLabel, NULL, NULL},
+  {(char*)"hint", PyOFXParameter_GetHint, PyOFXParameter_SetHint, NULL, NULL},
+  {(char*)"data", PyOFXParameter_GetData, PyOFXParameter_SetData, NULL, NULL},
+  {(char*)"enable", PyOFXParameter_GetEnable, PyOFXParameter_SetEnable, NULL, NULL},
+  {(char*)"secret", PyOFXParameter_GetSecret, PyOFXParameter_SetSecret, NULL, NULL},
+#ifdef OFX_API_1_2
+  {(char*)"pngIcon", PyOFXParameter_GetPNGIcon, NULL, NULL, NULL},
+  {(char*)"svgIcon", PyOFXParameter_GetSVGIcon, NULL, NULL, NULL},
+#endif
+  {NULL, NULL, NULL, NULL, NULL}
+};
+
+// ---
+
+
+
+// ---
+
 bool PyOFX_InitParameter(PyObject *mod)
 {
   INIT_TYPE(PyOFXParameterDescriptorType, "ofx.ParameterDescriptor", PyOFXParameterDescriptor);
@@ -1142,6 +2264,17 @@ bool PyOFX_InitParameter(PyObject *mod)
     return false;
   }
   
+  INIT_TYPE(PyOFXParameterType, "ofx.Parameter", PyOFXParameter);
+  PyOFXParameterType.tp_flags = Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE;
+  PyOFXParameterType.tp_new = PyOFXParameter_New;
+  PyOFXParameterType.tp_init = PyOFXParameter_Init;
+  PyOFXParameterType.tp_dealloc = PyOFXParameter_Delete;
+  PyOFXParameterType.tp_getset = PyOFXParameter_GetSeters;
+  if (PyType_Ready(&PyOFXParameterType) < 0)
+  {
+    return false;
+  }
+  
   // add new types to module
   
   Py_INCREF(&PyOFXParameterDescriptorType);
@@ -1149,6 +2282,9 @@ bool PyOFX_InitParameter(PyObject *mod)
   
   Py_INCREF(&PyOFXValueParameterDescriptorType);
   PyModule_AddObject(mod, "ValueParameterDescriptor", (PyObject*)&PyOFXValueParameterDescriptorType);
+  
+  Py_INCREF(&PyOFXParameterType);
+  PyModule_AddObject(mod, "Parameter", (PyObject*)&PyOFXParameterType);
   
   return true;
 }

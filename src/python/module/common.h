@@ -151,16 +151,20 @@ class Receiver
     
     inline void* getHandle()
     {
+      void *rv = 0;
       if (mRcv)
       {
-        const char *meth = "getHandle";
-        PyObject *phdl = PyObject_CallMethod(mRcv, (char*)meth, NULL);
-        if (phdl && PyObject_TypeCheck(phdl, &PyOFXHandleType))
+        if (PyObject_HasAttrString(mRcv, "handle"))
         {
-          return ((PyOFXHandle*)phdl)->handle;
+          PyObject *phdl = PyObject_GetAttrString(mRcv, "handle");
+          if (phdl && PyObject_TypeCheck(phdl, &PyOFXHandleType))
+          {
+            rv = ((PyOFXHandle*)phdl)->handle;
+          }
+          Py_DECREF(phdl);
         }
       }
-      return 0;
+      return rv;
     }
   
   protected:

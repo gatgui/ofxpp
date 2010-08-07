@@ -24,14 +24,6 @@ USA.
 #include "common.h"
 
 PyTypeObject PyOFXPropertySetType;
-/* = 
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.PropertySet",
-  sizeof(PyOFXPropertySet),
-  0
-};*/
 
 static PyObject* PyOFXPropertySet_New(PyTypeObject *type, PyObject *, PyObject *)
 {
@@ -738,7 +730,7 @@ static PyObject* PyOFXPropertySet_Size(PyObject *self, PyObject *args)
   return PyInt_FromLong(sz);
 }
 
-static PyObject* PyOFXPropertySet_GetHandle(PyObject *self, PyObject *)
+static PyObject* PyOFXPropertySet_GetHandle(PyObject *self, void*)
 {
   PyOFXPropertySet *ppset = (PyOFXPropertySet*) self;
   if (!ppset->pset)
@@ -763,6 +755,12 @@ static PyObject* PyOFXPropertySet_GetHandle(PyObject *self, PyObject *)
   return phdl;
 }
 
+static PyGetSetDef PyOFXPropertySet_GetSeters[] =
+{
+  {(char*)"handle", PyOFXPropertySet_GetHandle, NULL, NULL, NULL},
+  {NULL, NULL, NULL, NULL, NULL}
+};
+
 static PyMethodDef PyOFXPropertySet_Methods[] =
 {
   {"setPointer", PyOFXPropertySet_SetPointer, METH_VARARGS, 0},
@@ -783,7 +781,6 @@ static PyMethodDef PyOFXPropertySet_Methods[] =
   {"getInts", PyOFXPropertySet_GetInts, METH_VARARGS, 0},
   {"reset", PyOFXPropertySet_Reset, METH_VARARGS, 0},
   {"size", PyOFXPropertySet_Size, METH_VARARGS, 0},
-  {"getHandle", PyOFXPropertySet_GetHandle, METH_VARARGS, 0},
   {NULL, NULL, NULL, NULL}
 };
 
@@ -795,6 +792,7 @@ bool PyOFX_InitProperty(PyObject *mod)
   PyOFXPropertySetType.tp_new = PyOFXPropertySet_New;
   PyOFXPropertySetType.tp_dealloc = PyOFXPropertySet_Delete;
   PyOFXPropertySetType.tp_methods = PyOFXPropertySet_Methods;
+  PyOFXPropertySetType.tp_getset = PyOFXPropertySet_GetSeters;
   if (PyType_Ready(&PyOFXPropertySetType) < 0)
   {
     return false;

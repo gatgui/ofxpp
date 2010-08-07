@@ -24,14 +24,6 @@ USA.
 #include "common.h"
 
 PyTypeObject PyOFXMessageSuiteType;
-/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.MessageSuite",
-  sizeof(PyOFXMessageSuite),
-  0
-};*/
 
 static PyObject* PyOFXMessageSuite_New(PyTypeObject *type, PyObject *, PyObject *)
 {

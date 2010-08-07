@@ -24,18 +24,10 @@ USA.
 #include "common.h"
 
 /*
-PyTypeObject PyOFXPlugin =
-{
-  PyObject_HEAD
-  ofx::Plugin *plugin;
-  bool owns;
-};
+PyTypeObject PyOFXPlugin;
+PyTypeObject PyOFXImageEffectPlugin;
 
-PyTypeObject PyOFXImageEffectPlugin =
-{
-  PyObject_HEAD
-  // base type is PyOFXPlugin
-};
+// ---
 
 PyObject* PyOFXPlugin_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
 {

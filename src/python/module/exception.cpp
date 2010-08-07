@@ -24,15 +24,19 @@ USA.
 #include "common.h"
 
 PyTypeObject PyOFXExceptionType;
-/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.Exception",
-  sizeof(PyOFXException),
-  0
-};
-*/
+PyTypeObject PyOFXFailedErrorType;
+PyTypeObject PyOFXFatalErrorType;
+PyTypeObject PyOFXUnknownErrorType;
+PyTypeObject PyOFXMissingHostFeatureErrorType;
+PyTypeObject PyOFXUnsupportedErrorType;
+PyTypeObject PyOFXExistsErrorType;
+PyTypeObject PyOFXFormatErrorType;
+PyTypeObject PyOFXMemoryErrorType;
+PyTypeObject PyOFXBadHandleErrorType;
+PyTypeObject PyOFXBadIndexErrorType;
+PyTypeObject PyOFXValueErrorType;
+
+// ---
 
 static void PyOFXException_Delete(PyObject *self)
 {
@@ -90,16 +94,6 @@ static PyMemberDef PyOFXException_Members[] =
 
 // ---
 
-PyTypeObject PyOFXFailedErrorType;
-/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.FailedError",
-  sizeof(PyOFXException),
-  0
-};*/
-
 static int PyOFXFailedError_Init(PyObject *self, PyObject *args, PyObject *kwargs)
 {
   PyObject *newArgs = PyTuple_New(PyTuple_Size(args)+1);
@@ -116,16 +110,6 @@ static int PyOFXFailedError_Init(PyObject *self, PyObject *args, PyObject *kwarg
 }
 
 // ---
-
-PyTypeObject PyOFXFatalErrorType;
-/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.FatalError",
-  sizeof(PyOFXException),
-  0
-};*/
 
 static int PyOFXFatalError_Init(PyObject *self, PyObject *args, PyObject *kwargs)
 {
@@ -144,17 +128,6 @@ static int PyOFXFatalError_Init(PyObject *self, PyObject *args, PyObject *kwargs
 
 // ---
 
-PyTypeObject PyOFXUnknownErrorType;
-/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.UnknownError",
-  sizeof(PyOFXException),
-  0
-};
-*/
-
 static int PyOFXUnknownError_Init(PyObject *self, PyObject *args, PyObject *kwargs)
 {
   PyObject *newArgs = PyTuple_New(PyTuple_Size(args)+1);
@@ -171,17 +144,6 @@ static int PyOFXUnknownError_Init(PyObject *self, PyObject *args, PyObject *kwar
 }
 
 // ---
-
-PyTypeObject PyOFXMissingHostFeatureErrorType;
-/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.MissingHostFeatureError",
-  sizeof(PyOFXException),
-  0
-};
-*/
 
 static int PyOFXMissingHostFeatureError_Init(PyObject *self, PyObject *args, PyObject *kwargs)
 {
@@ -200,17 +162,6 @@ static int PyOFXMissingHostFeatureError_Init(PyObject *self, PyObject *args, PyO
 
 // ---
 
-PyTypeObject PyOFXUnsupportedErrorType;
-/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.UnsupportedError",
-  sizeof(PyOFXException),
-  0
-};
-*/
-
 static int PyOFXUnsupportedError_Init(PyObject *self, PyObject *args, PyObject *kwargs)
 {
   PyObject *newArgs = PyTuple_New(PyTuple_Size(args)+1);
@@ -227,17 +178,6 @@ static int PyOFXUnsupportedError_Init(PyObject *self, PyObject *args, PyObject *
 }
 
 // ---
-
-PyTypeObject PyOFXExistsErrorType;
-/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.ExistsError",
-  sizeof(PyOFXException),
-  0
-};
-*/
 
 static int PyOFXExistsError_Init(PyObject *self, PyObject *args, PyObject *kwargs)
 {
@@ -256,17 +196,6 @@ static int PyOFXExistsError_Init(PyObject *self, PyObject *args, PyObject *kwarg
 
 // ---
 
-PyTypeObject PyOFXFormatErrorType;
-/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.FormatError",
-  sizeof(PyOFXException),
-  0
-};
-*/
-
 static int PyOFXFormatError_Init(PyObject *self, PyObject *args, PyObject *kwargs)
 {
   PyObject *newArgs = PyTuple_New(PyTuple_Size(args)+1);
@@ -283,16 +212,6 @@ static int PyOFXFormatError_Init(PyObject *self, PyObject *args, PyObject *kwarg
 }
 
 // ---
-
-PyTypeObject PyOFXMemoryErrorType;/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.MemoryError",
-  sizeof(PyOFXException),
-  0
-};
-*/
 
 static int PyOFXMemoryError_Init(PyObject *self, PyObject *args, PyObject *kwargs)
 {
@@ -311,16 +230,6 @@ static int PyOFXMemoryError_Init(PyObject *self, PyObject *args, PyObject *kwarg
 
 // ---
 
-PyTypeObject PyOFXBadHandleErrorType;
-/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.BadHandleError",
-  sizeof(PyOFXException),
-  0
-};*/
-
 static int PyOFXBadHandleError_Init(PyObject *self, PyObject *args, PyObject *kwargs)
 {
   PyObject *newArgs = PyTuple_New(PyTuple_Size(args)+1);
@@ -338,16 +247,6 @@ static int PyOFXBadHandleError_Init(PyObject *self, PyObject *args, PyObject *kw
 
 // ---
 
-PyTypeObject PyOFXBadIndexErrorType;
-/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.BadIndexError",
-  sizeof(PyOFXException),
-  0
-};*/
-
 static int PyOFXBadIndexError_Init(PyObject *self, PyObject *args, PyObject *kwargs)
 {
   PyObject *newArgs = PyTuple_New(PyTuple_Size(args)+1);
@@ -364,16 +263,6 @@ static int PyOFXBadIndexError_Init(PyObject *self, PyObject *args, PyObject *kwa
 }
 
 // ---
-
-PyTypeObject PyOFXValueErrorType;
-/* =
-{
-  PyObject_HEAD_INIT(NULL)
-  0,
-  "ofx.ValueError",
-  sizeof(PyOFXException),
-  0
-};*/
 
 static int PyOFXValueError_Init(PyObject *self, PyObject *args, PyObject *kwargs)
 {

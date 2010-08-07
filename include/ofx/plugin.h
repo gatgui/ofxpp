@@ -55,16 +55,28 @@ namespace ofx {
         mPlugin.pluginIdentifier = ID;
       }
       
+      inline int getMajorVersion() const {
+        return mPlugin.pluginVersionMajor;
+      }
+      
+      inline int getMinorVersion() const {
+        return mPlugin.pluginVersionMinor;
+      }
+      
+      inline const char* getID() const {
+        return mPlugin.pluginIdentifier;
+      }
+      
     protected:
       
       OfxPlugin mPlugin;
   };
   
-  template <class Descriptor, class Effect>
-  class ImageEffectPlugin : public Plugin {
+  template <class Descriptor, class Effect, class BaseClass=Plugin>
+  class ImageEffectPlugin : public BaseClass {
     public:
       
-      typedef ImageEffectPlugin<Descriptor, Effect> SelfType;
+      typedef ImageEffectPlugin<Descriptor, Effect, BaseClass> SelfType;
       typedef Descriptor EffectDescriptor;
       typedef Effect EffectInstance;
       typedef std::map<OfxImageEffectHandle, Effect*> EffectMap;
@@ -381,11 +393,12 @@ namespace ofx {
     protected:
       
       ImageEffectPlugin()
-        : Plugin(), mHost(0) {
-        mPlugin.pluginApi = kOfxImageEffectPluginApi;
-        mPlugin.apiVersion = kOfxImageEffectPluginApiVersion;
-        mPlugin.setHost = SelfType::SetHost;
-        mPlugin.mainEntry = SelfType::Main;
+        : BaseClass(), mHost(0) {
+        OfxPlugin *plugin = BaseClass::getDescription();
+        plugin->pluginApi = kOfxImageEffectPluginApi;
+        plugin->apiVersion = kOfxImageEffectPluginApiVersion;
+        plugin->setHost = SelfType::SetHost;
+        plugin->mainEntry = SelfType::Main;
         msInstance = this;
       }
       
@@ -403,8 +416,8 @@ namespace ofx {
       static SelfType *msInstance;
   };
   
-  template <class Descriptor, class Effect>
-  typename ImageEffectPlugin<Descriptor, Effect>::SelfType * ImageEffectPlugin<Descriptor, Effect>::msInstance = 0;
+  template <class Descriptor, class Effect, class BaseClass>
+  typename ImageEffectPlugin<Descriptor, Effect, BaseClass>::SelfType * ImageEffectPlugin<Descriptor, Effect, BaseClass>::msInstance = 0;
 }
 
 #endif

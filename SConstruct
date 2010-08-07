@@ -24,6 +24,7 @@ import excons
 import excons.tools
 from excons.tools import gl
 from excons.tools import openfx
+from excons.tools import python
 
 ofxVersion = ARGUMENTS.get("ofxVersion", "1.1")
 ofxNewMacPackaging = (int(ARGUMENTS.get("ofxNewMacPackaging", "0")) != 0)
@@ -41,6 +42,15 @@ prjs = [
     "install" : {"include"               : glob.glob("include/%s/*.h" % ofxVersion),
                  "include/ofx"           : glob.glob("include/ofx/*.h"),
                  "include/ofx/parameter" : glob.glob("include/ofx/parameter/*.h")}
+  },
+  { "name"   : "ofx",
+    "alias"  : "ofxpy",
+    "type"   : "dynamicmodule",
+    "srcs"   : glob.glob("src/python/module/*.cpp"),
+    "libs"   : ["ofxpp"],
+    "custom" : [python.Require],
+    "prefix" : python.ModulePrefix(),
+    "ext"    : python.ModuleExtension()
   },
   { "name"    : "ellipseFade",
     "type"    : "dynamicmodule",

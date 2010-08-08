@@ -27,11 +27,12 @@ USA.
 #include <ofx/ofx.h>
 #include <ofx/exception.h>
 #include <ofx/property.h>
+#include <ofx/host.h>
 #include <ofxParam.h>
 
 namespace ofx {
   
-  class Host;
+  //class Host;
   class ParameterSet;
   
   typedef std::string (*InterpFunc)(ParameterSet &params,
@@ -45,9 +46,13 @@ namespace ofx {
   
   template <InterpFunc F>
   static OfxStatus Interpolator(OfxParamSetHandle instance, OfxPropertySetHandle inArgs, OfxPropertySetHandle outArgs) {
-    ParameterSet params(instance);
-    PropertySet ia(inArgs);
-    PropertySet oa(outArgs);
+    Host *host = Host::Get();
+    if (!host) {
+      return kOfxStatFailed;
+    }
+    ParameterSet params(host, instance);
+    PropertySet ia(host, inArgs);
+    PropertySet oa(host, outArgs);
     try {
       std::string name = ia.getString(kOfxPropName, 0);
       Time ct = ia.getDouble(kOfxPropTime, 0);

@@ -102,6 +102,9 @@ namespace ofx {
       OfxParametricParameterSuiteV1 *getParametricParameterSuite() {return mParametricParamSuite;}
       
 #endif
+    public:
+      
+      static Host* Get();
       
     protected:
       
@@ -193,6 +196,10 @@ namespace ofx {
       
       void getParameterPageRowColumnCount(int &rowCount, int &columnCount);
     
+    public:
+      
+      static ImageEffectHost* Get();
+      
     protected:
       
       OfxInteractSuiteV1 *mInteractSuite;

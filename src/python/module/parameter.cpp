@@ -801,15 +801,15 @@ OfxStatus InteractEntryPoint(const char *action,
 
 PyObject* PyOFXValueParameterDescriptor_GetInteract(PyObject *self, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  //ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  //ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   // typedef OfxStatus (*EntryPoint)(const char*, const void*, OfxPropertySetHandle, OfxPropertySetHandle);
   //ofx::EntryPoint interact = desc->getInteract();
@@ -823,15 +823,15 @@ PyObject* PyOFXValueParameterDescriptor_GetInteract(PyObject *self, void*)
 
 PyObject* PyOFXValueParameterDescriptor_GetInteractSize(PyObject *self, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   double w, h;
   
@@ -852,15 +852,15 @@ PyObject* PyOFXValueParameterDescriptor_GetInteractSize(PyObject *self, void*)
 
 PyObject* PyOFXValueParameterDescriptor_GetInteractSizeAspect(PyObject *self, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -878,15 +878,15 @@ PyObject* PyOFXValueParameterDescriptor_GetInteractSizeAspect(PyObject *self, vo
 
 PyObject* PyOFXValueParameterDescriptor_GetInteractMinSize(PyObject *self, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   int w, h;
   
@@ -907,15 +907,15 @@ PyObject* PyOFXValueParameterDescriptor_GetInteractMinSize(PyObject *self, void*
 
 PyObject* PyOFXValueParameterDescriptor_GetInteractPreferedSize(PyObject *self, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   int w, h;
   
@@ -936,15 +936,15 @@ PyObject* PyOFXValueParameterDescriptor_GetInteractPreferedSize(PyObject *self, 
 
 PyObject* PyOFXValueParameterDescriptor_GetAnimateable(PyObject *self, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -971,15 +971,15 @@ PyObject* PyOFXValueParameterDescriptor_GetAnimateable(PyObject *self, void*)
 
 PyObject* PyOFXValueParameterDescriptor_GetAnimating(PyObject *self, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -1006,15 +1006,15 @@ PyObject* PyOFXValueParameterDescriptor_GetAnimating(PyObject *self, void*)
 
 PyObject* PyOFXValueParameterDescriptor_GetAutoKeying(PyObject *self, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -1041,15 +1041,15 @@ PyObject* PyOFXValueParameterDescriptor_GetAutoKeying(PyObject *self, void*)
 
 PyObject* PyOFXValueParameterDescriptor_GetPersistant(PyObject *self, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -1076,15 +1076,15 @@ PyObject* PyOFXValueParameterDescriptor_GetPersistant(PyObject *self, void*)
 
 PyObject* PyOFXValueParameterDescriptor_GetEvaluateOnChange(PyObject *self, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -1111,15 +1111,15 @@ PyObject* PyOFXValueParameterDescriptor_GetEvaluateOnChange(PyObject *self, void
 
 PyObject* PyOFXValueParameterDescriptor_GetPluginMayWrite(PyObject *self, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -1146,15 +1146,15 @@ PyObject* PyOFXValueParameterDescriptor_GetPluginMayWrite(PyObject *self, void*)
 
 PyObject* PyOFXValueParameterDescriptor_GetCacheInvalidation(PyObject *self, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -1174,15 +1174,15 @@ PyObject* PyOFXValueParameterDescriptor_GetCacheInvalidation(PyObject *self, voi
 
 PyObject* PyOFXValueParameterDescriptor_GetHasHostOverlayHandle(PyObject *self, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -1209,15 +1209,15 @@ PyObject* PyOFXValueParameterDescriptor_GetHasHostOverlayHandle(PyObject *self, 
 
 PyObject* PyOFXValueParameterDescriptor_GetUseHostOverlayHandle(PyObject *self, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -1246,15 +1246,15 @@ PyObject* PyOFXValueParameterDescriptor_GetUseHostOverlayHandle(PyObject *self, 
 
 int PyOFXValueParameterDescriptor_SetInteractSize(PyObject *self, PyObject *val, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   if (!PyTuple_Check(val))
   {
@@ -1285,15 +1285,15 @@ int PyOFXValueParameterDescriptor_SetInteractSize(PyObject *self, PyObject *val,
 
 int PyOFXValueParameterDescriptor_SetInteractSizeAspect(PyObject *self, PyObject *val, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -1309,15 +1309,15 @@ int PyOFXValueParameterDescriptor_SetInteractSizeAspect(PyObject *self, PyObject
 
 int PyOFXValueParameterDescriptor_SetInteractMinSize(PyObject *self, PyObject *val, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   if (!PyTuple_Check(val))
   {
@@ -1348,15 +1348,15 @@ int PyOFXValueParameterDescriptor_SetInteractMinSize(PyObject *self, PyObject *v
 
 int PyOFXValueParameterDescriptor_SetInteractPreferedSize(PyObject *self, PyObject *val, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   if (!PyTuple_Check(val))
   {
@@ -1387,15 +1387,15 @@ int PyOFXValueParameterDescriptor_SetInteractPreferedSize(PyObject *self, PyObje
 
 int PyOFXValueParameterDescriptor_SetAnimateable(PyObject *self, PyObject *val, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -1411,15 +1411,15 @@ int PyOFXValueParameterDescriptor_SetAnimateable(PyObject *self, PyObject *val, 
 
 int PyOFXValueParameterDescriptor_SetAnimating(PyObject *self, PyObject *val, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -1435,15 +1435,15 @@ int PyOFXValueParameterDescriptor_SetAnimating(PyObject *self, PyObject *val, vo
 
 int PyOFXValueParameterDescriptor_SetAutoKeying(PyObject *self, PyObject *val, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -1459,15 +1459,15 @@ int PyOFXValueParameterDescriptor_SetAutoKeying(PyObject *self, PyObject *val, v
 
 int PyOFXValueParameterDescriptor_SetPersistant(PyObject *self, PyObject *val, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -1483,15 +1483,15 @@ int PyOFXValueParameterDescriptor_SetPersistant(PyObject *self, PyObject *val, v
 
 int PyOFXValueParameterDescriptor_SetEvaluateOnChange(PyObject *self, PyObject *val, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -1507,15 +1507,15 @@ int PyOFXValueParameterDescriptor_SetEvaluateOnChange(PyObject *self, PyObject *
 
 int PyOFXValueParameterDescriptor_SetPluginMayWrite(PyObject *self, PyObject *val, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -1531,15 +1531,15 @@ int PyOFXValueParameterDescriptor_SetPluginMayWrite(PyObject *self, PyObject *va
 
 int PyOFXValueParameterDescriptor_SetCacheInvalidation(PyObject *self, PyObject *val, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -1557,15 +1557,15 @@ int PyOFXValueParameterDescriptor_SetCacheInvalidation(PyObject *self, PyObject 
 
 int PyOFXValueParameterDescriptor_SetUseHostOverlayHandle(PyObject *self, PyObject *val, void*)
 {
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
@@ -1584,15 +1584,15 @@ int PyOFXValueParameterDescriptor_SetUseHostOverlayHandle(PyObject *self, PyObje
 int PyOFXValueParameterDescriptor_SetInteract(PyObject *self, PyObject *, void*)
 {
   // val is a callable
-  PyOFXValueParameterDescriptor *pdesc = (PyOFXValueParameterDescriptor*) self;
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
-  if (!pdesc->base.desc)
+  if (!pdesc->desc)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  //ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->base.desc;
+  //ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   return 0;
 }
@@ -2244,15 +2244,15 @@ int PyOFXValueParameter_Init(PyObject *, PyObject *, PyObject *)
 
 PyObject* PyOFXValueParameter_GetInteract(PyObject *self, void*)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  //ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  //ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   Py_INCREF(Py_None);
   return Py_None;
@@ -2260,15 +2260,15 @@ PyObject* PyOFXValueParameter_GetInteract(PyObject *self, void*)
 
 PyObject* PyOFXValueParameter_GetInteractSize(PyObject *self, void*)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   bool failed = false;
   
@@ -2289,15 +2289,15 @@ PyObject* PyOFXValueParameter_GetInteractSize(PyObject *self, void*)
 
 PyObject* PyOFXValueParameter_GetInteractSizeAspect(PyObject *self, void*)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   bool failed = false;
   
@@ -2315,15 +2315,15 @@ PyObject* PyOFXValueParameter_GetInteractSizeAspect(PyObject *self, void*)
 
 PyObject* PyOFXValueParameter_GetInteractMinSize(PyObject *self, void*)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   bool failed = false;
   
@@ -2344,15 +2344,15 @@ PyObject* PyOFXValueParameter_GetInteractMinSize(PyObject *self, void*)
 
 PyObject* PyOFXValueParameter_GetInteractPreferedSize(PyObject *self, void*)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   bool failed = false;
   
@@ -2373,15 +2373,15 @@ PyObject* PyOFXValueParameter_GetInteractPreferedSize(PyObject *self, void*)
 
 PyObject* PyOFXValueParameter_GetAnimateable(PyObject *self, void*)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   bool failed = false;
   
@@ -2408,15 +2408,15 @@ PyObject* PyOFXValueParameter_GetAnimateable(PyObject *self, void*)
 
 PyObject* PyOFXValueParameter_GetAnimating(PyObject *self, void*)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   bool failed = false;
   
@@ -2443,15 +2443,15 @@ PyObject* PyOFXValueParameter_GetAnimating(PyObject *self, void*)
 
 PyObject* PyOFXValueParameter_GetAutoKeying(PyObject *self, void*)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   bool failed = false;
   
@@ -2478,15 +2478,15 @@ PyObject* PyOFXValueParameter_GetAutoKeying(PyObject *self, void*)
 
 PyObject* PyOFXValueParameter_GetPersistant(PyObject *self, void*)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   bool failed = false;
   
@@ -2513,15 +2513,15 @@ PyObject* PyOFXValueParameter_GetPersistant(PyObject *self, void*)
 
 PyObject* PyOFXValueParameter_GetEvaluateOnChange(PyObject *self, void*)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   bool failed = false;
   
@@ -2548,15 +2548,15 @@ PyObject* PyOFXValueParameter_GetEvaluateOnChange(PyObject *self, void*)
 
 PyObject* PyOFXValueParameter_GetPluginMayWrite(PyObject *self, void*)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   bool failed = false;
   
@@ -2583,15 +2583,15 @@ PyObject* PyOFXValueParameter_GetPluginMayWrite(PyObject *self, void*)
 
 PyObject* PyOFXValueParameter_GetCacheInvalidation(PyObject *self, void*)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   bool failed = false;
   
@@ -2611,15 +2611,15 @@ PyObject* PyOFXValueParameter_GetCacheInvalidation(PyObject *self, void*)
 
 PyObject* PyOFXValueParameter_GetUseHostOverlayHandle(PyObject *self, void*)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   bool failed = false;
   
@@ -2668,15 +2668,15 @@ static PyGetSetDef PyOFXValueParameter_GetSeters[] =
 
 PyObject* PyOFXValueParameter_GetNumKeys(PyObject *self, PyObject *)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   bool failed = false;
   
@@ -2694,15 +2694,15 @@ PyObject* PyOFXValueParameter_GetNumKeys(PyObject *self, PyObject *)
 
 PyObject* PyOFXValueParameter_GetKeyTime(PyObject *self, PyObject *args)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   unsigned int nth;
   
@@ -2727,15 +2727,15 @@ PyObject* PyOFXValueParameter_GetKeyTime(PyObject *self, PyObject *args)
 
 PyObject* PyOFXValueParameter_GetKeyIndex(PyObject *self, PyObject *args)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   double t;
   int d = int(ofx::KeyDirectionExact);
@@ -2761,15 +2761,15 @@ PyObject* PyOFXValueParameter_GetKeyIndex(PyObject *self, PyObject *args)
 
 PyObject* PyOFXValueParameter_DeleteKey(PyObject *self, PyObject *args)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   double t;
   
@@ -2803,15 +2803,15 @@ PyObject* PyOFXValueParameter_DeleteKey(PyObject *self, PyObject *args)
 
 PyObject* PyOFXValueParameter_DeleteAllKeys(PyObject *self, PyObject *)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   bool failed = false;
   
@@ -2828,15 +2828,15 @@ PyObject* PyOFXValueParameter_DeleteAllKeys(PyObject *self, PyObject *)
 
 PyObject* PyOFXValueParameter_Copy(PyObject *self, PyObject *args)
 {
-  PyOFXValueParameter *pparam = (PyOFXValueParameter*) self;
+  PyOFXParameter *pparam = (PyOFXParameter*) self;
   
-  if (!pparam->base.param)
+  if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->base.param;
+  ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
   PyObject *pfrom = 0;
   double offset = 0.0;
@@ -2903,6 +2903,8 @@ static PyMethodDef PyOFXValueParameter_Methods[] =
 
 // ---
 
+extern bool PyOFX_InitParameter_Boolean(PyObject *mod);
+
 bool PyOFX_InitParameter(PyObject *mod)
 {
   INIT_TYPE(PyOFXParameterDescriptorType, "ofx.ParameterDescriptor", PyOFXParameterDescriptor);
@@ -2948,7 +2950,10 @@ bool PyOFX_InitParameter(PyObject *mod)
     return false;
   }
   
-  // add new types to module
+  if (!PyOFX_InitParameter_Boolean(mod))
+  {
+    return false;
+  }
   
   Py_INCREF(&PyOFXParameterDescriptorType);
   PyModule_AddObject(mod, "ParameterDescriptor", (PyObject*)&PyOFXParameterDescriptorType);
@@ -2961,6 +2966,8 @@ bool PyOFX_InitParameter(PyObject *mod)
   
   Py_INCREF(&PyOFXValueParameterType);
   PyModule_AddObject(mod, "ValueParameter", (PyObject*)&PyOFXValueParameterType);
+  
+  
   
   return true;
 }

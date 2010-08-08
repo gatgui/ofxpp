@@ -36,6 +36,7 @@ USA.
 #include <ofx/parameter.h>
 #include <ofx/parameterset.h>
 #include <iostream>
+#include <map>
 
 typedef struct {
   PyBaseExceptionObject base;
@@ -84,6 +85,10 @@ typedef struct {
 } PyOFXValueParameterDescriptor;
 
 typedef struct {
+  PyOFXValueParameterDescriptor base;
+} PyOFXBooleanParameterDescriptor;
+
+typedef struct {
   PyObject_HEAD
   ofx::Parameter *param;
 } PyOFXParameter;
@@ -91,6 +96,20 @@ typedef struct {
 typedef struct {
   PyOFXParameter base;
 } PyOFXValueParameter;
+
+typedef struct {
+  PyOFXValueParameter base;
+} PyOFXBooleanParameter;
+
+typedef struct {
+  PyObject_HEAD
+  ofx::ParameterSetDescriptor *psetdesc;
+} PyOFXParameterSetDescriptor;
+
+typedef struct {
+  PyObject_HEAD
+  ofx::ParameterSet *pset;
+} PyOFXParameterSet;
 
 typedef struct {
   PyObject_HEAD
@@ -124,8 +143,12 @@ extern PyTypeObject PyOFXPropertySetType;
 extern PyTypeObject PyOFXHandleType;
 extern PyTypeObject PyOFXParameterDescriptorType;
 extern PyTypeObject PyOFXValueParameterDescriptorType;
+extern PyTypeObject PyOFXBooleanParameterDescriptorType;
 extern PyTypeObject PyOFXParameterType;
 extern PyTypeObject PyOFXValueParameterType;
+extern PyTypeObject PyOFXBooleanParameterType;
+extern PyTypeObject PyOFXParameterSetType;
+extern PyTypeObject PyOFXParameterSetDescriptorType;
 
 
 class Receiver
@@ -262,6 +285,22 @@ extern bool PyOFX_InitTimeLine(PyObject *mod);
 extern bool PyOFX_InitHandle(PyObject *mod);
 extern bool PyOFX_InitProperty(PyObject *mod);
 extern bool PyOFX_InitParameter(PyObject *mod);
+
+
+struct PyInterpolatorKey
+{
+  OfxParamSetHandle paramSet;
+  std::string paramName;
+  
+  inline bool operator<(const PyInterpolatorKey &k) const
+  {
+    return (paramSet < k.paramSet);
+  }
+};
+
+extern std::map<PyInterpolatorKey, PyObject*> gPyInterpolators;
+
+extern OfxStatus PyInterpolator(OfxParamSetHandle instance, OfxPropertySetHandle inArgs, OfxPropertySetHandle outArgs);
 
 
 #define CATCH(code, failed)\

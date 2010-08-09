@@ -89,6 +89,10 @@ typedef struct {
 } PyOFXBooleanParameterDescriptor;
 
 typedef struct {
+  PyOFXValueParameterDescriptor base;
+} PyOFXChoiceParameterDescriptor;
+
+typedef struct {
   PyObject_HEAD
   ofx::Parameter *param;
 } PyOFXParameter;
@@ -100,6 +104,10 @@ typedef struct {
 typedef struct {
   PyOFXValueParameter base;
 } PyOFXBooleanParameter;
+
+typedef struct {
+  PyOFXValueParameter base;
+} PyOFXChoiceParameter;
 
 typedef struct {
   PyObject_HEAD
@@ -144,9 +152,11 @@ extern PyTypeObject PyOFXHandleType;
 extern PyTypeObject PyOFXParameterDescriptorType;
 extern PyTypeObject PyOFXValueParameterDescriptorType;
 extern PyTypeObject PyOFXBooleanParameterDescriptorType;
+extern PyTypeObject PyOFXChoiceParameterDescriptorType;
 extern PyTypeObject PyOFXParameterType;
 extern PyTypeObject PyOFXValueParameterType;
 extern PyTypeObject PyOFXBooleanParameterType;
+extern PyTypeObject PyOFXChoiceParameterType;
 extern PyTypeObject PyOFXParameterSetType;
 extern PyTypeObject PyOFXParameterSetDescriptorType;
 

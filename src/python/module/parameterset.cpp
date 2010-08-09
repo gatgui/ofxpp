@@ -31,8 +31,6 @@ std::map<PyInterpolatorKey, PyObject*> gPyInterpolators;
 
 OfxStatus PyInterpolator(OfxParamSetHandle instance, OfxPropertySetHandle inArgs, OfxPropertySetHandle outArgs)
 {
-  // this does not work !
-  // what about the host pointer?
   ofx::Host *host = ofx::Host::Get();
   
   if (!host)

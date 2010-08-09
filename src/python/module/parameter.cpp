@@ -2904,6 +2904,7 @@ static PyMethodDef PyOFXValueParameter_Methods[] =
 // ---
 
 extern bool PyOFX_InitParameter_Boolean(PyObject *mod);
+extern bool PyOFX_InitParameter_Choice(PyObject *mod);
 
 bool PyOFX_InitParameter(PyObject *mod)
 {
@@ -2951,6 +2952,11 @@ bool PyOFX_InitParameter(PyObject *mod)
   }
   
   if (!PyOFX_InitParameter_Boolean(mod))
+  {
+    return false;
+  }
+  
+  if (!PyOFX_InitParameter_Choice(mod))
   {
     return false;
   }

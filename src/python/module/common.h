@@ -93,6 +93,10 @@ typedef struct {
 } PyOFXChoiceParameterDescriptor;
 
 typedef struct {
+  PyOFXValueParameterDescriptor base;
+} PyOFXCustomParameterDescriptor;
+
+typedef struct {
   PyObject_HEAD
   ofx::Parameter *param;
 } PyOFXParameter;
@@ -108,6 +112,10 @@ typedef struct {
 typedef struct {
   PyOFXValueParameter base;
 } PyOFXChoiceParameter;
+
+typedef struct {
+  PyOFXValueParameter base;
+} PyOFXCustomParameter;
 
 typedef struct {
   PyObject_HEAD
@@ -153,10 +161,12 @@ extern PyTypeObject PyOFXParameterDescriptorType;
 extern PyTypeObject PyOFXValueParameterDescriptorType;
 extern PyTypeObject PyOFXBooleanParameterDescriptorType;
 extern PyTypeObject PyOFXChoiceParameterDescriptorType;
+extern PyTypeObject PyOFXCustomParameterDescriptorType;
 extern PyTypeObject PyOFXParameterType;
 extern PyTypeObject PyOFXValueParameterType;
 extern PyTypeObject PyOFXBooleanParameterType;
 extern PyTypeObject PyOFXChoiceParameterType;
+extern PyTypeObject PyOFXCustomParameterType;
 extern PyTypeObject PyOFXParameterSetType;
 extern PyTypeObject PyOFXParameterSetDescriptorType;
 
@@ -310,8 +320,12 @@ struct PyInterpolatorKey
 
 extern std::map<PyInterpolatorKey, PyObject*> gPyInterpolators;
 
-extern OfxStatus PyInterpolator(OfxParamSetHandle instance, OfxPropertySetHandle inArgs, OfxPropertySetHandle outArgs);
-
+extern std::string PyInterpolator(ofx::ParameterSet &params,
+                                  const std::string &paramName,
+                                  ofx::Time t,
+                                  ofx::Time t0, const std::string &v0,
+                                  ofx::Time t1, const std::string &v1,
+                                  double amount);
 
 #define CATCH(code, failed)\
   failed = true;\

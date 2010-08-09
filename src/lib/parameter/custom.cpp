@@ -54,8 +54,12 @@ void CustomParameterDescriptor::setDefault(const std::string &v) {
   setString(kOfxParamPropDefault, 0, v);
 }
 
-void* CustomParameterDescriptor::getInterpolator() {
-  return getPointer(kOfxParamPropCustomInterpCallbackV1, 0);
+void CustomParameterDescriptor::setInterpolator(OfxInterpFunc func) {
+  setPointer(kOfxParamPropCustomInterpCallbackV1, 0, (void*)func);
+}
+
+OfxInterpFunc CustomParameterDescriptor::getInterpolator() {
+  return (OfxInterpFunc) getPointer(kOfxParamPropCustomInterpCallbackV1, 0);
 }
 
 // ---
@@ -84,8 +88,8 @@ std::string CustomParameter::getDefault() {
   return mProps.getString(kOfxParamPropDefault, 0);
 }
 
-void* CustomParameter::getInterpolator() {
-  return mProps.getPointer(kOfxParamPropCustomInterpCallbackV1, 0);
+OfxInterpFunc CustomParameter::getInterpolator() {
+  return (OfxInterpFunc) mProps.getPointer(kOfxParamPropCustomInterpCallbackV1, 0);
 }
 
 std::string CustomParameter::getValue() throw(Exception) {

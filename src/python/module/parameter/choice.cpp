@@ -170,6 +170,7 @@ PyObject* PyOFXChoiceParameterDescriptor_SetChoice(PyObject *self, PyObject *arg
   
   if (!PyString_Check(pval))
   {
+    PyErr_SetString(PyExc_TypeError, "Exepected a string");
     return NULL;
   }
   
@@ -439,6 +440,7 @@ PyObject* PyOFXChoiceParameter_SetChoice(PyObject *self, PyObject *args)
   
   if (!PyString_Check(pval))
   {
+    PyErr_SetString(PyExc_TypeError, "Exepected a string");
     return NULL;
   }
   

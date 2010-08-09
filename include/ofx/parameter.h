@@ -30,6 +30,10 @@ USA.
 #include <ofx/host.h>
 #include <ofxParam.h>
 
+typedef OfxStatus (*OfxInterpFunc)(OfxParamSetHandle instance,
+                                   OfxPropertySetHandle inArgs,
+                                   OfxPropertySetHandle outArgs);
+
 namespace ofx {
   
   //class Host;
@@ -45,7 +49,7 @@ namespace ofx {
                                     double amount);
   
   template <InterpFunc F>
-  static OfxStatus Interpolator(OfxParamSetHandle instance, OfxPropertySetHandle inArgs, OfxPropertySetHandle outArgs) {
+  OfxStatus Interpolator(OfxParamSetHandle instance, OfxPropertySetHandle inArgs, OfxPropertySetHandle outArgs) {
     Host *host = Host::Get();
     if (!host) {
       return kOfxStatFailed;
@@ -203,6 +207,10 @@ namespace ofx {
       
       inline OfxParamHandle getHandle() {
         return mHandle;
+      }
+      
+      inline PropertySet& getProperties() {
+        return mProps;
       }
       
       // properties

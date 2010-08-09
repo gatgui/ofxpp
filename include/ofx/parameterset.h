@@ -67,6 +67,14 @@ namespace ofx {
         return mHost;
       }
       
+      inline OfxParamSetHandle getHandle() {
+        return mHandle;
+      }
+      
+      inline PropertySet& getProperties() {
+        return mProps;
+      }
+      
       // properties
       
       // kOfxPluginPropParamPageOrder -> multi string
@@ -113,7 +121,17 @@ namespace ofx {
         return mHost;
       }
       
+      inline OfxParamSetHandle getHandle() {
+        return mHandle;
+      }
+      
+      inline PropertySet& getProperties() {
+        return mProps;
+      }
+      
       // properties
+      
+      // read/write: kOfxPropParamSetNeedsSyncing
       
       // suite
       

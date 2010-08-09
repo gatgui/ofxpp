@@ -42,12 +42,8 @@ namespace ofx {
       std::string getDefault();
       void setDefault(const std::string &v);
       
-      template <InterpFunc F>
-      void setInterpolator(InterpFunc func) {
-        setPointer(kOfxParamPropCustomInterpCallbackV1, 0, (void*) &Interpolator<InterpFunc>);
-      }
-      // no proper getter. cannot cast back from void* to Interpolator<func>
-      void* getInterpolator();
+      void setInterpolator(OfxInterpFunc func);
+      OfxInterpFunc getInterpolator();
   };
   
   class CustomParameter : public ValueParameter {
@@ -62,8 +58,7 @@ namespace ofx {
       // properties
       
       std::string getDefault();
-      
-      void* getInterpolator();
+      OfxInterpFunc getInterpolator();
       
       // suite
       

@@ -1,0 +1,91 @@
+Clip descriptor:
+
+OFX 1.1
+
+  kOfxPropType [R] string(1)
+  kOfxPropName [R] string(1)
+  kOfxPropLabel [RW] string(1)
+  kOfxPropShortLabel [RW] string(1)
+  kOfxPropLongLabel [RW] string(1)
+  kOfxImageEffectPropSupportedComponents [RW] string(-)
+    in [kOfxImageComponentNone,
+        kOfxImageComponentRGB,
+        kOfxImageComponentRGBA,
+        kOfxImageComponentAlpha]
+  kOfxImageEffectPropTemporalClipAccess [RW] int(1) default(0)
+  kOfxImageClipPropOptional [RW] int(1) default(0)
+  kOfxImageClipPropFieldExtraction [RW] string(1) default(kOfxImageFieldDoubled)
+    in [kOfxImageFieldBoth,
+        kOfxImageFieldSingle,
+        kOfxImageFieldDoubled]
+  kOfxImageClipPropIsMask [RW] int(1) default(0)
+  kOfxImageEffectPropSupportsTiles [RW] int(1) default(1)
+
+  
+OFX 1.2
+
+
+
+Clip instance:
+
+OFX 1.1
+
+  kOfxPropType [R] string(1)
+  kOfxPropName [R] string(1)
+  kOfxPropLabel [R] string(1)
+  kOfxPropShortLabel [R] string(1)
+  kOfxPropLongLabel [R] string(1)
+
+  // Documentation is a bit contracdictory on those ones, they should not appear in instance
+  kOfxImageEffectPropSupportedComponents [R] string(-)
+    in [kOfxImageComponentNone,
+        kOfxImageComponentRGB,
+        kOfxImageComponentRGBA,
+        kOfxImageComponentAlpha]
+  kOfxImageEffectPropTemporalClipAccess [R] int(1)
+  kOfxImageClipPropOptional [R] int(1)
+  kOfxImageClipPropFieldExtraction [R] string(1)
+    in [kOfxImageFieldBoth,
+        kOfxImageFieldSingle,
+        kOfxImageFieldDoubled]
+  kOfxImageClipPropIsMask [R] int(1)
+  kOfxImageEffectPropSupportsTiles [R] int(1)
+
+  kOfxImageEffectPropPixelDepth [R] string(1)
+    in [kOfxBitDepthNone,
+        kOfxBitDepthByte,
+        kOfxBitDepthShort,
+        kOfxBitDepthFloat]
+  kOfxImageEffectPropComponents [R] string(1)
+    in [kOfxImageComponentNone,
+        kOfxImageComponentRGB,
+        kOfxImageComponentRGBA,
+        kOfxImageComponentAlpha]
+  kOfxImageClipPropUnmappedPixelDepth [R] string(1)
+    in [kOfxBitDepthNone,
+        kOfxBitDepthByte,
+        kOfxBitDepthShort,
+        kOfxBitDepthFloat]
+  kOfxImageClipPropUnmappedComponents [R] string(1)
+    in [kOfxImageComponentNone,
+        kOfxImageComponentRGB,
+        kOfxImageComponentRGBA,
+        kOfxImageComponentAlpha]
+  kOfxImageEffectPropPreMultiplication [R] string(1)
+    in [kOfxImageOpaque,
+        kOfxImagePreMultiplied,
+        kOfxImageUnPreMultiplied]
+  kOfxImagePropPixelAspectRatio [R] double(1)
+  kOfxImageEffectPropFrameRate [R] double(1)
+  kOfxImageEffectPropFrameRange [R] double(2)
+  kOfxImageClipPropFieldOrder [R] string(1)
+    in [kOfxImageFieldNone,
+        kOfxImageFieldLower,
+        kOfxImageFieldUpper]
+  kOfxImageClipPropConnected [R] int(1)
+  kOfxImageEffectPropUnmappedFrameRange [R] double(2)
+  kOfxImageEffectPropUnmappedFrameRate [R] double(1)
+  kOfxImageClipPropContinuousSamples [R] int(1)
+
+
+OFX 1.2

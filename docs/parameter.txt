@@ -1,0 +1,217 @@
+All parameter Descriptor
+  OFX 1.1
+    kOfxPropType [R] string(1)
+    kOfxPropName [RW] string(1)
+    kOfxPropLabel [RW] string(1)
+    kOfxPropShortLabel [RW] string(1)
+    kOfxPropLongLabel [RW] string(1)
+    kOfxParamPropType [R] string(1)
+    kOfxParamPropSecret [RW] int(1) default(0)
+    kOfxParamPropCanUndo [RW] int(1) default(1)
+    kOfxParamPropHint [RW] string(1) default("")
+    kOfxParamPropScriptName [RW] string(1) default(paramName)
+    kOfxParamPropParent [RW] string(1) default("")
+    kOfxParamPropEnabled [RW] int(1) default(1)
+    // kOfxParamPropDataPtr [RW] ptr(1) default(NULL)
+  OFX 1.2
+    kOfxPropIcon [RW] string(2) default([]) (note: [SVG, PNG])
+
+Group parameter descriptor:
+  OFX 1.2
+    kOfxParamPropGroupOpen [RW] int(1) default(1)
+
+All but group and page parameter descriptors:
+  OFX 1.1
+    kOfxParamPropInteractV1 [RW] ptr(1) default(NULL)
+    kOfxParamPropInteractSizeAspect [RW] double(1) default(1)
+    kOfxParamPropInteractMinimumSize [RW] int(2) default(10, 10)
+    kOfxParamPropInteractPreferedSize [RW] int(2) default(10, 10)
+    // kOfxParamPropInteractSize [R] double(2)
+  OFX 1.2
+    kOfxParamPropHasHostOverlayHandle [R] int(1)
+    kOfxParamPropUseHostOverlayHandle [RW] int(1) default(0)
+
+All value holding parameter descriptors:
+  OFX 1.1
+    kOfxParamPropDefault [RW]
+    kOfxParamPropAnimates [RW] int(1) default(1)
+    kOfxParamPropPersistant [RW] int(1) default(1)
+    kOfxParamPropEvaluateOnChange [RW] int(1) default(1)
+    kOfxParamPropPluginMayWrite [RW] int(1) default(0)
+    kOfxParamPropCacheInvalidation [RW] string(1) default(kOfxParamInvalidateValueChange)
+      in [kOfxParamInvalidateValueChange,
+          kOfxParamInvalidateValueChangeToEnd,
+          kOfxParamInvalidateAll]
+    // kOfxParamPropIsAnimating [RW] int(1)
+    // kOfxParamIsAutoKeying [RW] int(1)
+
+Numeric parameter descriptors:
+  OFX 1.1
+    kOfxParamPropMax [RW] int/double(-)
+    kOfxParamPropMin [RW] int/double(-)
+    kOfxParamPropDisplayMax　[RW] int/double(-)
+    kOfxParamPropDisplayMin　[RW] int/double(-)
+  
+Double parameter descriptors:
+  OFX 1.1
+    kOfxParamPropIncrement [RW] double(1) default(1)
+    kOfxParamPropDigits [RW] int(1) default(2)
+    kOfxParamPropDoubleType [RW] string(1) in [kOfxParamDoubleTypePlain,
+                                               kOfxParamDoubleTypeAngle,
+                                               kOfxParamDoubleTypeScale,
+                                               kOfxParamDoubleTypeTime,                 1D only
+                                               kOfxParamDoubleTypeAbsoluteTime,         1D only
+                                               kOfxParamDoubleTypeNormalisedX,          1D only
+                                               kOfxParamDoubleTypeNormalisedXAbsolute,  1D only
+                                               kOfxParamDoubleTypeNormalisedY,          1D only
+                                               kOfxParamDoubleTypeNormalisedYAbsolute,  1D only
+                                               kOfxParamDoubleTypeNormalisedXY,         2D only
+                                               kOfxParamDoubleTypeNormalisedXYAbsolute, 2D only
+                                               kOfxParamDoubleTypeX,                    1D only, OFX >1.2
+                                               kOfxParamDoubleTypeXAbsolute,            1D only, OFX >1.2
+                                               kOfxParamDoubleTypeY,                    1D only, OFX >1.2
+                                               kOfxParamDoubleTypeYAbsolute,            1D only, OFX >1.2
+                                               kOfxParamDoubleTypeXY,                   2D only, OFX >1.2
+                                               kOfxParamDoubleTypeXYAbsolute]           2D only, OFX >1.2
+    kOfxParamPropShowTimeMarker [RW] int(1) default(0) (for 1D absolute time double parameter)
+    kOfxParamPropDimensionLabel [RW] string(-) default(["x", "y", "z"]) (for 2D or 3D double parameter)
+  OFX 1.2
+    kOfxParamPropDefaultCoordinateSystem [RW] string(1) (for non-normalised spacial double parameter)
+      in [kOfxParamCoordinatesCanonical,
+          kOfxParamCoordinatesNormalised]
+
+Integer parameter descriptor
+  OFX 1.1
+        kOfxParamPropDimensionLabel [RW] string(-) default(["x", "y", "z"])
+
+String parameter descriptor
+  OFX 1.1
+    kOfxParamPropStringMode [RW] string(1) default(kOfxParamStringIsSingleLine)
+      in [kOfxParamStringIsSingleLine,
+          kOfxParamStringIsMultiLine,
+          kOfxParamStringIsFilePath,
+          kOfxParamStringIsDirectoryPath,
+          kOfxParamStringIsLabel]
+    kOfxParamPropStringFilePathExists [RW] int(1) default(1)
+
+Choice parameter descriptor
+  OFX 1.1
+    kOfxParamPropChoiceOption [RW] string(-)
+
+Custom parameter descriptor
+  OFX 1.1
+    kOfxParamPropCustomInterpCallbackV1 [RW] ptr(1) default(NULL)
+
+Page parameter descriptor
+  Special parameter names:
+    the kOfxParamPageSkipRow, the kOfxParamPageSkipColumn
+  OFX 1.1
+    kOfxParamPropPageChild [RW] string(-)
+  
+Parametric parameter descriptor (OFX 1.2 only)
+  OFX 1.2
+    kOfxParamPropParametricDimension [RW] int(1) default(1)
+    kOfxParamPropParametricInteractBackground [RW] ptr(1) default(NULL)
+    kOfxParamPropParametricRange [RW] double(2) default(0,1)
+    kOfxParamPropParametricUIColour [RW] double(-) [3 values for each dimension]
+  
+
+
+
+
+All parameter instance
+  OFX 1.1
+    kOfxPropType [R] string(1)
+    kOfxPropName [R] string(1)
+    kOfxPropLabel [RW] string(1)
+    kOfxPropShortLabel [RW] string(1)
+    kOfxPropLongLabel [RW] string(1)
+    kOfxParamPropType [R] string(1)
+    kOfxParamPropSecret [RW] int(1) default(0)
+    kOfxParamPropCanUndo [R] int(1) default(1)
+    kOfxParamPropHint [RW] string(1) default("")
+    kOfxParamPropScriptName [R] string(1) default(paramName)
+    kOfxParamPropParent [R] string(1) default("")
+    kOfxParamPropEnabled [RW] int(1) default(1)
+    kOfxParamPropDataPtr [RW] ptr(1) default(NULL)
+  OFX 1.2
+    kOfxPropIcon [R] string(2) default([]) (note: [SVG, PNG])
+
+Group parameter instance
+  OFX 1.2
+    kOfxParamPropGroupOpen [R] int(1)
+
+All but group and page parameter instance
+  OFX 1.1
+    kOfxParamPropInteractV1 [R] ptr(1) default(NULL)
+    kOfxParamPropInteractSize [R] double(2)
+    kOfxParamPropInteractSizeAspect [R] double(1) default(1)
+    kOfxParamPropInteractMinimumSize [R] int(2) default(10, 10)
+    kOfxParamPropInteractPreferedSize [R] int(2) default(10, 10)
+  OFX 1.2
+    kOfxParamPropUseHostOverlayHandle [R] int(1) default(0)
+
+All value holding parameter instance
+  OFX 1.1
+    kOfxParamPropDefault [R]
+    kOfxParamPropAnimates [R] int(1)
+    kOfxParamPropIsAnimating [R] int(1)
+    kOfxParamPropIsAutoKeying [R] int(1)
+    kOfxParamPropPersistant [R] int(1)
+    kOfxParamPropEvaluateOnChange [R] int(1)
+    kOfxParamPropPluginMayWrite [R] int(1)
+    kOfxParamPropCacheInvalidation [R] string(1)
+      in [kOfxParamInvalidateValueChange,
+          kOfxParamInvalidateValueChangeToEnd,
+          kOfxParamInvalidateAll]
+
+All numeric parameter instance
+  OFX 1.1
+    kOfxParamPropMax [RW] int/double(-)
+    kOfxParamPropMin [RW] int/double(-)
+    kOfxParamPropDisplayMax　[RW] int/double(-)
+    kOfxParamPropDisplayMin [RW] int/double(-)
+
+Double parameter instance
+  OFX 1.1
+    kOfxParamPropDigits [RW] int(1) default(2)
+    kOfxParamPropIncrement [RW] double(1) default(1)
+    kOfxParamPropDoubleType [R] string(1) in (see descriptor info)
+    kOfxParamPropShowTimeMarker [RW] int(1) default(0) (absolute time double only)
+    kOfxParamPropDimensionLabel [R] string(-) (2D and 3D double parameter)
+  OFX 1.2
+    kOfxParamPropDefaultCoordinateSystem [R] string(1) (for non-normalised spacial double parameters)
+    
+Integer parameter instance
+  OFX 1.1
+    kOfxParamPropDimensionLabel [R] string(-) (2D and 3D double parameter)
+
+Choice parameter instance
+  OFX 1.1
+    kOfxParamPropChoiceOption [RW] string(-)
+
+Custom parameter instance
+  OFX 1.1
+    kOfxParamPropCustomInterpCallbackV1 [R] ptr(1)
+
+String parameter instance
+  OFX 1.1
+    kOfxParamPropStringFilePathExists [R] int(1)
+    kOfxParamPropStringMode [R] string(1)
+      in [kOfxParamStringIsSingleLine,
+          kOfxParamStringIsMultiLine,
+          kOfxParamStringIsFilePath,
+          kOfxParamStringIsDirectoryPath,
+          kOfxParamStringIsLabel]
+
+Page parameter instance
+  OFX 1.1
+    kOfxParamPropPageChild [R] string(-)
+
+Parametric parameter instance
+  OFX 1.2
+    kOfxParamPropParametricDimension [R] int(1)
+    kOfxParamPropParametricInteractBackground [R] ptr(1)
+    kOfxParamPropParametricRange [R] double(2)
+    kOfxParamPropParametricUIColour [R] double(-) [3 values for each dimension]
+  

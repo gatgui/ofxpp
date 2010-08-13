@@ -28,6 +28,63 @@ USA.
 
 namespace ofx {
   
+  template <class ParameterClass>
+  class Interpolator
+  {
+    public:
+      static OfxStatus Interpolate(OfxParamSetHandle instance,
+                                   OfxPropertySetHandle inArgs,
+                                   OfxPropertySetHandle outArgs)
+      {
+        Host *host = Host::Get();
+        
+        if (!host)
+        {
+          return kOfxStatFailed;
+        }
+        
+        PropertySet ia(host, inArgs);
+        PropertySet oa(host, outArgs);
+        
+        try
+        {
+          // get input arguments
+          std::string name = ia.getString(kOfxPropName, 0);
+          Time t = ia.getDouble(kOfxPropTime, 0);
+          Time t0 = ia.getDouble(kOfxParamPropInterpolationTime, 0);
+          Time t1 = ia.getDouble(kOfxParamPropInterpolationTime, 1);
+          std::string v0 = ia.getString(kOfxParamPropCustomValue, 0);
+          std::string v1 = ia.getString(kOfxParamPropCustomValue, 1);
+          double amount = ia.getDouble(kOfxParamPropInterpolationAmount, 0);
+          
+          // get custom param class (without using the ParameterSet class)
+          OfxParamHandle hParam;
+          OfxStatus stat = host->getParameterSuite()->paramGetHandle(instance, name.c_str(), &hParam, NULL);
+          if (stat != kOfxStatOK)
+          {
+            return stat;
+          }
+          
+          ParameterClass param(host, hParam);
+          
+          if (param.getType() != ParamTypeCustom)
+          {
+            return kOfxStatFailed;
+          }
+          
+          std::string rv = param.interpolate(t0, v0, t1, v1, t, amount);
+          
+          oa.setString(kOfxParamPropCustomValue, 0, rv);
+          
+          return kOfxStatOK;
+        }
+        catch (Exception &e)
+        {
+          return e.getStatus();
+        }
+      }
+  };
+  
   class CustomParameterDescriptor : public ValueParameterDescriptor {
     public:
       CustomParameterDescriptor();
@@ -44,6 +101,11 @@ namespace ofx {
       
       void setInterpolator(OfxInterpFunc func);
       OfxInterpFunc getInterpolator();
+      
+      template <class ParameterClass>
+      void setInterpolator() {
+        setInterpolator(&Interpolator<ParameterClass>::Interpolate);
+      }
   };
   
   class CustomParameter : public ValueParameter {
@@ -54,6 +116,10 @@ namespace ofx {
       virtual ~CustomParameter();
       
       CustomParameter& operator=(const CustomParameter &rhs);
+      
+      virtual std::string interpolate(Time t0, const std::string &v0,
+                                      Time t1, const std::string &v1,
+                                      Time t, double amount);
       
       // properties
       

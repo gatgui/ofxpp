@@ -1,0 +1,55 @@
+Image effect host descriptor:
+
+OFX 1.1
+  
+  kOfxPropType [R] string(1)
+  kOfxPropName [R] string(1)
+  kOfxPropLabel [R] string(1)
+  kOfxImageEffectHostPropIsBackground [R] int(1)
+  kOfxImageEffectPropSupportsOverlays [R] int(1)
+  kOfxImageEffectPropSupportsMultiResolution [R] int(1)
+  kOfxImageEffectPropSupportsTiles [R] int(1)
+  kOfxImageEffectPropTemporalClipAccess [R] int(1)
+  kOfxImageEffectPropSupportedComponents [R] string(-)
+    in [kOfxImageComponentNone,
+        kOfxImageComponentRGB,
+        kOfxImageComponentRGBA,
+        kOfxImageComponentAlpha]
+  kOfxImageEffectPropSupportedContexts [R] string(-)
+    in [kOfxImageEffectContextGenerator,
+        kOfxImageEffectContextFilter,
+        kOfxImageEffectContextTransition,
+        kOfxImageEffectContextPaint,
+        kOfxImageEffectContextGeneral,
+        kOfxImageEffectContextRetimer]
+  kOfxImageEffectPropSupportsMultipleClipDepths [R] int(1)
+  kOfxImageEffectPropSupportsMultipleClipPARs [R] int(1)
+  kOfxImageEffectPropSetableFrameRate [R] int(1)
+  kOfxImageEffectPropSetableFielding [R] int(1)
+  kOfxParamHostPropSupportsCustomInteract [R] int(1)
+  kOfxParamHostPropSupportsStringAnimation [R] int(1)
+  kOfxParamHostPropSupportsChoiceAnimation [R] int(1)
+  kOfxParamHostPropSupportsBooleanAnimation [R] int(1)
+  kOfxParamHostPropSupportsCustomAnimation [R] int(1)
+  kOfxParamHostPropMaxParameters [R] int(1)
+  kOfxParamHostPropMaxPages [R] int(1)
+  kOfxParamHostPropPageRowColumnCount [R] int(2)
+  kOfxImageEffectInstancePropSequentialRender [R] int(1) default(0)
+    in [0: Cannot guarantee sequential render,
+        1: Can always render sequentially,
+        2: Can render sequentially sometimes
+           (indicated in kOfxImageEffectPropSequentialRenderStatus of actions arguments)
+           (OFX >1.2)]
+  kOfxImageEffectPropSupportedPixelDepths [R] string(-)
+    in [kOfxBitDepthNone,
+        kOfxBitDepthByte,
+        kOfxBitDepthShort,
+        kOfxBitDepthFloat]
+
+OFX 1.2
+  
+  kOfxPropAPIVersion [R] int(-)
+  kOfxPropVersion [R] int(-)
+  kOfxPropVersionLabel [R] string(1)
+  kOfxPropHostOSHandle [R] ptr(1)
+  kOfxParamHostPropSupportsParametricAnimation [R] int(1)

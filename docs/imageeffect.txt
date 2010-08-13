@@ -1,0 +1,79 @@
+Image effect descriptor:
+
+OFX 1.1
+  
+  kOfxPropType [R] string(1)
+  kOfxPropLabel [R] string(1)
+  kOfxPropShortLabel [R] string(1)
+  kOfxPropLongLabel [R] string(1)
+  kOfxImageEffectPropSupportedContexts [RW] string(-)
+    in [kOfxImageEffectContextGenerator,
+        kOfxImageEffectContextFilter,
+        kOfxImageEffectContextTransition,
+        kOfxImageEffectContextPaint,
+        kOfxImageEffectContextGeneral,
+        kOfxImageEffectContextRetimer]
+  kOfxImageEffectPluginPropGrouping [RW] string(1) default("")
+  kOfxImageEffectPluginPropSingleInstance [RW] int(1) default(0)
+  kOfxImageEffectPluginRenderThreadSafety [RW] string(1) default(kOfxImageEffectRenderInstanceSafe)
+    in [kOfxImageEffectRenderUnsafe,
+        kOfxImageEffectRenderInstanceSafe,
+        kOfxImageEffectRenderFullySafe]
+  kOfxImageEffectPluginPropHostFrameThreading [RW] int(1) default(1)
+  kOfxImageEffectPluginPropOverlayInteractV1 [RW] ptr(1) default(NULL)
+  kOfxImageEffectPropSupportsMultiResolution [RW] int(1) default(1)
+  kOfxImageEffectPropSupportsTiles [RW] int(1) default(1)
+  kOfxImageEffectPropTemporalClipAccess [RW] int(1) default(0)
+  kOfxImageEffectPropSupportedPixelDepths [RW] string(-)
+    in [kOfxBitDepthNone,
+        kOfxBitDepthByte,
+        kOfxBitDepthShort,
+        kOfxBitDepthFloat]
+  kOfxImageEffectPluginPropFieldRenderTwiceAlways [RW] int(1) default(1)
+  kOfxImageEffectPropSupportsMultipleClipDepths [RW] int(1) default(0)
+  kOfxImageEffectPropSupportsMultipleClipPARs [RW] int(1) default(0)
+  kOfxImageEffectPropClipPreferencesSlaveParam [RW] string(-)
+  kOfxPluginPropFilePath [R] string(1)
+  kOfxImageEffectInstancePropSequentialRender [RW] int(1) default(0) in [0, 1, 2] (2 for OFX >1.2, see doc for meaning)
+
+  
+OFX 1.2
+  
+  kOfxPropVersion [RW] int(-)
+  kOfxPropVersionLabel [RW] string(1)
+  kOfxPropPluginDescription [RW] string(1)
+
+
+
+Image effect instance:
+
+OFX 1.1
+  
+  kOfxPropType [R] string(1)
+  kOfxImageEffectPropContext [R] string(1)
+    in [kOfxImageEffectContextGenerator,
+        kOfxImageEffectContextFilter,
+        kOfxImageEffectContextTransition,
+        kOfxImageEffectContextPaint,
+        kOfxImageEffectContextGeneral,
+        kOfxImageEffectContextRetimer]
+  kOfxPropInstanceData [RW] ptr(1) default(NULL)
+  kOfxImageEffectPropProjectSize [R] double(2)
+  kOfxImageEffectPropProjectOffset [R] double(2)
+  kOfxImageEffectPropProjectExtent [R] double(2)
+  kOfxImageEffectPropProjectPixelAspectRatio [R] double(1)
+  kOfxImageEffectInstancePropEffectDuration [R] double(1)
+  kOfxImageEffectInstancePropSequentialRender [RW] int(1) default(0)
+    in [0: Do not required to be rendered sequentially,
+        1: Need to be rendered sequentially,
+        2: Better rendered sequentially　     (OFX >1.2)]　
+  kOfxImageEffectPropFrameRate [R] double(1)
+  kOfxPropIsInteractive [R] int(1)
+    
+  // Documentation is not clear on those properties
+  kOfxImageEffectPropInAnalysis [RW] int(1) default(0)
+  kOfxImageEffectPropPluginHandle [R] ptr(1) (plugin handle pointer passed to describe action, same for all instance)
+  
+OFX 1.2
+  
+  kOfxPropPluginDescription [R] string(1)

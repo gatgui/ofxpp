@@ -1,0 +1,32 @@
+
+OFX 1.1
+
+  kOfxPropType [R] string(1)
+  kOfxImageEffectPropPixelDepth [R] string(1)
+    in [kOfxBitDepthNone,
+        kOfxBitDepthByte,
+        kOfxBitDepthShort,
+        kOfxBitDepthFloat]
+  kOfxImageEffectPropComponents [R] string(1)
+    in [kOfxImageComponentNone,
+        kOfxImageComponentRGB,
+        kOfxImageComponentRGBA,
+        kOfxImageComponentAlpha]
+  kOfxImageEffectPropPreMultiplication [R] string(1)
+    in [kOfxImageOpaque,
+        kOfxImagePreMultiplied,
+        kOfxImageUnPreMultiplied]
+  kOfxImageEffectPropRenderScale [R] double(2)
+  kOfxImagePropPixelAspectRatio [R] double(1)
+  kOfxImagePropData [R] ptr(1)
+  kOfxImagePropBounds [R] int(4)
+  kOfxImagePropRegionOfDefinition [R] int(4)
+  kOfxImagePropRowBytes [R] int(1)
+  kOfxImagePropField [R] string(1)
+    in [kOfxImageFieldNone,
+        kOfxImageFieldBoth,
+        kOfxImageFieldLower,
+        kOfxImageFieldUpper]
+  kOfxImagePropUniqueIdentifier [R] string(1)
+
+OFX 1.2

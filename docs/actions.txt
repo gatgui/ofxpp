@@ -1,0 +1,102 @@
+
+kOfxActionInstanceChanged
+  In arguments
+    kOfxPropChangeReason string(1) in [kOfxChangeUserEdited, kOfxChangePluginEdited, kOfxChangeTime]
+
+kOfxImageEffectActionGetClipPreferences
+  Out arguments
+    kOfxImageClipPropContinuousSamples int(1) default(0)
+    kOfxImageEffectFrameVarying int(1) default(0)
+    kOfxImageEffectPropFrameRate double(1)
+    kOfxImageEffectPropPreMultiplication string(1) in [kOfxImageOpaque, kOfxImagePreMultiplied, kOfxImageUnPreMultiplied]
+    kOfxImagePropPixelAspectRatio [RW] double(1)
+
+kOfxImageEffectActionIsIdentity
+  In arguments
+    kOfxImageEffectPropFieldToRender string(1) in [kOfxImageFieldNone, kOfxImageFieldBoth, kOfxImageFieldLower, kOfxImageFieldUpper]
+    kOfxImageEffectPropRenderScale double(2)
+    kOfxImageEffectPropRenderWindow int(4)
+
+kOfxImageEffectActionGetRegionOfDefinition
+  In arguments
+    kOfxImageEffectPropRenderScale double(2)
+  Out arguments
+    kOfxImageEffectPropRegionOfDefinition double(4)
+
+kOfxImageEffectActionGetRegionsOfInterest
+  In arguments
+    kOfxImageEffectPropRegionOfInterest double(4)
+    kOfxImageEffectPropRenderScale double(2)
+
+kOfxImageEffectActionBeginSequenceRender
+  In arguments
+    kOfxImageEffectPropFrameStep double(1)
+    kOfxImageEffectPropRenderScale double(2)
+    kOfxImageEffectPropInteractiveRenderStatus int(1) [OFX >1.2]
+    kOfxImageEffectPropSequentialRenderStatus int(1)  [OFX >1.2]
+
+kOfxImageEffectActionRender
+  In arguments
+    kOfxImageEffectPropFieldToRender string(1) in [kOfxImageFieldNone, kOfxImageFieldBoth, kOfxImageFieldLower, kOfxImageFieldUpper]
+    kOfxImageEffectPropRenderScale double(2)
+    kOfxImageEffectPropRenderWindow int(4)
+    kOfxImageEffectPropSequentialRenderStatus int(1)  [OFX >1.2]
+    kOfxImageEffectPropInteractiveRenderStatus int(1) [OFX >1.2]
+
+kOfxImageEffectActionEndSequenceRender
+  In arguments
+    kOfxImageEffectPropRenderScale double(2)
+    kOfxImageEffectPropSequentialRenderStatus int(1)  [OFX >1.2]
+    kOfxImageEffectPropInteractiveRenderStatus int(1) [OFX >1.2]
+
+kOfxInteractActionDraw
+  In arguments
+    kOfxInteractPropBackgroundColour　double(3)
+
+kOfxInteractActionPenMotion
+  In arguments
+    kOfxInteractPropPenPosition double(2)
+    kOfxInteractPropPenPressure double(1)
+    kOfxInteractPropPenViewportPosition int(2) [OFX >1.2]
+
+kOfxInteractActionPenDown
+  In arguments
+    kOfxInteractPropPenPosition double(2)
+    kOfxInteractPropPenPressure double(1)
+    kOfxInteractPropPenViewportPosition int(2) [OFX >1.2]
+
+kOfxInteractActionPenUp
+  In arguments
+    kOfxInteractPropPenPosition double(2)
+    kOfxInteractPropPenPressure double(1)
+    kOfxInteractPropPenViewportPosition int(2) [OFX >1.2]
+
+kOfxInteractActionKeyDown
+  In arguments
+    kOfxPropKeyString string(1)
+    kOfxPropKeySym int(1)
+
+kOfxInteractActionKeyUp
+  In arguments
+    kOfxPropKeyString string(1)
+    kOfxPropKeySym int(1)
+
+kOfxInteractActionKeyRepeat
+  In arguments
+    kOfxPropKeyString string(1)
+    kOfxPropKeySym int(1)
+
+kOfxInteract*
+  In arguments
+    kOfxInteractPropPixelScale double(2)
+    kOfxInteractPropViewportSize int(2)
+
+
+
+OfxCustomParamInterpFuncV1
+  In arguments
+    kOfxParamPropCustomValue string(2)
+    kOfxParamPropInterpolationTime double(2)
+    kOfxParamPropInterpolationAmount double(1)
+  Out arguments
+    kOfxParamPropCustomValue string(1)

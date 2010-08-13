@@ -1,0 +1,26 @@
+Interact descriptor
+
+OFX 1.1
+
+  kOfxInteractPropBitDepth [R] int(1)
+  kOfxInteractPropHasAlpha [R] int(1)
+
+OFX 1.2
+
+
+Interact instance
+
+OFX 1.1
+
+  kOfxPropEffectInstance [R] ptr(1)
+  kOfxPropInstanceData [RW] ptr(1)
+  kOfxInteractPropPixelScale [R] double(2)
+  kOfxInteractPropBackgroundColour　[R] double(3)
+  kOfxInteractPropViewportSize [R] int(2)
+  kOfxInteractPropHasAlpha [R] int(1)
+  kOfxInteractPropBitDepth [R] int(1)
+  kOfxInteractPropSlaveToParam [RW] string(-)
+
+OFX 1.2
+
+  kOfxInteractPropSuggestedColour [R] double(3)

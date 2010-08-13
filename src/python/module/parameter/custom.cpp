@@ -23,7 +23,7 @@ USA.
 
 #include "common.h"
 
-OfxInterpFunc PyOFXInterpolator = &ofx::Interpolator<PyInterpolator>;
+OfxInterpFunc PyOFXInterpolator = &ofx::InterpFuncWrap<PyInterpolator>;
 
 PyTypeObject PyOFXCustomParameterDescriptorType;
 PyTypeObject PyOFXCustomParameterType;

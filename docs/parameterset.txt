@@ -1,0 +1,12 @@
+ParameterSet descriptor
+
+OFX 1.1
+  kOfxPluginPropParamPageOrder [RW] string(-)
+
+
+ParameterSet instance
+
+OFX 1.1
+  kOfxPluginPropParamPageOrder [R] string(-)
+OFX 1.2
+  kOfxPropParamSetNeedsSyncing [RW] int(1)

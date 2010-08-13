@@ -49,14 +49,18 @@ namespace ofx {
                                     double amount);
   
   template <InterpFunc F>
-  OfxStatus Interpolator(OfxParamSetHandle instance, OfxPropertySetHandle inArgs, OfxPropertySetHandle outArgs) {
+  OfxStatus InterpFuncWrap(OfxParamSetHandle instance, OfxPropertySetHandle inArgs, OfxPropertySetHandle outArgs) {
+    
     Host *host = Host::Get();
+    
     if (!host) {
       return kOfxStatFailed;
     }
+    
     ParameterSet params(host, instance);
     PropertySet ia(host, inArgs);
     PropertySet oa(host, outArgs);
+    
     try {
       std::string name = ia.getString(kOfxPropName, 0);
       Time ct = ia.getDouble(kOfxPropTime, 0);
@@ -65,9 +69,13 @@ namespace ofx {
       std::string v0 = ia.getString(kOfxParamPropCustomValue, 0);
       std::string v1 = ia.getString(kOfxParamPropCustomValue, 1);
       double amount = ia.getDouble(kOfxParamPropInterpolationAmount, 0);
+      
       std::string rv = F(params, name, ct, t0, v0, t1, v1, amount);
+      
       oa.setString(kOfxParamPropCustomValue, 0, rv);
+      
       return kOfxStatOK;
+      
     } catch (Exception &e) {
       return e.getStatus();
     }

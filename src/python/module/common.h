@@ -306,6 +306,25 @@ extern bool PyOFX_InitHandle(PyObject *mod);
 extern bool PyOFX_InitProperty(PyObject *mod);
 extern bool PyOFX_InitParameter(PyObject *mod);
 
+/*
+class PyCustomParameter : public ofx::CustomParameter
+{
+  public:
+    PyCustomParameter();
+    PyCustomParameter(ofx::Host *h, OfxParamHandle hdl);
+    PyCustomParameter(const ofx::CustomParameter &rhs);
+    virtual ~PyCustomParameter();
+    
+    PyCustomParameter& operator=(const CustomParameter &rhs);
+    
+    virtual std::string interpolate(Time t0, const std::string &v0,
+                                    Time t1, const std::string &v1,
+                                    Time t, double amount);
+
+   　// TODO
+};
+*/
+
 
 struct PyInterpolatorKey
 {

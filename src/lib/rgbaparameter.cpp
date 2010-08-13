@@ -21,7 +21,7 @@ USA.
 
 */
 
-#include <ofx/parameter/rgba.h>
+#include <ofx/rgbaparameter.h>
 #include <ofx/host.h>
 
 namespace ofx {

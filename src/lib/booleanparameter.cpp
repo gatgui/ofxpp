@@ -21,7 +21,7 @@ USA.
 
 */
 
-#include <ofx/parameter/boolean.h>
+#include <ofx/booleanparameter.h>
 #include <ofx/host.h>
 
 namespace ofx {

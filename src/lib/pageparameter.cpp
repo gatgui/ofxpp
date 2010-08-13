@@ -21,7 +21,7 @@ USA.
 
 */
 
-#include <ofx/parameter/page.h>
+#include <ofx/pageparameter.h>
 #include <ofx/host.h>
 
 namespace ofx {

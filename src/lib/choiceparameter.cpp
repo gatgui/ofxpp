@@ -21,7 +21,7 @@ USA.
 
 */
 
-#include <ofx/parameter/choice.h>
+#include <ofx/choiceparameter.h>
 #include <ofx/host.h>
 
 namespace ofx {

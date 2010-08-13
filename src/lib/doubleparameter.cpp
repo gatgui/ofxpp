@@ -21,7 +21,7 @@ USA.
 
 */
 
-#include <ofx/parameter/double.h>
+#include <ofx/doubleparameter.h>
 #include <ofx/host.h>
 
 namespace ofx {

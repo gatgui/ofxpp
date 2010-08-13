@@ -25,23 +25,23 @@ USA.
 #define __ofx_parameterset_h__
 
 
-#include <ofx/parameter/boolean.h>
-#include <ofx/parameter/int.h>
-#include <ofx/parameter/int2.h>
-#include <ofx/parameter/int3.h>
-#include <ofx/parameter/double.h>
-#include <ofx/parameter/double2.h>
-#include <ofx/parameter/double3.h>
-#include <ofx/parameter/string.h>
-#include <ofx/parameter/choice.h>
-#include <ofx/parameter/rgb.h>
-#include <ofx/parameter/rgba.h>
-#include <ofx/parameter/custom.h>
-#include <ofx/parameter/page.h>
-#include <ofx/parameter/group.h>
-#include <ofx/parameter/pushbutton.h>
+#include <ofx/booleanparameter.h>
+#include <ofx/intparameter.h>
+#include <ofx/int2parameter.h>
+#include <ofx/int3parameter.h>
+#include <ofx/doubleparameter.h>
+#include <ofx/double2parameter.h>
+#include <ofx/double3parameter.h>
+#include <ofx/stringparameter.h>
+#include <ofx/choiceparameter.h>
+#include <ofx/rgbparameter.h>
+#include <ofx/rgbaparameter.h>
+#include <ofx/customparameter.h>
+#include <ofx/pageparameter.h>
+#include <ofx/groupparameter.h>
+#include <ofx/pushbuttonparameter.h>
 #ifdef OFX_API_1_2
-#include <ofx/parameter/parametric.h>
+#include <ofx/parametricparameter.h>
 #endif
 
 namespace ofx {

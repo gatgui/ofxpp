@@ -21,7 +21,7 @@ USA.
 
 */
 
-#include <ofx/parameter/pushbutton.h>
+#include <ofx/pushbuttonparameter.h>
 #include <ofx/host.h>
 
 namespace ofx {

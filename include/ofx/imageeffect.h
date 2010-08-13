@@ -29,13 +29,13 @@ USA.
 #include <ofx/exception.h>
 #include <ofx/property.h>
 #include <ofx/parameterset.h>
+#include <ofx/clip.h>
 #include <map>
 
 namespace ofx {
   
   class Host;
   class ImageEffectHost;
-  
   class Interaction;
   
   
@@ -52,250 +52,6 @@ namespace ofx {
     ImagePreMult preMult;
     bool continuousSamples;
     bool frameVarying;
-  };
-  
-  
-  class Image {
-    public:
-      
-      Image();
-      Image(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception);
-      Image(const Image &rhs);
-      ~Image();
-      
-      Image& operator=(const Image &rhs);
-      
-      inline OfxPropertySetHandle getHandle() {
-        return mProps.getHandle();
-      }
-      
-      inline void* getData() {
-        return mData;
-      }
-      
-      inline BitDepth getPixelDepth() const {
-        return mBitDepth;
-      }
-      
-      inline ImageComponent getComponents() const {
-        return mComponents;
-      }
-      
-      inline ImagePreMult getPreMultiplication() const {
-        return mPreMult;
-      }
-      
-      inline void getRenderScale(double &sx, double &sy) const {
-        sx = mRenderScaleX;
-        sy = mRenderScaleY;
-      }
-      
-      inline double getPixelAspectRatio() const {
-        return mPixelAspectRatio;
-      }
-      
-      const Rect<int>& getRegionOfDefinition() const {
-        return mRoD;
-      }
-      
-      inline ImageField getField() const {
-        return mField;
-      }
-      
-      inline const std::string& getUniqueID() const {
-        return mUID;
-      }
-      
-      inline int getComponentBytes() const {
-        return mCompBytes;
-      }
-      
-      inline int getComponentsCount() const {
-        return mNumComps;
-      }
-      
-      inline int getPixelBytes() const {
-        return mPixelBytes;
-      }
-      
-      inline int getRowBytes() {
-        return mRowBytes;
-      }
-      
-      inline const Rect<int>& getBounds() {
-        return mBounds;
-      }
-      
-      inline void* getPixelAddress(int x, int y) {
-        if (x < mBounds.x1 || x >= mBounds.x2 || y < mBounds.y1 || y >= mBounds.y2) {
-          return 0;
-        }
-        return (void*)((char*)mData + ((y - mBounds.y1) * mRowBytes) + ((x - mBounds.x1) * mPixelBytes));
-      }
-      
-      template <typename ComponentType>
-      inline bool getPixelAddress(int x, int y, RGBAColour<ComponentType> *&adr) {
-        adr = (RGBAColour<ComponentType>*) getPixelAddress(x, y);
-        return (adr != 0);
-      }
-      
-      // suite
-      
-      void release() throw(Exception);
-      
-    protected:
-      
-      PropertySet mProps;
-      OfxImageEffectSuiteV1 *mSuite;
-      BitDepth mBitDepth;
-      ImageComponent mComponents;
-      ImagePreMult mPreMult;
-      double mRenderScaleX;
-      double mRenderScaleY;
-      double mPixelAspectRatio;
-      Rect<int> mRoD;
-      ImageField mField;
-      std::string mUID;
-      int mCompBytes;
-      int mNumComps;
-      int mPixelBytes;
-      int mRowBytes;
-      Rect<int> mBounds;
-      void *mData;
-  };
-  
-  class ClipDescriptor {
-    public:
-      
-      ClipDescriptor();
-      ClipDescriptor(ImageEffectHost *h, OfxPropertySetHandle hdl);
-      ClipDescriptor(const ClipDescriptor &rhs);
-      ~ClipDescriptor();
-      
-      ClipDescriptor& operator=(const ClipDescriptor &rhs);
-      
-      inline OfxPropertySetHandle getHandle() {
-        return mProps.getHandle();
-      }
-      
-      // properties
-      
-      std::string getName();
-      
-      std::string getLabel();
-      void setLabel(const std::string &l);
-      
-      std::string getShortLabel();
-      void setShortLabel(const std::string &l);
-      
-      std::string getLongLabel();
-      void setLongLabel(const std::string &l);
-      
-      int getSupportedComponentsCount();
-      ImageComponent getSupportedComponent(int i);
-      void setSupportedComponent(int i, ImageComponent ic);
-      
-      bool requireTemporalClipAccess();
-      void setTemporalClipAccess(bool);
-      
-      bool isOptional();
-      void setOptional(bool);
-      
-      ImageFieldExtract getFieldExtraction();
-      void setFieldExtraction(ImageFieldExtract f);
-      
-      bool isMask();
-      void setMask(bool);
-      
-      bool supportTiles();
-      void setTilesSupport(bool);
-    
-    protected:
-      
-      PropertySet mProps;
-  };
-  
-  class Clip {
-    public:
-      
-      Clip();
-      Clip(ImageEffectHost *h, OfxImageClipHandle hdl) throw(Exception);
-      Clip(const Clip &rhs);
-      ~Clip();
-      
-      Clip& operator=(const Clip &rhs);
-      
-      inline ImageEffectHost* getHost() {
-        return mHost;
-      }
-      
-      inline OfxImageClipHandle getHandle() {
-        return mHandle;
-      }
-      
-      // suite
-      
-      Image getImage(Time t) throw(Exception);
-      
-      Image getImage(Time t, const Rect<double> &region) throw(Exception);
-      
-      Rect<double> getRegionOfDefinition(Time t) throw(Exception);
-      
-      // properties
-      
-      std::string getName();
-      
-      std::string getLabel();
-      
-      std::string getShortLabel();
-      
-      std::string getLongLabel();
-      
-      int getSupportedComponentsCount();
-      ImageComponent getSupportedComponent(int i);
-      
-      bool requireTemporalClipAccess();
-      
-      bool isOptional();
-      
-      ImageFieldExtract getFieldExtraction();
-      
-      bool isMask();
-      
-      bool supportTiles();
-      
-      BitDepth getPixelDepth();
-      
-      ImageComponent getComponents();
-      
-      ImagePreMult getPreMultiplication();
-      
-      double getPixelAspectRatio();
-      
-      double getFrameRate();
-      
-      void getFrameRange(double &from, double &to);
-      
-      ImageFieldOrder getFieldOrder();
-      
-      bool isConnected();
-      
-      bool supportContinuousSampling();
-      
-      BitDepth getUnmappedPixelDepth();
-      
-      ImageComponent getUnmappedComponents();
-      
-      void getUnmappedFrameRange(double &from, double &to);
-      
-      double getUnmappedFrameRate();
-      
-      
-    protected:
-      
-      OfxImageClipHandle mHandle;
-      PropertySet mProps;
-      ImageEffectHost *mHost;
   };
   
   
@@ -612,6 +368,8 @@ namespace ofx {
       
       ImageEffect();
   };
+  
+  
 }
 
 #endif

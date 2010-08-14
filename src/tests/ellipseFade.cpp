@@ -122,19 +122,19 @@ EllipseFadeInteract::EllipseFadeInteract(ofx::ImageEffectHost *host, OfxInteract
     mLastX(-1),
     mLastY(-1),
     mApp(EllipseFadeInteract::HA_GENERIC) {
-  if (host->getName() == "uk.co.thefoundry.nuke") {
+  if (host->name() == "uk.co.thefoundry.nuke") {
     mApp = HA_NUKE;
-  } else if (host->getName() == "Ramen") {
+  } else if (host->name() == "Ramen") {
     mApp = HA_RAMEN;
-  } else if (host->getName() == "Autodesk Toxik") {
+  } else if (host->name() == "Autodesk Toxik") {
     mApp = HA_TOXIK;
-  } else if (host->getName() == "com.eyeonline.Fusion") {
+  } else if (host->name() == "com.eyeonline.Fusion") {
     mApp = HA_FUSION;
   }
   // Is this really needed?
-  setSlaveToParam(0, "center");
-  setSlaveToParam(1, "width");
-  setSlaveToParam(2, "height");
+  slaveToParam(0, "center");
+  slaveToParam(1, "width");
+  slaveToParam(2, "height");
 }
 
 EllipseFadeInteract::~EllipseFadeInteract() {
@@ -150,28 +150,28 @@ OfxStatus EllipseFadeInteract::penMotion(ofx::Interact::PenArgs &args) {
   ofx::DoubleParameter pH = ((EllipseFadeEffect*) args.effect)->pHeight;
   
   double ecx, ecy;
-  pC.getValueAtTime(args.time, ecx, ecy);
+  pC.getValueAtTime(args.time, &ecx, &ecy);
   double ew = 0.5 * pW.getValueAtTime(args.time);
   double eh = 0.5 * pH.getValueAtTime(args.time);
   
   double wext, hext;
-  args.effect->getProjectExtent(wext, hext);
+  args.effect->projectExtent(&wext, &hext);
   
   double xoff, yoff;
-  args.effect->getProjectOffset(xoff, yoff);
+  args.effect->projectOffset(&xoff, &yoff);
   
   // canonical values for eclipse
   double cecx, cecy, cew, ceh;
-  ofx::NormalisedToCanonicalCoords(ecx, ecy, wext, hext, xoff, yoff, true, cecx, cecy);
-  ofx::NormalisedToCanonicalCoords(ew, eh, wext, hext, 0, 0, false, cew, ceh);
+  ofx::NormalisedToCanonicalCoords(ecx, ecy, wext, hext, xoff, yoff, true, &cecx, &cecy);
+  ofx::NormalisedToCanonicalCoords(ew, eh, wext, hext, 0, 0, false, &cew, &ceh);
   
   if (mDragOp == DO_CENTER) {
     double dx = args.x - mLastX;
     double dy = args.y - mLastY;
     cecx += dx;
     cecy += dy;
-    ofx::CanonicalToNormalisedCoords(cecx, cecy, wext, hext, xoff, yoff, true, ecx, ecy);
-    if (pC.isAutoKeying()) {
+    ofx::CanonicalToNormalisedCoords(cecx, cecy, wext, hext, xoff, yoff, true, &ecx, &ecy);
+    if (pC.autoKeying()) {
       pC.setValueAtTime(args.time, ecx, ecy);
     } else {
       pC.setValue(ecx, ecy);
@@ -180,9 +180,9 @@ OfxStatus EllipseFadeInteract::penMotion(ofx::Interact::PenArgs &args) {
   } else if (mDragOp == DO_WIDTH) {
     double dx = args.x - mLastX;
     cew += dx;
-    ofx::CanonicalToNormalisedCoords(cew, ceh, wext, hext, 0, 0, false, ew, eh);
+    ofx::CanonicalToNormalisedCoords(cew, ceh, wext, hext, 0, 0, false, &ew, &eh);
     ew *= 2.0;
-    if (pW.isAutoKeying()) {
+    if (pW.autoKeying()) {
       pW.setValueAtTime(args.time, ew);
     } else {
       pW.setValue(ew);
@@ -191,9 +191,9 @@ OfxStatus EllipseFadeInteract::penMotion(ofx::Interact::PenArgs &args) {
   } else if (mDragOp == DO_HEIGHT) {
     double dy = args.y - mLastY;
     ceh += dy;
-    ofx::CanonicalToNormalisedCoords(cew, ceh, wext, hext, 0, 0, false, ew, eh);
+    ofx::CanonicalToNormalisedCoords(cew, ceh, wext, hext, 0, 0, false, &ew, &eh);
     eh *= 2.0;
-    if (pH.isAutoKeying()) {
+    if (pH.autoKeying()) {
       pH.setValueAtTime(args.time, eh);
     } else {
       pH.setValue(eh);
@@ -218,20 +218,20 @@ OfxStatus EllipseFadeInteract::penDown(ofx::Interact::PenArgs &args) {
   ofx::DoubleParameter pH = ((EllipseFadeEffect*) args.effect)->pHeight;
   
   double ecx, ecy;
-  pC.getValueAtTime(args.time, ecx, ecy);
+  pC.getValueAtTime(args.time, &ecx, &ecy);
   double ew = 0.5 * pW.getValueAtTime(args.time);
   double eh = 0.5 * pH.getValueAtTime(args.time);
   
   double wext, hext;
-  args.effect->getProjectExtent(wext, hext);
+  args.effect->projectExtent(&wext, &hext);
   
   double xoff, yoff;
-  args.effect->getProjectOffset(xoff, yoff);
+  args.effect->projectOffset(&xoff, &yoff);
   
   // canonical values for eclipse
   double cecx, cecy, cew, ceh;
-  ofx::NormalisedToCanonicalCoords(ecx, ecy, wext, hext, xoff, yoff, true, cecx, cecy);
-  ofx::NormalisedToCanonicalCoords(ew, eh, wext, hext, 0, 0, false, cew, ceh);
+  ofx::NormalisedToCanonicalCoords(ecx, ecy, wext, hext, xoff, yoff, true, &cecx, &cecy);
+  ofx::NormalisedToCanonicalCoords(ew, eh, wext, hext, 0, 0, false, &cew, &ceh);
   
   double bw, bh;
   
@@ -289,21 +289,21 @@ OfxStatus EllipseFadeInteract::draw(ofx::Interact::DrawArgs &args) {
   ofx::DoubleParameter pH = ((EllipseFadeEffect*) args.effect)->pHeight;
   
   double ecx, ecy;
-  pC.getValueAtTime(args.time, ecx, ecy);
+  pC.getValueAtTime(args.time, &ecx, &ecy);
   double ew = 0.5 * pW.getValueAtTime(args.time);
   double eh = 0.5 * pH.getValueAtTime(args.time);
   
   double wext, hext;
-  args.effect->getProjectExtent(wext, hext);
+  args.effect->projectExtent(&wext, &hext);
   
   double xoff, yoff;
-  args.effect->getProjectOffset(xoff, yoff);
+  args.effect->projectOffset(&xoff, &yoff);
   
   //double par = effect->projectPixelAspectRatio();
   
   double cecx, cecy, cew, ceh;
-  ofx::NormalisedToCanonicalCoords(ecx, ecy, wext, hext, xoff, yoff, true, cecx, cecy);
-  ofx::NormalisedToCanonicalCoords(ew, eh, wext, hext, 0, 0, false, cew, ceh);
+  ofx::NormalisedToCanonicalCoords(ecx, ecy, wext, hext, xoff, yoff, true, &cecx, &cecy);
+  ofx::NormalisedToCanonicalCoords(ew, eh, wext, hext, 0, 0, false, &cew, &ceh);
   
   double pw, ph;
   
@@ -378,23 +378,23 @@ EllipseFadeDescriptor::~EllipseFadeDescriptor() {
 }
 
 OfxStatus EllipseFadeDescriptor::describe() {
-  setLabel("ellipseFade");
-  setShortLabel("ellipseFade");
-  setLongLabel("ellipseFade");
-  setGroup("gatgui");
-  setSingleInstance(false);
-  setHostFrameThreading(true);
-  setRenderThreadSafety(ofx::RenderThreadFullySafe);
-  setSupportedPixelDepth(0, ofx::BitDepthFloat);
-  setSupportedContext(0, ofx::ImageEffectContextFilter);
-  setTemporalClipAccess(false);
-  setTilesSupport(true);
-  setAlwaysRenderFieldTwice(true);
-  setMultipleClipDepthsSupport(false);
-  setMultipleClipPARsSupport(false);
-  setMultiResolutionSupport(false);
-  if (getHost()->supportOverlays()) {
-    setOverlayInteract(ofx::InteractEntryPoint<EllipseFadePlugin, ofx::InteractDescriptor, EllipseFadeInteract>);
+  label("ellipseFade");
+  shortLabel("ellipseFade");
+  longLabel("ellipseFade");
+  group("gatgui");
+  singleInstance(false);
+  hostFrameThreading(true);
+  renderThreadSafety(ofx::RenderThreadFullySafe);
+  supportedPixelDepth(0, ofx::BitDepthFloat);
+  supportedContext(0, ofx::ImageEffectContextFilter);
+  temporalClipAccess(false);
+  supportsTiles(true);
+  fieldRenderTwiceAlways(true);
+  supportsMultipleClipDepths(false);
+  supportsMultipleClipPARs(false);
+  supportsMultiResolution(false);
+  if (host()->supportsOverlays()) {
+    overlayInteract(ofx::InteractEntryPoint<EllipseFadePlugin, ofx::InteractDescriptor, EllipseFadeInteract>);
   }
   return kOfxStatOK;
 }
@@ -404,46 +404,46 @@ OfxStatus EllipseFadeDescriptor::describeInContext(ofx::ImageEffectContext) {
   ofx::ClipDescriptor clip;
   
   clip = defineClip("Output");
-  clip.setSupportedComponent(0, ofx::ImageComponentRGBA);
+  clip.supportedComponent(0, ofx::ImageComponentRGBA);
   
   clip = defineClip("Source");
-  clip.setSupportedComponent(0, ofx::ImageComponentRGBA);
+  clip.supportedComponent(0, ofx::ImageComponentRGBA);
   
-  ofx::Double2ParameterDescriptor c = getParameters().defineDouble2Param("center");
-  c.setDefault(0.5, 0.5);
-  c.setMin(0, 0);
-  c.setMax(1, 1);
-  c.setDigits(3);
-  c.setDimensionLabel(0, "X");
-  c.setDimensionLabel(1, "Y");
-  c.setPersistant(true);
-  c.setAnimateable(true);
-  c.setDoubleType(ofx::DoubleParamNormalisedXY);
+  ofx::Double2ParameterDescriptor c = parameters().defineDouble2Param("center");
+  c.defaultValue(0.5, 0.5);
+  c.min(0.0, 0.0);
+  c.max(1, 1);
+  c.digits(3);
+  c.dimensionLabel(0, "X");
+  c.dimensionLabel(1, "Y");
+  c.persistant(true);
+  c.animates(true);
+  c.doubleType(ofx::DoubleParamNormalisedXY);
   
-  ofx::DoubleParameterDescriptor w = getParameters().defineDoubleParam("width");
-  w.setDefault(0.5);
-  w.setMin(0.0);
-  w.setMax(1.0);
-  w.setIncrement(0.001);
-  w.setDigits(3);
-  w.setPersistant(true);
-  w.setAnimateable(true);
-  w.setDoubleType(ofx::DoubleParamNormalisedX);
+  ofx::DoubleParameterDescriptor w = parameters().defineDoubleParam("width");
+  w.defaultValue(0.5);
+  w.min(0.0);
+  w.max(1.0);
+  w.increment(0.001);
+  w.digits(3);
+  w.persistant(true);
+  w.animates(true);
+  w.doubleType(ofx::DoubleParamNormalisedX);
   
-  ofx::DoubleParameterDescriptor h = getParameters().defineDoubleParam("height");
-  h.setDefault(0.5);
-  h.setMin(0.0);
-  h.setMax(1.0);
-  h.setIncrement(0.001);
-  h.setDigits(3);
-  h.setPersistant(true);
-  h.setAnimateable(true);
-  h.setDoubleType(ofx::DoubleParamNormalisedY);
+  ofx::DoubleParameterDescriptor h = parameters().defineDoubleParam("height");
+  h.defaultValue(0.5);
+  h.min(0.0);
+  h.max(1.0);
+  h.increment(0.001);
+  h.digits(3);
+  h.persistant(true);
+  h.animates(true);
+  h.doubleType(ofx::DoubleParamNormalisedY);
   
-  ofx::BooleanParameterDescriptor i = getParameters().defineBooleanParam("invert");
-  i.setDefault(false);
-  i.setPersistant(true);
-  i.setAnimateable(false);
+  ofx::BooleanParameterDescriptor i = parameters().defineBooleanParam("invert");
+  i.defaultValue(false);
+  i.persistant(true);
+  i.animates(false);
   
   return kOfxStatOK;
 }
@@ -452,10 +452,10 @@ OfxStatus EllipseFadeDescriptor::describeInContext(ofx::ImageEffectContext) {
 
 EllipseFadeEffect::EllipseFadeEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception)
   : ofx::ImageEffect(h, hdl) {
-  pCenter = getParameters().getDouble2Param("center");
-  pWidth = getParameters().getDoubleParam("width");
-  pHeight = getParameters().getDoubleParam("height");
-  pInvert = getParameters().getBooleanParam("invert");
+  pCenter = parameters().getDouble2Param("center");
+  pWidth = parameters().getDoubleParam("width");
+  pHeight = parameters().getDoubleParam("height");
+  pInvert = parameters().getBooleanParam("invert");
 }
 
 EllipseFadeEffect::~EllipseFadeEffect() {
@@ -506,25 +506,25 @@ OfxStatus EllipseFadeEffect::render(ofx::ImageEffect::RenderArgs &args) {
   ofx::RGBAColourF *srcPix, *dstPix;
   
   double nx, ny;
-  pCenter.getValueAtTime(args.time, nx, ny);
+  pCenter.getValueAtTime(args.time, &nx, &ny);
   
   double w = pWidth.getValueAtTime(args.time);
   double h = pHeight.getValueAtTime(args.time);
   bool invert = pInvert.getValue();
   
   double xoff, yoff;
-  getProjectOffset(xoff, yoff);
+  projectOffset(&xoff, &yoff);
   
   double wext, hext;
-  getProjectExtent(wext, hext);
+  projectExtent(&wext, &hext);
   
-  double par = getProjectPixelAspectRatio();
+  double par = projectPixelAspectRatio();
   
   double cx, cy;
-  ofx::NormalisedToCanonicalCoords(nx, ny, wext, hext, xoff, yoff, true, cx, cy);
+  ofx::NormalisedToCanonicalCoords(nx, ny, wext, hext, xoff, yoff, true, &cx, &cy);
   
   double cw, ch;
-  ofx::NormalisedToCanonicalCoords(w*0.5, h*0.5, wext, hext, 0, 0, false, cw, ch);
+  ofx::NormalisedToCanonicalCoords(w*0.5, h*0.5, wext, hext, 0, 0, false, &cw, &ch);
   
   //host()->message()->sendTo(this, ofx::MessageTypeMessage, NULL, "ellipse center: %f, %f", cx, cy);
   //host()->message()->sendTo(this, ofx::MessageTypeMessage, NULL, "ellipse dimension: %f, %f", cw, ch);
@@ -536,14 +536,14 @@ OfxStatus EllipseFadeEffect::render(ofx::ImageEffect::RenderArgs &args) {
       if (abort()) {
         break;
       }
-      if (!iOut.getPixelAddress(args.renderWindow.x1, y, dstPix)) {
+      if (!iOut.pixelAddress(args.renderWindow.x1, y, dstPix)) {
         continue;
       }
       for (int x=args.renderWindow.x1; x<args.renderWindow.x2; ++x) {
-        ofx::PixelToCanonicalCoords(x, y, par, args.renderScaleX, args.renderScaleY, args.field, pcx, pcy);
+        ofx::PixelToCanonicalCoords(x, y, par, args.renderScaleX, args.renderScaleY, args.field, &pcx, &pcy);
         double d = normalisedDistanceToEllipseCenter(cx, cy, cw, ch, pcx, pcy);
         if (d <= 1.0) {
-          if (!iSrc.getPixelAddress(x, y, srcPix)) {
+          if (!iSrc.pixelAddress(x, y, srcPix)) {
             dstPix->r = 0.0f;
             dstPix->g = 0.0f;
             dstPix->b = 0.0f;
@@ -556,7 +556,7 @@ OfxStatus EllipseFadeEffect::render(ofx::ImageEffect::RenderArgs &args) {
             dstPix->a = srcPix->a;
           }
         } else {
-          if (!iSrc.getPixelAddress(x, y, srcPix)) {
+          if (!iSrc.pixelAddress(x, y, srcPix)) {
             dstPix->r = 0.0f;
             dstPix->g = 0.0f;
             dstPix->b = 0.0f;
@@ -576,14 +576,14 @@ OfxStatus EllipseFadeEffect::render(ofx::ImageEffect::RenderArgs &args) {
       if (abort()) {
         break;
       }
-      if (!iOut.getPixelAddress(args.renderWindow.x1, y, dstPix)) {
+      if (!iOut.pixelAddress(args.renderWindow.x1, y, dstPix)) {
         continue;
       }
       for (int x=args.renderWindow.x1; x<args.renderWindow.x2; ++x) {
-        ofx::PixelToCanonicalCoords(x, y, par, args.renderScaleX, args.renderScaleY, args.field, pcx, pcy);
+        ofx::PixelToCanonicalCoords(x, y, par, args.renderScaleX, args.renderScaleY, args.field, &pcx, &pcy);
         double d = normalisedDistanceToEllipseCenter(cx, cy, cw, ch, pcx, pcy);
         if (d <= 1.0) {
-          if (!iSrc.getPixelAddress(x, y, srcPix)) {
+          if (!iSrc.pixelAddress(x, y, srcPix)) {
             dstPix->r = 0.0f;
             dstPix->g = 0.0f;
             dstPix->b = 0.0f;
@@ -599,7 +599,7 @@ OfxStatus EllipseFadeEffect::render(ofx::ImageEffect::RenderArgs &args) {
           dstPix->r = 0.0f;
           dstPix->g = 0.0f;
           dstPix->b = 0.0f;
-          if (!iSrc.getPixelAddress(x, y, srcPix)) {
+          if (!iSrc.pixelAddress(x, y, srcPix)) {
             dstPix->a = 1.0f;
           } else {
             dstPix->a = srcPix->a;
@@ -625,9 +625,9 @@ OfxStatus EllipseFadeEffect::render(ofx::ImageEffect::RenderArgs &args) {
 
 EllipseFadePlugin::EllipseFadePlugin()
   : ofx::ImageEffectPlugin<EllipseFadeDescriptor, EllipseFadeEffect>() {
-  setMajorVersion(1);
-  setMinorVersion(0);
-  setID("gatgui.filter.ellipseFade");
+  majorVersion(1);
+  minorVersion(0);
+  identifier("gatgui.filter.ellipseFade");
 }
 
 EllipseFadePlugin::~EllipseFadePlugin() {
@@ -643,7 +643,7 @@ OfxExport OfxPlugin* OfxGetPlugin(int i) {
   if (i == 0) {
     EllipseFadePlugin *p = new EllipseFadePlugin();
     // when is p deleted?
-    return p->getDescription();
+    return p->description();
   }
   return NULL;
 }

@@ -180,7 +180,7 @@ namespace ofx {
                                OfxPropertySetHandle hInArgs,
                                OfxPropertySetHandle) {
     
-    ImageEffectHost *host = PluginClass::Instance()->getHost();
+    ImageEffectHost *host = PluginClass::Instance()->host();
     
     OfxInteractHandle hInteract = (OfxInteractHandle) handle;
     

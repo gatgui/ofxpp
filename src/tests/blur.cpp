@@ -133,9 +133,9 @@ class BlurPlugin : public ofx::ImageEffectPlugin<BlurDescriptor, BlurEffect> {
   public:
     BlurPlugin()
       : ofx::ImageEffectPlugin<BlurDescriptor, BlurEffect>() {
-      setMajorVersion(1);
-      setMinorVersion(0);
-      setID("gatgui.filter.multiBlur");
+      majorVersion(1);
+      minorVersion(0);
+      identifier("gatgui.filter.multiBlur");
     }
     virtual ~BlurPlugin() {
     }
@@ -155,24 +155,24 @@ OfxStatus BlurDescriptor::describe() {
   // Nuke      : uk.co.thefoundry.nuke, nuke
   // Ramen     : Ramen, Ramen
   // Composite : Autodesk Toxik, Autodesk Toxik 2011
-  ofx::Log("Host: name = %s, label = %s", getHost()->getName().c_str(), getHost()->getLabel().c_str());
-  setLabel("multiBlur");
-  setShortLabel("multiBlur");
-  setLongLabel("multiBlur");
-  setGroup("gatgui");
-  setSupportedContext(0, ofx::ImageEffectContextFilter);
-  setSingleInstance(false);
-  setRenderThreadSafety(ofx::RenderThreadFullySafe);
-  setHostFrameThreading(true);
-  setSupportedPixelDepth(0, ofx::BitDepthFloat);
-  setTilesSupport(true);
-  setTemporalClipAccess(false);
-  setMultipleClipDepthsSupport(false);
-  setMultipleClipPARsSupport(false);
-  setMultiResolutionSupport(false);
-  setAlwaysRenderFieldTwice(true);
-  if (getHost()->supportOverlays()) {
-    setOverlayInteract(ofx::InteractEntryPoint<BlurPlugin, ofx::InteractDescriptor, BlurInteract>);
+  ofx::Log("Host: name = %s, label = %s", host()->name().c_str(), host()->label().c_str());
+  label("multiBlur");
+  shortLabel("multiBlur");
+  longLabel("multiBlur");
+  group("gatgui");
+  supportedContext(0, ofx::ImageEffectContextFilter);
+  singleInstance(false);
+  renderThreadSafety(ofx::RenderThreadFullySafe);
+  hostFrameThreading(true);
+  supportedPixelDepth(0, ofx::BitDepthFloat);
+  supportsTiles(true);
+  temporalClipAccess(false);
+  supportsMultipleClipDepths(false);
+  supportsMultipleClipPARs(false);
+  supportsMultiResolution(false);
+  fieldRenderTwiceAlways(true);
+  if (host()->supportsOverlays()) {
+    overlayInteract(ofx::InteractEntryPoint<BlurPlugin, ofx::InteractDescriptor, BlurInteract>);
   }
   return kOfxStatOK;
 }
@@ -180,84 +180,84 @@ OfxStatus BlurDescriptor::describe() {
 OfxStatus BlurDescriptor::describeInContext(ofx::ImageEffectContext /*ctx*/) {
   
   ofx::ClipDescriptor iClip = defineClip("Source");
-  iClip.setSupportedComponent(0, ofx::ImageComponentRGBA);
+  iClip.supportedComponent(0, ofx::ImageComponentRGBA);
   
   ofx::ClipDescriptor oClip = defineClip("Output");
-  oClip.setSupportedComponent(0, ofx::ImageComponentRGBA);
+  oClip.supportedComponent(0, ofx::ImageComponentRGBA);
   
   ofx::ClipDescriptor mClip = defineClip("Mask");
-  mClip.setLabel("Mask");
-  mClip.setShortLabel("Mask");
-  mClip.setLongLabel("Mask");
-  mClip.setSupportedComponent(1, ofx::ImageComponentAlpha);
-  mClip.setOptional(true);
-  mClip.setMask(true);
+  mClip.label("Mask");
+  mClip.shortLabel("Mask");
+  mClip.longLabel("Mask");
+  mClip.supportedComponent(1, ofx::ImageComponentAlpha);
+  mClip.optional(true);
+  mClip.isMask(true);
   
-  ofx::ChoiceParameterDescriptor type = getParameters().defineChoiceParam("type");
-  type.setAnimateable(false);
-  type.setPersistant(true);
-  type.setChoice(0, "standard");
-  type.setChoice(1, "directional");
-  type.setChoice(2, "radial");
-  type.setDefault(0);
+  ofx::ChoiceParameterDescriptor type = parameters().defineChoiceParam("type");
+  type.animates(false);
+  type.persistant(true);
+  type.choiceOption(0, "standard");
+  type.choiceOption(1, "directional");
+  type.choiceOption(2, "radial");
+  type.defaultValue(0);
   
-  ofx::ChoiceParameterDescriptor filter = getParameters().defineChoiceParam("filter");
-  filter.setAnimateable(false);
-  filter.setPersistant(true);
-  filter.setChoice(0, "box");
-  filter.setChoice(1, "triangle");
-  filter.setChoice(2, "gaussian");
-  filter.setDefault(2);
+  ofx::ChoiceParameterDescriptor filter = parameters().defineChoiceParam("filter");
+  filter.animates(false);
+  filter.persistant(true);
+  filter.choiceOption(0, "box");
+  filter.choiceOption(1, "triangle");
+  filter.choiceOption(2, "gaussian");
+  filter.defaultValue(2);
   
-  ofx::Double2ParameterDescriptor width = getParameters().defineDouble2Param("width");
-  width.setPersistant(true);
-  width.setAnimateable(true);
-  width.setDefault(2, 2);
-  width.setMin(0, 0);
-  width.setMax(100, 100);
-  width.setIncrement(1);
-  width.setDigits(0);
-  width.setDoubleType(ofx::DoubleParamPlain);
-  width.setDimensionLabel(0, "w");
-  width.setDimensionLabel(1, "h");
-  width.setHint("Blur samples");
+  ofx::Double2ParameterDescriptor width = parameters().defineDouble2Param("width");
+  width.persistant(true);
+  width.animates(true);
+  width.defaultValue(2, 2);
+  width.min(0.0, 0.0);
+  width.max(100, 100);
+  width.increment(1);
+  width.digits(0);
+  width.doubleType(ofx::DoubleParamPlain);
+  width.dimensionLabel(0, "w");
+  width.dimensionLabel(1, "h");
+  width.hint("Blur samples");
   
   // use for directional and radial blur
-  ofx::DoubleParameterDescriptor angle = getParameters().defineDoubleParam("angle");
-  angle.setPersistant(true);
-  angle.setAnimateable(true);
-  angle.setDefault(0);
-  angle.setMin(-180);
-  angle.setMax(180);
-  angle.setIncrement(0.001);
-  angle.setDigits(3);
-  angle.setDoubleType(ofx::DoubleParamAngle);
-  angle.setHint("Direction or blur angle");
+  ofx::DoubleParameterDescriptor angle = parameters().defineDoubleParam("angle");
+  angle.persistant(true);
+  angle.animates(true);
+  angle.defaultValue(0);
+  angle.min(-180);
+  angle.max(180);
+  angle.increment(0.001);
+  angle.digits(3);
+  angle.doubleType(ofx::DoubleParamAngle);
+  angle.hint("Direction or blur angle");
   
   // used for radial blur only
-  ofx::Double2ParameterDescriptor center = getParameters().defineDouble2Param("center");
-  center.setMin(0, 0);
-  center.setMax(1, 1);
-  center.setDefault(0.5, 0.5);
-  center.setPersistant(true);
-  center.setAnimateable(true);
-  center.setDimensionLabel(0, "x");
-  center.setDimensionLabel(1, "y");
-  center.setDigits(3);
-  center.setIncrement(0.001);
-  center.setDoubleType(ofx::DoubleParamNormalisedXY);
-  center.setHint("Radial blur center");
+  ofx::Double2ParameterDescriptor center = parameters().defineDouble2Param("center");
+  center.min(0.0, 0.0);
+  center.max(1, 1);
+  center.defaultValue(0.5, 0.5);
+  center.persistant(true);
+  center.animates(true);
+  center.dimensionLabel(0, "x");
+  center.dimensionLabel(1, "y");
+  center.digits(3);
+  center.increment(0.001);
+  center.doubleType(ofx::DoubleParamNormalisedXY);
+  center.hint("Radial blur center");
   
-  ofx::DoubleParameterDescriptor zoom = getParameters().defineDoubleParam("zoom");
-  zoom.setPersistant(true);
-  zoom.setAnimateable(true);
-  zoom.setMin(0);
-  zoom.setMax(10);
-  zoom.setDefault(0);
-  zoom.setDigits(3);
-  zoom.setIncrement(0.001);
-  zoom.setDoubleType(ofx::DoubleParamScale);
-  zoom.setHint("Zoom scale");
+  ofx::DoubleParameterDescriptor zoom = parameters().defineDoubleParam("zoom");
+  zoom.persistant(true);
+  zoom.animates(true);
+  zoom.min(0);
+  zoom.max(10);
+  zoom.defaultValue(0);
+  zoom.digits(3);
+  zoom.increment(0.001);
+  zoom.doubleType(ofx::DoubleParamScale);
+  zoom.hint("Zoom scale");
   
   return kOfxStatOK;
 }
@@ -269,12 +269,12 @@ BlurEffect::BlurEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl)
   cSource = getClip("Source");
   cOutput = getClip("Output");
   cMask = getClip("Mask");
-  pType = getParameters().getChoiceParam("type");
-  pFilter = getParameters().getChoiceParam("filter");
-  pWidth = getParameters().getDouble2Param("width");
-  pAngle = getParameters().getDoubleParam("angle");
-  pZoom = getParameters().getDoubleParam("zoom");
-  pCenter = getParameters().getDouble2Param("center");
+  pType = parameters().getChoiceParam("type");
+  pFilter = parameters().getChoiceParam("filter");
+  pWidth = parameters().getDouble2Param("width");
+  pAngle = parameters().getDoubleParam("angle");
+  pZoom = parameters().getDoubleParam("zoom");
+  pCenter = parameters().getDouble2Param("center");
 }
 
 BlurEffect::~BlurEffect() {
@@ -311,7 +311,7 @@ OfxStatus BlurEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &/*a
 OfxStatus BlurEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args) {
   // review that
   double wsamples = 0, hsamples = 0;
-  pWidth.getValueAtTime(args.time, wsamples, hsamples);
+  pWidth.getValueAtTime(args.time, &wsamples, &hsamples);
   if (wsamples <= 0 && hsamples <= 0) {
     args.idClip = "Source";
     args.idTime = args.time;
@@ -329,15 +329,15 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
   ofx::RGBAColourF *srcPix, *dstPix;
   
   double ws = 0, hs = 0;
-  pWidth.getValueAtTime(args.time, ws, hs);
+  pWidth.getValueAtTime(args.time, &ws, &hs);
   
   // Project format
   
   double xoff, yoff, wext, hext, PAR;
   
-  getProjectOffset(xoff, yoff);
-  getProjectExtent(wext, hext);
-  PAR = getProjectPixelAspectRatio();
+  projectOffset(&xoff, &yoff);
+  projectExtent(&wext, &hext);
+  PAR = projectPixelAspectRatio();
   
   // note: clip must be pre-multipled
   
@@ -406,7 +406,7 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
         dstPix->a = 0.0f;
         wsum = 0.0f;
         for (int x1=0; x1<=wsamples; ++x1) {
-          if (iSource.getPixelAddress(x0-x1, y0, srcPix)) {
+          if (iSource.pixelAddress(x0-x1, y0, srcPix)) {
             wsum += wweights[x1];
             dstPix->r += wweights[x1] * srcPix->r;
             dstPix->g += wweights[x1] * srcPix->g;
@@ -415,7 +415,7 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
           }
         }
         for (int x1=1; x1<=wsamples; ++x1) {
-          if (iSource.getPixelAddress(x0+x1, y0, srcPix)) {
+          if (iSource.pixelAddress(x0+x1, y0, srcPix)) {
             wsum += wweights[x1];
             dstPix->r += wweights[x1] * srcPix->r;
             dstPix->g += wweights[x1] * srcPix->g;
@@ -440,7 +440,7 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
         if (abort()) {
           break;
         }
-        if (!iOutput.getPixelAddress(args.renderWindow.x1, y0, dstPix)) {
+        if (!iOutput.pixelAddress(args.renderWindow.x1, y0, dstPix)) {
           continue;
         }
         for (int x0=args.renderWindow.x1, x1=0; x0<args.renderWindow.x2; ++x0, ++x1) {
@@ -521,12 +521,12 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
         dstPix->b = 0.0f;
         dstPix->a = 0.0f;
         wsum = 0.0f;
-        ofx::PixelToCanonicalCoords(x0, y0, PAR, args.renderScaleX, args.renderScaleY, args.field, cx, cy);
+        ofx::PixelToCanonicalCoords(x0, y0, PAR, args.renderScaleX, args.renderScaleY, args.field, &cx, &cy);
         for (int x1=0; x1<=wsamples; ++x1) {
           scx = cx - x1 * wstepx;
           scy = cy - x1 * wstepy;
-          ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
-          if (iSource.getPixelAddress(sx, sy, srcPix)) {
+          ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, &sx, &sy);
+          if (iSource.pixelAddress(sx, sy, srcPix)) {
             wsum += wweights[x1];
             dstPix->r += wweights[x1] * srcPix->r;
             dstPix->g += wweights[x1] * srcPix->g;
@@ -537,8 +537,8 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
         for (int x1=1; x1<wsamples; ++x1) {
           scx = cx + x1 * wstepx;
           scy = cy + x1 * wstepy;
-          ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
-          if (iSource.getPixelAddress(sx, sy, srcPix)) {
+          ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, &sx, &sy);
+          if (iSource.pixelAddress(sx, sy, srcPix)) {
             wsum += wweights[x1];
             dstPix->r += wweights[x1] * srcPix->r;
             dstPix->g += wweights[x1] * srcPix->g;
@@ -564,7 +564,7 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
         if (abort()) {
           break;
         }
-        if (!iOutput.getPixelAddress(args.renderWindow.x1, y0, dstPix)) {
+        if (!iOutput.pixelAddress(args.renderWindow.x1, y0, dstPix)) {
           continue;
         }
         for (int x0=args.renderWindow.x1; x0<args.renderWindow.x2; ++x0) {
@@ -573,11 +573,11 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
           dstPix->b = 0.0f;
           dstPix->a = 0.0f;
           wsum = 0.0f;
-          ofx::PixelToCanonicalCoords(x0, y0, PAR, args.renderScaleX, args.renderScaleY, args.field, cx, cy);
+          ofx::PixelToCanonicalCoords(x0, y0, PAR, args.renderScaleX, args.renderScaleY, args.field, &cx, &cy);
           for (int y1=0; y1<=hsamples; ++y1) {
             scx = cx - y1 * wstepy;
             scy = cy - y1 * wstepx;
-            ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
+            ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, &sx, &sy);
             sx -= args.renderWindow.x1;
             sy -= args.renderWindow.y1;
             if (sx >= 0 && sx < ww && sy >= 0 && sy < wh) {
@@ -592,7 +592,7 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
           for (int y1=1; y1<=hsamples; ++y1) {
             scx = cx + y1 * wstepy;
             scy = cy + y1 * wstepx;
-            ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
+            ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, &sx, &sy);
             sx -= args.renderWindow.x1;
             sy -= args.renderWindow.y1;
             if (sx >= 0 && sx < ww && sy >= 0 && sy < wh) {
@@ -628,13 +628,13 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
     double ncx, ncy, ccx, ccy, pcx, pcy, vcx, vcy, scx, scy, ca, sa;
     int sx, sy;
     
-    pCenter.getValueAtTime(args.time, ncx, ncy);
+    pCenter.getValueAtTime(args.time, &ncx, &ncy);
     
     double angle = pAngle.getValueAtTime(args.time) * M_PI / 180.0f;
     double astep = (wsamples > 0 ? angle / (2.0f * wsamples) : 0.0f);
     double cangle = 0.0f;
     
-    ofx::NormalisedToCanonicalCoords(ncx, ncy, wext, hext, xoff, yoff, true, ccx, ccy);
+    ofx::NormalisedToCanonicalCoords(ncx, ncy, wext, hext, xoff, yoff, true, &ccx, &ccy);
     
     ofx::Log("Angle: %f", angle);
     ofx::Log("Angular step: %f", astep);
@@ -659,7 +659,7 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
         dstPix->b = 0.0f;
         dstPix->a = 0.0f;
         wsum = 0.0f;
-        ofx::PixelToCanonicalCoords(x0, y0, PAR, args.renderScaleX, args.renderScaleY, args.field, pcx, pcy);
+        ofx::PixelToCanonicalCoords(x0, y0, PAR, args.renderScaleX, args.renderScaleY, args.field, &pcx, &pcy);
         vcx = pcx - ccx;
         vcy = pcy - ccy;
         for (int x1=0; x1<=wsamples; ++x1) {
@@ -668,8 +668,8 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
           sa = sin(cangle);
           scx = ccx + vcx * ca - vcy * sa;
           scy = ccy + vcy * ca + vcx * sa;
-          ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
-          if (iSource.getPixelAddress(sx, sy, srcPix)) {
+          ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, &sx, &sy);
+          if (iSource.pixelAddress(sx, sy, srcPix)) {
             wsum += wweights[x1];
             dstPix->r += wweights[x1] * srcPix->r;
             dstPix->g += wweights[x1] * srcPix->g;
@@ -683,8 +683,8 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
           sa = sin(cangle);
           scx = ccx + vcx * ca - vcy * sa;
           scy = ccy + vcy * ca + vcx * sa;
-          ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
-          if (iSource.getPixelAddress(sx, sy, srcPix)) {
+          ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, &sx, &sy);
+          if (iSource.pixelAddress(sx, sy, srcPix)) {
             wsum += wweights[x1];
             dstPix->r += wweights[x1] * srcPix->r;
             dstPix->g += wweights[x1] * srcPix->g;
@@ -713,7 +713,7 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
         if (abort()) {
           break;
         }
-        if (!iOutput.getPixelAddress(args.renderWindow.x1, y0, dstPix)) {
+        if (!iOutput.pixelAddress(args.renderWindow.x1, y0, dstPix)) {
           continue;
         }
         for (int x0=args.renderWindow.x1; x0<args.renderWindow.x2; ++x0) {
@@ -722,7 +722,7 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
           dstPix->b = 0.0f;
           dstPix->a = 0.0f;
           wsum = 0.0f;
-          ofx::PixelToCanonicalCoords(x0, y0, PAR, args.renderScaleX, args.renderScaleY, args.field, pcx, pcy);
+          ofx::PixelToCanonicalCoords(x0, y0, PAR, args.renderScaleX, args.renderScaleY, args.field, &pcx, &pcy);
           vcx = pcx - ccx;
           vcy = pcy - ccy;
           fromx = ccx - vcx * 0.5 * zoom;
@@ -734,7 +734,7 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
           for (int y1=0; y1<=hsamples; ++y1) {
             scx = pcx - y1 * stepx;
             scy = pcy - y1 * stepy;
-            ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
+            ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, &sx, &sy);
             sx -= args.renderWindow.x1;
             sy -= args.renderWindow.y1;
             if (sx >= 0 && sx < ww && sy >= 0 && sy < wh) {
@@ -749,7 +749,7 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
           for (int y1=1; y1<=hsamples; ++y1) {
             scx = pcx + y1 * stepx;
             scy = pcy + y1 * stepy;
-            ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, sx, sy);
+            ofx::CanonicalToPixelCoords(scx, scy, PAR, args.renderScaleX, args.renderScaleY, args.field, &sx, &sy);
             sx -= args.renderWindow.x1;
             sy -= args.renderWindow.y1;
             if (sx >= 0 && sx < ww && sy >= 0 && sy < wh) {
@@ -782,11 +782,11 @@ OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
       if (abort()) {
         break;
       }
-      if (!iOutput.getPixelAddress(args.renderWindow.x1, y, dstPix)) {
+      if (!iOutput.pixelAddress(args.renderWindow.x1, y, dstPix)) {
         continue;
       }
       for (int x=args.renderWindow.x1; x<args.renderWindow.x2; ++x) {
-        if (!iSource.getPixelAddress(x, y, srcPix)) {
+        if (!iSource.pixelAddress(x, y, srcPix)) {
           dstPix->r = 0.0f;
           dstPix->g = 0.0f;
           dstPix->b = 0.0f;
@@ -824,13 +824,13 @@ BlurInteract::BlurInteract(ofx::ImageEffectHost *h, OfxInteractHandle hdl)
   // Ramen     : Ramen, Ramen
   // Composite : Autodesk Toxik, Autodesk Toxik 2011
   // Fusion    : ?, ?
-  if (h->getName() == "uk.co.thefoundry.nuke") {
+  if (h->name() == "uk.co.thefoundry.nuke") {
     mApp = HA_NUKE;
-  } else if (h->getName() == "Ramen") {
+  } else if (h->name() == "Ramen") {
     mApp = HA_RAMEN;
-  } else if (h->getName() == "Autodesk Toxik") {
+  } else if (h->name() == "Autodesk Toxik") {
     mApp = HA_TOXIK;
-  } else if (h->getName() == "com.eyeonline.Fusion") {
+  } else if (h->name() == "com.eyeonline.Fusion") {
     mApp = HA_FUSION;
   }
 }
@@ -843,8 +843,8 @@ OfxStatus BlurInteract::draw(ofx::Interact::DrawArgs &args) {
   
   BlurEffect *blur = (BlurEffect*) args.effect;
   
-  blur->getProjectOffset(xoff, yoff);
-  blur->getProjectExtent(wext, hext);
+  blur->projectOffset(&xoff, &yoff);
+  blur->projectExtent(&wext, &hext);
   
   // size of a pixel
   double pw, ph;
@@ -863,11 +863,11 @@ OfxStatus BlurInteract::draw(ofx::Interact::DrawArgs &args) {
   double bh = 2.0 * ph;
   
   // get effect parameters
-  blur->pCenter.getValueAtTime(args.time, ncx, ncy);
-  blur->pWidth.getValueAtTime(args.time, ws, hs);
+  blur->pCenter.getValueAtTime(args.time, &ncx, &ncy);
+  blur->pWidth.getValueAtTime(args.time, &ws, &hs);
   zoom = blur->pZoom.getValueAtTime(args.time);
   angle = blur->pAngle.getValueAtTime(args.time) * M_PI / 180.0;
-  ofx::NormalisedToCanonicalCoords(ncx, ncy, wext, hext, xoff, yoff, true, ccx, ccy);
+  ofx::NormalisedToCanonicalCoords(ncx, ncy, wext, hext, xoff, yoff, true, &ccx, &ccy);
   
   // Draw axis from center
   glColor3d(0.0, 1.0, 0.0);
@@ -974,20 +974,20 @@ OfxStatus BlurInteract::penMotion(ofx::Interact::PenArgs &args) {
     
     BlurEffect *blur = (BlurEffect*) args.effect;
     
-    blur->getProjectOffset(xoff, yoff);
-    blur->getProjectExtent(wext, hext);
+    blur->projectOffset(&xoff, &yoff);
+    blur->projectExtent(&wext, &hext);
     
-    blur->pCenter.getValueAtTime(args.time, ncx, ncy);
-    blur->pWidth.getValueAtTime(args.time, ws, hs);
+    blur->pCenter.getValueAtTime(args.time, &ncx, &ncy);
+    blur->pWidth.getValueAtTime(args.time, &ws, &hs);
     zoom = blur->pZoom.getValueAtTime(args.time);
     angle = blur->pAngle.getValueAtTime(args.time) * M_PI / 180.0;
-    ofx::NormalisedToCanonicalCoords(ncx, ncy, wext, hext, xoff, yoff, true, ccx, ccy);
+    ofx::NormalisedToCanonicalCoords(ncx, ncy, wext, hext, xoff, yoff, true, &ccx, &ccy);
     
     if (mOp == DO_MOVE_CENTER) {
       ccx += dx;
       ccy += dy;
-      ofx::CanonicalToNormalisedCoords(ccx, ccy, wext, hext, xoff, yoff, true, ncx, ncy);
-      if (blur->pCenter.isAutoKeying()) {
+      ofx::CanonicalToNormalisedCoords(ccx, ccy, wext, hext, xoff, yoff, true, &ncx, &ncy);
+      if (blur->pCenter.autoKeying()) {
         blur->pCenter.setValueAtTime(args.time, ncx, ncy);
       } else {
         blur->pCenter.setValue(ncx, ncy);
@@ -1004,7 +1004,7 @@ OfxStatus BlurInteract::penMotion(ofx::Interact::PenArgs &args) {
         hs = 0;
       }
       // divide by pw and ph?
-      if (blur->pWidth.isAutoKeying()) {
+      if (blur->pWidth.autoKeying()) {
         blur->pWidth.setValueAtTime(args.time, ws, hs);
       } else {
         blur->pWidth.setValue(ws, hs);
@@ -1029,7 +1029,7 @@ OfxStatus BlurInteract::penMotion(ofx::Interact::PenArgs &args) {
       if (dot < 0) {
         dot = 0;
       }
-      if (blur->pZoom.isAutoKeying()) {
+      if (blur->pZoom.autoKeying()) {
         blur->pZoom.setValueAtTime(args.time, dot);
       } else {
         blur->pZoom.setValue(dot);
@@ -1044,7 +1044,7 @@ OfxStatus BlurInteract::penMotion(ofx::Interact::PenArgs &args) {
         a = (cay > 0 ? 1 : -1) * acos(cax / hyp);
         a = a * 180.0 / M_PI;
       }
-      if (blur->pAngle.isAutoKeying()) {
+      if (blur->pAngle.autoKeying()) {
         blur->pAngle.setValueAtTime(args.time, a);
       } else {
         blur->pAngle.setValue(a);
@@ -1072,8 +1072,8 @@ OfxStatus BlurInteract::penDown(ofx::Interact::PenArgs &args) {
   
   BlurEffect *blur = (BlurEffect*) args.effect;
   
-  blur->getProjectOffset(xoff, yoff);
-  blur->getProjectExtent(wext, hext);
+  blur->projectOffset(&xoff, &yoff);
+  blur->projectExtent(&wext, &hext);
   
   // size of a pixel
   double pw, ph;
@@ -1087,12 +1087,12 @@ OfxStatus BlurInteract::penDown(ofx::Interact::PenArgs &args) {
   }
   
   // get effect parameters
-  blur->pCenter.getValueAtTime(args.time, ncx, ncy);
-  blur->pWidth.getValueAtTime(args.time, ws, hs);
+  blur->pCenter.getValueAtTime(args.time, &ncx, &ncy);
+  blur->pWidth.getValueAtTime(args.time, &ws, &hs);
   zoom = blur->pZoom.getValueAtTime(args.time);
   angle = blur->pAngle.getValueAtTime(args.time) * M_PI / 180.0;
   
-  ofx::NormalisedToCanonicalCoords(ncx, ncy, wext, hext, xoff, yoff, true, ccx, ccy);
+  ofx::NormalisedToCanonicalCoords(ncx, ncy, wext, hext, xoff, yoff, true, &ccx, &ccy);
   
   mLastX = args.x;
   mLastY = args.y;
@@ -1166,7 +1166,7 @@ OfxExport int OfxGetNumberOfPlugins(void) {
 OfxExport OfxPlugin* OfxGetPlugin(int i) {
   if (i == 0) {
     BlurPlugin *p = new BlurPlugin();
-    return p->getDescription();
+    return p->description();
   }
   return NULL;
 }

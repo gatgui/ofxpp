@@ -394,7 +394,7 @@ namespace ofx {
       
       ImageEffectPlugin()
         : BaseClass(), mHost(0) {
-        OfxPlugin *plugin = BaseClass::getDescription();
+        OfxPlugin *plugin = BaseClass::description();
         plugin->pluginApi = kOfxImageEffectPluginApi;
         plugin->apiVersion = kOfxImageEffectPluginApiVersion;
         plugin->setHost = SelfType::SetHost;

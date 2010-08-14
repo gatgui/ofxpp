@@ -39,12 +39,12 @@ namespace ofx {
       
       // properties
       
-      int getDefault();
-      void setDefault(int);
+      int defaultValue();
+      void defaultValue(int);
       
-      int getChoiceCount();
-      void setChoice(int i, const std::string &str);
-      std::string getChoice(int i);
+      int choiceOptionCount();
+      void choiceOption(int i, const std::string &str);
+      std::string choiceOption(int i);
   };
   
   class ChoiceParameter : public ValueParameter {
@@ -58,11 +58,11 @@ namespace ofx {
       
       // properties
       
-      int getDefault();
+      int defaultValue();
       
-      int getChoiceCount();
-      void setChoice(int i, const std::string &str);
-      std::string getChoice(int i);
+      int choiceOptionCount();
+      void choiceOption(int i, const std::string &str);
+      std::string choiceOption(int i);
       
       // suite
       

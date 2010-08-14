@@ -42,8 +42,8 @@ namespace ofx {
       
       // properties
       
-      bool isInitiallyOpened();
-      void setInitiallyOpened(bool o);
+      bool open();
+      void open(bool o);
   };
   
   class GroupParameter : public Parameter {
@@ -58,7 +58,7 @@ namespace ofx {
       
       // properties
       
-      bool isInitiallyOpened();
+      bool open();
   };
   
 #else

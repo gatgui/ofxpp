@@ -46,23 +46,23 @@ ChoiceParameterDescriptor& ChoiceParameterDescriptor::operator=(const ChoicePara
   return *this;
 }
 
-int ChoiceParameterDescriptor::getDefault() {
+int ChoiceParameterDescriptor::defaultValue() {
   return getInt(kOfxParamPropDefault, 0);
 }
 
-void ChoiceParameterDescriptor::setDefault(int v) {
+void ChoiceParameterDescriptor::defaultValue(int v) {
   setInt(kOfxParamPropDefault, 0, v);
 }
 
-int ChoiceParameterDescriptor::getChoiceCount() {
+int ChoiceParameterDescriptor::choiceOptionCount() {
   return size(kOfxParamPropChoiceOption);
 }
 
-void ChoiceParameterDescriptor::setChoice(int i, const std::string &str) {
+void ChoiceParameterDescriptor::choiceOption(int i, const std::string &str) {
   setString(kOfxParamPropChoiceOption, i, str);
 }
 
-std::string ChoiceParameterDescriptor::getChoice(int i) {
+std::string ChoiceParameterDescriptor::choiceOption(int i) {
   return getString(kOfxParamPropChoiceOption, i);
 }
 
@@ -88,19 +88,19 @@ ChoiceParameter& ChoiceParameter::operator=(const ChoiceParameter &rhs) {
   return *this;
 }
 
-int ChoiceParameter::getDefault() {
+int ChoiceParameter::defaultValue() {
   return mProps.getInt(kOfxParamPropDefault, 0);
 }
 
-int ChoiceParameter::getChoiceCount() {
+int ChoiceParameter::choiceOptionCount() {
   return mProps.size(kOfxParamPropChoiceOption);
 }
 
-void ChoiceParameter::setChoice(int i, const std::string &str) {
+void ChoiceParameter::choiceOption(int i, const std::string &str) {
   mProps.setString(kOfxParamPropChoiceOption, i, str);
 }
 
-std::string ChoiceParameter::getChoice(int i) {
+std::string ChoiceParameter::choiceOption(int i) {
   return mProps.getString(kOfxParamPropChoiceOption, i);
 }
 

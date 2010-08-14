@@ -35,11 +35,11 @@ InteractDescriptor::InteractDescriptor(ImageEffectHost *h, OfxInteractHandle hdl
   if (!h) {
     throw BadHandleError("ofx::InteractDescriptor::InteractDescriptor: invalid host");
   }
-  if (!h->getInteractSuite()) {
+  if (!h->interactSuite()) {
     throw MissingHostFeatureError("Interact suite");
   }
   OfxPropertySetHandle hProps;
-  h->getInteractSuite()->interactGetPropertySet(mHandle, &hProps);
+  h->interactSuite()->interactGetPropertySet(mHandle, &hProps);
   mProps = PropertySet(h, hProps);
 }
 
@@ -60,7 +60,7 @@ bool InteractDescriptor::hasAlpha() {
   return (mProps.getInt(kOfxInteractPropHasAlpha, 0) == 1);
 }
 
-int InteractDescriptor::getBitDepth() {
+int InteractDescriptor::bitDepth() {
   return mProps.getInt(kOfxInteractPropBitDepth, 0);
 }
 
@@ -102,11 +102,11 @@ Interact::PenArgs::PenArgs(ImageEffectHost *host, PropertySet &args)
   pressure = args.getDouble(kOfxInteractPropPenPressure, 0);
 #ifdef OFX_API_1_2
   if (host->checkAPIVersion(1, 2)) {
-    viewportx = args.getInt(kOfxInteractPropPenViewportPosition, 0);
-    viewporty = args.getInt(kOfxInteractPropPenViewportPosition, 1);
+    viewportX = args.getInt(kOfxInteractPropPenViewportPosition, 0);
+    viewportY = args.getInt(kOfxInteractPropPenViewportPosition, 1);
   } else {
-    viewportx = -1;
-    viewporty = -1;
+    viewportX = -1;
+    viewportY = -1;
   }
 #endif
 }
@@ -141,10 +141,10 @@ Interact::Interact(ImageEffectHost *h, OfxInteractHandle hdl) throw(Exception)
   if (!h) {
     throw BadHandleError("ofx::Interact::Interact: invalid host");
   }
-  if (!h->getInteractSuite()) {
+  if (!h->interactSuite()) {
     throw MissingHostFeatureError("Interact suite");
   }
-  mSuite = h->getInteractSuite();
+  mSuite = h->interactSuite();
   OfxPropertySetHandle hProps;
   mSuite->interactGetPropertySet(mHandle, &hProps);
   mProps = PropertySet(h, hProps);
@@ -171,25 +171,25 @@ void Interact::redraw() throw(Exception) {
   }
 }
 
-ImageEffect* Interact::getEffectInstance() {
+ImageEffect* Interact::effectInstance() {
   OfxImageEffectHandle hdl = (OfxImageEffectHandle) mProps.getPointer(kOfxPropEffectInstance, 0);
   return ImageEffect::GetEffect(hdl);
 }
 
-void* Interact::getInstanceData() {
+void* Interact::instanceData() {
   return mProps.getPointer(kOfxPropInstanceData, 0);
 }
 
-void Interact::setInstanceData(void *d) {
+void Interact::instanceData(void *d) {
   mProps.setPointer(kOfxPropInstanceData, 0, d);
 }
 
-void Interact::getPixelScale(double &sx, double &sy) {
-  sx = mProps.getDouble(kOfxInteractPropPixelScale, 0);
-  sy = mProps.getDouble(kOfxInteractPropPixelScale, 1);
+void Interact::pixelScale(double *sx, double *sy) {
+  *sx = mProps.getDouble(kOfxInteractPropPixelScale, 0);
+  *sy = mProps.getDouble(kOfxInteractPropPixelScale, 1);
 }
 
-RGBAColour<double> Interact::getBackgroundColor() {
+RGBAColour<double> Interact::backgroundColor() {
   RGBAColour<double> color;
   color.r = mProps.getDouble(kOfxInteractPropBackgroundColour, 0);
   color.g = mProps.getDouble(kOfxInteractPropBackgroundColour, 1);
@@ -198,33 +198,33 @@ RGBAColour<double> Interact::getBackgroundColor() {
   return color;
 }
 
-void Interact::getViewportSize(int &w, int &h) {
-  w = mProps.getInt(kOfxInteractPropViewportSize, 0);
-  h = mProps.getInt(kOfxInteractPropViewportSize, 1);
+void Interact::viewportSize(int *w, int *h) {
+  *w = mProps.getInt(kOfxInteractPropViewportSize, 0);
+  *h = mProps.getInt(kOfxInteractPropViewportSize, 1);
 }
 
 bool Interact::hasAlpha() {
   return (mProps.getInt(kOfxInteractPropHasAlpha, 0) == 1);
 }
 
-int Interact::getBitDepth() {
+int Interact::bitDepth() {
   return mProps.getInt(kOfxInteractPropBitDepth, 0);
 }
 
-int Interact::getSlaveToParamCount() {
+int Interact::slaveToParamCount() {
   return mProps.size(kOfxInteractPropSlaveToParam);
 }
 
-std::string Interact::getSlaveToParam(int i) {
+std::string Interact::slaveToParam(int i) {
   return mProps.getString(kOfxInteractPropSlaveToParam, i);
 }
 
-void Interact::setSlaveToParam(int i, const std::string &pn) {
+void Interact::slaveToParam(int i, const std::string &pn) {
   mProps.setString(kOfxInteractPropSlaveToParam, i, pn);
 }
 
 #ifdef OFX_API_1_2
-RGBAColour<double> Interact::getSuggestedColour() {
+RGBAColour<double> Interact::suggestedColour() {
   RGBAColour<double> sc;
   sc.a = 1.0;
   sc.r = mProps.getDouble(kOfxInteractPropSuggestedColour, 0);

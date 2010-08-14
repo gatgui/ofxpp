@@ -36,7 +36,7 @@ OFX 1.1
   kOfxPropShortLabel [R] string(1)
   kOfxPropLongLabel [R] string(1)
 
-  // Documentation is a bit contracdictory on those ones, they should not appear in instance
+  // Documentation is a bit contradictory on those ones, they should not appear in instance
   kOfxImageEffectPropSupportedComponents [R] string(-)
     in [kOfxImageComponentNone,
         kOfxImageComponentRGB,

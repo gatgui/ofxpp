@@ -34,7 +34,7 @@ OFX 1.1
   kOfxParamHostPropMaxParameters [R] int(1)
   kOfxParamHostPropMaxPages [R] int(1)
   kOfxParamHostPropPageRowColumnCount [R] int(2)
-  kOfxImageEffectInstancePropSequentialRender [R] int(1) default(0)
+  kOfxImageEffectInstancePropSequentialRender [R] int(1) default(0) [since OFX 1.2?]
     in [0: Cannot guarantee sequential render,
         1: Can always render sequentially,
         2: Can render sequentially sometimes

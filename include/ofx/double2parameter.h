@@ -39,36 +39,36 @@ namespace ofx {
       
       // properties
       
-      void getDefault(double &v0, double &v1);
-      void setDefault(double v0, double v1);
+      void defaultValue(double *v0, double *v1);
+      void defaultValue(double v0, double v1);
       
-      void getMin(double &min0, double &min1);
-      void setMin(double min0, double min1);
+      void min(double *min0, double *min1);
+      void min(double min0, double min1);
       
-      void getMax(double &max0, double &max1);
-      void setMax(double max0, double max1);
+      void max(double *max0, double *max1);
+      void max(double max0, double max1);
       
-      void getDisplayMin(double &min0, double &min1);
-      void setDisplayMin(double min0, double min1);
+      void displayMin(double *min0, double *min1);
+      void displayMin(double min0, double min1);
       
-      void getDisplayMax(double &max0, double &max1);
-      void setDisplayMax(double max0, double max1);
+      void displayMax(double *max0, double *max1);
+      void displayMax(double max0, double max1);
       
-      double getIncrement();
-      void setIncrement(double i);
+      double increment();
+      void increment(double i);
       
-      int getDigits();
-      void setDigits(int d);
+      int digits();
+      void digits(int d);
       
-      DoubleParamType getDoubleType();
-      void setDoubleType(DoubleParamType t);
+      DoubleParamType doubleType();
+      void doubleType(DoubleParamType t);
       
-      void setDimensionLabel(int i, const std::string &name);
-      std::string getDimensionLabel(int i);
+      void dimensionLabel(int i, const std::string &name);
+      std::string dimensionLabel(int i);
       
 #ifdef OFX_API_1_2
-      Coordinates getDefaultCoordinateSystem();
-      void setDefaultCoordinateSystem(Coordinates cs);
+      Coordinates defaultCoordinateSystem();
+      void defaultCoordinateSystem(Coordinates cs);
 #endif
   };
   
@@ -83,40 +83,40 @@ namespace ofx {
       
       // properties
       
-      void getDefault(double &v0, double &v1);
+      void defaultValue(double *v0, double *v1);
       
-      void getMin(double &min0, double &min1);
-      void setMin(double min0, double min1);
+      void min(double *min0, double *min1);
+      void min(double min0, double min1);
       
-      void getMax(double &max0, double &max1);
-      void setMax(double max0, double max1);
+      void max(double *max0, double *max1);
+      void max(double max0, double max1);
       
-      void getDisplayMin(double &min0, double &min1);
-      void setDisplayMin(double min0, double min1);
+      void displayMin(double *min0, double *min1);
+      void displayMin(double min0, double min1);
       
-      void getDisplayMax(double &max0, double &max1);
-      void setDisplayMax(double max0, double max1);
+      void displayMax(double *max0, double *max1);
+      void displayMax(double max0, double max1);
       
-      double getIncrement();
-      void setIncrement(double i);
+      double increment();
+      void increment(double i);
       
-      int getDigits();
-      void setDigits(int d);
+      int digits();
+      void digits(int d);
       
-      DoubleParamType getDoubleType();
+      DoubleParamType doubleType();
       
-      std::string getDimensionLabel(int i);
+      std::string dimensionLabel(int i);
       
 #ifdef OFX_API_1_2
-      Coordinates getDefaultCoordinateSystem();
+      Coordinates defaultCoordinateSystem();
 #endif
       
       // suite
       
-      void getValue(double &v0, double &v1) throw(Exception);
-      void getValueAtTime(Time t, double &v0, double &v1) throw(Exception);
-      void getDerivative(Time t, double &v0, double &v1) throw(Exception);
-      void getIntegral(Time t0, Time t1, double &v0, double &v1) throw(Exception);
+      void getValue(double *v0, double *v1) throw(Exception);
+      void getValueAtTime(Time t, double *v0, double *v1) throw(Exception);
+      void getDerivative(Time t, double *v0, double *v1) throw(Exception);
+      void getIntegral(Time t0, Time t1, double *v0, double *v1) throw(Exception);
       
       void setValue(double v0, double v1) throw(Exception);
       void setValueAtTime(Time t, double v0, double v1) throw(Exception);

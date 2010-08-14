@@ -39,26 +39,26 @@ namespace ofx {
       
       // properties
       
-      EntryPoint getInteract();
-      void setInteract(EntryPoint func);
+      EntryPoint interact();
+      void interact(EntryPoint func);
       
-      void getInteractSize(double &w, double &h);
-      void setInteractSize(double w, double h);
+      //void interactSize(double &w, double &h);
+      //void interactSize(double w, double h);
       
-      double getInteractSizeAspect();
-      void setInteractSizeAspect(double a);
+      double interactSizeAspect();
+      void interactSizeAspect(double a);
       
-      void getInteractMinSize(int &w, int &h);
-      void setInteractMinSize(int w, int h);
+      void interactMinimumSize(int *w, int *h);
+      void interactMinimumSize(int w, int h);
       
-      void getInteractPreferedSize(int &w, int &h);
-      void setInteractPreferedSize(int w, int h);
+      void interactPreferedSize(int *w, int *h);
+      void interactPreferedSize(int w, int h);
       
 #ifdef OFX_API_1_2
       bool hasHostOverlayHandle();
       
       bool useHostOverlayHandle();
-      void setUseHostOverlayHandle(bool b);
+      void useHostOverlayHandle(bool b);
 #endif
   };
   
@@ -74,15 +74,15 @@ namespace ofx {
       
       // properties
       
-      EntryPoint getInteract();
+      EntryPoint interact();
       
-      void getInteractSize(double &w, double &h);
+      void interactSize(double *w, double *h);
       
-      double getInteractSizeAspect();
+      double interactSizeAspect();
       
-      void getInteractMinSize(int &w, int &h);
+      void interactMinimumSize(int *w, int *h);
       
-      void getInteractPreferedSize(int &w, int &h);
+      void interactPreferedSize(int *w, int *h);
       
 #ifdef OFX_API_1_2
       bool useHostOverlayHandle();

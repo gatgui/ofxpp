@@ -63,21 +63,23 @@ namespace ofx {
       
       ParameterSetDescriptor& operator=(const ParameterSetDescriptor &rhs);
       
-      inline Host* getHost() {
+      inline Host* host() {
         return mHost;
       }
       
-      inline OfxParamSetHandle getHandle() {
+      inline OfxParamSetHandle handle() {
         return mHandle;
       }
       
-      inline PropertySet& getProperties() {
+      inline PropertySet& properties() {
         return mProps;
       }
       
       // properties
       
-      // kOfxPluginPropParamPageOrder -> multi string
+      int pageOrderCount();
+      std::string pageOrder(int idx);
+      void pargeOrder(int idx, const std::string &page);
       
       // suite
       
@@ -117,21 +119,27 @@ namespace ofx {
       
       ParameterSet& operator=(const ParameterSet &rhs);
       
-      inline Host* getHost() {
+      inline Host* host() {
         return mHost;
       }
       
-      inline OfxParamSetHandle getHandle() {
+      inline OfxParamSetHandle handle() {
         return mHandle;
       }
       
-      inline PropertySet& getProperties() {
+      inline PropertySet& properties() {
         return mProps;
       }
       
       // properties
       
-      // read/write: kOfxPropParamSetNeedsSyncing
+      int pageOrderCount();
+      std::string pageOrder(int idx);
+      
+#ifdef OFX_API_1_2
+      bool needsSyncing();
+      void needsSyncing(bool v);
+#endif
       
       // suite
       

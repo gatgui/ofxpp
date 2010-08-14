@@ -378,12 +378,12 @@ namespace ofx {
                                      double renderScaleX,
                                      double renderScaleY,
                                      ImageField field,
-                                     int &px, int &py)
+                                     int *px, int *py)
   {
     double fieldScale = ((field == ImageFieldUpper || field == ImageFieldLower) ? 0.5 : 1.0);
     double invPAR = 1.0 / pixelAspectRatio;
-    px = int(cx * renderScaleX * invPAR);
-    py = int(cy * renderScaleY * fieldScale);
+    *px = int(cx * renderScaleX * invPAR);
+    *py = int(cy * renderScaleY * fieldScale);
   }
   
   inline void PixelToCanonicalCoords(int px, int py,
@@ -391,31 +391,31 @@ namespace ofx {
                                      double renderScaleX,
                                      double renderScaleY,
                                      ImageField field,
-                                     double &cx, double &cy)
+                                     double *cx, double *cy)
   {
     double fieldScale = ((field == ImageFieldUpper || field == ImageFieldLower) ? 0.5 : 1.0);
-    cx = double(px) * pixelAspectRatio / renderScaleX;
-    cy = double(py) / (renderScaleY * fieldScale);
+    *cx = double(px) * pixelAspectRatio / renderScaleX;
+    *cy = double(py) / (renderScaleY * fieldScale);
   }
   
   inline void NormalisedToCanonicalCoords(double nx, double ny,
                                           double wsize, double hsize,
                                           double xoff, double yoff,
                                           bool absolute,
-                                          double &cx, double &cy)
+                                          double *cx, double *cy)
   {
-    cx = (nx * wsize) + (absolute ? xoff : 0.0);
-    cy = (ny * hsize) + (absolute ? yoff : 0.0);
+    *cx = (nx * wsize) + (absolute ? xoff : 0.0);
+    *cy = (ny * hsize) + (absolute ? yoff : 0.0);
   }
   
   inline void CanonicalToNormalisedCoords(double cx, double cy,
                                           double wsize, double hsize,
                                           double xoff, double yoff,
                                           bool absolute,
-                                          double &nx, double &ny)
+                                          double *nx, double *ny)
   {
-    nx = (cx - (absolute ? xoff : 0.0)) / wsize;
-    ny = (cy - (absolute ? yoff : 0.0)) / hsize;
+    *nx = (cx - (absolute ? xoff : 0.0)) / wsize;
+    *ny = (cy - (absolute ? yoff : 0.0)) / hsize;
   }
   
 #ifdef _DEBUG

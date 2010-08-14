@@ -48,11 +48,11 @@ GroupParameterDescriptor& GroupParameterDescriptor::operator=(const GroupParamet
   return *this;
 }
 
-bool GroupParameterDescriptor::isInitiallyOpened() {
+bool GroupParameterDescriptor::open() {
   return (getInt(kOfxParamPropGroupOpen, 0) == 1);
 }
 
-void GroupParameterDescriptor::setInitiallyOpened(bool o) {
+void GroupParameterDescriptor::open(bool o) {
   setInt(kOfxParamPropGroupOpen, 0, (o ? 1 : 0));
 }
 
@@ -78,7 +78,7 @@ GroupParameter& GroupParameter::operator=(const GroupParameter &rhs) {
   return *this;
 }
 
-bool GroupParameter::isInitiallyOpened() {
+bool GroupParameter::open() {
   return (mProps.getInt(kOfxParamPropGroupOpen, 0) == 1);
 }
 

@@ -77,7 +77,7 @@ namespace ofx {
       return kOfxStatOK;
       
     } catch (Exception &e) {
-      return e.getStatus();
+      return e.status();
     }
   }
   
@@ -94,47 +94,47 @@ namespace ofx {
       
       // properties
       
-      std::string getName();
-      void setName(const std::string &name);
+      std::string name();
+      void name(const std::string &name);
       
-      std::string getLabel();
-      void setLabel(const std::string &lbl);
+      std::string label();
+      void label(const std::string &lbl);
       
-      std::string getShortLabel();
-      void setShortLabel(const std::string &lbl);
+      std::string shortLabel();
+      void shortLabel(const std::string &lbl);
       
-      std::string getLongLabel();
-      void setLongLabel(const std::string &lbl);
+      std::string longLabel();
+      void longLabel(const std::string &lbl);
       
-      ParamType getType();
+      ParamType type();
       
-      bool isSecret();
-      void setSecret(bool);
+      bool secret();
+      void secret(bool);
       
       bool canUndo();
-      void setCanUndo(bool);
+      void canUndo(bool);
       
-      std::string getHint();
-      void setHint(const std::string &h);
+      std::string hint();
+      void hint(const std::string &h);
       
-      std::string getScriptName();
-      void setScriptName(const std::string &h);
+      std::string scriptName();
+      void scriptName(const std::string &h);
       
-      std::string getParent();
-      void setParent(const std::string &n);
+      std::string parent();
+      void parent(const std::string &n);
       
-      bool isEnable();
-      void enable(bool);
+      bool enabled();
+      void enabled(bool);
       
-      void* getData();
-      void setData(void *);
+      //void* data();
+      //void data(void *);
       
 #ifdef OFX_API_1_2
       
-      std::string getPNGIcon();
-      std::string getSVGIcon();
-      void setPNGIcon(const std::string &resPath);
-      void setSVGIcon(const std::string &resPath);
+      std::string PNGIcon();
+      std::string SVGIcon();
+      void PNGIcon(const std::string &resPath);
+      void SVGIcon(const std::string &resPath);
       
 #endif
   };
@@ -151,48 +151,48 @@ namespace ofx {
       
       // properties
       
-      EntryPoint getInteract();
-      void setInteract(EntryPoint func);
+      EntryPoint interact();
+      void interact(EntryPoint func);
       
-      void getInteractSize(double &w, double &h);
-      void setInteractSize(double w, double h);
+      //void interactSize(double &w, double &h);
+      //void interactSize(double w, double h);
       
-      double getInteractSizeAspect();
-      void setInteractSizeAspect(double a);
+      double interactSizeAspect();
+      void interactSizeAspect(double a);
       
-      void getInteractMinSize(int &w, int &h);
-      void setInteractMinSize(int w, int h);
+      void interactMinimumSize(int *w, int *h);
+      void interactMinimumSize(int w, int h);
       
-      void getInteractPreferedSize(int &w, int &h);
-      void setInteractPreferedSize(int w, int h);
+      void interactPreferedSize(int *w, int *h);
+      void interactPreferedSize(int w, int h);
       
-      bool isAnimateable();
-      void setAnimateable(bool);
+      bool animates();
+      void animates(bool);
       
-      bool isAnimating();
-      void setAnimating(bool);
+      //bool animating();
+      //void animating(bool);
       
-      bool isAutoKeying();
-      void setAutoKeying(bool);
+      //bool autoKeying();
+      //void autoKeying(bool);
       
-      bool isPersistant();
-      void setPersistant(bool);
+      bool persistant();
+      void persistant(bool);
       
       bool evaluateOnChange();
-      void setEvaluateOnChange(bool);
+      void evaluateOnChange(bool);
       
-      bool mayPluginWrite();
-      void setPluginMayWrite(bool);
+      bool pluginMayWrite();
+      void pluginMayWrite(bool);
       
-      ParamInvalidate getCacheInvalidation();
-      void setCacheInvalidation(ParamInvalidate i);
+      ParamInvalidate cacheInvalidation();
+      void cacheInvalidation(ParamInvalidate i);
       
 #ifdef OFX_API_1_2
       
       bool hasHostOverlayHandle();
       
       bool useHostOverlayHandle();
-      void setUseHostOverlayHandle(bool b);
+      void useHostOverlayHandle(bool b);
       
 #endif
   };
@@ -213,50 +213,50 @@ namespace ofx {
       
       Parameter& operator=(const Parameter &rhs);
       
-      inline OfxParamHandle getHandle() {
+      inline OfxParamHandle handle() {
         return mHandle;
       }
       
-      inline PropertySet& getProperties() {
+      inline PropertySet& properties() {
         return mProps;
       }
       
       // properties
       
-      std::string getName();
+      std::string name();
       
-      std::string getLabel();
-      void setLabel(const std::string &lbl);
+      std::string label();
+      void label(const std::string &lbl);
       
-      std::string getShortLabel();
-      void setShortLabel(const std::string &lbl);
+      std::string shortLabel();
+      void shortLabel(const std::string &lbl);
       
-      std::string getLongLabel();
-      void setLongLabel(const std::string &lbl);
+      std::string longLabel();
+      void longLabel(const std::string &lbl);
       
-      ParamType getType();
+      ParamType type();
       
-      bool isSecret();
-      void setSecret(bool);
+      bool secret();
+      void secret(bool);
       
       bool canUndo();
       
-      std::string getHint();
-      void setHint(const std::string &h);
+      std::string hint();
+      void hint(const std::string &h);
       
-      std::string getScriptName();
+      std::string scriptName();
       
-      std::string getParent();
+      std::string parent();
       
-      bool isEnable();
-      void enable(bool);
+      bool enabled();
+      void enabled(bool);
       
-      void* getData();
-      void setData(void *);
+      void* data();
+      void data(void *);
       
 #ifdef OFX_API_1_2
-      std::string getPNGIcon();
-      std::string getSVGIcon();
+      std::string PNGIcon();
+      std::string SVGIcon();
 #endif
       
       // suite
@@ -274,29 +274,29 @@ namespace ofx {
       
       // properties
       
-      EntryPoint getInteract();
+      EntryPoint interact();
       
-      void getInteractSize(double &w, double &h);
+      void interactSize(double *w, double *h);
       
-      double getInteractSizeAspect();
+      double interactSizeAspect();
       
-      void getInteractMinSize(int &w, int &h);
+      void interactMinimumSize(int *w, int *h);
       
-      void getInteractPreferedSize(int &w, int &h);
+      void interactPreferedSize(int *w, int *h);
       
-      bool isAnimateable();
+      bool animates();
       
-      bool isAnimating();
+      bool animating();
       
-      bool isAutoKeying();
+      bool autoKeying();
       
-      bool isPersistant();
+      bool persistant();
       
       bool evaluateOnChange();
       
-      bool mayPluginWrite();
+      bool pluginMayWrite();
       
-      ParamInvalidate getCacheInvalidation();
+      ParamInvalidate cacheInvalidation();
       
 #ifdef OFX_API_1_2
       bool useHostOverlayHandle();

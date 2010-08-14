@@ -44,20 +44,20 @@ namespace ofx {
       
       // properties
       
-      int getDimension();
-      void setDimension(int n);
+      int dimension();
+      void dimension(int n);
       
-      RGBAColour<double> getUIColour(int d);
-      void setUIColour(int d, const RGBAColour<double> &c);
+      RGBAColour<double> UIColour(int d);
+      void UIColour(int d, const RGBAColour<double> &c);
       
-      EntryPoint getInteractBackground();
-      void setInteractBackground(EntryPoint ep);
+      EntryPoint interactBackground();
+      void interactBackground(EntryPoint ep);
       
-      void getRange(double &pmin, double &pmax);
-      void setRange(double pmin, double pmax);
+      void range(double *pmin, double *pmax);
+      void range(double pmin, double pmax);
       
-      std::string getDimensionLabel(int d);
-      void setDimensionLabel(int d, const std::string &l);
+      std::string dimensionLabel(int d);
+      void dimensionLabel(int d, const std::string &l);
       
       /*
       // Parametric parameters are numeric
@@ -94,15 +94,15 @@ namespace ofx {
       
       // properties
       
-      int getDimension();
+      int dimension();
       
-      RGBAColour<double> getUIColour(int d);
+      RGBAColour<double> UIColour(int d);
       
-      EntryPoint getInteractBackground();
+      EntryPoint interactBackground();
       
-      void getRange(double &pmin, double &pmax);
+      void range(double *pmin, double *pmax);
       
-      std::string getDimensionLabel(int d);
+      std::string dimensionLabel(int d);
       
       // suite
       

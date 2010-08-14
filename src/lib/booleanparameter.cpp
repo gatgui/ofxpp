@@ -46,11 +46,11 @@ BooleanParameterDescriptor& BooleanParameterDescriptor::operator=(const BooleanP
   return *this;
 }
 
-bool BooleanParameterDescriptor::getDefault() {
+bool BooleanParameterDescriptor::defaultValue() {
   return (getInt(kOfxParamPropDefault, 0) == 1);
 }
 
-void BooleanParameterDescriptor::setDefault(bool v) {
+void BooleanParameterDescriptor::defaultValue(bool v) {
   setInt(kOfxParamPropDefault, 0, (v ? 1 : 0));
 }
 
@@ -76,7 +76,7 @@ BooleanParameter& BooleanParameter::operator=(const BooleanParameter &rhs) {
   return *this;
 }
 
-bool BooleanParameter::getDefault() {
+bool BooleanParameter::defaultValue() {
   return (mProps.getInt(kOfxParamPropDefault, 0) == 1);
 }
 

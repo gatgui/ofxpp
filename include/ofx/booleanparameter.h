@@ -39,8 +39,8 @@ namespace ofx {
       
       // properties
       
-      bool getDefault();
-      void setDefault(bool v);
+      bool defaultValue();
+      void defaultValue(bool v);
   };
   
   class BooleanParameter : public ValueParameter {
@@ -54,7 +54,7 @@ namespace ofx {
       
       // properties
       
-      bool getDefault();
+      bool defaultValue();
       
       // suite
       

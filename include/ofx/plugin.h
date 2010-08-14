@@ -39,31 +39,31 @@ namespace ofx {
       Plugin();
       virtual ~Plugin();
       
-      inline OfxPlugin* getDescription() {
+      inline OfxPlugin* description() {
         return &mPlugin;
       }
       
-      inline void setMajorVersion(int v) {
+      inline void majorVersion(int v) {
         mPlugin.pluginVersionMajor = v;
       }
       
-      inline void setMinorVersion(int v) {
+      inline void minorVersion(int v) {
         mPlugin.pluginVersionMinor = v;
       }
       
-      inline void setID(const char *ID) {
+      inline void identifier(const char *ID) {
         mPlugin.pluginIdentifier = ID;
       }
       
-      inline int getMajorVersion() const {
+      inline int majorVersion() const {
         return mPlugin.pluginVersionMajor;
       }
       
-      inline int getMinorVersion() const {
+      inline int minorVersion() const {
         return mPlugin.pluginVersionMinor;
       }
       
-      inline const char* getID() const {
+      inline const char* identifier() const {
         return mPlugin.pluginIdentifier;
       }
       
@@ -96,7 +96,7 @@ namespace ofx {
           Log("*** Invalid plugin");
           return kOfxStatErrBadHandle;
         }
-        ImageEffectHost *host = plugin->getHost();
+        ImageEffectHost *host = plugin->host();
         if (!host) {
           Log("*** Invalid host");
           return kOfxStatErrBadHandle;
@@ -332,7 +332,7 @@ namespace ofx {
         } catch (Exception &e) {
           Log("*** Caught exception");
           Log("***   %s", e.what());
-          return e.getStatus();
+          return e.status();
           
         }
       }
@@ -363,7 +363,7 @@ namespace ofx {
         return kOfxStatReplyDefault;
       }
       
-      inline ImageEffectHost* getHost() {
+      inline ImageEffectHost* host() {
         return mHost;
       }
       

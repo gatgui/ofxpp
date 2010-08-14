@@ -36,7 +36,6 @@ namespace ofx {
   
   class Host;
   class ImageEffectHost;
-  class Interaction;
   
   
   struct PixelPreferences {
@@ -73,19 +72,19 @@ namespace ofx {
       
       ImageEffectDescriptor& operator=(const ImageEffectDescriptor &rhs);
       
-      inline ImageEffectHost* getHost() {
+      inline ImageEffectHost* host() {
         return mHost;
       }
       
-      inline OfxImageEffectHandle getHandle() {
+      inline OfxImageEffectHandle handle() {
         return mHandle;
       }
       
-      inline PropertySet& getProperties() {
+      inline PropertySet& properties() {
         return mProps;
       }
       
-      inline ParameterSetDescriptor& getParameters() {
+      inline ParameterSetDescriptor& parameters() {
         return mParams;
       }
       
@@ -95,79 +94,79 @@ namespace ofx {
       
       // properties
       
-      std::string getLabel();
-      void setLabel(const std::string &s);
+      std::string label();
+      void label(const std::string &s);
       
-      std::string getShortLabel();
-      void setShortLabel(const std::string &s);
+      std::string shortLabel();
+      void shortLabel(const std::string &s);
       
-      std::string getLongLabel();
-      void setLongLabel(const std::string &s);
+      std::string longLabel();
+      void longLabel(const std::string &s);
       
-      int getSupportedContextsCount();
-      ImageEffectContext getSupportedContext(int i);
-      void setSupportedContext(int i, ImageEffectContext ctx);
+      int supportedContextsCount();
+      ImageEffectContext supportedContext(int i);
+      void supportedContext(int i, ImageEffectContext ctx);
       
-      std::string getGroup();
-      void setGroup(const std::string &g);
+      std::string group();
+      void group(const std::string &g);
       
-      bool isSingleInstance();
-      void setSingleInstance(bool);
+      bool singleInstance();
+      void singleInstance(bool);
       
-      RenderThreadSafety getRenderThreadSafety();
-      void setRenderThreadSafety(RenderThreadSafety rts);
+      RenderThreadSafety renderThreadSafety();
+      void renderThreadSafety(RenderThreadSafety rts);
       
       // indicates whether plugin relies on host for frame threading or not
-      bool requireHostFrameThreading();
-      void setHostFrameThreading(bool);
+      bool hostFrameThreading();
+      void hostFrameThreading(bool);
       
       // Use this way:
-      //   effectDesc->setOverlayInteract(InteractEntryPoint<MyPluginClass, MyInteractDescriptionClass, MyInteractClass>)
-      EntryPoint getOverlayInteract();
-      void setOverlayInteract(EntryPoint func);
+      //   effectDesc->overlayInteract(InteractEntryPoint<MyPluginClass, MyInteractDescriptionClass, MyInteractClass>)
+      EntryPoint overlayInteract();
+      void overlayInteract(EntryPoint func);
       
-      bool supportMultiResolution();
-      void setMultiResolutionSupport(bool);
+      bool supportsMultiResolution();
+      void supportsMultiResolution(bool);
       
-      bool supportTiles();
-      void setTilesSupport(bool);
+      bool supportsTiles();
+      void supportsTiles(bool);
       
-      bool requireTemporalClipAccess();
-      void setTemporalClipAccess(bool);
+      bool temporalClipAccess();
+      void temporalClipAccess(bool);
       
-      int getSupportedPixelDepthsCount();
-      void setSupportedPixelDepth(int i, BitDepth bd);
-      BitDepth getSupportedPixelDepth(int i);
+      int supportedPixelDepthsCount();
+      void supportedPixelDepth(int i, BitDepth bd);
+      BitDepth supportedPixelDepth(int i);
       
-      bool alwaysRenderFieldTwice();
-      void setAlwaysRenderFieldTwice(bool);
+      bool fieldRenderTwiceAlways();
+      void fieldRenderTwiceAlways(bool);
       
-      bool supportMultipleClipDepths();
-      void setMultipleClipDepthsSupport(bool);
+      bool supportsMultipleClipDepths();
+      void supportsMultipleClipDepths(bool);
       
-      bool supportMultipleClipPARs();
-      void setMultipleClipPARsSupport(bool);  
+      bool supportsMultipleClipPARs();
+      void supportsMultipleClipPARs(bool);  
       
-      int getClipPreferencesSlaveParamCount();
-      std::string getClipPreferencesSlaveParam(int i);
-      void setClipPreferencesSlaveParam(int i, const std::string &n);
+      int clipPreferencesSlaveParamCount();
+      std::string clipPreferencesSlaveParam(int i);
+      void clipPreferencesSlaveParam(int i, const std::string &n);
       
-      std::string getPluginFilePath();
+      std::string pluginFilePath();
       
-      SequentialRender getSequentialRender();
-      void setSequentialRender(SequentialRender sr);
+      SequentialRender sequentialRender();
+      void sequentialRender(SequentialRender sr);
       
 #ifdef OFX_API_1_2
-      int getVersion(int level);
-      int getMajorVersion();
-      int getMinorVersion();
-      void setVersion(int level, int v);
+      int version(int level);
+      int majorVersion();
+      int minorVersion();
+      void version(int level, int v);
       
-      std::string getVersionLabel();
-      void setVersionLabel(const std::string &vl);
+      std::string versionLabel();
+      void versionLabel(const std::string &vl);
       
-      std::string getDescription();
-      void setDescription(const std::string &vl);
+      std::string description();
+      void description(const std::string &vl);
 #endif
       
       // Image effect actions
@@ -282,23 +281,23 @@ namespace ofx {
       ImageEffect(ImageEffectHost *h, OfxImageEffectHandle hdl);
       virtual ~ImageEffect();
       
-      inline ImageEffectHost* getHost() {
+      inline ImageEffectHost* host() {
         return mHost;
       }
       
-      inline PropertySet& getProperties() {
+      inline PropertySet& properties() {
         return mProps;
       }
       
-      inline ParameterSet& getParameters() {
+      inline ParameterSet& parameters() {
         return mParams;
       }
       
-      inline OfxImageEffectHandle getHandle() {
+      inline OfxImageEffectHandle handle() {
         return mHandle;
       }
       
-      void setHandle(OfxImageEffectHandle handle) throw(Exception);
+      void handle(OfxImageEffectHandle handle) throw(Exception);
       
       // suite
       
@@ -312,30 +311,35 @@ namespace ofx {
       
       // properties
       
-      ImageEffectContext getContext();
+      ImageEffectContext context();
       
-      void* getInstanceData();
-      void setInstanceData(void *data);
+      void* instanceData();
+      void instanceData(void *data);
       
-      void getProjectSize(double &w, double &h);
+      void projectSize(double *w, double *h);
       
-      void getProjectOffset(double &x, double &y);
+      void projectOffset(double *x, double *y);
       
-      void getProjectExtent(double &w, double &h);
+      void projectExtent(double *w, double *h);
       
-      double getProjectPixelAspectRatio();
+      double projectPixelAspectRatio();
       
-      double getDuration();
+      double duration();
       
-      SequentialRender getSequentialRender();
-      void setSequentialRender(SequentialRender sr);
+      SequentialRender sequentialRender();
+      void sequentialRender(SequentialRender sr);
       
-      double getFrameRate();
+      double frameRate();
       
       bool isInteractive();
       
+      bool inAnalysis();
+      void inAnalysis(bool v);
+      
+      ImageEffectDescriptor descriptor();
+      
 #ifdef OFX_API_1_2
-      std::string getDescription();
+      std::string description();
 #endif
       
       // Image effect actions

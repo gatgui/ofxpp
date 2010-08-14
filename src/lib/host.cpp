@@ -103,7 +103,7 @@ void Host::init() throw(Exception) {
   gsHost = this;
 }
 
-int Host::getAPIVersion(int level) {
+int Host::APIVersion(int level) {
 #ifdef OFX_API_1_2
   try {
     return getInt(kOfxPropAPIVersion, level);
@@ -115,7 +115,7 @@ int Host::getAPIVersion(int level) {
 #endif
 }
 
-int Host::getAPIMajorVersion() {
+int Host::APIMajorVersion() {
 #ifdef OFX_API_1_2
   try {
     return getInt(kOfxPropAPIVersion, 0);
@@ -127,7 +127,7 @@ int Host::getAPIMajorVersion() {
 #endif
 }
 
-int Host::getAPIMinorVersion() {
+int Host::APIMinorVersion() {
 #ifdef OFX_API_1_2
   try {
     return getInt(kOfxPropAPIVersion, 1);
@@ -140,30 +140,30 @@ int Host::getAPIMinorVersion() {
 }
 
 bool Host::checkAPIVersion(int major, int minor) {
-  int apiMaj = getAPIMajorVersion();
-  int apiMin = getAPIMinorVersion();
+  int apiMaj = APIMajorVersion();
+  int apiMin = APIMinorVersion();
   return (apiMaj > major || (apiMaj == major && apiMin >= minor));
 }
 
 #ifdef OFX_API_1_2
 
-int Host::getVersion(int level) {
+int Host::version(int level) {
   return (size(kOfxPropVersion) > level ? getInt(kOfxPropVersion, level) : 0);
 }
 
-int Host::getMajorVersion() {
+int Host::majorVersion() {
   return (size(kOfxPropVersion) > 0 ? getInt(kOfxPropVersion, 0) : 0);
 }
 
-int Host::getMinorVersion() {
+int Host::minorVersion() {
   return (size(kOfxPropVersion) > 1 ? getInt(kOfxPropVersion, 1) : 0);
 }
 
-std::string Host::getVersionLabel() {
+std::string Host::versionLabel() {
   return getString(kOfxPropVersionLabel, 0);
 }
 
-void* Host::getOSHandle() {
+void* Host::OSHandle() {
   return getPointer(kOfxPropHostOSHandle, 0);
 }
 
@@ -199,11 +199,11 @@ void ImageEffectHost::init() throw(Exception) {
   gsImageEffectHost = this;
 }
 
-std::string ImageEffectHost::getName() {
+std::string ImageEffectHost::name() {
   return getString(kOfxPropName, 0);
 }
 
-std::string ImageEffectHost::getLabel() {
+std::string ImageEffectHost::label() {
   return getString(kOfxPropLabel, 0);
 }
 
@@ -211,102 +211,102 @@ bool ImageEffectHost::isBackground() {
   return (getInt(kOfxImageEffectHostPropIsBackground, 0) == 1);
 }
 
-bool ImageEffectHost::supportOverlays() {
+bool ImageEffectHost::supportsOverlays() {
   return (getInt(kOfxImageEffectPropSupportsOverlays, 0) == 1);
 }
 
-bool ImageEffectHost::supportMultiResolution() {
+bool ImageEffectHost::supportsMultiResolution() {
   return (getInt(kOfxImageEffectPropSupportsMultiResolution, 0) == 1);
 }
 
-bool ImageEffectHost::supportTiles() {
+bool ImageEffectHost::supportsTiles() {
   return (getInt(kOfxImageEffectPropSupportsTiles, 0) == 1);
 }
 
-bool ImageEffectHost::supportTemporalClipAccess() {
+bool ImageEffectHost::temporalClipAccess() {
   return (getInt(kOfxImageEffectPropTemporalClipAccess, 0) == 1);
 }
 
-int ImageEffectHost::getSupportedComponentsCount() {
+int ImageEffectHost::supportedComponentsCount() {
   return size(kOfxImageEffectPropSupportedComponents);
 }
 
-ImageComponent ImageEffectHost::getSupportedComponent(int idx) {
+ImageComponent ImageEffectHost::supportedComponent(int idx) {
   return StringToImageComponent(getString(kOfxImageEffectPropSupportedComponents, idx));
 }
 
-int ImageEffectHost::getSupportedPixelDepthsCount() {
+int ImageEffectHost::supportedPixelDepthsCount() {
   return size(kOfxImageEffectPropSupportedPixelDepths);
 }
 
-BitDepth ImageEffectHost::getSupportedPixelDepth(int idx) {
+BitDepth ImageEffectHost::supportedPixelDepth(int idx) {
   return StringToBitDepth(getString(kOfxImageEffectPropSupportedPixelDepths, idx));
 }
 
-int ImageEffectHost::getSupportedContextsCount() {
+int ImageEffectHost::supportedContextsCount() {
   return size(kOfxImageEffectPropSupportedContexts);
 }
 
-ImageEffectContext ImageEffectHost::getSupportedContext(int idx) {
+ImageEffectContext ImageEffectHost::supportedContext(int idx) {
   return StringToImageEffectContext(getString(kOfxImageEffectPropSupportedContexts, idx));
 }
 
-bool ImageEffectHost::supportMultipleClipDepths() {
+bool ImageEffectHost::supportsMultipleClipDepths() {
   return (getInt(kOfxImageEffectPropSupportsMultipleClipDepths, 0) == 1);
 }
 
-bool ImageEffectHost::supportMultipleClipPARs() {
+bool ImageEffectHost::supportsMultipleClipPARs() {
   return (getInt(kOfxImageEffectPropSupportsMultipleClipPARs, 0) == 1);
 }
 
-bool ImageEffectHost::isFramerateSetable() {
+bool ImageEffectHost::setableFrameRate() {
   return (getInt(kOfxImageEffectPropSetableFrameRate, 0) == 1);
 }
 
-bool ImageEffectHost::isFieldingSetable() {
+bool ImageEffectHost::setableFielding() {
   return (getInt(kOfxImageEffectPropSetableFielding, 0) == 1);
 }
 
-bool ImageEffectHost::supportCustomParamAnimation() {
+bool ImageEffectHost::supportsCustomAnimation() {
   return (getInt(kOfxParamHostPropSupportsCustomAnimation, 0) == 1);
 }
 
-bool ImageEffectHost::supportStringParamAnimation() {
+bool ImageEffectHost::supportsStringAnimation() {
   return (getInt(kOfxParamHostPropSupportsStringAnimation, 0) == 1);
 }
 
-bool ImageEffectHost::supportChoiceParamAnimation() {
+bool ImageEffectHost::supportsChoiceAnimation() {
   return (getInt(kOfxParamHostPropSupportsChoiceAnimation, 0) == 1);
 }
 
-bool ImageEffectHost::supportBooleanParamAnimation() {
+bool ImageEffectHost::supportsBooleanAnimation() {
   return (getInt(kOfxParamHostPropSupportsBooleanAnimation, 0) == 1);
 }
 
-bool ImageEffectHost::supportParamCustomInteract() {
+bool ImageEffectHost::supportsCustomInteract() {
   return (getInt(kOfxParamHostPropSupportsCustomInteract, 0) == 1);
 }
 
-int ImageEffectHost::getMaxParameters() {
+int ImageEffectHost::maxParameters() {
   return (getInt(kOfxParamHostPropMaxParameters, 0));
 }
 
-int ImageEffectHost::getMaxParameterPages() {
+int ImageEffectHost::maxPages() {
   return (getInt(kOfxParamHostPropMaxPages, 0));
 }
 
-void ImageEffectHost::getParameterPageRowColumnCount(int &rowCount, int &columnCount) {
-  columnCount = getInt(kOfxParamHostPropPageRowColumnCount, 0);
-  rowCount = getInt(kOfxParamHostPropPageRowColumnCount, 1);
+void ImageEffectHost::pageRowColumnCount(int *rowCount, int *columnCount) {
+  *columnCount = getInt(kOfxParamHostPropPageRowColumnCount, 0);
+  *rowCount = getInt(kOfxParamHostPropPageRowColumnCount, 1);
 }
 
 #ifdef OFX_API_1_2
 
-SequentialRender ImageEffectHost::getSequentialRender() {
+SequentialRender ImageEffectHost::sequentialRender() {
   return SequentialRender(getInt(kOfxImageEffectInstancePropSequentialRender, 0));
 }
 
-bool ImageEffectHost::supportParametricParamAnimation() {
+bool ImageEffectHost::supportsParametricAnimation() {
   return (getInt(kOfxParamHostPropSupportsParametricAnimation, 0) == 1);
 }
 

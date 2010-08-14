@@ -59,7 +59,7 @@ namespace ofx {
           
           // get custom param class (without using the ParameterSet class)
           OfxParamHandle hParam;
-          OfxStatus stat = host->getParameterSuite()->paramGetHandle(instance, name.c_str(), &hParam, NULL);
+          OfxStatus stat = host->parameterSuite()->paramGetHandle(instance, name.c_str(), &hParam, NULL);
           if (stat != kOfxStatOK)
           {
             return stat;
@@ -67,7 +67,7 @@ namespace ofx {
           
           ParameterClass param(host, hParam);
           
-          if (param.getType() != ParamTypeCustom)
+          if (param.type() != ParamTypeCustom)
           {
             return kOfxStatFailed;
           }
@@ -80,7 +80,7 @@ namespace ofx {
         }
         catch (Exception &e)
         {
-          return e.getStatus();
+          return e.status();
         }
       }
   };
@@ -96,15 +96,15 @@ namespace ofx {
       
       // properties
       
-      std::string getDefault();
-      void setDefault(const std::string &v);
+      std::string defaultValue();
+      void defaultValue(const std::string &v);
       
-      void setInterpolator(OfxInterpFunc func);
-      OfxInterpFunc getInterpolator();
+      void interpCallback(OfxInterpFunc func);
+      OfxInterpFunc interpCallback();
       
       template <class ParameterClass>
-      void setInterpolator() {
-        setInterpolator(&Interpolator<ParameterClass>::Interpolate);
+      void interpCallback() {
+        interpCallback(&Interpolator<ParameterClass>::Interpolate);
       }
   };
   
@@ -123,8 +123,8 @@ namespace ofx {
       
       // properties
       
-      std::string getDefault();
-      OfxInterpFunc getInterpolator();
+      std::string defaultValue();
+      OfxInterpFunc interpCallback();
       
       // suite
       

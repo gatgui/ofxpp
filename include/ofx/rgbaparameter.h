@@ -39,8 +39,8 @@ namespace ofx {
       
       // properties
       
-      RGBAColour<double> getDefault();
-      void setDefault(const RGBAColour<double> &v);
+      RGBAColour<double> defaultValue();
+      void defaultValue(const RGBAColour<double> &v);
   };
   
   class RGBAParameter : public ValueParameter {
@@ -54,7 +54,7 @@ namespace ofx {
       
       // properties
       
-      RGBAColour<double> getDefault();
+      RGBAColour<double> defaultValue();
       
       // suite
       

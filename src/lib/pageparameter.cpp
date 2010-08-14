@@ -46,15 +46,15 @@ PageParameterDescriptor& PageParameterDescriptor::operator=(const PageParameterD
   return *this;
 }
 
-int PageParameterDescriptor::getChildCount() {
+int PageParameterDescriptor::childCount() {
   return size(kOfxParamPropPageChild);
 }
 
-void PageParameterDescriptor::setChild(int i, const std::string &name) {
+void PageParameterDescriptor::child(int i, const std::string &name) {
   setString(kOfxParamPropPageChild, i, name);
 }
 
-std::string PageParameterDescriptor::getChild(int i) {
+std::string PageParameterDescriptor::child(int i) {
   return getString(kOfxParamPropPageChild, i);
 }
 
@@ -80,11 +80,11 @@ PageParameter& PageParameter::operator=(const PageParameter &rhs) {
   return *this;
 }
 
-int PageParameter::getChildCount() {
+int PageParameter::childCount() {
   return mProps.size(kOfxParamPropPageChild);
 }
 
-std::string PageParameter::getChild(int i) {
+std::string PageParameter::child(int i) {
   return mProps.getString(kOfxParamPropPageChild, i);
 }
 

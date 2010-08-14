@@ -46,67 +46,67 @@ ClipDescriptor& ClipDescriptor::operator=(const ClipDescriptor &rhs) {
   return *this;
 }
 
-std::string ClipDescriptor::getName() {
+std::string ClipDescriptor::name() {
   return mProps.getString(kOfxPropName, 0);
 }
 
-std::string ClipDescriptor::getLabel() {
+std::string ClipDescriptor::label() {
   return mProps.getString(kOfxPropLabel, 0);
 }
 
-void ClipDescriptor::setLabel(const std::string &l) {
+void ClipDescriptor::label(const std::string &l) {
   mProps.setString(kOfxPropLabel, 0, l);
 }
 
-std::string ClipDescriptor::getShortLabel() {
+std::string ClipDescriptor::shortLabel() {
   return mProps.getString(kOfxPropShortLabel, 0);
 }
 
-void ClipDescriptor::setShortLabel(const std::string &l) {
+void ClipDescriptor::shortLabel(const std::string &l) {
   mProps.setString(kOfxPropShortLabel, 0, l);
 }
 
-std::string ClipDescriptor::getLongLabel() {
+std::string ClipDescriptor::longLabel() {
   return mProps.getString(kOfxPropLongLabel, 0);
 }
 
-void ClipDescriptor::setLongLabel(const std::string &l) {
+void ClipDescriptor::longLabel(const std::string &l) {
   mProps.setString(kOfxPropLongLabel, 0, l);
 }
 
-int ClipDescriptor::getSupportedComponentsCount() {
+int ClipDescriptor::supportedComponentsCount() {
   return mProps.size(kOfxImageEffectPropSupportedComponents);
 }
 
-ImageComponent ClipDescriptor::getSupportedComponent(int i) {
+ImageComponent ClipDescriptor::supportedComponent(int i) {
   return StringToImageComponent(mProps.getString(kOfxImageEffectPropSupportedComponents, i));
 }
 
-void ClipDescriptor::setSupportedComponent(int i, ImageComponent ic) {
+void ClipDescriptor::supportedComponent(int i, ImageComponent ic) {
   mProps.setString(kOfxImageEffectPropSupportedComponents, i, ImageComponentToString(ic));
 }
 
-bool ClipDescriptor::requireTemporalClipAccess() {
+bool ClipDescriptor::temporalClipAccess() {
   return (mProps.getInt(kOfxImageEffectPropTemporalClipAccess, 0) == 1);
 }
 
-void ClipDescriptor::setTemporalClipAccess(bool yes) {
+void ClipDescriptor::temporalClipAccess(bool yes) {
   mProps.setInt(kOfxImageEffectPropTemporalClipAccess, 0, (yes ? 1 : 0));
 }
 
-bool ClipDescriptor::isOptional() {
+bool ClipDescriptor::optional() {
   return (mProps.getInt(kOfxImageClipPropOptional, 0) == 1);
 }
 
-void ClipDescriptor::setOptional(bool yes) {
+void ClipDescriptor::optional(bool yes) {
   mProps.setInt(kOfxImageClipPropOptional, 0, (yes ? 1 : 0));
 }
 
-ImageFieldExtract ClipDescriptor::getFieldExtraction() {
+ImageFieldExtract ClipDescriptor::fieldExtraction() {
   return StringToImageFieldExtract(mProps.getString(kOfxImageClipPropFieldExtraction, 0));
 }
 
-void ClipDescriptor::setFieldExtraction(ImageFieldExtract f) {
+void ClipDescriptor::fieldExtraction(ImageFieldExtract f) {
   mProps.setString(kOfxImageClipPropFieldExtraction, 0, ImageFieldExtractToString(f));
 }
 
@@ -114,15 +114,15 @@ bool ClipDescriptor::isMask() {
   return (mProps.getInt(kOfxImageClipPropIsMask, 0) == 1);
 }
 
-void ClipDescriptor::setMask(bool yes) {
+void ClipDescriptor::isMask(bool yes) {
   mProps.setInt(kOfxImageClipPropIsMask, 0, (yes ? 1 : 0));
 }
 
-bool ClipDescriptor::supportTiles() {
+bool ClipDescriptor::supportsTiles() {
   return (mProps.getInt(kOfxImageEffectPropSupportsTiles, 0) == 1);
 }
 
-void ClipDescriptor::setTilesSupport(bool yes) {
+void ClipDescriptor::supportsTiles(bool yes) {
   mProps.setInt(kOfxImageEffectPropSupportsTiles, 0, (yes ? 1 : 0));
 }
 
@@ -138,7 +138,7 @@ Clip::Clip(ImageEffectHost *h, OfxImageClipHandle hdl) throw(Exception)
     throw BadHandleError("ofx::Clip::Clip: invalid host");
   }
   OfxPropertySetHandle hProps;
-  mHost->getImageEffectSuite()->clipGetPropertySet(mHandle, &hProps);
+  mHost->imageEffectSuite()->clipGetPropertySet(mHandle, &hProps);
   mProps = PropertySet(h, hProps);
 }
 
@@ -156,39 +156,40 @@ Clip& Clip::operator=(const Clip &rhs) {
   return *this;
 }
 
-std::string Clip::getName() {
+std::string Clip::name() {
   return mProps.getString(kOfxPropName, 0);
 }
 
-std::string Clip::getLabel() {
+std::string Clip::label() {
   return mProps.getString(kOfxPropLabel, 0);
 }
 
-std::string Clip::getShortLabel() {
+std::string Clip::shortLabel() {
   return mProps.getString(kOfxPropShortLabel, 0);
 }
 
-std::string Clip::getLongLabel() {
+std::string Clip::longLabel() {
   return mProps.getString(kOfxPropLongLabel, 0);
 }
 
-int Clip::getSupportedComponentsCount() {
+/*
+int Clip::supportedComponentsCount() {
   return mProps.size(kOfxImageEffectPropSupportedComponents);
 }
 
-ImageComponent Clip::getSupportedComponent(int i) {
+ImageComponent Clip::supportedComponent(int i) {
   return StringToImageComponent(mProps.getString(kOfxImageEffectPropSupportedComponents, i));
 }
 
-bool Clip::requireTemporalClipAccess() {
+bool Clip::temporalClipAccess() {
   return (mProps.getInt(kOfxImageEffectPropTemporalClipAccess, 0) == 1);
 }
 
-bool Clip::isOptional() {
+bool Clip::optional() {
   return (mProps.getInt(kOfxImageClipPropOptional, 0) == 1);
 }
 
-ImageFieldExtract Clip::getFieldExtraction() {
+ImageFieldExtract Clip::fieldExtraction() {
   return StringToImageFieldExtract(mProps.getString(kOfxImageClipPropFieldExtraction, 0));
 }
 
@@ -196,67 +197,68 @@ bool Clip::isMask() {
   return (mProps.getInt(kOfxImageClipPropIsMask, 0) == 1);
 }
 
-bool Clip::supportTiles() {
+bool Clip::supportsTiles() {
   return (mProps.getInt(kOfxImageEffectPropSupportsTiles, 0) == 1);
 }
+*/
 
-BitDepth Clip::getPixelDepth() {
+BitDepth Clip::pixelDepth() {
   return StringToBitDepth(mProps.getString(kOfxImageEffectPropPixelDepth, 0));
 }
 
-ImageComponent Clip::getComponents() {
+ImageComponent Clip::components() {
   return StringToImageComponent(mProps.getString(kOfxImageEffectPropComponents, 0));
 }
 
-BitDepth Clip::getUnmappedPixelDepth() {
+BitDepth Clip::unmappedPixelDepth() {
   return StringToBitDepth(mProps.getString(kOfxImageClipPropUnmappedPixelDepth, 0));
 }
 
-ImageComponent Clip::getUnmappedComponents() {
+ImageComponent Clip::unmappedComponents() {
   return StringToImageComponent(mProps.getString(kOfxImageClipPropUnmappedComponents, 0));
 }
 
-ImagePreMult Clip::getPreMultiplication() {
+ImagePreMult Clip::preMultiplication() {
   return StringToImagePreMult(mProps.getString(kOfxImageEffectPropPreMultiplication, 0));
 }
 
-double Clip::getPixelAspectRatio() {
+double Clip::pixelAspectRatio() {
   return mProps.getDouble(kOfxImagePropPixelAspectRatio, 0);
 }
 
-double Clip::getFrameRate() {
+double Clip::frameRate() {
   return mProps.getDouble(kOfxImageEffectPropFrameRate, 0);
 }
 
-void Clip::getFrameRange(double &from, double &to) {
-  from = mProps.getDouble(kOfxImageEffectPropFrameRange, 0);
-  to = mProps.getDouble(kOfxImageEffectPropFrameRange, 1);
+void Clip::frameRange(double *from, double *to) {
+  *from = mProps.getDouble(kOfxImageEffectPropFrameRange, 0);
+  *to = mProps.getDouble(kOfxImageEffectPropFrameRange, 1);
 }
 
-ImageFieldOrder Clip::getFieldOrder() {
+ImageFieldOrder Clip::fieldOrder() {
   return StringToImageFieldOrder(mProps.getString(kOfxImageClipPropConnected, 0));
 }
 
-bool Clip::isConnected() {
+bool Clip::connected() {
   return (mProps.getInt(kOfxImageClipPropConnected, 0) == 1);
 }
 
-void Clip::getUnmappedFrameRange(double &from, double &to) {
-  from = mProps.getDouble(kOfxImageEffectPropUnmappedFrameRange, 0);
-  to = mProps.getDouble(kOfxImageEffectPropUnmappedFrameRange, 1);
+void Clip::unmappedFrameRange(double *from, double *to) {
+  *from = mProps.getDouble(kOfxImageEffectPropUnmappedFrameRange, 0);
+  *to = mProps.getDouble(kOfxImageEffectPropUnmappedFrameRange, 1);
 }
 
-double Clip::getUnmappedFrameRate() {
+double Clip::unmappedFrameRate() {
   return mProps.getDouble(kOfxImageEffectPropUnmappedFrameRate, 0);
 }
 
-bool Clip::supportContinuousSampling() {
+bool Clip::continuousSamples() {
   return (mProps.getInt(kOfxImageClipPropContinuousSamples, 0) == 1);
 }
 
 Image Clip::getImage(Time t) throw(Exception) {
   OfxPropertySetHandle hImage;
-  OfxStatus stat = mHost->getImageEffectSuite()->clipGetImage(mHandle, t, NULL, &hImage);
+  OfxStatus stat = mHost->imageEffectSuite()->clipGetImage(mHandle, t, NULL, &hImage);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::Clip::getImage");
   }
@@ -270,7 +272,7 @@ Image Clip::getImage(Time t, const Rect<double> &region) throw(Exception) {
   r.y1 = region.y1;
   r.y2 = region.y2;
   OfxPropertySetHandle hImage;
-  OfxStatus stat = mHost->getImageEffectSuite()->clipGetImage(mHandle, t, &r, &hImage);
+  OfxStatus stat = mHost->imageEffectSuite()->clipGetImage(mHandle, t, &r, &hImage);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::Clip::getImage");
   }
@@ -279,7 +281,7 @@ Image Clip::getImage(Time t, const Rect<double> &region) throw(Exception) {
 
 Rect<double> Clip::getRegionOfDefinition(Time t) throw(Exception) {
   OfxRectD bounds;
-  OfxStatus stat = mHost->getImageEffectSuite()->clipGetRegionOfDefinition(mHandle, t, &bounds);
+  OfxStatus stat = mHost->imageEffectSuite()->clipGetRegionOfDefinition(mHandle, t, &bounds);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::Clip::getRegionOfDefinition");
   }

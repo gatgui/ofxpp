@@ -51,7 +51,7 @@ namespace ofx {
       
       bool hasAlpha();
       
-      int getBitDepth();
+      int bitDepth();
       
       // Interact actions
       
@@ -99,8 +99,8 @@ namespace ofx {
         double y;
         double pressure;
 #ifdef OFX_API_1_2
-        int viewportx;
-        int viewporty;
+        int viewportX;
+        int viewportY;
 #endif
         
         PenArgs(ImageEffectHost *h, PropertySet &args);
@@ -126,27 +126,27 @@ namespace ofx {
       
       // properties
       
-      ImageEffect* getEffectInstance();
+      ImageEffect* effectInstance();
       
-      void* getInstanceData();
-      void setInstanceData(void *d);
+      void* instanceData();
+      void instanceData(void *d);
       
-      void getPixelScale(double &sx, double &sy);
+      void pixelScale(double *sx, double *sy);
       
-      RGBAColour<double> getBackgroundColor();
+      RGBAColour<double> backgroundColor();
       
-      void getViewportSize(int &w, int &h);
+      void viewportSize(int *w, int *h);
       
       bool hasAlpha();
       
-      int getBitDepth();
+      int bitDepth();
       
-      int getSlaveToParamCount();
-      std::string getSlaveToParam(int i);
-      void setSlaveToParam(int i, const std::string &pn);
+      int slaveToParamCount();
+      std::string slaveToParam(int i);
+      void slaveToParam(int i, const std::string &pn);
       
 #ifdef OFX_API_1_2
-      RGBAColour<double> getSuggestedColour();
+      RGBAColour<double> suggestedColour();
 #endif
       
       // Interact actions
@@ -261,7 +261,7 @@ namespace ofx {
     } catch (Exception &e) {
       Log("*** Caught exception");
       Log("***   %s", e.what());
-      return e.getStatus();
+      return e.status();
     }
   }
 }

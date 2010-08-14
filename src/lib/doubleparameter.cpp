@@ -46,59 +46,59 @@ DoubleParameterDescriptor& DoubleParameterDescriptor::operator=(const DoublePara
   return *this;
 }
 
-double DoubleParameterDescriptor::getDefault() {
+double DoubleParameterDescriptor::defaultValue() {
   return getDouble(kOfxParamPropDefault, 0);
 }
 
-void DoubleParameterDescriptor::setDefault(double v0) {
+void DoubleParameterDescriptor::defaultValue(double v0) {
   setDouble(kOfxParamPropDefault, 0, v0);
 }
 
-double DoubleParameterDescriptor::getMin() {
+double DoubleParameterDescriptor::min() {
   return getDouble(kOfxParamPropMin, 0);
 }
 
-void DoubleParameterDescriptor::setMin(double min0) {
+void DoubleParameterDescriptor::min(double min0) {
   setDouble(kOfxParamPropMin, 0, min0);
 }
 
-double DoubleParameterDescriptor::getMax() {
+double DoubleParameterDescriptor::max() {
   return getDouble(kOfxParamPropMax, 0);
 }
 
-void DoubleParameterDescriptor::setMax(double max0) {
+void DoubleParameterDescriptor::max(double max0) {
   setDouble(kOfxParamPropMax, 0, max0);
 }
 
-double DoubleParameterDescriptor::getDisplayMin() {
+double DoubleParameterDescriptor::displayMin() {
   return getDouble(kOfxParamPropDisplayMin, 0);
 }
 
-void DoubleParameterDescriptor::setDisplayMin(double min0) {
+void DoubleParameterDescriptor::displayMin(double min0) {
   setDouble(kOfxParamPropDisplayMin, 0, min0);
 }
 
-double DoubleParameterDescriptor::getDisplayMax() {
+double DoubleParameterDescriptor::displayMax() {
   return getDouble(kOfxParamPropDisplayMax, 0);
 }
 
-void DoubleParameterDescriptor::setDisplayMax(double max0) {
+void DoubleParameterDescriptor::displayMax(double max0) {
   setDouble(kOfxParamPropDisplayMax, 0, max0);
 }
 
-double DoubleParameterDescriptor::getIncrement() {
+double DoubleParameterDescriptor::increment() {
   return getDouble(kOfxParamPropIncrement, 0);
 }
 
-void DoubleParameterDescriptor::setIncrement(double i) {
+void DoubleParameterDescriptor::increment(double i) {
   setDouble(kOfxParamPropIncrement, 0, i);
 }
 
-int DoubleParameterDescriptor::getDigits() {
+int DoubleParameterDescriptor::digits() {
   return getInt(kOfxParamPropDigits, 0);
 }
 
-void DoubleParameterDescriptor::setDigits(int d) {
+void DoubleParameterDescriptor::digits(int d) {
   setInt(kOfxParamPropDigits, 0, d);
 }
 
@@ -106,25 +106,25 @@ bool DoubleParameterDescriptor::showTimeMarker() {
   return (getInt(kOfxParamPropShowTimeMarker, 0) == 1);
 }
 
-void DoubleParameterDescriptor::setShowTimeMarker(bool yes) {
+void DoubleParameterDescriptor::showTimeMarker(bool yes) {
   setInt(kOfxParamPropShowTimeMarker, 0, (yes ? 1 : 0));
 }
 
-DoubleParamType DoubleParameterDescriptor::getDoubleType() {
+DoubleParamType DoubleParameterDescriptor::doubleType() {
   return StringToDoubleParamType(getString(kOfxParamPropDoubleType, 0));
 }
 
-void DoubleParameterDescriptor::setDoubleType(DoubleParamType t) {
+void DoubleParameterDescriptor::doubleType(DoubleParamType t) {
   setString(kOfxParamPropDoubleType, 0, DoubleParamTypeToString(t));
 }
 
 #ifdef OFX_API_1_2
 
-Coordinates DoubleParameterDescriptor::getDefaultCoordinateSystem() {
+Coordinates DoubleParameterDescriptor::defaultCoordinateSystem() {
   return StringToCoordinates(getString(kOfxParamPropDefaultCoordinateSystem, 0));
 }
 
-void DoubleParameterDescriptor::setDefaultCoordinateSystem(Coordinates cs) {
+void DoubleParameterDescriptor::defaultCoordinateSystem(Coordinates cs) {
   setString(kOfxParamPropDefaultCoordinateSystem, 0, CoordinatesToString(cs));
 }
 
@@ -152,55 +152,55 @@ DoubleParameter& DoubleParameter::operator=(const DoubleParameter &rhs) {
   return *this;
 }
 
-double DoubleParameter::getDefault() {
+double DoubleParameter::defaultValue() {
   return mProps.getDouble(kOfxParamPropDefault, 0);
 }
 
-double DoubleParameter::getMin() {
+double DoubleParameter::min() {
   return mProps.getDouble(kOfxParamPropMin, 0);
 }
 
-void DoubleParameter::setMin(double min0) {
+void DoubleParameter::min(double min0) {
   mProps.setDouble(kOfxParamPropMin, 0, min0);
 }
 
-double DoubleParameter::getMax() {
+double DoubleParameter::max() {
   return mProps.getDouble(kOfxParamPropMax, 0);
 }
 
-void DoubleParameter::setMax(double max0) {
+void DoubleParameter::max(double max0) {
   mProps.setDouble(kOfxParamPropMax, 0, max0);
 }
 
-double DoubleParameter::getDisplayMin() {
+double DoubleParameter::displayMin() {
   return mProps.getDouble(kOfxParamPropDisplayMin, 0);
 }
 
-void DoubleParameter::setDisplayMin(double min0) {
+void DoubleParameter::displayMin(double min0) {
   mProps.setDouble(kOfxParamPropDisplayMin, 0, min0);
 }
 
-double DoubleParameter::getDisplayMax() {
+double DoubleParameter::displayMax() {
   return mProps.getDouble(kOfxParamPropDisplayMax, 0);
 }
 
-void DoubleParameter::setDisplayMax(double max0) {
+void DoubleParameter::displayMax(double max0) {
   mProps.setDouble(kOfxParamPropDisplayMax, 0, max0);
 }
 
-double DoubleParameter::getIncrement() {
+double DoubleParameter::increment() {
   return mProps.getDouble(kOfxParamPropIncrement, 0);
 }
 
-void DoubleParameter::setIncrement(double i) {
+void DoubleParameter::increment(double i) {
   mProps.setDouble(kOfxParamPropIncrement, 0, i);
 }
 
-int DoubleParameter::getDigits() {
+int DoubleParameter::digits() {
   return mProps.getInt(kOfxParamPropDigits, 0);
 }
 
-void DoubleParameter::setDigits(int d) {
+void DoubleParameter::digits(int d) {
   mProps.setInt(kOfxParamPropDigits, 0, d);
 }
 
@@ -208,17 +208,17 @@ bool DoubleParameter::showTimeMarker() {
   return (mProps.getInt(kOfxParamPropShowTimeMarker, 0) == 1);
 }
 
-void DoubleParameter::setShowTimeMarker(bool yes) {
+void DoubleParameter::showTimeMarker(bool yes) {
   mProps.setInt(kOfxParamPropShowTimeMarker, 0, (yes ? 1 : 0));
 }
 
-DoubleParamType DoubleParameter::getDoubleType() {
+DoubleParamType DoubleParameter::doubleType() {
   return StringToDoubleParamType(mProps.getString(kOfxParamPropDoubleType, 0));
 }
 
 #ifdef OFX_API_1_2
 
-Coordinates DoubleParameter::getDefaultCoordinateSystem() {
+Coordinates DoubleParameter::defaultCoordinateSystem() {
   return StringToCoordinates(mProps.getString(kOfxParamPropDefaultCoordinateSystem, 0));
 }
 

@@ -46,71 +46,71 @@ Int3ParameterDescriptor& Int3ParameterDescriptor::operator=(const Int3ParameterD
   return *this;
 }
 
-void Int3ParameterDescriptor::getDefault(int &v0, int &v1, int &v2) {
-  v0 = getInt(kOfxParamPropDefault, 0);
-  v1 = getInt(kOfxParamPropDefault, 1);
-  v2 = getInt(kOfxParamPropDefault, 2);
+void Int3ParameterDescriptor::defaultValue(int *v0, int *v1, int *v2) {
+  *v0 = getInt(kOfxParamPropDefault, 0);
+  *v1 = getInt(kOfxParamPropDefault, 1);
+  *v2 = getInt(kOfxParamPropDefault, 2);
 }
 
-void Int3ParameterDescriptor::setDefault(int v0, int v1, int v2) {
+void Int3ParameterDescriptor::defaultValue(int v0, int v1, int v2) {
   setInt(kOfxParamPropDefault, 0, v0);
   setInt(kOfxParamPropDefault, 1, v1);
   setInt(kOfxParamPropDefault, 2, v2);
 }
 
-void Int3ParameterDescriptor::getMin(int &v0, int &v1, int &v2) {
-  v0 = getInt(kOfxParamPropMin, 0);
-  v1 = getInt(kOfxParamPropMin, 1);
-  v2 = getInt(kOfxParamPropMin, 2);
+void Int3ParameterDescriptor::min(int *v0, int *v1, int *v2) {
+  *v0 = getInt(kOfxParamPropMin, 0);
+  *v1 = getInt(kOfxParamPropMin, 1);
+  *v2 = getInt(kOfxParamPropMin, 2);
 }
 
-void Int3ParameterDescriptor::setMin(int v0, int v1, int v2) {
+void Int3ParameterDescriptor::min(int v0, int v1, int v2) {
   setInt(kOfxParamPropMin, 0, v0);
   setInt(kOfxParamPropMin, 1, v1);
   setInt(kOfxParamPropMin, 2, v2);
 }
 
-void Int3ParameterDescriptor::getMax(int &v0, int &v1, int &v2) {
-  v0 = getInt(kOfxParamPropMax, 0);
-  v1 = getInt(kOfxParamPropMax, 1);
-  v2 = getInt(kOfxParamPropMax, 2);
+void Int3ParameterDescriptor::max(int *v0, int *v1, int *v2) {
+  *v0 = getInt(kOfxParamPropMax, 0);
+  *v1 = getInt(kOfxParamPropMax, 1);
+  *v2 = getInt(kOfxParamPropMax, 2);
 }
 
-void Int3ParameterDescriptor::setMax(int v0, int v1, int v2) {
+void Int3ParameterDescriptor::max(int v0, int v1, int v2) {
   setInt(kOfxParamPropMax, 0, v0);
   setInt(kOfxParamPropMax, 1, v1);
   setInt(kOfxParamPropMax, 2, v2);
 }
 
-void Int3ParameterDescriptor::getDisplayMin(int &v0, int &v1, int &v2) {
-  v0 = getInt(kOfxParamPropDisplayMin, 0);
-  v1 = getInt(kOfxParamPropDisplayMin, 1);
-  v2 = getInt(kOfxParamPropDisplayMin, 2);
+void Int3ParameterDescriptor::displayMin(int *v0, int *v1, int *v2) {
+  *v0 = getInt(kOfxParamPropDisplayMin, 0);
+  *v1 = getInt(kOfxParamPropDisplayMin, 1);
+  *v2 = getInt(kOfxParamPropDisplayMin, 2);
 }
 
-void Int3ParameterDescriptor::setDisplayMin(int v0, int v1, int v2) {
+void Int3ParameterDescriptor::displayMin(int v0, int v1, int v2) {
   setInt(kOfxParamPropDisplayMin, 0, v0);
   setInt(kOfxParamPropDisplayMin, 1, v1);
   setInt(kOfxParamPropDisplayMin, 2, v2);
 }
 
-void Int3ParameterDescriptor::getDisplayMax(int &v0, int &v1, int &v2) {
-  v0 = getInt(kOfxParamPropDisplayMax, 0);
-  v1 = getInt(kOfxParamPropDisplayMax, 1);
-  v2 = getInt(kOfxParamPropDisplayMax, 2);
+void Int3ParameterDescriptor::displayMax(int *v0, int *v1, int *v2) {
+  *v0 = getInt(kOfxParamPropDisplayMax, 0);
+  *v1 = getInt(kOfxParamPropDisplayMax, 1);
+  *v2 = getInt(kOfxParamPropDisplayMax, 2);
 }
 
-void Int3ParameterDescriptor::setDisplayMax(int v0, int v1, int v2) {
+void Int3ParameterDescriptor::displayMax(int v0, int v1, int v2) {
   setInt(kOfxParamPropDisplayMax, 0, v0);
   setInt(kOfxParamPropDisplayMax, 1, v1);
   setInt(kOfxParamPropDisplayMax, 2, v2);
 }
 
-void Int3ParameterDescriptor::setDimensionLabel(int i, const std::string &l) {
+void Int3ParameterDescriptor::dimensionLabel(int i, const std::string &l) {
   setString(kOfxParamPropDimensionLabel, i, l);
 }
 
-std::string Int3ParameterDescriptor::getDimensionLabel(int i) {
+std::string Int3ParameterDescriptor::dimensionLabel(int i) {
   return getString(kOfxParamPropDimensionLabel, i);
 }
 
@@ -136,87 +136,87 @@ Int3Parameter& Int3Parameter::operator=(const Int3Parameter &rhs) {
   return *this;
 }
 
-void Int3Parameter::getDefault(int &v0, int &v1, int &v2) {
-  v0 = mProps.getInt(kOfxParamPropDefault, 0);
-  v1 = mProps.getInt(kOfxParamPropDefault, 1);
-  v2 = mProps.getInt(kOfxParamPropDefault, 2);
+void Int3Parameter::defaultValue(int *v0, int *v1, int *v2) {
+  *v0 = mProps.getInt(kOfxParamPropDefault, 0);
+  *v1 = mProps.getInt(kOfxParamPropDefault, 1);
+  *v2 = mProps.getInt(kOfxParamPropDefault, 2);
 }
 
-void Int3Parameter::getMin(int &v0, int &v1, int &v2) {
-  v0 = mProps.getInt(kOfxParamPropMin, 0);
-  v1 = mProps.getInt(kOfxParamPropMin, 1);
-  v2 = mProps.getInt(kOfxParamPropMin, 2);
+void Int3Parameter::min(int *v0, int *v1, int *v2) {
+  *v0 = mProps.getInt(kOfxParamPropMin, 0);
+  *v1 = mProps.getInt(kOfxParamPropMin, 1);
+  *v2 = mProps.getInt(kOfxParamPropMin, 2);
 }
 
-void Int3Parameter::setMin(int v0, int v1, int v2) {
+void Int3Parameter::min(int v0, int v1, int v2) {
   mProps.setInt(kOfxParamPropMin, 0, v0);
   mProps.setInt(kOfxParamPropMin, 1, v1);
   mProps.setInt(kOfxParamPropMin, 2, v2);
 }
 
-void Int3Parameter::getMax(int &v0, int &v1, int &v2) {
-  v0 = mProps.getInt(kOfxParamPropMax, 0);
-  v1 = mProps.getInt(kOfxParamPropMax, 1);
-  v2 = mProps.getInt(kOfxParamPropMax, 2);
+void Int3Parameter::max(int *v0, int *v1, int *v2) {
+  *v0 = mProps.getInt(kOfxParamPropMax, 0);
+  *v1 = mProps.getInt(kOfxParamPropMax, 1);
+  *v2 = mProps.getInt(kOfxParamPropMax, 2);
 }
 
-void Int3Parameter::setMax(int v0, int v1, int v2) {
+void Int3Parameter::max(int v0, int v1, int v2) {
   mProps.setInt(kOfxParamPropMax, 0, v0);
   mProps.setInt(kOfxParamPropMax, 1, v1);
   mProps.setInt(kOfxParamPropMax, 2, v2);
 }
 
-void Int3Parameter::getDisplayMin(int &v0, int &v1, int &v2) {
-  v0 = mProps.getInt(kOfxParamPropDisplayMin, 0);
-  v1 = mProps.getInt(kOfxParamPropDisplayMin, 1);
-  v2 = mProps.getInt(kOfxParamPropDisplayMin, 2);
+void Int3Parameter::displayMin(int *v0, int *v1, int *v2) {
+  *v0 = mProps.getInt(kOfxParamPropDisplayMin, 0);
+  *v1 = mProps.getInt(kOfxParamPropDisplayMin, 1);
+  *v2 = mProps.getInt(kOfxParamPropDisplayMin, 2);
 }
 
-void Int3Parameter::setDisplayMin(int v0, int v1, int v2) {
+void Int3Parameter::displayMin(int v0, int v1, int v2) {
   mProps.setInt(kOfxParamPropDisplayMin, 0, v0);
   mProps.setInt(kOfxParamPropDisplayMin, 1, v1);
   mProps.setInt(kOfxParamPropDisplayMin, 2, v2);
 }
 
-void Int3Parameter::getDisplayMax(int &v0, int &v1, int &v2) {
-  v0 = mProps.getInt(kOfxParamPropDisplayMax, 0);
-  v1 = mProps.getInt(kOfxParamPropDisplayMax, 1);
-  v2 = mProps.getInt(kOfxParamPropDisplayMax, 2);
+void Int3Parameter::displayMax(int *v0, int *v1, int *v2) {
+  *v0 = mProps.getInt(kOfxParamPropDisplayMax, 0);
+  *v1 = mProps.getInt(kOfxParamPropDisplayMax, 1);
+  *v2 = mProps.getInt(kOfxParamPropDisplayMax, 2);
 }
 
-void Int3Parameter::setDisplayMax(int v0, int v1, int v2) {
+void Int3Parameter::displayMax(int v0, int v1, int v2) {
   mProps.setInt(kOfxParamPropDisplayMax, 0, v0);
   mProps.setInt(kOfxParamPropDisplayMax, 1, v1);
   mProps.setInt(kOfxParamPropDisplayMax, 2, v2);
 }
 
-std::string Int3Parameter::getDimensionLabel(int i) {
+std::string Int3Parameter::dimensionLabel(int i) {
   return mProps.getString(kOfxParamPropDimensionLabel, i);
 }
 
-void Int3Parameter::getValue(int &v0, int &v1, int &v2) throw(Exception) {
-  OfxStatus stat = mSuite->paramGetValue(mHandle, &v0, &v1, &v2);
+void Int3Parameter::getValue(int *v0, int *v1, int *v2) throw(Exception) {
+  OfxStatus stat = mSuite->paramGetValue(mHandle, v0, v1, v2);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::Int3Parameter::getValue");
   }
 }
 
-void Int3Parameter::getValueAtTime(Time t, int &v0, int &v1, int &v2) throw(Exception) {
-  OfxStatus stat = mSuite->paramGetValueAtTime(mHandle, t, &v0, &v1, &v2);
+void Int3Parameter::getValueAtTime(Time t, int *v0, int *v1, int *v2) throw(Exception) {
+  OfxStatus stat = mSuite->paramGetValueAtTime(mHandle, t, v0, v1, v2);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::Int3Parameter::getValueAtTime");
   }
 }
 
-void Int3Parameter::getDerivative(Time t, int &v0, int &v1, int &v2) throw(Exception) {
-  OfxStatus stat = mSuite->paramGetDerivative(mHandle, t, &v0, &v1, &v2);
+void Int3Parameter::getDerivative(Time t, int *v0, int *v1, int *v2) throw(Exception) {
+  OfxStatus stat = mSuite->paramGetDerivative(mHandle, t, v0, v1, v2);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::Int3Parameter::getDerivative");
   }
 }
 
-void Int3Parameter::getIntegral(Time t0, Time t1, int &v0, int &v1, int &v2) throw(Exception) {
-  OfxStatus stat = mSuite->paramGetIntegral(mHandle, t0, t1, &v0, &v1, &v2);
+void Int3Parameter::getIntegral(Time t0, Time t1, int *v0, int *v1, int *v2) throw(Exception) {
+  OfxStatus stat = mSuite->paramGetIntegral(mHandle, t0, t1, v0, v1, v2);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::Int3Parameter::getIntegral");
   }

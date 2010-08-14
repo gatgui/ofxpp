@@ -42,9 +42,9 @@ namespace ofx {
       // special string values:
       //   kOfxParamPageSkipRow
       //   kOfxParamPageSkipColumn
-      int getChildCount();
-      void setChild(int i, const std::string &name);
-      std::string getChild(int i);
+      int childCount();
+      void child(int i, const std::string &name);
+      std::string child(int i);
   };
   
   class PageParameter : public Parameter {
@@ -58,8 +58,8 @@ namespace ofx {
       
       // properties
       
-      int getChildCount();
-      std::string getChild(int i);
+      int childCount();
+      std::string child(int i);
   };
   
 }

@@ -3,9 +3,9 @@ Image effect descriptor:
 OFX 1.1
   
   kOfxPropType [R] string(1)
-  kOfxPropLabel [R] string(1)
-  kOfxPropShortLabel [R] string(1)
-  kOfxPropLongLabel [R] string(1)
+  kOfxPropLabel [RW] string(1)
+  kOfxPropShortLabel [RW] string(1)
+  kOfxPropLongLabel [RW] string(1)
   kOfxImageEffectPropSupportedContexts [RW] string(-)
     in [kOfxImageEffectContextGenerator,
         kOfxImageEffectContextFilter,

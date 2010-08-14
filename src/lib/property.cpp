@@ -37,7 +37,7 @@ PropertySet::PropertySet(Host *h, OfxPropertySetHandle hdl) throw(Exception)
   if (!h) {
     throw BadHandleError("ofx::PropertySet::PropertySet: invalid host");
   }
-  mSuite = h->getPropertySuite();
+  mSuite = h->propertySuite();
 }
 
 PropertySet::PropertySet(const PropertySet &rhs)

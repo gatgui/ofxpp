@@ -48,7 +48,7 @@ Image::Image(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception)
     throw BadHandleError("ofx::Image::Image: invalid host");
   }
 
-  mSuite = h->getImageEffectSuite();
+  mSuite = h->imageEffectSuite();
 
   static int byteSize[] = {0, 1, 2, 4};
   static int compCount[] = {0, 4, 1};
@@ -66,8 +66,8 @@ Image::Image(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception)
   mRowBytes = mProps.getInt(kOfxImagePropRowBytes, 0);
   mProps.getInts(kOfxImagePropBounds, 4, &(mBounds.x1));
 
-  mCompBytes = byteSize[getPixelDepth()];
-  mNumComps = compCount[getComponents()];
+  mCompBytes = byteSize[pixelDepth()];
+  mNumComps = compCount[components()];
   mPixelBytes = mNumComps * mCompBytes;
 }
 
@@ -115,7 +115,7 @@ Image& Image::operator=(const Image &rhs) {
 }
 
 void Image::release() throw(Exception) {
-  OfxStatus stat = mSuite->clipReleaseImage(mProps.getHandle());
+  OfxStatus stat = mSuite->clipReleaseImage(mProps.handle());
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::Image::release");
   }

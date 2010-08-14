@@ -50,7 +50,7 @@ namespace ofx {
       template <class Receiver>
       double getTime(Receiver *recv) throw(Exception) {
         double val;
-        OfxStatus stat = mSuite->getTime(recv->getHandle(), &val);
+        OfxStatus stat = mSuite->getTime(recv->handle(), &val);
         if (stat != kOfxStatOK) {
           throw Exception(stat, "ofx::TimeLine::getTime");
         }
@@ -59,7 +59,7 @@ namespace ofx {
       
       template <class Receiver>
       void gotoTime(Receiver *recv, double t) throw(Exception) {
-        OfxStatus stat = mSuite->gotoTime(recv->getHandle(), t);
+        OfxStatus stat = mSuite->gotoTime(recv->handle(), t);
         if (stat != kOfxStatOK) {
           throw Exception(stat, "ofx::TimeLine::gotoTime");
         }
@@ -67,7 +67,7 @@ namespace ofx {
       
       template <class Receiver>
       void getTimeBounds(Receiver *recv, double &first, double &last) throw(Exception) {
-        OfxStatus stat = mSuite->getTimeBounds(recv->getHandle(), &first, &last);
+        OfxStatus stat = mSuite->getTimeBounds(recv->handle(), &first, &last);
         if (stat != kOfxStatOK) {
           throw Exception(stat, "ofx::TimeLine::getTimeBounds");
         }

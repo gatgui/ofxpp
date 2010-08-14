@@ -39,23 +39,23 @@ namespace ofx {
       
       // properties
       
-      void getDefault(int &v0, int &v1);
-      void setDefault(int v0, int v1);
+      void defaultValue(int *v0, int *v1);
+      void defaultValue(int v0, int v1);
       
-      void getMin(int &min0, int &min1);
-      void setMin(int min0, int min1);
+      void min(int *min0, int *min1);
+      void min(int min0, int min1);
       
-      void getMax(int &max0, int &max1);
-      void setMax(int max0, int max1);
+      void max(int *max0, int *max1);
+      void max(int max0, int max1);
       
-      void getDisplayMin(int &min0, int &min1);
-      void setDisplayMin(int min0, int min1);
+      void displayMin(int *min0, int *min1);
+      void displayMin(int min0, int min1);
       
-      void getDisplayMax(int &max0, int &max1);
-      void setDisplayMax(int max0, int max1);
+      void displayMax(int *max0, int *max1);
+      void displayMax(int max0, int max1);
       
-      void setDimensionLabel(int i, const std::string &name);
-      std::string getDimensionLabel(int i);
+      void dimensionLabel(int i, const std::string &name);
+      std::string dimensionLabel(int i);
   };
   
   class Int2Parameter : public ValueParameter {
@@ -69,28 +69,28 @@ namespace ofx {
       
       // properties
       
-      void getDefault(int &v0, int &v1);
+      void defaultValue(int *v0, int *v1);
       
-      void getMin(int &min0, int &min1);
-      void setMin(int min0, int min1);
+      void min(int *min0, int *min1);
+      void min(int min0, int min1);
       
-      void getMax(int &max0, int &max1);
-      void setMax(int max0, int max1);
+      void max(int *max0, int *max1);
+      void max(int max0, int max1);
       
-      void getDisplayMin(int &min0, int &min1);
-      void setDisplayMin(int min0, int min1);
+      void displayMin(int *min0, int *min1);
+      void displayMin(int min0, int min1);
       
-      void getDisplayMax(int &max0, int &max1);
-      void setDisplayMax(int max0, int max1);
+      void displayMax(int *max0, int *max1);
+      void displayMax(int max0, int max1);
       
-      std::string getDimensionLabel(int i);
+      std::string dimensionLabel(int i);
       
       // suite
       
-      void getValue(int &v0, int &v1) throw(Exception);
-      void getValueAtTime(Time t, int &v0, int &v1) throw(Exception);
-      void getDerivative(Time t, int &v0, int &v1) throw(Exception);
-      void getIntegral(Time t0, Time t1, int &v0, int &v1) throw(Exception);
+      void getValue(int *v0, int *v1) throw(Exception);
+      void getValueAtTime(Time t, int *v0, int *v1) throw(Exception);
+      void getDerivative(Time t, int *v0, int *v1) throw(Exception);
+      void getIntegral(Time t0, Time t1, int *v0, int *v1) throw(Exception);
       
       void setValue(int v0, int v1) throw(Exception);
       void setValueAtTime(Time t, int v0, int v1) throw(Exception);

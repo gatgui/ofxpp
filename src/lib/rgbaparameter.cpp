@@ -46,13 +46,13 @@ RGBAParameterDescriptor& RGBAParameterDescriptor::operator=(const RGBAParameterD
   return *this;
 }
 
-RGBAColour<double> RGBAParameterDescriptor::getDefault() {
+RGBAColour<double> RGBAParameterDescriptor::defaultValue() {
   RGBAColour<double> rv;
   getDoubles(kOfxParamPropDefault, 4, &(rv.r));
   return rv;
 }
 
-void RGBAParameterDescriptor::setDefault(const RGBAColour<double> &v) {
+void RGBAParameterDescriptor::defaultValue(const RGBAColour<double> &v) {
   setDoubles(kOfxParamPropDefault, 4, (double*)&(v.r));
 }
 
@@ -78,7 +78,7 @@ RGBAParameter& RGBAParameter::operator=(const RGBAParameter &rhs) {
   return *this;
 }
 
-RGBAColour<double> RGBAParameter::getDefault() {
+RGBAColour<double> RGBAParameter::defaultValue() {
   RGBAColour<double> rv;
   mProps.getDoubles(kOfxParamPropDefault, 4, &(rv.r));
   return rv;

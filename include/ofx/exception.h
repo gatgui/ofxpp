@@ -38,7 +38,7 @@ namespace ofx {
       
       virtual ~Exception() throw();
       
-      inline OfxStatus getStatus() const {
+      inline OfxStatus status() const {
         return mStat;
       }
       

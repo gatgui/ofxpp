@@ -64,42 +64,42 @@ namespace ofx {
         return mHost;
       }
       
-      inline TimeLineSuite* getTimeLineSuite() {return mTimeLine;}
+      inline TimeLineSuite* timeLineSuite() {return mTimeLine;}
       
-      inline ProgressSuite* getProgressSuite() {return mProgress;}
+      inline ProgressSuite* progressSuite() {return mProgress;}
       
-      inline MessageSuite* getMessageSuite() {return mMessage;}
+      inline MessageSuite* messageSuite() {return mMessage;}
       
-      inline MemorySuite* getMemorySuite() {return mMemory;}
+      inline MemorySuite* memorySuite() {return mMemory;}
       
-      inline MultiThreadSuite* getMultiThreadSuite() {return mMultiThread;}
+      inline MultiThreadSuite* multiThreadSuite() {return mMultiThread;}
       
-      OfxPropertySuiteV1 *getPropertySuite() {return mPropSuite;}
+      OfxPropertySuiteV1 *propertySuite() {return mPropSuite;}
       
-      OfxParameterSuiteV1 *getParameterSuite() {return mParamSuite;}
+      OfxParameterSuiteV1 *parameterSuite() {return mParamSuite;}
       
       // host OpenFX version
-      int getAPIVersion(int level=0);
+      int APIVersion(int level=0);
       
-      int getAPIMajorVersion();
+      int APIMajorVersion();
       
-      int getAPIMinorVersion();
+      int APIMinorVersion();
       
       bool checkAPIVersion(int major, int minor);
       
 #ifdef OFX_API_1_2
       
-      int getVersion(int level=0);
+      int version(int level=0);
       
-      int getMajorVersion();
+      int majorVersion();
       
-      int getMinorVersion();
+      int minorVersion();
       
-      std::string getVersionLabel();
+      std::string versionLabel();
       
-      void* getOSHandle();
+      void* OSHandle();
       
-      OfxParametricParameterSuiteV1 *getParametricParameterSuite() {return mParametricParamSuite;}
+      OfxParametricParameterSuiteV1 *parametricParameterSuite() {return mParametricParamSuite;}
       
 #endif
     public:
@@ -131,70 +131,67 @@ namespace ofx {
       
       virtual void init() throw(Exception);
       
-      inline OfxInteractSuiteV1* getInteractSuite() {return mInteractSuite;}
+      inline OfxInteractSuiteV1* interactSuite() {return mInteractSuite;}
       
-      inline OfxImageEffectSuiteV1 *getImageEffectSuite() {return mImageEffectSuite;}
+      inline OfxImageEffectSuiteV1 *imageEffectSuite() {return mImageEffectSuite;}
       
       // general properties
-      std::string getName();
+      std::string name();
       
-      std::string getLabel();
+      std::string label();
       
       // image effect properties
       bool isBackground();
       
-      bool supportOverlays();
+      bool supportsOverlays();
       
-      bool supportMultiResolution();
+      bool supportsMultiResolution();
       
-      bool supportTiles();
+      bool supportsTiles();
       
-      bool supportTemporalClipAccess();
+      bool temporalClipAccess();
       
-      int getSupportedComponentsCount();
+      int supportedComponentsCount();
+      ImageComponent supportedComponent(int idx);
       
-      ImageComponent getSupportedComponent(int idx);
+      int supportedContextsCount();
+      ImageEffectContext supportedContext(int idx);
       
-      int getSupportedContextsCount();
+      int supportedPixelDepthsCount();
+      BitDepth supportedPixelDepth(int idx);
       
-      ImageEffectContext getSupportedContext(int idx);
+      bool supportsMultipleClipDepths();
       
-      int getSupportedPixelDepthsCount();
+      bool supportsMultipleClipPARs();
       
-      BitDepth getSupportedPixelDepth(int idx);
+      bool setableFrameRate();
       
-      bool supportMultipleClipDepths();
-      
-      bool supportMultipleClipPARs();
-      
-      bool isFramerateSetable();
-      
-      bool isFieldingSetable();
+      bool setableFielding();
       
 #ifdef OFX_API_1_2
       
-      SequentialRender getSequentialRender();
+      SequentialRender sequentialRender();
       
-      bool supportParametricParamAnimation();
+      bool supportsParametricAnimation();
       
 #endif
       
       // parameter properties
-      bool supportCustomParamAnimation();
+      bool supportsCustomAnimation();
       
-      bool supportStringParamAnimation();
+      bool supportsStringAnimation();
       
-      bool supportChoiceParamAnimation();
+      bool supportsChoiceAnimation();
       
-      bool supportBooleanParamAnimation();
+      bool supportsBooleanAnimation();
       
-      bool supportParamCustomInteract();
+      bool supportsCustomInteract();
       
-      int getMaxParameters();
+      int maxParameters();
       
-      int getMaxParameterPages();
+      int maxPages();
       
-      void getParameterPageRowColumnCount(int &rowCount, int &columnCount);
+      void pageRowColumnCount(int *rowCount, int *columnCount);
     
     public:
       

@@ -41,41 +41,41 @@ namespace ofx {
       
       ClipDescriptor& operator=(const ClipDescriptor &rhs);
       
-      inline OfxPropertySetHandle getHandle() {
-        return mProps.getHandle();
+      inline OfxPropertySetHandle handle() {
+        return mProps.handle();
       }
       
       // properties
       
-      std::string getName();
+      std::string name();
       
-      std::string getLabel();
-      void setLabel(const std::string &l);
+      std::string label();
+      void label(const std::string &l);
       
-      std::string getShortLabel();
-      void setShortLabel(const std::string &l);
+      std::string shortLabel();
+      void shortLabel(const std::string &l);
       
-      std::string getLongLabel();
-      void setLongLabel(const std::string &l);
+      std::string longLabel();
+      void longLabel(const std::string &l);
       
-      int getSupportedComponentsCount();
-      ImageComponent getSupportedComponent(int i);
-      void setSupportedComponent(int i, ImageComponent ic);
+      int supportedComponentsCount();
+      ImageComponent supportedComponent(int i);
+      void supportedComponent(int i, ImageComponent ic);
       
-      bool requireTemporalClipAccess();
-      void setTemporalClipAccess(bool);
+      bool temporalClipAccess();
+      void temporalClipAccess(bool);
       
-      bool isOptional();
-      void setOptional(bool);
+      bool optional();
+      void optional(bool);
       
-      ImageFieldExtract getFieldExtraction();
-      void setFieldExtraction(ImageFieldExtract f);
+      ImageFieldExtract fieldExtraction();
+      void fieldExtraction(ImageFieldExtract f);
       
       bool isMask();
-      void setMask(bool);
+      void isMask(bool);
       
-      bool supportTiles();
-      void setTilesSupport(bool);
+      bool supportsTiles();
+      void supportsTiles(bool);
     
     protected:
       
@@ -93,11 +93,11 @@ namespace ofx {
       
       Clip& operator=(const Clip &rhs);
       
-      inline ImageEffectHost* getHost() {
+      inline ImageEffectHost* host() {
         return mHost;
       }
       
-      inline OfxImageClipHandle getHandle() {
+      inline OfxImageClipHandle handle() {
         return mHandle;
       }
       
@@ -111,52 +111,54 @@ namespace ofx {
       
       // properties
       
-      std::string getName();
+      std::string name();
       
-      std::string getLabel();
+      std::string label();
       
-      std::string getShortLabel();
+      std::string shortLabel();
       
-      std::string getLongLabel();
+      std::string longLabel();
       
-      int getSupportedComponentsCount();
-      ImageComponent getSupportedComponent(int i);
+      /*
+      int supportedComponentsCount();
+      ImageComponent supportedComponent(int i);
       
-      bool requireTemporalClipAccess();
+      bool temporalClipAccess();
       
-      bool isOptional();
+      bool optional();
       
-      ImageFieldExtract getFieldExtraction();
+      ImageFieldExtract fieldExtraction();
       
       bool isMask();
       
-      bool supportTiles();
+      bool supportsTiles();
+      */
       
-      BitDepth getPixelDepth();
+      BitDepth pixelDepth();
       
-      ImageComponent getComponents();
+      ImageComponent components();
       
-      ImagePreMult getPreMultiplication();
+      ImagePreMult preMultiplication();
       
-      double getPixelAspectRatio();
+      double pixelAspectRatio();
       
-      double getFrameRate();
+      double frameRate();
       
-      void getFrameRange(double &from, double &to);
+      void frameRange(double *from, double *to);
       
-      ImageFieldOrder getFieldOrder();
+      ImageFieldOrder fieldOrder();
       
-      bool isConnected();
+      bool connected();
       
-      bool supportContinuousSampling();
+      bool continuousSamples();
       
-      BitDepth getUnmappedPixelDepth();
+      BitDepth unmappedPixelDepth();
       
-      ImageComponent getUnmappedComponents();
+      ImageComponent unmappedComponents();
       
-      void getUnmappedFrameRange(double &from, double &to);
+      void unmappedFrameRange(double *from, double *to);
       
-      double getUnmappedFrameRate();
+      double unmappedFrameRate();
       
       
     protected:

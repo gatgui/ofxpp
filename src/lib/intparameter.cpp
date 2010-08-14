@@ -46,43 +46,43 @@ IntParameterDescriptor& IntParameterDescriptor::operator=(const IntParameterDesc
   return *this;
 }
 
-int IntParameterDescriptor::getDefault() {
+int IntParameterDescriptor::defaultValue() {
   return getInt(kOfxParamPropDefault, 0);
 }
 
-void IntParameterDescriptor::setDefault(int v0) {
+void IntParameterDescriptor::defaultValue(int v0) {
   setInt(kOfxParamPropDefault, 0, v0);
 }
 
-int IntParameterDescriptor::getMin() {
+int IntParameterDescriptor::min() {
   return getInt(kOfxParamPropMin, 0);
 }
 
-void IntParameterDescriptor::setMin(int v) {
+void IntParameterDescriptor::min(int v) {
   setInt(kOfxParamPropMin, 0, v);
 }
 
-int IntParameterDescriptor::getMax() {
+int IntParameterDescriptor::max() {
   return getInt(kOfxParamPropMax, 0);
 }
 
-void IntParameterDescriptor::setMax(int v) {
+void IntParameterDescriptor::max(int v) {
   setInt(kOfxParamPropMax, 0, v);
 }
 
-int IntParameterDescriptor::getDisplayMin() {
+int IntParameterDescriptor::displayMin() {
   return getInt(kOfxParamPropDisplayMin, 0);
 }
 
-void IntParameterDescriptor::setDisplayMin(int v) {
+void IntParameterDescriptor::displayMin(int v) {
   setInt(kOfxParamPropDisplayMin, 0, v);
 }
 
-int IntParameterDescriptor::getDisplayMax() {
+int IntParameterDescriptor::displayMax() {
   return getInt(kOfxParamPropDisplayMax, 0);
 }
 
-void IntParameterDescriptor::setDisplayMax(int v) {
+void IntParameterDescriptor::displayMax(int v) {
   setInt(kOfxParamPropDisplayMax, 0, v);
 }
 
@@ -108,39 +108,39 @@ IntParameter& IntParameter::operator=(const IntParameter &rhs) {
   return *this;
 }
 
-int IntParameter::getDefault() {
+int IntParameter::defaultValue() {
   return mProps.getInt(kOfxParamPropDefault, 0);
 }
 
-int IntParameter::getMin() {
+int IntParameter::min() {
   return mProps.getInt(kOfxParamPropMin, 0);
 }
 
-void IntParameter::setMin(int v) {
+void IntParameter::min(int v) {
   mProps.setInt(kOfxParamPropMin, 0, v);
 }
 
-int IntParameter::getMax() {
+int IntParameter::max() {
   return mProps.getInt(kOfxParamPropMax, 0);
 }
 
-void IntParameter::setMax(int v) {
+void IntParameter::max(int v) {
   mProps.setInt(kOfxParamPropMax, 0, v);
 }
 
-int IntParameter::getDisplayMin() {
+int IntParameter::displayMin() {
   return mProps.getInt(kOfxParamPropDisplayMin, 0);
 }
 
-void IntParameter::setDisplayMin(int v) {
+void IntParameter::displayMin(int v) {
   mProps.setInt(kOfxParamPropDisplayMin, 0, v);
 }
 
-int IntParameter::getDisplayMax() {
+int IntParameter::displayMax() {
   return mProps.getInt(kOfxParamPropDisplayMax, 0);
 }
 
-void IntParameter::setDisplayMax(int v) {
+void IntParameter::displayMax(int v) {
   mProps.setInt(kOfxParamPropDisplayMax, 0, v);
 }
 

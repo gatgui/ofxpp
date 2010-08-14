@@ -39,20 +39,20 @@ namespace ofx {
       
       // properties
       
-      int getDefault();
-      void setDefault(int v);
+      int defaultValue();
+      void defaultValue(int v);
       
-      int getMin();
-      void setMin(int v);
+      int min();
+      void min(int v);
       
-      int getMax();
-      void setMax(int v);
+      int max();
+      void max(int v);
       
-      int getDisplayMin();
-      void setDisplayMin(int v);
+      int displayMin();
+      void displayMin(int v);
       
-      int getDisplayMax();
-      void setDisplayMax(int v);
+      int displayMax();
+      void displayMax(int v);
   };
   
   class IntParameter : public ValueParameter {
@@ -66,19 +66,19 @@ namespace ofx {
       
       // properties
       
-      int getDefault();
+      int defaultValue();
       
-      int getMin();
-      void setMin(int v);
+      int min();
+      void min(int v);
       
-      int getMax();
-      void setMax(int v);
+      int max();
+      void max(int v);
       
-      int getDisplayMin();
-      void setDisplayMin(int v);
+      int displayMin();
+      void displayMin(int v);
       
-      int getDisplayMax();
-      void setDisplayMax(int v);
+      int displayMax();
+      void displayMax(int v);
       
       // suite
       

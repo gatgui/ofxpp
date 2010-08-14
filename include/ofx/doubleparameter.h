@@ -39,36 +39,36 @@ namespace ofx {
       
       // properties
       
-      double getDefault();
-      void setDefault(double v);
+      double defaultValue();
+      void defaultValue(double v);
       
-      double getMin();
-      void setMin(double min0);
+      double min();
+      void min(double min0);
       
-      double getMax();
-      void setMax(double max0);
+      double max();
+      void max(double max0);
       
-      double getDisplayMin();
-      void setDisplayMin(double min0);
+      double displayMin();
+      void displayMin(double min0);
       
-      double getDisplayMax();
-      void setDisplayMax(double max0);
+      double displayMax();
+      void displayMax(double max0);
       
-      double getIncrement();
-      void setIncrement(double i);
+      double increment();
+      void increment(double i);
       
-      int getDigits();
-      void setDigits(int d);
+      int digits();
+      void digits(int d);
       
       bool showTimeMarker();
-      void setShowTimeMarker(bool);
+      void showTimeMarker(bool);
       
-      DoubleParamType getDoubleType();
-      void setDoubleType(DoubleParamType t);
+      DoubleParamType doubleType();
+      void doubleType(DoubleParamType t);
       
 #ifdef OFX_API_1_2
-      Coordinates getDefaultCoordinateSystem();
-      void setDefaultCoordinateSystem(Coordinates cs);
+      Coordinates defaultCoordinateSystem();
+      void defaultCoordinateSystem(Coordinates cs);
 #endif
   };
   
@@ -83,33 +83,33 @@ namespace ofx {
       
       // properties
       
-      double getDefault();
+      double defaultValue();
       
-      double getMin();
-      void setMin(double min0);
+      double min();
+      void min(double min0);
       
-      double getMax();
-      void setMax(double max0);
+      double max();
+      void max(double max0);
       
-      double getDisplayMin();
-      void setDisplayMin(double min0);
+      double displayMin();
+      void displayMin(double min0);
       
-      double getDisplayMax();
-      void setDisplayMax(double max0);
+      double displayMax();
+      void displayMax(double max0);
       
-      double getIncrement();
-      void setIncrement(double i);
+      double increment();
+      void increment(double i);
       
-      int getDigits();
-      void setDigits(int d);
+      int digits();
+      void digits(int d);
       
       bool showTimeMarker();
-      void setShowTimeMarker(bool);
+      void showTimeMarker(bool);
       
-      DoubleParamType getDoubleType();
+      DoubleParamType doubleType();
       
 #ifdef OFX_API_1_2
-      Coordinates getDefaultCoordinateSystem();
+      Coordinates defaultCoordinateSystem();
 #endif
       // suite
       

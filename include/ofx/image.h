@@ -43,68 +43,68 @@ namespace ofx {
       
       Image& operator=(const Image &rhs);
       
-      inline OfxPropertySetHandle getHandle() {
-        return mProps.getHandle();
+      inline OfxPropertySetHandle handle() {
+        return mProps.handle();
       }
       
-      inline void* getData() {
+      inline void* data() {
         return mData;
       }
       
-      inline BitDepth getPixelDepth() const {
+      inline BitDepth pixelDepth() const {
         return mBitDepth;
       }
       
-      inline ImageComponent getComponents() const {
+      inline ImageComponent components() const {
         return mComponents;
       }
       
-      inline ImagePreMult getPreMultiplication() const {
+      inline ImagePreMult preMultiplication() const {
         return mPreMult;
       }
       
-      inline void getRenderScale(double &sx, double &sy) const {
-        sx = mRenderScaleX;
-        sy = mRenderScaleY;
+      inline void renderScale(double *sx, double *sy) const {
+        *sx = mRenderScaleX;
+        *sy = mRenderScaleY;
       }
       
-      inline double getPixelAspectRatio() const {
+      inline double pixelAspectRatio() const {
         return mPixelAspectRatio;
       }
       
-      const Rect<int>& getRegionOfDefinition() const {
+      const Rect<int>& regionOfDefinition() const {
         return mRoD;
       }
       
-      inline ImageField getField() const {
+      inline ImageField field() const {
         return mField;
       }
       
-      inline const std::string& getUniqueID() const {
+      inline const std::string& uniqueIdentifier() const {
         return mUID;
       }
       
-      inline int getComponentBytes() const {
+      inline int componentBytes() const {
         return mCompBytes;
       }
       
-      inline int getComponentsCount() const {
+      inline int componentsCount() const {
         return mNumComps;
       }
       
-      inline int getPixelBytes() const {
+      inline int pixelBytes() const {
         return mPixelBytes;
       }
       
-      inline int getRowBytes() {
+      inline int rowBytes() {
         return mRowBytes;
       }
       
-      inline const Rect<int>& getBounds() {
+      inline const Rect<int>& bounds() {
         return mBounds;
       }
       
-      inline void* getPixelAddress(int x, int y) {
+      inline void* pixelAddress(int x, int y) {
         if (x < mBounds.x1 || x >= mBounds.x2 || y < mBounds.y1 || y >= mBounds.y2) {
           return 0;
         }
@@ -112,8 +112,8 @@ namespace ofx {
       }
       
       template <typename ComponentType>
-      inline bool getPixelAddress(int x, int y, RGBAColour<ComponentType> *&adr) {
-        adr = (RGBAColour<ComponentType>*) getPixelAddress(x, y);
+      inline bool pixelAddress(int x, int y, RGBAColour<ComponentType> *&adr) {
+        adr = (RGBAColour<ComponentType>*) pixelAddress(x, y);
         return (adr != 0);
       }
       

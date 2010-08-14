@@ -46,19 +46,19 @@ CustomParameterDescriptor& CustomParameterDescriptor::operator=(const CustomPara
   return *this;
 }
 
-std::string CustomParameterDescriptor::getDefault() {
+std::string CustomParameterDescriptor::defaultValue() {
   return getString(kOfxParamPropDefault, 0);
 }
 
-void CustomParameterDescriptor::setDefault(const std::string &v) {
+void CustomParameterDescriptor::defaultValue(const std::string &v) {
   setString(kOfxParamPropDefault, 0, v);
 }
 
-void CustomParameterDescriptor::setInterpolator(OfxInterpFunc func) {
+void CustomParameterDescriptor::interpCallback(OfxInterpFunc func) {
   setPointer(kOfxParamPropCustomInterpCallbackV1, 0, (void*)func);
 }
 
-OfxInterpFunc CustomParameterDescriptor::getInterpolator() {
+OfxInterpFunc CustomParameterDescriptor::interpCallback() {
   return (OfxInterpFunc) getPointer(kOfxParamPropCustomInterpCallbackV1, 0);
 }
 
@@ -91,11 +91,11 @@ std::string CustomParameter::interpolate(Time , const std::string &v0,
   return v0;
 }
 
-std::string CustomParameter::getDefault() {
+std::string CustomParameter::defaultValue() {
   return mProps.getString(kOfxParamPropDefault, 0);
 }
 
-OfxInterpFunc CustomParameter::getInterpolator() {
+OfxInterpFunc CustomParameter::interpCallback() {
   return (OfxInterpFunc) mProps.getPointer(kOfxParamPropCustomInterpCallbackV1, 0);
 }
 

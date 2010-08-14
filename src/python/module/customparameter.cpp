@@ -53,7 +53,7 @@ PyObject* PyOFXCustomParameterDescriptor_GetDefault(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = desc->getDefault();}, failed);
+  CATCH({rv = desc->defaultValue();}, failed);
   
   if (failed)
   {
@@ -85,7 +85,7 @@ int PyOFXCustomParameterDescriptor_SetDefault(PyObject *self, PyObject *val, voi
   
   std::string s = PyString_AsString(val);
   
-  CATCH({desc->setDefault(s);}, failed);
+  CATCH({desc->defaultValue(s);}, failed);
   
   if (failed)
   {
@@ -95,7 +95,7 @@ int PyOFXCustomParameterDescriptor_SetDefault(PyObject *self, PyObject *val, voi
   return 0;
 }
 
-PyObject* PyOFXCustomParameterDescriptor_GetInterpolator(PyObject *self, void*)
+PyObject* PyOFXCustomParameterDescriptor_GetInterpCallback(PyObject *self, void*)
 {
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
@@ -121,7 +121,7 @@ PyObject* PyOFXCustomParameterDescriptor_GetInterpolator(PyObject *self, void*)
   Py_RETURN_NONE;
 }
 
-int PyOFXCustomParameterDescriptor_SetInterpolator(PyObject *self, PyObject *val, void*)
+int PyOFXCustomParameterDescriptor_SetInterpCallback(PyObject *self, PyObject *val, void*)
 {
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
@@ -147,15 +147,15 @@ int PyOFXCustomParameterDescriptor_SetInterpolator(PyObject *self, PyObject *val
   }
   */
   
-  desc->setInterpolator(PyOFXInterpolator);
+  desc->interpCallback(PyOFXInterpolator);
   
   return 0;
 }
 
 static PyGetSetDef PyOFXCustomParameterDescriptor_GetSeters[] =
 {
-  {(char*)"default", PyOFXCustomParameterDescriptor_GetDefault, PyOFXCustomParameterDescriptor_SetDefault, NULL, NULL},
-  {(char*)"interpolator", PyOFXCustomParameterDescriptor_GetInterpolator, PyOFXCustomParameterDescriptor_SetInterpolator, NULL, NULL},
+  {(char*)"defaultValue", PyOFXCustomParameterDescriptor_GetDefault, PyOFXCustomParameterDescriptor_SetDefault, NULL, NULL},
+  {(char*)"interpCallback", PyOFXCustomParameterDescriptor_GetInterpCallback, PyOFXCustomParameterDescriptor_SetInterpCallback, NULL, NULL},
   {NULL, NULL, NULL, NULL, NULL}
 };
 
@@ -184,7 +184,7 @@ PyObject* PyOFXCustomParameter_GetDefault(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = param->getDefault();}, failed);
+  CATCH({rv = param->defaultValue();}, failed);
   
   if (failed)
   {
@@ -194,7 +194,7 @@ PyObject* PyOFXCustomParameter_GetDefault(PyObject *self, void*)
   return PyString_FromString(rv.c_str());
 }
 
-PyObject* PyOFXCustomParameter_GetInterpolator(PyObject *self, void*)
+PyObject* PyOFXCustomParameter_GetInterpCallback(PyObject *self, void*)
 {
   PyOFXParameter *pparam = (PyOFXParameter*) self;
   
@@ -222,8 +222,8 @@ PyObject* PyOFXCustomParameter_GetInterpolator(PyObject *self, void*)
 
 static PyGetSetDef PyOFXCustomParameter_GetSeters[] =
 {
-  {(char*)"default", PyOFXCustomParameter_GetDefault, NULL, NULL, NULL},
-  {(char*)"interpolator", PyOFXCustomParameter_GetInterpolator, NULL, NULL, NULL},
+  {(char*)"defaultValue", PyOFXCustomParameter_GetDefault, NULL, NULL, NULL},
+  {(char*)"interpCallback", PyOFXCustomParameter_GetInterpCallback, NULL, NULL, NULL},
   {NULL, NULL, NULL, NULL, NULL}
 };
 

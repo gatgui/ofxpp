@@ -192,7 +192,7 @@ class Receiver
       }
     }
     
-    inline void* getHandle()
+    inline void* handle()
     {
       void *rv = 0;
       if (mRcv)

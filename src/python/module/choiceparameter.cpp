@@ -51,7 +51,7 @@ PyObject* PyOFXChoiceParameterDescriptor_GetDefault(PyObject *self, void*)
   
   int rv;
   
-  CATCH({rv = desc->getDefault();}, failed);
+  CATCH({rv = desc->defaultValue();}, failed);
   
   if (failed)
   {
@@ -75,7 +75,7 @@ int PyOFXChoiceParameterDescriptor_SetDefault(PyObject *self, PyObject *val, voi
   
   bool failed = false;
   
-  CATCH({desc->setDefault(PyInt_AsLong(val));}, failed);
+  CATCH({desc->defaultValue(PyInt_AsLong(val));}, failed);
   
   if (failed)
   {
@@ -87,11 +87,11 @@ int PyOFXChoiceParameterDescriptor_SetDefault(PyObject *self, PyObject *val, voi
 
 static PyGetSetDef PyOFXChoiceParameterDescriptor_GetSeters[] =
 {
-  {(char*)"default", PyOFXChoiceParameterDescriptor_GetDefault, PyOFXChoiceParameterDescriptor_SetDefault, NULL, NULL},
+  {(char*)"defaultValue", PyOFXChoiceParameterDescriptor_GetDefault, PyOFXChoiceParameterDescriptor_SetDefault, NULL, NULL},
   {NULL, NULL, NULL, NULL, NULL}
 };
 
-PyObject* PyOFXChoiceParameterDescriptor_GetChoiceCount(PyObject *self, PyObject *)
+PyObject* PyOFXChoiceParameterDescriptor_ChoiceOptionCount(PyObject *self, PyObject *)
 {
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
@@ -107,7 +107,7 @@ PyObject* PyOFXChoiceParameterDescriptor_GetChoiceCount(PyObject *self, PyObject
   
   int rv;
   
-  CATCH({rv = desc->getChoiceCount();}, failed);
+  CATCH({rv = desc->choiceOptionCount();}, failed);
   
   if (failed)
   {
@@ -117,7 +117,7 @@ PyObject* PyOFXChoiceParameterDescriptor_GetChoiceCount(PyObject *self, PyObject
   return PyInt_FromLong(rv);
 }
 
-PyObject* PyOFXChoiceParameterDescriptor_GetChoice(PyObject *self, PyObject *args)
+PyObject* PyOFXChoiceParameterDescriptor_ChoiceOption(PyObject *self, PyObject *args)
 {
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
@@ -128,8 +128,9 @@ PyObject* PyOFXChoiceParameterDescriptor_GetChoice(PyObject *self, PyObject *arg
   }
   
   int idx;
+  PyObject *pval = 0;
   
-  if (!PyArg_ParseTuple(args, "i", &idx))
+  if (!PyArg_ParseTuple(args, "i|O", &idx, &pval))
   {
     return NULL;
   }
@@ -138,63 +139,44 @@ PyObject* PyOFXChoiceParameterDescriptor_GetChoice(PyObject *self, PyObject *arg
   
   bool failed = false;
   
-  std::string rv;
-  
-  CATCH({rv = desc->getChoice(idx);}, failed);
-  
-  if (failed)
+  if (pval == 0)
   {
-    return NULL;
+    std::string rv;
+    
+    CATCH({rv = desc->choiceOption(idx);}, failed);
+    
+    if (failed)
+    {
+      return NULL;
+    }
+    
+    return PyString_FromString(rv.c_str());
   }
-  
-  return PyString_FromString(rv.c_str());
-}
+  else
+  {
+    if (!PyString_Check(pval))
+    {
+      PyErr_SetString(PyExc_TypeError, "Exepected a string");
+      return NULL;
+    }
 
-PyObject* PyOFXChoiceParameterDescriptor_SetChoice(PyObject *self, PyObject *args)
-{
-  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
-  
-  if (!pdesc->desc)
-  {
-    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
-    return NULL;
+    std::string val = PyString_AsString(pval);
+    
+    CATCH({desc->choiceOption(idx, val);}, failed);
+
+    if (failed)
+    {
+      return NULL;
+    }
+
+    Py_RETURN_NONE;
   }
-  
-  int idx;
-  PyObject *pval;
-  
-  if (!PyArg_ParseTuple(args, "iO", &idx, &pval))
-  {
-    return NULL;
-  }
-  
-  if (!PyString_Check(pval))
-  {
-    PyErr_SetString(PyExc_TypeError, "Exepected a string");
-    return NULL;
-  }
-  
-  std::string val = PyString_AsString(pval);
-  
-  ofx::ChoiceParameterDescriptor *desc = (ofx::ChoiceParameterDescriptor*) pdesc->desc;
-  
-  bool failed = false;
-  
-  CATCH({desc->setChoice(idx, val);}, failed);
-  
-  if (failed)
-  {
-    return NULL;
-  }
-  
-  Py_RETURN_NONE;
 }
 
 static PyMethodDef PyOFXChoiceParameterDescriptor_Methods[] =
 {
-  {"setChoice", PyOFXChoiceParameterDescriptor_SetChoice, METH_VARARGS, NULL},
-  {"getChoice", PyOFXChoiceParameterDescriptor_GetChoice, METH_VARARGS, NULL},
-  {"getChoiceCount", PyOFXChoiceParameterDescriptor_GetChoiceCount, METH_VARARGS, NULL},
+  {"choiceOption", PyOFXChoiceParameterDescriptor_ChoiceOption, METH_VARARGS, NULL},
+  {"choiceOptionCount", PyOFXChoiceParameterDescriptor_ChoiceOptionCount, METH_VARARGS, NULL},
   {NULL, NULL, NULL, NULL}
 };
 
@@ -223,7 +205,7 @@ PyObject* PyOFXChoiceParameter_GetDefault(PyObject *self, void*)
   
   int rv;
   
-  CATCH({rv = param->getDefault();}, failed);
+  CATCH({rv = param->defaultValue();}, failed);
   
   if (failed)
   {
@@ -235,7 +217,7 @@ PyObject* PyOFXChoiceParameter_GetDefault(PyObject *self, void*)
 
 static PyGetSetDef PyOFXChoiceParameter_GetSeters[] =
 {
-  {(char*)"default", PyOFXChoiceParameter_GetDefault, NULL, NULL, NULL},
+  {(char*)"defaultValue", PyOFXChoiceParameter_GetDefault, NULL, NULL, NULL},
   {NULL, NULL, NULL, NULL, NULL}
 };
 
@@ -361,7 +343,7 @@ PyObject* PyOFXChoiceParameter_SetValueAtTime(PyObject *self, PyObject *args)
   Py_RETURN_NONE;
 }
 
-PyObject* PyOFXChoiceParameter_GetChoiceCount(PyObject *self, PyObject *)
+PyObject* PyOFXChoiceParameter_ChoiceOptionCount(PyObject *self, PyObject *)
 {
   PyOFXParameter *pparam = (PyOFXParameter*) self;
   
@@ -377,7 +359,7 @@ PyObject* PyOFXChoiceParameter_GetChoiceCount(PyObject *self, PyObject *)
   
   int rv;
   
-  CATCH({rv = param->getChoiceCount();}, failed);
+  CATCH({rv = param->choiceOptionCount();}, failed);
   
   if (failed)
   {
@@ -387,7 +369,7 @@ PyObject* PyOFXChoiceParameter_GetChoiceCount(PyObject *self, PyObject *)
   return PyInt_FromLong(rv);
 }
 
-PyObject* PyOFXChoiceParameter_GetChoice(PyObject *self, PyObject *args)
+PyObject* PyOFXChoiceParameter_ChoiceOption(PyObject *self, PyObject *args)
 {
   PyOFXParameter *pparam = (PyOFXParameter*) self;
   
@@ -398,8 +380,9 @@ PyObject* PyOFXChoiceParameter_GetChoice(PyObject *self, PyObject *args)
   }
   
   int idx;
+  PyObject *pval = 0;
   
-  if (!PyArg_ParseTuple(args, "i", &idx))
+  if (!PyArg_ParseTuple(args, "i|O", &idx, &pval))
   {
     return NULL;
   }
@@ -408,56 +391,38 @@ PyObject* PyOFXChoiceParameter_GetChoice(PyObject *self, PyObject *args)
   
   bool failed = false;
   
-  std::string rv;
-  
-  CATCH({rv = param->getChoice(idx);}, failed);
-  
-  if (failed)
+  if (pval == 0)
   {
-    return NULL;
-  }
+    std::string rv;
   
-  return PyString_FromString(rv.c_str());
-}
+    CATCH({rv = param->choiceOption(idx);}, failed);
+  
+    if (failed)
+    {
+      return NULL;
+    }
+  
+    return PyString_FromString(rv.c_str());
+  }
+  else
+  {
+    if (!PyString_Check(pval))
+    {
+      PyErr_SetString(PyExc_TypeError, "Exepected a string");
+      return NULL;
+    }
 
-PyObject* PyOFXChoiceParameter_SetChoice(PyObject *self, PyObject *args)
-{
-  PyOFXParameter *pparam = (PyOFXParameter*) self;
-  
-  if (!pparam->param)
-  {
-    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
-    return NULL;
+    std::string val = PyString_AsString(pval);
+    
+    CATCH({param->choiceOption(idx, val);}, failed);
+
+    if (failed)
+    {
+      return NULL;
+    }
+
+    Py_RETURN_NONE;
   }
-  
-  int idx;
-  PyObject *pval;
-  
-  if (!PyArg_ParseTuple(args, "iO", &idx, &pval))
-  {
-    return NULL;
-  }
-  
-  if (!PyString_Check(pval))
-  {
-    PyErr_SetString(PyExc_TypeError, "Exepected a string");
-    return NULL;
-  }
-  
-  std::string val = PyString_AsString(pval);
-  
-  ofx::ChoiceParameter *param = (ofx::ChoiceParameter*) pparam->param;
-  
-  bool failed = false;
-  
-  CATCH({param->setChoice(idx, val);}, failed);
-  
-  if (failed)
-  {
-    return NULL;
-  }
-  
-  Py_RETURN_NONE;
 }
 
 static PyMethodDef PyOFXChoiceParameter_Methods[] =
@@ -466,9 +431,8 @@ static PyMethodDef PyOFXChoiceParameter_Methods[] =
   {"getValue", PyOFXChoiceParameter_GetValue, METH_VARARGS, NULL},
   {"setValueAtTime", PyOFXChoiceParameter_SetValueAtTime, METH_VARARGS, NULL},
   {"getValueAtTime", PyOFXChoiceParameter_GetValueAtTime, METH_VARARGS, NULL},
-  {"getChoiceCount", PyOFXChoiceParameter_GetChoiceCount, METH_VARARGS, NULL},
-  {"getChoice", PyOFXChoiceParameter_GetChoice, METH_VARARGS, NULL},
-  {"setChoice", PyOFXChoiceParameter_SetChoice, METH_VARARGS, NULL},
+  {"choiceOptionCount", PyOFXChoiceParameter_ChoiceOptionCount, METH_VARARGS, NULL},
+  {"choiceOption", PyOFXChoiceParameter_ChoiceOption, METH_VARARGS, NULL},
   {NULL, NULL, NULL, NULL}
 };
 

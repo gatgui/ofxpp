@@ -73,7 +73,7 @@ PyObject* PyOFXHost_GetAPIVersion(PyObject *self, PyObject *args)
   
   bool failed = false;
   
-  CATCH({v = phost->host->getAPIVersion(level);}, failed);
+  CATCH({v = phost->host->APIVersion(level);}, failed);
   
   if (failed)
   {

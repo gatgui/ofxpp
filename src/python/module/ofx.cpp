@@ -67,7 +67,7 @@ static PyObject* PyOFX_CanonicalToPixelCoords(PyObject *, PyObject *args)
   
   int outX, outY;
   
-  ofx::CanonicalToPixelCoords(inX, inY, par, rsX, rsY, ofx::ImageField(field), outX, outY);
+  ofx::CanonicalToPixelCoords(inX, inY, par, rsX, rsY, ofx::ImageField(field), &outX, &outY);
   
   PyObject *rv = PyTuple_New(2);
   PyTuple_SetItem(rv, 0, PyInt_FromLong(outX));
@@ -119,7 +119,7 @@ static PyObject* PyOFX_PixelToCanonicalCoords(PyObject *, PyObject *args)
   
   double outX, outY;
   
-  ofx::PixelToCanonicalCoords(inX, inY, par, rsX, rsY, ofx::ImageField(field), outX, outY);
+  ofx::PixelToCanonicalCoords(inX, inY, par, rsX, rsY, ofx::ImageField(field), &outX, &outY);
   
   PyObject *rv = PyTuple_New(2);
   PyTuple_SetItem(rv, 0, PyFloat_FromDouble(outX));
@@ -185,7 +185,7 @@ static PyObject* PyOFX_NormalisedToCanonicalCoords(PyObject *, PyObject *args)
   
   double outX, outY;
   
-  ofx::NormalisedToCanonicalCoords(inX, inY, extW, extH, offX, offY, absolute, outX, outY);
+  ofx::NormalisedToCanonicalCoords(inX, inY, extW, extH, offX, offY, absolute, &outX, &outY);
   
   PyObject *rv = PyTuple_New(2);
   PyTuple_SetItem(rv, 0, PyFloat_FromDouble(outX));
@@ -251,7 +251,7 @@ static PyObject* PyOFX_CanonicalToNormalisedCoords(PyObject *, PyObject *args)
   
   double outX, outY;
   
-  ofx::CanonicalToNormalisedCoords(inX, inY, extW, extH, offX, offY, absolute, outX, outY);
+  ofx::CanonicalToNormalisedCoords(inX, inY, extW, extH, offX, offY, absolute, &outX, &outY);
   
   PyObject *rv = PyTuple_New(2);
   PyTuple_SetItem(rv, 0, PyFloat_FromDouble(outX));

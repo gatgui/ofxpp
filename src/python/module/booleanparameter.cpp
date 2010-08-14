@@ -51,7 +51,7 @@ PyObject* PyOFXBooleanParameterDescriptor_GetDefault(PyObject *self, void*)
   
   bool rv;
   
-  CATCH({rv = desc->getDefault();}, failed);
+  CATCH({rv = desc->defaultValue();}, failed);
   
   if (failed)
   {
@@ -82,7 +82,7 @@ int PyOFXBooleanParameterDescriptor_SetDefault(PyObject *self, PyObject *val, vo
   
   bool failed = false;
   
-  CATCH({desc->setDefault(val == Py_True);}, failed);
+  CATCH({desc->defaultValue(val == Py_True);}, failed);
   
   if (failed)
   {
@@ -94,7 +94,7 @@ int PyOFXBooleanParameterDescriptor_SetDefault(PyObject *self, PyObject *val, vo
 
 static PyGetSetDef PyOFXBooleanParameterDescriptor_GetSeters[] =
 {
-  {(char*)"default", PyOFXBooleanParameterDescriptor_GetDefault, PyOFXBooleanParameterDescriptor_SetDefault, NULL, NULL},
+  {(char*)"defaultValue", PyOFXBooleanParameterDescriptor_GetDefault, PyOFXBooleanParameterDescriptor_SetDefault, NULL, NULL},
   {NULL, NULL, NULL, NULL, NULL}
 };
 
@@ -123,7 +123,7 @@ PyObject* PyOFXBooleanParameter_GetDefault(PyObject *self, void*)
   
   bool rv;
   
-  CATCH({rv = param->getDefault();}, failed);
+  CATCH({rv = param->defaultValue();}, failed);
   
   if (failed)
   {
@@ -142,7 +142,7 @@ PyObject* PyOFXBooleanParameter_GetDefault(PyObject *self, void*)
 
 static PyGetSetDef PyOFXBooleanParameter_GetSeters[] =
 {
-  {(char*)"default", PyOFXBooleanParameter_GetDefault, NULL, NULL, NULL},
+  {(char*)"defaultValue", PyOFXBooleanParameter_GetDefault, NULL, NULL, NULL},
   {NULL, NULL, NULL, NULL, NULL}
 };
 

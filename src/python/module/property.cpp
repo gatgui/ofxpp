@@ -743,7 +743,7 @@ static PyObject* PyOFXPropertySet_GetHandle(PyObject *self, void*)
   
   OfxPropertySetHandle handle = 0;
   
-  CATCH({handle = ppset->pset->getHandle();}, failed);
+  CATCH({handle = ppset->pset->handle();}, failed);
   
   if (failed)
   {

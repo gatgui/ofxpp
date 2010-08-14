@@ -36,7 +36,7 @@ std::string PyInterpolator(ofx::ParameterSet &params,
                            ofx::Time t1, const std::string &v1,
                            double amount)
 {
-  PyInterpolatorKey key = {params.getHandle(), paramName};
+  PyInterpolatorKey key = {params.handle(), paramName};
   
   std::map<PyInterpolatorKey, PyObject*>::iterator it = gPyInterpolators.find(key);
   

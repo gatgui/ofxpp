@@ -66,7 +66,7 @@ PyObject* PyOFXParameterDescriptor_GetName(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pdesc->desc->getName();}, failed);
+  CATCH({rv = pdesc->desc->name();}, failed);
   
   if (failed)
   {
@@ -90,7 +90,7 @@ PyObject* PyOFXParameterDescriptor_GetLabel(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pdesc->desc->getLabel();}, failed);
+  CATCH({rv = pdesc->desc->label();}, failed);
   
   if (failed)
   {
@@ -114,7 +114,7 @@ PyObject* PyOFXParameterDescriptor_GetShortLabel(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pdesc->desc->getShortLabel();}, failed);
+  CATCH({rv = pdesc->desc->shortLabel();}, failed);
   
   if (failed)
   {
@@ -138,7 +138,7 @@ PyObject* PyOFXParameterDescriptor_GetLongLabel(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pdesc->desc->getLongLabel();}, failed);
+  CATCH({rv = pdesc->desc->longLabel();}, failed);
   
   if (failed)
   {
@@ -162,7 +162,7 @@ PyObject* PyOFXParameterDescriptor_GetType(PyObject *self, void*)
   
   ofx::ParamType rv;
   
-  CATCH({rv = pdesc->desc->getType();}, failed);
+  CATCH({rv = pdesc->desc->type();}, failed);
   
   if (failed)
   {
@@ -186,7 +186,7 @@ PyObject* PyOFXParameterDescriptor_GetSecret(PyObject *self, void*)
   
   bool rv;
   
-  CATCH({rv = pdesc->desc->isSecret();}, failed);
+  CATCH({rv = pdesc->desc->secret();}, failed);
   
   if (failed)
   {
@@ -252,7 +252,7 @@ PyObject* PyOFXParameterDescriptor_GetHint(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pdesc->desc->getHint();}, failed);
+  CATCH({rv = pdesc->desc->hint();}, failed);
   
   if (failed)
   {
@@ -276,7 +276,7 @@ PyObject* PyOFXParameterDescriptor_GetScriptName(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pdesc->desc->getScriptName();}, failed);
+  CATCH({rv = pdesc->desc->scriptName();}, failed);
   
   if (failed)
   {
@@ -300,7 +300,7 @@ PyObject* PyOFXParameterDescriptor_GetParent(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pdesc->desc->getParent();}, failed);
+  CATCH({rv = pdesc->desc->parent();}, failed);
   
   if (failed)
   {
@@ -310,7 +310,7 @@ PyObject* PyOFXParameterDescriptor_GetParent(PyObject *self, void*)
   return PyString_FromString(rv.c_str());
 }
 
-PyObject* PyOFXParameterDescriptor_GetEnable(PyObject *self, void*)
+PyObject* PyOFXParameterDescriptor_GetEnabled(PyObject *self, void*)
 {
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*)self;
   
@@ -324,7 +324,7 @@ PyObject* PyOFXParameterDescriptor_GetEnable(PyObject *self, void*)
   
   bool rv;
   
-  CATCH({rv = pdesc->desc->isEnable();}, failed);
+  CATCH({rv = pdesc->desc->enabled();}, failed);
   
   if (failed)
   {
@@ -343,6 +343,7 @@ PyObject* PyOFXParameterDescriptor_GetEnable(PyObject *self, void*)
   }
 }
 
+/*
 PyObject* PyOFXParameterDescriptor_GetData(PyObject *self, void*)
 {
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*)self;
@@ -357,7 +358,7 @@ PyObject* PyOFXParameterDescriptor_GetData(PyObject *self, void*)
   
   void *rv;
   
-  CATCH({rv = pdesc->desc->getData();}, failed);
+  CATCH({rv = pdesc->desc->data();}, failed);
   
   if (failed)
   {
@@ -366,6 +367,7 @@ PyObject* PyOFXParameterDescriptor_GetData(PyObject *self, void*)
   
   return ((PyObject*) rv);
 }
+*/
 
 #ifdef OFX_API_1_2
 
@@ -383,7 +385,7 @@ PyObject* PyOFXParameterDescriptor_GetPNGIcon(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pdesc->desc->getPNGIcon();}, failed);
+  CATCH({rv = pdesc->desc->PNGIcon();}, failed);
   
   if (failed)
   {
@@ -407,7 +409,7 @@ PyObject* PyOFXParameterDescriptor_GetSVGIcon(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pdesc->desc->getSVGIcon();}, failed);
+  CATCH({rv = pdesc->desc->SVGIcon();}, failed);
   
   if (failed)
   {
@@ -437,7 +439,7 @@ int PyOFXParameterDescriptor_SetName(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pdesc->desc->setName(PyString_AsString(val));}, failed);
+  CATCH({pdesc->desc->name(PyString_AsString(val));}, failed);
   
   if (failed)
   {
@@ -465,7 +467,7 @@ int PyOFXParameterDescriptor_SetLabel(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pdesc->desc->setLabel(PyString_AsString(val));}, failed);
+  CATCH({pdesc->desc->label(PyString_AsString(val));}, failed);
   
   if (failed)
   {
@@ -493,7 +495,7 @@ int PyOFXParameterDescriptor_SetShortLabel(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pdesc->desc->setShortLabel(PyString_AsString(val));}, failed);
+  CATCH({pdesc->desc->shortLabel(PyString_AsString(val));}, failed);
   
   if (failed)
   {
@@ -521,7 +523,7 @@ int PyOFXParameterDescriptor_SetLongLabel(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pdesc->desc->setLongLabel(PyString_AsString(val));}, failed);
+  CATCH({pdesc->desc->longLabel(PyString_AsString(val));}, failed);
   
   if (failed)
   {
@@ -549,7 +551,7 @@ int PyOFXParameterDescriptor_SetHint(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pdesc->desc->setHint(PyString_AsString(val));}, failed);
+  CATCH({pdesc->desc->hint(PyString_AsString(val));}, failed);
   
   if (failed)
   {
@@ -577,7 +579,7 @@ int PyOFXParameterDescriptor_SetScriptName(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pdesc->desc->setScriptName(PyString_AsString(val));}, failed);
+  CATCH({pdesc->desc->scriptName(PyString_AsString(val));}, failed);
   
   if (failed)
   {
@@ -605,7 +607,7 @@ int PyOFXParameterDescriptor_SetParent(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pdesc->desc->setParent(PyString_AsString(val));}, failed);
+  CATCH({pdesc->desc->parent(PyString_AsString(val));}, failed);
   
   if (failed)
   {
@@ -615,6 +617,7 @@ int PyOFXParameterDescriptor_SetParent(PyObject *self, PyObject *val, void*)
   return 0;
 }
 
+/*
 int PyOFXParameterDescriptor_SetData(PyObject *self, PyObject *val, void*)
 {
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*)self;
@@ -627,7 +630,7 @@ int PyOFXParameterDescriptor_SetData(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pdesc->desc->setData((void*)val);}, failed);
+  CATCH({pdesc->desc->data((void*)val);}, failed);
   
   if (failed)
   {
@@ -636,8 +639,9 @@ int PyOFXParameterDescriptor_SetData(PyObject *self, PyObject *val, void*)
   
   return 0;
 }
+*/
 
-int PyOFXParameterDescriptor_SetEnable(PyObject *self, PyObject *val, void*)
+int PyOFXParameterDescriptor_SetEnabled(PyObject *self, PyObject *val, void*)
 {
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*)self;
   
@@ -649,7 +653,7 @@ int PyOFXParameterDescriptor_SetEnable(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pdesc->desc->enable(val == Py_True);}, failed);
+  CATCH({pdesc->desc->enabled(val == Py_True);}, failed);
   
   if (failed)
   {
@@ -671,7 +675,7 @@ int PyOFXParameterDescriptor_SetCanUndo(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pdesc->desc->setCanUndo(val == Py_True);}, failed);
+  CATCH({pdesc->desc->canUndo(val == Py_True);}, failed);
   
   if (failed)
   {
@@ -693,7 +697,7 @@ int PyOFXParameterDescriptor_SetSecret(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pdesc->desc->setSecret(val == Py_True);}, failed);
+  CATCH({pdesc->desc->secret(val == Py_True);}, failed);
   
   if (failed)
   {
@@ -723,7 +727,7 @@ int PyOFXParameterDescriptor_SetPNGIcon(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pdesc->desc->setPNGIcon(PyString_AsString(val));}, failed);
+  CATCH({pdesc->desc->PNGIcon(PyString_AsString(val));}, failed);
   
   if (failed)
   {
@@ -751,7 +755,7 @@ int PyOFXParameterDescriptor_SetSVGIcon(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pdesc->desc->setSVGIcon(PyString_AsString(val));}, failed);
+  CATCH({pdesc->desc->SVGIcon(PyString_AsString(val));}, failed);
   
   if (failed)
   {
@@ -773,13 +777,13 @@ static PyGetSetDef PyOFXParameterDescriptor_GetSeters[] =
   {(char*)"hint", PyOFXParameterDescriptor_GetHint, PyOFXParameterDescriptor_SetHint, NULL, NULL},
   {(char*)"parent", PyOFXParameterDescriptor_GetParent, PyOFXParameterDescriptor_SetParent, NULL, NULL},
   {(char*)"scriptName", PyOFXParameterDescriptor_GetScriptName, PyOFXParameterDescriptor_SetScriptName, NULL, NULL},
-  {(char*)"data", PyOFXParameterDescriptor_GetData, PyOFXParameterDescriptor_SetData, NULL, NULL},
-  {(char*)"enable", PyOFXParameterDescriptor_GetEnable, PyOFXParameterDescriptor_SetEnable, NULL, NULL},
+  //{(char*)"data", PyOFXParameterDescriptor_GetData, PyOFXParameterDescriptor_SetData, NULL, NULL},
+  {(char*)"enabled", PyOFXParameterDescriptor_GetEnabled, PyOFXParameterDescriptor_SetEnabled, NULL, NULL},
   {(char*)"secret", PyOFXParameterDescriptor_GetSecret, PyOFXParameterDescriptor_SetSecret, NULL, NULL},
   {(char*)"canUndo", PyOFXParameterDescriptor_GetCanUndo, PyOFXParameterDescriptor_SetCanUndo, NULL, NULL},
 #ifdef OFX_API_1_2
-  {(char*)"pngIcon", PyOFXParameterDescriptor_GetPNGIcon, PyOFXParameterDescriptor_SetPNGIcon, NULL, NULL},
-  {(char*)"svgIcon", PyOFXParameterDescriptor_GetSVGIcon, PyOFXParameterDescriptor_SetSVGIcon, NULL, NULL},
+  {(char*)"PNGIcon", PyOFXParameterDescriptor_GetPNGIcon, PyOFXParameterDescriptor_SetPNGIcon, NULL, NULL},
+  {(char*)"SVGIcon", PyOFXParameterDescriptor_GetSVGIcon, PyOFXParameterDescriptor_SetSVGIcon, NULL, NULL},
 #endif
   {NULL, NULL, NULL, NULL, NULL}
 };
@@ -812,7 +816,7 @@ PyObject* PyOFXValueParameterDescriptor_GetInteract(PyObject *self, void*)
   //ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
   
   // typedef OfxStatus (*EntryPoint)(const char*, const void*, OfxPropertySetHandle, OfxPropertySetHandle);
-  //ofx::EntryPoint interact = desc->getInteract();
+  //ofx::EntryPoint interact = desc->interact();
   
   // -> wrap as a python method?
   
@@ -820,7 +824,7 @@ PyObject* PyOFXValueParameterDescriptor_GetInteract(PyObject *self, void*)
   return Py_None;
 }
 
-
+/*
 PyObject* PyOFXValueParameterDescriptor_GetInteractSize(PyObject *self, void*)
 {
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
@@ -837,7 +841,7 @@ PyObject* PyOFXValueParameterDescriptor_GetInteractSize(PyObject *self, void*)
   
   bool failed = false;
   
-  CATCH({desc->getInteractSize(w, h);}, failed);
+  CATCH({desc->interactSize(&w, &h);}, failed);
   
   if (failed)
   {
@@ -849,6 +853,7 @@ PyObject* PyOFXValueParameterDescriptor_GetInteractSize(PyObject *self, void*)
   PyTuple_SetItem(rv, 1, PyFloat_FromDouble(h));
   return rv;
 }
+*/
 
 PyObject* PyOFXValueParameterDescriptor_GetInteractSizeAspect(PyObject *self, void*)
 {
@@ -866,7 +871,7 @@ PyObject* PyOFXValueParameterDescriptor_GetInteractSizeAspect(PyObject *self, vo
   
   double rv;
   
-  CATCH({rv = desc->getInteractSizeAspect();}, failed);
+  CATCH({rv = desc->interactSizeAspect();}, failed);
   
   if (failed)
   {
@@ -876,7 +881,7 @@ PyObject* PyOFXValueParameterDescriptor_GetInteractSizeAspect(PyObject *self, vo
   return PyFloat_FromDouble(rv);
 }
 
-PyObject* PyOFXValueParameterDescriptor_GetInteractMinSize(PyObject *self, void*)
+PyObject* PyOFXValueParameterDescriptor_GetInteractMinimumSize(PyObject *self, void*)
 {
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
@@ -892,7 +897,7 @@ PyObject* PyOFXValueParameterDescriptor_GetInteractMinSize(PyObject *self, void*
   
   bool failed = false;
   
-  CATCH({desc->getInteractMinSize(w, h);}, failed);
+  CATCH({desc->interactMinimumSize(&w, &h);}, failed);
   
   if (failed)
   {
@@ -921,7 +926,7 @@ PyObject* PyOFXValueParameterDescriptor_GetInteractPreferedSize(PyObject *self, 
   
   bool failed = false;
   
-  CATCH({desc->getInteractPreferedSize(w, h);}, failed);
+  CATCH({desc->interactPreferedSize(&w, &h);}, failed);
   
   if (failed)
   {
@@ -934,7 +939,7 @@ PyObject* PyOFXValueParameterDescriptor_GetInteractPreferedSize(PyObject *self, 
   return rv;
 }
 
-PyObject* PyOFXValueParameterDescriptor_GetAnimateable(PyObject *self, void*)
+PyObject* PyOFXValueParameterDescriptor_GetAnimates(PyObject *self, void*)
 {
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
@@ -950,7 +955,7 @@ PyObject* PyOFXValueParameterDescriptor_GetAnimateable(PyObject *self, void*)
   
   bool rv;
   
-  CATCH({rv = desc->isAnimateable();}, failed);
+  CATCH({rv = desc->animates();}, failed);
   
   if (failed)
   {
@@ -969,6 +974,7 @@ PyObject* PyOFXValueParameterDescriptor_GetAnimateable(PyObject *self, void*)
   }
 }
 
+/*
 PyObject* PyOFXValueParameterDescriptor_GetAnimating(PyObject *self, void*)
 {
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
@@ -985,7 +991,7 @@ PyObject* PyOFXValueParameterDescriptor_GetAnimating(PyObject *self, void*)
   
   bool rv;
   
-  CATCH({rv = desc->isAnimating();}, failed);
+  CATCH({rv = desc->animating();}, failed);
   
   if (failed)
   {
@@ -1020,7 +1026,7 @@ PyObject* PyOFXValueParameterDescriptor_GetAutoKeying(PyObject *self, void*)
   
   bool rv;
   
-  CATCH({rv = desc->isAutoKeying();}, failed);
+  CATCH({rv = desc->autoKeying();}, failed);
   
   if (failed)
   {
@@ -1038,6 +1044,7 @@ PyObject* PyOFXValueParameterDescriptor_GetAutoKeying(PyObject *self, void*)
     return Py_False;
   }
 }
+*/
 
 PyObject* PyOFXValueParameterDescriptor_GetPersistant(PyObject *self, void*)
 {
@@ -1055,7 +1062,7 @@ PyObject* PyOFXValueParameterDescriptor_GetPersistant(PyObject *self, void*)
   
   bool rv;
   
-  CATCH({rv = desc->isPersistant();}, failed);
+  CATCH({rv = desc->persistant();}, failed);
   
   if (failed)
   {
@@ -1125,7 +1132,7 @@ PyObject* PyOFXValueParameterDescriptor_GetPluginMayWrite(PyObject *self, void*)
   
   bool rv;
   
-  CATCH({rv = desc->mayPluginWrite();}, failed);
+  CATCH({rv = desc->pluginMayWrite();}, failed);
   
   if (failed)
   {
@@ -1160,7 +1167,7 @@ PyObject* PyOFXValueParameterDescriptor_GetCacheInvalidation(PyObject *self, voi
   
   ofx::ParamInvalidate rv;
   
-  CATCH({rv = desc->getCacheInvalidation();}, failed);
+  CATCH({rv = desc->cacheInvalidation();}, failed);
   
   if (failed)
   {
@@ -1244,6 +1251,7 @@ PyObject* PyOFXValueParameterDescriptor_GetUseHostOverlayHandle(PyObject *self, 
 
 #endif
 
+/*
 int PyOFXValueParameterDescriptor_SetInteractSize(PyObject *self, PyObject *val, void*)
 {
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
@@ -1273,7 +1281,7 @@ int PyOFXValueParameterDescriptor_SetInteractSize(PyObject *self, PyObject *val,
   
   bool failed = false;
   
-  CATCH({desc->setInteractSize(w, h);}, failed);
+  CATCH({desc->interactSize(w, h);}, failed);
   
   if (failed)
   {
@@ -1282,6 +1290,7 @@ int PyOFXValueParameterDescriptor_SetInteractSize(PyObject *self, PyObject *val,
   
   return 0;
 }
+*/
 
 int PyOFXValueParameterDescriptor_SetInteractSizeAspect(PyObject *self, PyObject *val, void*)
 {
@@ -1297,7 +1306,7 @@ int PyOFXValueParameterDescriptor_SetInteractSizeAspect(PyObject *self, PyObject
   
   bool failed = false;
   
-  CATCH({desc->setInteractSizeAspect(PyFloat_AsDouble(val));}, failed);
+  CATCH({desc->interactSizeAspect(PyFloat_AsDouble(val));}, failed);
   
   if (failed)
   {
@@ -1307,7 +1316,7 @@ int PyOFXValueParameterDescriptor_SetInteractSizeAspect(PyObject *self, PyObject
   return 0;
 }
 
-int PyOFXValueParameterDescriptor_SetInteractMinSize(PyObject *self, PyObject *val, void*)
+int PyOFXValueParameterDescriptor_SetInteractMinimumSize(PyObject *self, PyObject *val, void*)
 {
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
@@ -1336,7 +1345,7 @@ int PyOFXValueParameterDescriptor_SetInteractMinSize(PyObject *self, PyObject *v
   
   bool failed = false;
   
-  CATCH({desc->setInteractMinSize(w, h);}, failed);
+  CATCH({desc->interactMinimumSize(w, h);}, failed);
   
   if (failed)
   {
@@ -1375,7 +1384,7 @@ int PyOFXValueParameterDescriptor_SetInteractPreferedSize(PyObject *self, PyObje
   
   bool failed = false;
   
-  CATCH({desc->setInteractPreferedSize(w, h);}, failed);
+  CATCH({desc->interactPreferedSize(w, h);}, failed);
   
   if (failed)
   {
@@ -1385,7 +1394,7 @@ int PyOFXValueParameterDescriptor_SetInteractPreferedSize(PyObject *self, PyObje
   return 0;
 }
 
-int PyOFXValueParameterDescriptor_SetAnimateable(PyObject *self, PyObject *val, void*)
+int PyOFXValueParameterDescriptor_SetAnimates(PyObject *self, PyObject *val, void*)
 {
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
@@ -1399,7 +1408,7 @@ int PyOFXValueParameterDescriptor_SetAnimateable(PyObject *self, PyObject *val, 
   
   bool failed = false;
   
-  CATCH({desc->setAnimateable(val == Py_True);}, failed);
+  CATCH({desc->animates(val == Py_True);}, failed);
   
   if (failed)
   {
@@ -1409,6 +1418,7 @@ int PyOFXValueParameterDescriptor_SetAnimateable(PyObject *self, PyObject *val, 
   return 0;
 }
 
+/*
 int PyOFXValueParameterDescriptor_SetAnimating(PyObject *self, PyObject *val, void*)
 {
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
@@ -1423,7 +1433,7 @@ int PyOFXValueParameterDescriptor_SetAnimating(PyObject *self, PyObject *val, vo
   
   bool failed = false;
   
-  CATCH({desc->setAnimating(val == Py_True);}, failed);
+  CATCH({desc->animating(val == Py_True);}, failed);
   
   if (failed)
   {
@@ -1447,7 +1457,7 @@ int PyOFXValueParameterDescriptor_SetAutoKeying(PyObject *self, PyObject *val, v
   
   bool failed = false;
   
-  CATCH({desc->setAutoKeying(val == Py_True);}, failed);
+  CATCH({desc->autoKeying(val == Py_True);}, failed);
   
   if (failed)
   {
@@ -1456,6 +1466,7 @@ int PyOFXValueParameterDescriptor_SetAutoKeying(PyObject *self, PyObject *val, v
   
   return 0;
 }
+*/
 
 int PyOFXValueParameterDescriptor_SetPersistant(PyObject *self, PyObject *val, void*)
 {
@@ -1471,7 +1482,7 @@ int PyOFXValueParameterDescriptor_SetPersistant(PyObject *self, PyObject *val, v
   
   bool failed = false;
   
-  CATCH({desc->setPersistant(val == Py_True);}, failed);
+  CATCH({desc->persistant(val == Py_True);}, failed);
   
   if (failed)
   {
@@ -1495,7 +1506,7 @@ int PyOFXValueParameterDescriptor_SetEvaluateOnChange(PyObject *self, PyObject *
   
   bool failed = false;
   
-  CATCH({desc->setEvaluateOnChange(val == Py_True);}, failed);
+  CATCH({desc->evaluateOnChange(val == Py_True);}, failed);
   
   if (failed)
   {
@@ -1519,7 +1530,7 @@ int PyOFXValueParameterDescriptor_SetPluginMayWrite(PyObject *self, PyObject *va
   
   bool failed = false;
   
-  CATCH({desc->setPluginMayWrite(val == Py_True);}, failed);
+  CATCH({desc->pluginMayWrite(val == Py_True);}, failed);
   
   if (failed)
   {
@@ -1543,7 +1554,7 @@ int PyOFXValueParameterDescriptor_SetCacheInvalidation(PyObject *self, PyObject 
   
   bool failed = false;
   
-  CATCH({desc->setCacheInvalidation(ofx::ParamInvalidate(PyInt_AsLong(val)));}, failed);
+  CATCH({desc->cacheInvalidation(ofx::ParamInvalidate(PyInt_AsLong(val)));}, failed);
   
   if (failed)
   {
@@ -1569,7 +1580,7 @@ int PyOFXValueParameterDescriptor_SetUseHostOverlayHandle(PyObject *self, PyObje
   
   bool failed = false;
   
-  CATCH({desc->setUseHostOverlayHandle(val == Py_True);}, failed);
+  CATCH({desc->useHostOverlayHandle(val == Py_True);}, failed);
   
   if (failed)
   {
@@ -1600,13 +1611,13 @@ int PyOFXValueParameterDescriptor_SetInteract(PyObject *self, PyObject *, void*)
 static PyGetSetDef PyOFXValueParameterDescriptor_GetSeters[] =
 {
   {(char*)"interact", PyOFXValueParameterDescriptor_GetInteract, PyOFXValueParameterDescriptor_SetInteract, NULL, NULL},
-  {(char*)"interactSize", PyOFXValueParameterDescriptor_GetInteractSize, PyOFXValueParameterDescriptor_SetInteractSize, NULL, NULL},
+  //{(char*)"interactSize", PyOFXValueParameterDescriptor_GetInteractSize, PyOFXValueParameterDescriptor_SetInteractSize, NULL, NULL},
   {(char*)"interactSizeAspect", PyOFXValueParameterDescriptor_GetInteractSizeAspect, PyOFXValueParameterDescriptor_SetInteractSizeAspect, NULL, NULL},
-  {(char*)"interactMinSize", PyOFXValueParameterDescriptor_GetInteractMinSize, PyOFXValueParameterDescriptor_SetInteractMinSize, NULL, NULL},
+  {(char*)"interactMinimumSize", PyOFXValueParameterDescriptor_GetInteractMinimumSize, PyOFXValueParameterDescriptor_SetInteractMinimumSize, NULL, NULL},
   {(char*)"interactPreferedSize", PyOFXValueParameterDescriptor_GetInteractPreferedSize, PyOFXValueParameterDescriptor_SetInteractPreferedSize, NULL, NULL},
-  {(char*)"animateable", PyOFXValueParameterDescriptor_GetAnimateable, PyOFXValueParameterDescriptor_SetAnimateable, NULL, NULL},
-  {(char*)"animating", PyOFXValueParameterDescriptor_GetAnimating, PyOFXValueParameterDescriptor_SetAnimating, NULL, NULL},
-  {(char*)"autoKeying", PyOFXValueParameterDescriptor_GetAutoKeying, PyOFXValueParameterDescriptor_SetAutoKeying, NULL, NULL},
+  {(char*)"animates", PyOFXValueParameterDescriptor_GetAnimates, PyOFXValueParameterDescriptor_SetAnimates, NULL, NULL},
+  //{(char*)"animating", PyOFXValueParameterDescriptor_GetAnimating, PyOFXValueParameterDescriptor_SetAnimating, NULL, NULL},
+  //{(char*)"autoKeying", PyOFXValueParameterDescriptor_GetAutoKeying, PyOFXValueParameterDescriptor_SetAutoKeying, NULL, NULL},
   {(char*)"persistant", PyOFXValueParameterDescriptor_GetPersistant, PyOFXValueParameterDescriptor_SetPersistant, NULL, NULL},
   {(char*)"evaluateOnChange", PyOFXValueParameterDescriptor_GetEvaluateOnChange, PyOFXValueParameterDescriptor_SetEvaluateOnChange, NULL, NULL},
   {(char*)"pluginMayWrite", PyOFXValueParameterDescriptor_GetPluginMayWrite, PyOFXValueParameterDescriptor_SetPluginMayWrite, NULL, NULL},
@@ -1656,7 +1667,7 @@ PyObject* PyOFXParameter_GetHandle(PyObject *self, void*)
   
   OfxParamHandle handle;
   
-  CATCH({handle = pparam->param->getHandle();}, failed);
+  CATCH({handle = pparam->param->handle();}, failed);
   
   if (failed)
   {
@@ -1682,7 +1693,7 @@ PyObject* PyOFXParameter_GetName(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pparam->param->getName();}, failed);
+  CATCH({rv = pparam->param->name();}, failed);
   
   if (failed)
   {
@@ -1706,7 +1717,7 @@ PyObject* PyOFXParameter_GetLabel(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pparam->param->getLabel();}, failed);
+  CATCH({rv = pparam->param->label();}, failed);
   
   if (failed)
   {
@@ -1730,7 +1741,7 @@ PyObject* PyOFXParameter_GetShortLabel(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pparam->param->getShortLabel();}, failed);
+  CATCH({rv = pparam->param->shortLabel();}, failed);
   
   if (failed)
   {
@@ -1754,7 +1765,7 @@ PyObject* PyOFXParameter_GetLongLabel(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pparam->param->getLongLabel();}, failed);
+  CATCH({rv = pparam->param->longLabel();}, failed);
   
   if (failed)
   {
@@ -1778,7 +1789,7 @@ PyObject* PyOFXParameter_GetHint(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pparam->param->getHint();}, failed);
+  CATCH({rv = pparam->param->hint();}, failed);
   
   if (failed)
   {
@@ -1802,7 +1813,7 @@ PyObject* PyOFXParameter_GetScriptName(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pparam->param->getScriptName();}, failed);
+  CATCH({rv = pparam->param->scriptName();}, failed);
   
   if (failed)
   {
@@ -1826,7 +1837,7 @@ PyObject* PyOFXParameter_GetParent(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pparam->param->getParent();}, failed);
+  CATCH({rv = pparam->param->parent();}, failed);
   
   if (failed)
   {
@@ -1852,7 +1863,7 @@ PyObject* PyOFXParameter_GetPNGIcon(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pparam->param->getPNGIcon();}, failed);
+  CATCH({rv = pparam->param->PNGIcon();}, failed);
   
   if (failed)
   {
@@ -1876,7 +1887,7 @@ PyObject* PyOFXParameter_GetSVGIcon(PyObject *self, void*)
   
   std::string rv;
   
-  CATCH({rv = pparam->param->getSVGIcon();}, failed);
+  CATCH({rv = pparam->param->SVGIcon();}, failed);
   
   if (failed)
   {
@@ -1902,7 +1913,7 @@ PyObject* PyOFXParameter_GetData(PyObject *self, void*)
   
   void *rv;
   
-  CATCH({rv = pparam->param->getData();}, failed);
+  CATCH({rv = pparam->param->data();}, failed);
   
   if (failed)
   {
@@ -1926,7 +1937,7 @@ PyObject* PyOFXParameter_GetType(PyObject *self, void*)
   
   ofx::ParamType rv;
   
-  CATCH({rv = pparam->param->getType();}, failed);
+  CATCH({rv = pparam->param->type();}, failed);
   
   if (failed)
   {
@@ -1950,7 +1961,7 @@ PyObject* PyOFXParameter_GetSecret(PyObject *self, void*)
   
   bool rv;
   
-  CATCH({rv = pparam->param->isSecret();}, failed);
+  CATCH({rv = pparam->param->secret();}, failed);
   
   if (failed)
   {
@@ -2002,7 +2013,7 @@ PyObject* PyOFXParameter_GetCanUndo(PyObject *self, void*)
   }
 }
 
-PyObject* PyOFXParameter_GetEnable(PyObject *self, void*)
+PyObject* PyOFXParameter_GetEnabled(PyObject *self, void*)
 {
   PyOFXParameter *pparam = (PyOFXParameter*) self;
   
@@ -2016,7 +2027,7 @@ PyObject* PyOFXParameter_GetEnable(PyObject *self, void*)
   
   bool rv;
   
-  CATCH({rv = pparam->param->isEnable();}, failed);
+  CATCH({rv = pparam->param->enabled();}, failed);
   
   if (failed)
   {
@@ -2053,7 +2064,7 @@ int PyOFXParameter_SetLabel(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pparam->param->setLabel(PyString_AsString(val));}, failed);
+  CATCH({pparam->param->label(PyString_AsString(val));}, failed);
   
   if (failed)
   {
@@ -2081,7 +2092,7 @@ int PyOFXParameter_SetShortLabel(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pparam->param->setShortLabel(PyString_AsString(val));}, failed);
+  CATCH({pparam->param->shortLabel(PyString_AsString(val));}, failed);
   
   if (failed)
   {
@@ -2109,7 +2120,7 @@ int PyOFXParameter_SetLongLabel(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pparam->param->setLongLabel(PyString_AsString(val));}, failed);
+  CATCH({pparam->param->longLabel(PyString_AsString(val));}, failed);
   
   if (failed)
   {
@@ -2137,7 +2148,7 @@ int PyOFXParameter_SetHint(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pparam->param->setHint(PyString_AsString(val));}, failed);
+  CATCH({pparam->param->hint(PyString_AsString(val));}, failed);
   
   if (failed)
   {
@@ -2147,7 +2158,7 @@ int PyOFXParameter_SetHint(PyObject *self, PyObject *val, void*)
   return 0;
 }
 
-int PyOFXParameter_SetEnable(PyObject *self, PyObject *val, void*)
+int PyOFXParameter_SetEnabled(PyObject *self, PyObject *val, void*)
 {
   PyOFXParameter *pparam = (PyOFXParameter*) self;
   
@@ -2159,7 +2170,7 @@ int PyOFXParameter_SetEnable(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pparam->param->enable(val == Py_True);}, failed);
+  CATCH({pparam->param->enabled(val == Py_True);}, failed);
   
   if (failed)
   {
@@ -2181,7 +2192,7 @@ int PyOFXParameter_SetSecret(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pparam->param->setSecret(val == Py_True);}, failed);
+  CATCH({pparam->param->secret(val == Py_True);}, failed);
   
   if (failed)
   {
@@ -2203,7 +2214,7 @@ int PyOFXParameter_SetData(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({pparam->param->setData((void*)val);}, failed);
+  CATCH({pparam->param->data((void*)val);}, failed);
   
   if (failed)
   {
@@ -2226,11 +2237,11 @@ static PyGetSetDef PyOFXParameter_GetSeters[] =
   {(char*)"longLabel", PyOFXParameter_GetLongLabel, PyOFXParameter_SetLongLabel, NULL, NULL},
   {(char*)"hint", PyOFXParameter_GetHint, PyOFXParameter_SetHint, NULL, NULL},
   {(char*)"data", PyOFXParameter_GetData, PyOFXParameter_SetData, NULL, NULL},
-  {(char*)"enable", PyOFXParameter_GetEnable, PyOFXParameter_SetEnable, NULL, NULL},
+  {(char*)"enabled", PyOFXParameter_GetEnabled, PyOFXParameter_SetEnabled, NULL, NULL},
   {(char*)"secret", PyOFXParameter_GetSecret, PyOFXParameter_SetSecret, NULL, NULL},
 #ifdef OFX_API_1_2
-  {(char*)"pngIcon", PyOFXParameter_GetPNGIcon, NULL, NULL, NULL},
-  {(char*)"svgIcon", PyOFXParameter_GetSVGIcon, NULL, NULL, NULL},
+  {(char*)"PNGIcon", PyOFXParameter_GetPNGIcon, NULL, NULL, NULL},
+  {(char*)"SVGIcon", PyOFXParameter_GetSVGIcon, NULL, NULL, NULL},
 #endif
   {NULL, NULL, NULL, NULL, NULL}
 };
@@ -2274,7 +2285,7 @@ PyObject* PyOFXValueParameter_GetInteractSize(PyObject *self, void*)
   
   double w, h;
   
-  CATCH({param->getInteractSize(w, h);}, failed);
+  CATCH({param->interactSize(&w, &h);}, failed);
   
   if (failed)
   {
@@ -2303,7 +2314,7 @@ PyObject* PyOFXValueParameter_GetInteractSizeAspect(PyObject *self, void*)
   
   double rv;
   
-  CATCH({rv = param->getInteractSizeAspect();}, failed);
+  CATCH({rv = param->interactSizeAspect();}, failed);
   
   if (failed)
   {
@@ -2313,7 +2324,7 @@ PyObject* PyOFXValueParameter_GetInteractSizeAspect(PyObject *self, void*)
   return PyFloat_FromDouble(rv);
 }
 
-PyObject* PyOFXValueParameter_GetInteractMinSize(PyObject *self, void*)
+PyObject* PyOFXValueParameter_GetInteractMinimumSize(PyObject *self, void*)
 {
   PyOFXParameter *pparam = (PyOFXParameter*) self;
   
@@ -2329,7 +2340,7 @@ PyObject* PyOFXValueParameter_GetInteractMinSize(PyObject *self, void*)
   
   int w, h;
   
-  CATCH({param->getInteractMinSize(w, h);}, failed);
+  CATCH({param->interactMinimumSize(&w, &h);}, failed);
   
   if (failed)
   {
@@ -2358,7 +2369,7 @@ PyObject* PyOFXValueParameter_GetInteractPreferedSize(PyObject *self, void*)
   
   int w, h;
   
-  CATCH({param->getInteractPreferedSize(w, h);}, failed);
+  CATCH({param->interactPreferedSize(&w, &h);}, failed);
   
   if (failed)
   {
@@ -2371,7 +2382,7 @@ PyObject* PyOFXValueParameter_GetInteractPreferedSize(PyObject *self, void*)
   return rv;
 }
 
-PyObject* PyOFXValueParameter_GetAnimateable(PyObject *self, void*)
+PyObject* PyOFXValueParameter_GetAnimates(PyObject *self, void*)
 {
   PyOFXParameter *pparam = (PyOFXParameter*) self;
   
@@ -2387,7 +2398,7 @@ PyObject* PyOFXValueParameter_GetAnimateable(PyObject *self, void*)
   
   bool rv;
   
-  CATCH({rv = param->isAnimateable();}, failed);
+  CATCH({rv = param->animates();}, failed);
   
   if (failed)
   {
@@ -2422,7 +2433,7 @@ PyObject* PyOFXValueParameter_GetAnimating(PyObject *self, void*)
   
   bool rv;
   
-  CATCH({rv = param->isAnimating();}, failed);
+  CATCH({rv = param->animating();}, failed);
   
   if (failed)
   {
@@ -2457,7 +2468,7 @@ PyObject* PyOFXValueParameter_GetAutoKeying(PyObject *self, void*)
   
   bool rv;
   
-  CATCH({rv = param->isAutoKeying();}, failed);
+  CATCH({rv = param->autoKeying();}, failed);
   
   if (failed)
   {
@@ -2492,7 +2503,7 @@ PyObject* PyOFXValueParameter_GetPersistant(PyObject *self, void*)
   
   bool rv;
   
-  CATCH({rv = param->isPersistant();}, failed);
+  CATCH({rv = param->persistant();}, failed);
   
   if (failed)
   {
@@ -2562,7 +2573,7 @@ PyObject* PyOFXValueParameter_GetPluginMayWrite(PyObject *self, void*)
   
   bool rv;
   
-  CATCH({rv = param->mayPluginWrite();}, failed);
+  CATCH({rv = param->pluginMayWrite();}, failed);
   
   if (failed)
   {
@@ -2597,7 +2608,7 @@ PyObject* PyOFXValueParameter_GetCacheInvalidation(PyObject *self, void*)
   
   ofx::ParamInvalidate rv;
   
-  CATCH({rv = param->getCacheInvalidation();}, failed);
+  CATCH({rv = param->cacheInvalidation();}, failed);
   
   if (failed)
   {
@@ -2651,9 +2662,9 @@ static PyGetSetDef PyOFXValueParameter_GetSeters[] =
   {(char*)"interact", PyOFXValueParameter_GetInteract, NULL, NULL, NULL},
   {(char*)"interactSize", PyOFXValueParameter_GetInteractSize, NULL, NULL, NULL},
   {(char*)"interactSizeAspect", PyOFXValueParameter_GetInteractSizeAspect, NULL, NULL, NULL},
-  {(char*)"interactMinSize", PyOFXValueParameter_GetInteractMinSize, NULL, NULL, NULL},
+  {(char*)"interactMinimumSize", PyOFXValueParameter_GetInteractMinimumSize, NULL, NULL, NULL},
   {(char*)"interactPreferedSize", PyOFXValueParameter_GetInteractPreferedSize, NULL, NULL, NULL},
-  {(char*)"animateable", PyOFXValueParameter_GetAnimateable, NULL, NULL, NULL},
+  {(char*)"animates", PyOFXValueParameter_GetAnimates, NULL, NULL, NULL},
   {(char*)"animating", PyOFXValueParameter_GetAnimating, NULL, NULL, NULL},
   {(char*)"autoKeying", PyOFXValueParameter_GetAutoKeying, NULL, NULL, NULL},
   {(char*)"persistant", PyOFXValueParameter_GetPersistant, NULL, NULL, NULL},

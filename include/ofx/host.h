@@ -74,9 +74,9 @@ namespace ofx {
       
       inline MultiThreadSuite* multiThreadSuite() {return mMultiThread;}
       
-      OfxPropertySuiteV1 *propertySuite() {return mPropSuite;}
+      inline OfxPropertySuiteV1 *propertySuite() {return mPropSuite;}
       
-      OfxParameterSuiteV1 *parameterSuite() {return mParamSuite;}
+      inline OfxParameterSuiteV1 *parameterSuite() {return mParamSuite;}
       
       // host OpenFX version
       int APIVersion(int level=0);
@@ -102,6 +102,7 @@ namespace ofx {
       OfxParametricParameterSuiteV1 *parametricParameterSuite() {return mParametricParamSuite;}
       
 #endif
+      
     public:
       
       static Host* Get();

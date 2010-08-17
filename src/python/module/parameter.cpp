@@ -160,7 +160,7 @@ PyObject* PyOFXParameterDescriptor_GetType(PyObject *self, void*)
   
   bool failed = false;
   
-  ofx::ParamType rv;
+  ofx::ParamType rv = ofx::MaxParamType;
   
   CATCH({rv = pdesc->desc->type();}, failed);
   
@@ -184,7 +184,7 @@ PyObject* PyOFXParameterDescriptor_GetSecret(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = pdesc->desc->secret();}, failed);
   
@@ -217,7 +217,7 @@ PyObject* PyOFXParameterDescriptor_GetCanUndo(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = pdesc->desc->canUndo();}, failed);
   
@@ -322,7 +322,7 @@ PyObject* PyOFXParameterDescriptor_GetEnabled(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = pdesc->desc->enabled();}, failed);
   
@@ -869,7 +869,7 @@ PyObject* PyOFXValueParameterDescriptor_GetInteractSizeAspect(PyObject *self, vo
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = desc->interactSizeAspect();}, failed);
   
@@ -953,7 +953,7 @@ PyObject* PyOFXValueParameterDescriptor_GetAnimates(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = desc->animates();}, failed);
   
@@ -1060,7 +1060,7 @@ PyObject* PyOFXValueParameterDescriptor_GetPersistant(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = desc->persistant();}, failed);
   
@@ -1095,7 +1095,7 @@ PyObject* PyOFXValueParameterDescriptor_GetEvaluateOnChange(PyObject *self, void
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = desc->evaluateOnChange();}, failed);
   
@@ -1130,7 +1130,7 @@ PyObject* PyOFXValueParameterDescriptor_GetPluginMayWrite(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = desc->pluginMayWrite();}, failed);
   
@@ -1165,7 +1165,7 @@ PyObject* PyOFXValueParameterDescriptor_GetCacheInvalidation(PyObject *self, voi
   
   bool failed = false;
   
-  ofx::ParamInvalidate rv;
+  ofx::ParamInvalidate rv = ofx::MaxParamInvalidate;
   
   CATCH({rv = desc->cacheInvalidation();}, failed);
   
@@ -1193,7 +1193,7 @@ PyObject* PyOFXValueParameterDescriptor_GetHasHostOverlayHandle(PyObject *self, 
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = desc->hasHostOverlayHandle();}, failed);
   
@@ -1228,7 +1228,7 @@ PyObject* PyOFXValueParameterDescriptor_GetUseHostOverlayHandle(PyObject *self, 
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = desc->useHostOverlayHandle();}, failed);
   
@@ -1660,23 +1660,28 @@ PyObject* PyOFXParameter_GetHandle(PyObject *self, void*)
   if (!pparam->param)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
-    return 0;
+    return NULL;
   }
   
   bool failed = false;
   
-  OfxParamHandle handle;
-  
-  CATCH({handle = pparam->param->handle();}, failed);
+  OfxParamHandle hdl = pparam->param->handle();
   
   if (failed)
   {
     return NULL;
   }
   
-  PyObject *rv = PyObject_CallObject((PyObject*)&PyOFXHandleType, NULL);
-  ((PyOFXHandle*)rv)->handle = (void*) handle;
-  return rv;
+  if (!hdl)
+  {
+    Py_RETURN_NONE;
+  }
+  else
+  {
+    PyObject *rv = PyObject_CallObject((PyObject*)&PyOFXHandleType, NULL);
+    ((PyOFXHandle*)rv)->handle = (void*) hdl;
+    return rv;
+  }
 }
 
 PyObject* PyOFXParameter_GetName(PyObject *self, void*)
@@ -1911,7 +1916,7 @@ PyObject* PyOFXParameter_GetData(PyObject *self, void*)
   
   bool failed = false;
   
-  void *rv;
+  void *rv = 0;
   
   CATCH({rv = pparam->param->data();}, failed);
   
@@ -1920,7 +1925,14 @@ PyObject* PyOFXParameter_GetData(PyObject *self, void*)
     return 0;
   }
   
-  return (PyObject*)rv;
+  if (!rv)
+  {
+    Py_RETURN_NONE;
+  }
+  else
+  {
+    return (PyObject*)rv;
+  }
 }
 
 PyObject* PyOFXParameter_GetType(PyObject *self, void*)
@@ -1935,7 +1947,7 @@ PyObject* PyOFXParameter_GetType(PyObject *self, void*)
   
   bool failed = false;
   
-  ofx::ParamType rv;
+  ofx::ParamType rv = ofx::MaxParamType;
   
   CATCH({rv = pparam->param->type();}, failed);
   
@@ -1959,7 +1971,7 @@ PyObject* PyOFXParameter_GetSecret(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = pparam->param->secret();}, failed);
   
@@ -1992,7 +2004,7 @@ PyObject* PyOFXParameter_GetCanUndo(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = pparam->param->canUndo();}, failed);
   
@@ -2025,7 +2037,7 @@ PyObject* PyOFXParameter_GetEnabled(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = pparam->param->enabled();}, failed);
   
@@ -2312,7 +2324,7 @@ PyObject* PyOFXValueParameter_GetInteractSizeAspect(PyObject *self, void*)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = param->interactSizeAspect();}, failed);
   
@@ -2396,7 +2408,7 @@ PyObject* PyOFXValueParameter_GetAnimates(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = param->animates();}, failed);
   
@@ -2431,7 +2443,7 @@ PyObject* PyOFXValueParameter_GetAnimating(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = param->animating();}, failed);
   
@@ -2466,7 +2478,7 @@ PyObject* PyOFXValueParameter_GetAutoKeying(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = param->autoKeying();}, failed);
   
@@ -2501,7 +2513,7 @@ PyObject* PyOFXValueParameter_GetPersistant(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = param->persistant();}, failed);
   
@@ -2536,7 +2548,7 @@ PyObject* PyOFXValueParameter_GetEvaluateOnChange(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = param->evaluateOnChange();}, failed);
   
@@ -2571,7 +2583,7 @@ PyObject* PyOFXValueParameter_GetPluginMayWrite(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = param->pluginMayWrite();}, failed);
   
@@ -2606,7 +2618,7 @@ PyObject* PyOFXValueParameter_GetCacheInvalidation(PyObject *self, void*)
   
   bool failed = false;
   
-  ofx::ParamInvalidate rv;
+  ofx::ParamInvalidate rv = ofx::MaxParamInvalidate;
   
   CATCH({rv = param->cacheInvalidation();}, failed);
   
@@ -2634,7 +2646,7 @@ PyObject* PyOFXValueParameter_GetUseHostOverlayHandle(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = param->useHostOverlayHandle();}, failed);
   
@@ -2691,7 +2703,7 @@ PyObject* PyOFXValueParameter_GetNumKeys(PyObject *self, PyObject *)
   
   bool failed = false;
   
-  unsigned int rv;
+  unsigned int rv = 0;
   
   CATCH({rv = param->getNumKeys();}, failed);
   
@@ -2724,7 +2736,7 @@ PyObject* PyOFXValueParameter_GetKeyTime(PyObject *self, PyObject *args)
   
   bool failed = false;
   
-  ofx::Time rv;
+  ofx::Time rv = 0.0;
   
   CATCH({rv = param->getKeyTime(nth);}, failed);
   
@@ -2758,7 +2770,7 @@ PyObject* PyOFXValueParameter_GetKeyIndex(PyObject *self, PyObject *args)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = param->getKeyIndex(t, ofx::KeyDirection(d));}, failed);
   
@@ -2791,7 +2803,7 @@ PyObject* PyOFXValueParameter_DeleteKey(PyObject *self, PyObject *args)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = param->deleteKey(t);}, failed);
   
@@ -2920,6 +2932,16 @@ extern bool PyOFX_InitParameter_Custom(PyObject *mod);
 extern bool PyOFX_InitParameter_Double(PyObject *mod);
 extern bool PyOFX_InitParameter_Double2(PyObject *mod);
 extern bool PyOFX_InitParameter_Double3(PyObject *mod);
+extern bool PyOFX_InitParameter_Int(PyObject *mod);
+extern bool PyOFX_InitParameter_Int2(PyObject *mod);
+extern bool PyOFX_InitParameter_Int3(PyObject *mod);
+extern bool PyOFX_InitParameter_String(PyObject *mod);
+extern bool PyOFX_InitParameter_Page(PyObject *mod);
+extern bool PyOFX_InitParameter_RGB(PyObject *mod);
+extern bool PyOFX_InitParameter_RGBA(PyObject *mod);
+extern bool PyOFX_InitParameter_Group(PyObject *mod);
+extern bool PyOFX_InitParameter_PushButton(PyObject *mod);
+extern bool PyOFX_InitParameter_Parametric(PyObject *mod);
 
 bool PyOFX_InitParameter(PyObject *mod)
 {
@@ -2992,6 +3014,56 @@ bool PyOFX_InitParameter(PyObject *mod)
   }
   
   if (!PyOFX_InitParameter_Double3(mod))
+  {
+    return false;
+  }
+  
+  if (!PyOFX_InitParameter_Int(mod))
+  {
+    return false;
+  }
+  
+  if (!PyOFX_InitParameter_Int2(mod))
+  {
+    return false;
+  }
+  
+  if (!PyOFX_InitParameter_Int3(mod))
+  {
+    return false;
+  }
+  
+  if (!PyOFX_InitParameter_String(mod))
+  {
+    return false;
+  }
+  
+  if (!PyOFX_InitParameter_Page(mod))
+  {
+    return false;
+  }
+  
+  if (!PyOFX_InitParameter_RGB(mod))
+  {
+    return false;
+  }
+  
+  if (!PyOFX_InitParameter_RGBA(mod))
+  {
+    return false;
+  }
+  
+  if (!PyOFX_InitParameter_Group(mod))
+  {
+    return false;
+  }
+  
+  if (!PyOFX_InitParameter_PushButton(mod))
+  {
+    return false;
+  }
+  
+  if (!PyOFX_InitParameter_Parametric(mod))
   {
     return false;
   }

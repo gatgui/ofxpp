@@ -51,7 +51,11 @@ Image::Image(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception)
   mSuite = h->imageEffectSuite();
 
   static int byteSize[] = {0, 1, 2, 4};
-  static int compCount[] = {0, 4, 1};
+#ifdef OFX_API_1_2
+  static int compCount[] = {0, 3, 4, 1, 4};
+#else
+  static int compCount[] = {0, 4, 1, 4};
+#endif
 
   mBitDepth = StringToBitDepth(mProps.getString(kOfxImageEffectPropPixelDepth, 0));
   mComponents = StringToImageComponent(mProps.getString(kOfxImageEffectPropComponents, 0));

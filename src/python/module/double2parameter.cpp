@@ -374,7 +374,7 @@ PyObject* PyOFXDouble2ParameterDescriptor_GetIncrement(PyObject *self, void*)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = desc->increment();}, failed);
   
@@ -426,7 +426,7 @@ PyObject* PyOFXDouble2ParameterDescriptor_GetDigits(PyObject *self, void*)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = desc->digits();}, failed);
   
@@ -478,7 +478,7 @@ PyObject* PyOFXDouble2ParameterDescriptor_GetDoubleType(PyObject *self, void*)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = int(desc->doubleType());}, failed);
   
@@ -532,7 +532,7 @@ PyObject* PyOFXDouble2ParameterDescriptor_GetDefaultCoordinateSystem(PyObject *s
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = int(desc->defaultCoordinateSystem());}, failed);
   
@@ -960,7 +960,7 @@ PyObject* PyOFXDouble2Parameter_GetIncrement(PyObject *self, void*)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = param->increment();}, failed);
   
@@ -1012,7 +1012,7 @@ PyObject* PyOFXDouble2Parameter_GetDigits(PyObject *self, void*)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = param->digits();}, failed);
   
@@ -1064,7 +1064,7 @@ PyObject* PyOFXDouble2Parameter_GetDoubleType(PyObject *self, void*)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = int(param->doubleType());}, failed);
   
@@ -1092,7 +1092,7 @@ PyObject* PyOFXDouble2Parameter_GetDefaultCoordinateSystem(PyObject *self, void*
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = int(param->defaultCoordinateSystem());}, failed);
   

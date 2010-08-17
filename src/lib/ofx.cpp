@@ -59,8 +59,12 @@ END_ENUM_MAP(Type)
 
 BEGIN_ENUM_MAP(ImageComponent)
   ADD_ENUM_MAPPING(ImageComponent, None)
+#ifdef OFX_API_1_2
+  ADD_ENUM_MAPPING(ImageComponent, RGB)
+#endif
   ADD_ENUM_MAPPING(ImageComponent, RGBA)
   ADD_ENUM_MAPPING(ImageComponent, Alpha)
+  ADD_ENUM_MAPPING(ImageComponent, YUVA)
 END_ENUM_MAP(ImageComponent)
 
 BEGIN_ENUM_MAP(ImageField)

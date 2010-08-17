@@ -102,8 +102,12 @@ namespace ofx {
   
   enum ImageComponent {
     ImageComponentNone = 0,
+#ifdef OFX_API_1_2
+    ImageComponentRGB,
+#endif
     ImageComponentRGBA,
     ImageComponentAlpha,
+    ImageComponentYUVA,
     MaxImageComponent
   };
   
@@ -354,6 +358,18 @@ namespace ofx {
   typedef RGBAColour<unsigned short> RGBAColourS;
   typedef RGBAColour<float> RGBAColourF;
   typedef RGBAColour<double> RGBAColourD;
+  
+#ifdef OFX_API_1_2
+  template <typename T>
+  struct RGBColour {
+    T r, g, b;
+  };
+  
+  typedef RGBColour<unsigned char> RGBColourB;
+  typedef RGBColour<unsigned short> RGBColourS;
+  typedef RGBColour<float> RGBColourF;
+  typedef RGBColour<double> RGBColourD;
+#endif
   
   template <typename T>
   struct YUVAColour {

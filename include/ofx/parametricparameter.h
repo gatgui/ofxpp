@@ -108,7 +108,7 @@ namespace ofx {
       
       int getControlPointsCount(int curveIndex, Time t);
       
-      void getControlPoint(int curveIndex, Time t, int ctrlIdx, double &pos, double &val);
+      void getControlPoint(int curveIndex, Time t, int ctrlIdx, double *pos, double *val);
       
       void setControlPoint(int curveIndex, Time t, int ctrlIdx, double pos, double val, bool addKey);
       

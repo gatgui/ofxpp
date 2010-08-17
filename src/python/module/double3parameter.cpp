@@ -379,7 +379,7 @@ PyObject* PyOFXDouble3ParameterDescriptor_GetIncrement(PyObject *self, void*)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = desc->increment();}, failed);
   
@@ -431,7 +431,7 @@ PyObject* PyOFXDouble3ParameterDescriptor_GetDigits(PyObject *self, void*)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = desc->digits();}, failed);
   
@@ -483,7 +483,7 @@ PyObject* PyOFXDouble3ParameterDescriptor_GetDoubleType(PyObject *self, void*)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = int(desc->doubleType());}, failed);
   
@@ -629,7 +629,7 @@ PyObject* PyOFXDouble3Parameter_GetDefault(PyObject *self, void*)
     return NULL;
   }
   
-  return Py_BuildValue("dd", x, y, z);
+  return Py_BuildValue("ddd", x, y, z);
 }
 
 PyObject* PyOFXDouble3Parameter_GetMin(PyObject *self, void*)
@@ -910,7 +910,7 @@ PyObject* PyOFXDouble3Parameter_GetIncrement(PyObject *self, void*)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = param->increment();}, failed);
   
@@ -962,7 +962,7 @@ PyObject* PyOFXDouble3Parameter_GetDigits(PyObject *self, void*)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = param->digits();}, failed);
   
@@ -1014,7 +1014,7 @@ PyObject* PyOFXDouble3Parameter_GetDoubleType(PyObject *self, void*)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = int(param->doubleType());}, failed);
   
@@ -1095,7 +1095,7 @@ PyObject* PyOFXDouble3Parameter_GetValue(PyObject *self, PyObject *)
     return false;
   }
   
-  return Py_BuildValue("dd", x, y, z);
+  return Py_BuildValue("ddd", x, y, z);
 }
 
 PyObject* PyOFXDouble3Parameter_GetValueAtTime(PyObject *self, PyObject *args)
@@ -1128,7 +1128,7 @@ PyObject* PyOFXDouble3Parameter_GetValueAtTime(PyObject *self, PyObject *args)
     return false;
   }
   
-  return Py_BuildValue("dd", x, y, z);
+  return Py_BuildValue("ddd", x, y, z);
 }
 
 PyObject* PyOFXDouble3Parameter_GetDerivative(PyObject *self, PyObject *args)

@@ -49,7 +49,7 @@ PyObject* PyOFXBooleanParameterDescriptor_GetDefault(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = desc->defaultValue();}, failed);
   
@@ -121,7 +121,7 @@ PyObject* PyOFXBooleanParameter_GetDefault(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = param->defaultValue();}, failed);
   
@@ -160,7 +160,7 @@ PyObject* PyOFXBooleanParameter_GetValue(PyObject *self, PyObject *)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = param->getValue();}, failed);
   
@@ -200,7 +200,7 @@ PyObject* PyOFXBooleanParameter_GetValueAtTime(PyObject *self, PyObject *args)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = param->getValueAtTime(t);}, failed);
   

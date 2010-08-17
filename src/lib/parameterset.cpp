@@ -64,7 +64,7 @@ std::string ParameterSetDescriptor::pageOrder(int idx) {
   return mProps.getString(kOfxPluginPropParamPageOrder, idx);
 }
 
-void ParameterSetDescriptor::pargeOrder(int idx, const std::string &page) {
+void ParameterSetDescriptor::pageOrder(int idx, const std::string &page) {
   mProps.setString(kOfxPluginPropParamPageOrder, idx, page);
 }
 

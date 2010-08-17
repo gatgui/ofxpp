@@ -739,20 +739,18 @@ static PyObject* PyOFXPropertySet_GetHandle(PyObject *self, void*)
     return NULL;
   }
   
-  bool failed = false;
+  OfxPropertySetHandle handle = ppset->pset->handle();
   
-  OfxPropertySetHandle handle = 0;
-  
-  CATCH({handle = ppset->pset->handle();}, failed);
-  
-  if (failed)
+  if (handle != 0)
   {
-    return NULL;
+    PyObject *phdl = PyObject_CallObject((PyObject*)&PyOFXHandleType, NULL);
+    ((PyOFXHandle*)phdl)->handle = (void*) handle;
+    return phdl;
   }
-  
-  PyObject *phdl = PyObject_CallObject((PyObject*)&PyOFXHandleType, NULL);
-  ((PyOFXHandle*)phdl)->handle = (void*) handle;
-  return phdl;
+  else
+  {
+    Py_RETURN_NONE;
+  }
 }
 
 static PyGetSetDef PyOFXPropertySet_GetSeters[] =

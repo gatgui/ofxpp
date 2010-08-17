@@ -49,7 +49,7 @@ PyObject* PyOFXChoiceParameterDescriptor_GetDefault(PyObject *self, void*)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = desc->defaultValue();}, failed);
   
@@ -105,7 +105,7 @@ PyObject* PyOFXChoiceParameterDescriptor_ChoiceOptionCount(PyObject *self, PyObj
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = desc->choiceOptionCount();}, failed);
   
@@ -203,7 +203,7 @@ PyObject* PyOFXChoiceParameter_GetDefault(PyObject *self, void*)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = param->defaultValue();}, failed);
   
@@ -235,7 +235,7 @@ PyObject* PyOFXChoiceParameter_GetValue(PyObject *self, PyObject *)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = param->getValue();}, failed);
   
@@ -268,7 +268,7 @@ PyObject* PyOFXChoiceParameter_GetValueAtTime(PyObject *self, PyObject *args)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = param->getValueAtTime(t);}, failed);
   
@@ -357,7 +357,7 @@ PyObject* PyOFXChoiceParameter_ChoiceOptionCount(PyObject *self, PyObject *)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = param->choiceOptionCount();}, failed);
   

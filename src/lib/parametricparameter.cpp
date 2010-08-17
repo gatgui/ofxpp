@@ -162,8 +162,8 @@ int ParametricParameter::getControlPointsCount(int curveIndex, Time t) {
   return rv;
 }
 
-void ParametricParameter::getControlPoint(int curveIndex, Time t, int ctrlIdx, double &pos, double &val) {
-  OfxStatus stat = mParametricSuite->parametricParamGetNthControlPoint(mHandle, curveIndex, t, ctrlIdx, &pos, &val);
+void ParametricParameter::getControlPoint(int curveIndex, Time t, int ctrlIdx, double *pos, double *val) {
+  OfxStatus stat = mParametricSuite->parametricParamGetNthControlPoint(mHandle, curveIndex, t, ctrlIdx, pos, val);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParametricParameter::getControlPoint");
   }

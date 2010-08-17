@@ -79,7 +79,7 @@ namespace ofx {
       
       int pageOrderCount();
       std::string pageOrder(int idx);
-      void pargeOrder(int idx, const std::string &page);
+      void pageOrder(int idx, const std::string &page);
       
       // suite
       

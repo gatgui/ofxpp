@@ -49,7 +49,7 @@ PyObject* PyOFXDoubleParameterDescriptor_GetDefault(PyObject *self, void*)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = desc->defaultValue();}, failed);
   
@@ -101,7 +101,7 @@ PyObject* PyOFXDoubleParameterDescriptor_GetMin(PyObject *self, void*)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = desc->min();}, failed);
   
@@ -153,7 +153,7 @@ PyObject* PyOFXDoubleParameterDescriptor_GetMax(PyObject *self, void*)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = desc->max();}, failed);
   
@@ -205,7 +205,7 @@ PyObject* PyOFXDoubleParameterDescriptor_GetDisplayMin(PyObject *self, void*)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = desc->displayMin();}, failed);
   
@@ -257,7 +257,7 @@ PyObject* PyOFXDoubleParameterDescriptor_GetDisplayMax(PyObject *self, void*)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = desc->displayMax();}, failed);
   
@@ -309,7 +309,7 @@ PyObject* PyOFXDoubleParameterDescriptor_GetIncrement(PyObject *self, void*)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = desc->increment();}, failed);
   
@@ -361,7 +361,7 @@ PyObject* PyOFXDoubleParameterDescriptor_GetDigits(PyObject *self, void*)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = desc->digits();}, failed);
   
@@ -413,7 +413,7 @@ PyObject* PyOFXDoubleParameterDescriptor_GetDoubleType(PyObject *self, void*)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = int(desc->doubleType());}, failed);
   
@@ -465,7 +465,7 @@ PyObject* PyOFXDoubleParameterDescriptor_GetShowTimeMarker(PyObject *self, void*
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = desc->showTimeMarker();}, failed);
   
@@ -524,7 +524,7 @@ PyObject* PyOFXDoubleParameterDescriptor_GetDefaultCoordinateSystem(PyObject *se
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = int(desc->defaultCoordinateSystem());}, failed);
   
@@ -604,7 +604,7 @@ PyObject* PyOFXDoubleParameter_GetDefault(PyObject *self, void*)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = param->defaultValue();}, failed);
   
@@ -630,7 +630,7 @@ PyObject* PyOFXDoubleParameter_GetMin(PyObject *self, void*)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = param->min();}, failed);
   
@@ -682,7 +682,7 @@ PyObject* PyOFXDoubleParameter_GetMax(PyObject *self, void*)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = param->max();}, failed);
   
@@ -734,7 +734,7 @@ PyObject* PyOFXDoubleParameter_GetDisplayMin(PyObject *self, void*)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = param->displayMin();}, failed);
   
@@ -786,7 +786,7 @@ PyObject* PyOFXDoubleParameter_GetDisplayMax(PyObject *self, void*)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = param->displayMax();}, failed);
   
@@ -838,7 +838,7 @@ PyObject* PyOFXDoubleParameter_GetIncrement(PyObject *self, void*)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = param->increment();}, failed);
   
@@ -890,7 +890,7 @@ PyObject* PyOFXDoubleParameter_GetDigits(PyObject *self, void*)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = param->digits();}, failed);
   
@@ -942,7 +942,7 @@ PyObject* PyOFXDoubleParameter_GetDoubleType(PyObject *self, void*)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = int(param->doubleType());}, failed);
   
@@ -968,7 +968,7 @@ PyObject* PyOFXDoubleParameter_GetShowTimeMarker(PyObject *self, void*)
   
   bool failed = false;
   
-  bool rv;
+  bool rv = false;
   
   CATCH({rv = param->showTimeMarker();}, failed);
   
@@ -1027,7 +1027,7 @@ PyObject* PyOFXDoubleParameter_GetDefaultCoordinateSystem(PyObject *self, void*)
   
   bool failed = false;
   
-  int rv;
+  int rv = 0;
   
   CATCH({rv = int(param->defaultCoordinateSystem());}, failed);
   
@@ -1072,7 +1072,7 @@ PyObject* PyOFXDoubleParameter_GetValue(PyObject *self, PyObject *)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = param->getValue();}, failed);
   
@@ -1105,7 +1105,7 @@ PyObject* PyOFXDoubleParameter_GetValueAtTime(PyObject *self, PyObject *args)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = param->getValueAtTime(t);}, failed);
   
@@ -1138,7 +1138,7 @@ PyObject* PyOFXDoubleParameter_GetDerivative(PyObject *self, PyObject *args)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = param->getDerivative(t);}, failed);
   
@@ -1171,7 +1171,7 @@ PyObject* PyOFXDoubleParameter_GetIntegral(PyObject *self, PyObject *args)
   
   bool failed = false;
   
-  double rv;
+  double rv = 0.0;
   
   CATCH({rv = param->getIntegral(t0, t1);}, failed);
   

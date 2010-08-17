@@ -260,12 +260,27 @@ static PyObject* PyOFX_CanonicalToNormalisedCoords(PyObject *, PyObject *args)
   return rv;
 }
 
+PyObject* PyOFX_Log(PyObject *, PyObject *args)
+{
+  char *msg = 0;
+  
+  if (!PyArg_ParseTuple(args, "s", &msg))
+  {
+    return NULL;
+  }
+  
+  ofx::Log(msg);
+  
+  Py_RETURN_NONE;
+}
+
 static PyMethodDef PyOFX_Methods[] =
 {
   {"CanonicalToPixelCoords", PyOFX_CanonicalToPixelCoords, METH_VARARGS, 0},
   {"PixelToCanonicalCoords", PyOFX_PixelToCanonicalCoords, METH_VARARGS, 0},
   {"NormalisedToCanonicalCoords", PyOFX_NormalisedToCanonicalCoords, METH_VARARGS, 0},
   {"CanonicalToNormalisedCoords", PyOFX_CanonicalToNormalisedCoords, METH_VARARGS, 0},
+  {"Log", PyOFX_Log, METH_VARARGS, 0},
   {NULL, NULL, NULL, NULL}
 };
 
@@ -288,8 +303,12 @@ PyMODINIT_FUNC initofx(void)
   PyModule_AddIntConstant(mod, "BitDepthFloat", ofx::BitDepthFloat);
   
   PyModule_AddIntConstant(mod, "ImageComponentNone", ofx::ImageComponentNone);
+#ifdef OFX_API_1_2
+  PyModule_AddIntConstant(mod, "ImageComponentRGB", ofx::ImageComponentRGB);
+#endif
   PyModule_AddIntConstant(mod, "ImageComponentRGBA", ofx::ImageComponentRGBA);
   PyModule_AddIntConstant(mod, "ImageComponentAlpha", ofx::ImageComponentAlpha);
+  PyModule_AddIntConstant(mod, "ImageComponentYUVA", ofx::ImageComponentYUVA);
   
   PyModule_AddIntConstant(mod, "ImageFieldNone", ofx::ImageFieldNone);
   PyModule_AddIntConstant(mod, "ImageFieldBoth", ofx::ImageFieldBoth);
@@ -443,48 +462,83 @@ PyMODINIT_FUNC initofx(void)
   PyModule_AddIntConstant(mod, "StatReplyYes", kOfxStatReplyYes);
   PyModule_AddIntConstant(mod, "StatReplyNo", kOfxStatReplyNo);
   PyModule_AddIntConstant(mod, "StatReplyDefault", kOfxStatReplyDefault);
+  
+  PyModule_AddStringConstant(mod, "PageSkipRow", kOfxParamPageSkipRow);
+  PyModule_AddStringConstant(mod, "PageSkipColumn", kOfxParamPageSkipColumn);
 
   if (!PyOFX_InitException(mod))
   {
     Py_DECREF(mod);
     return;
   }
-  if (!PyOFX_InitTest(mod))
-  {
-    Py_DECREF(mod);
-    return;
-  }
+  
   if (!PyOFX_InitHandle(mod))
   {
     Py_DECREF(mod);
     return;
   }
+  
   if (!PyOFX_InitMessage(mod))
   {
     Py_DECREF(mod);
     return;
   }
+  
   if (!PyOFX_InitMemory(mod))
   {
     Py_DECREF(mod);
     return;
   }
+  
   if (!PyOFX_InitProgress(mod))
   {
     Py_DECREF(mod);
     return;
   }
+  
   if (!PyOFX_InitTimeLine(mod))
   {
     Py_DECREF(mod);
     return;
   }
+  
   if (!PyOFX_InitProperty(mod))
   {
     Py_DECREF(mod);
     return;
   }
+  
   if (!PyOFX_InitParameter(mod))
+  {
+    Py_DECREF(mod);
+    return;
+  }
+  
+  if (!PyOFX_InitParameterSet(mod))
+  {
+    Py_DECREF(mod);
+    return;
+  }
+  
+  if (!PyOFX_InitHost(mod))
+  {
+    Py_DECREF(mod);
+    return;
+  }
+  
+  if (!PyOFX_InitImage(mod))
+  {
+    Py_DECREF(mod);
+    return;
+  }
+  
+  if (!PyOFX_InitClip(mod))
+  {
+    Py_DECREF(mod);
+    return;
+  }
+  
+  if (!PyOFX_InitTest(mod))
   {
     Py_DECREF(mod);
     return;

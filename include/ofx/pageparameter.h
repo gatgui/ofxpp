@@ -28,7 +28,7 @@ USA.
 
 namespace ofx {
   
-  class PageParameterDescriptor : ParameterDescriptor {
+  class PageParameterDescriptor : public ParameterDescriptor {
     public:
       PageParameterDescriptor();
       PageParameterDescriptor(Host *h, OfxPropertySetHandle hdl);

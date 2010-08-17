@@ -35,6 +35,8 @@ USA.
 #include <ofx/property.h>
 #include <ofx/parameter.h>
 #include <ofx/parameterset.h>
+#include <ofx/image.h>
+#include <ofx/clip.h>
 #include <iostream>
 #include <map>
 
@@ -109,6 +111,46 @@ typedef struct {
 } PyOFXDouble3ParameterDescriptor;
 
 typedef struct {
+  PyOFXValueParameterDescriptor base;
+} PyOFXIntParameterDescriptor;
+
+typedef struct {
+  PyOFXValueParameterDescriptor base;
+} PyOFXInt2ParameterDescriptor;
+
+typedef struct {
+  PyOFXValueParameterDescriptor base;
+} PyOFXInt3ParameterDescriptor;
+
+typedef struct {
+  PyOFXValueParameterDescriptor base;
+} PyOFXStringParameterDescriptor;
+
+typedef struct {
+  PyOFXValueParameterDescriptor base;
+} PyOFXRGBParameterDescriptor;
+
+typedef struct {
+  PyOFXValueParameterDescriptor base;
+} PyOFXRGBAParameterDescriptor;
+
+typedef struct {
+  PyOFXValueParameterDescriptor base;
+} PyOFXParametricParameterDescriptor;
+
+typedef struct {
+  PyOFXParameterDescriptor base;
+} PyOFXPageParameterDescriptor;
+
+typedef struct {
+  PyOFXParameterDescriptor base;
+} PyOFXGroupParameterDescriptor;
+
+typedef struct {
+  PyOFXParameterDescriptor base;
+} PyOFXPushButtonParameterDescriptor;
+
+typedef struct {
   PyObject_HEAD
   ofx::Parameter *param;
 } PyOFXParameter;
@@ -142,8 +184,48 @@ typedef struct {
 } PyOFXDouble3Parameter;
 
 typedef struct {
+  PyOFXValueParameter base;
+} PyOFXIntParameter;
+
+typedef struct {
+  PyOFXValueParameter base;
+} PyOFXInt2Parameter;
+
+typedef struct {
+  PyOFXValueParameter base;
+} PyOFXInt3Parameter;
+
+typedef struct {
+  PyOFXValueParameter base;
+} PyOFXStringParameter;
+
+typedef struct {
+  PyOFXValueParameter base;
+} PyOFXRGBParameter;
+
+typedef struct {
+  PyOFXValueParameter base;
+} PyOFXRGBAParameter;
+
+typedef struct {
+  PyOFXValueParameter base;
+} PyOFXParametricParameter;
+
+typedef struct {
+  PyOFXParameter base;
+} PyOFXPageParameter;
+
+typedef struct {
+  PyOFXParameter base;
+} PyOFXGroupParameter;
+
+typedef struct {
+  PyOFXParameter base;
+} PyOFXPushButtonParameter;
+
+typedef struct {
   PyObject_HEAD
-  ofx::ParameterSetDescriptor *psetdesc;
+  ofx::ParameterSetDescriptor *desc;
 } PyOFXParameterSetDescriptor;
 
 typedef struct {
@@ -160,6 +242,26 @@ typedef struct {
   PyOFXHost host;
 } PyOFXImageEffectHost;
 
+typedef struct {
+  PyObject_HEAD
+  ofx::Image *img;
+} PyOFXImage;
+
+typedef struct {
+  PyObject_HEAD
+  void *ptr;
+  ofx::Image *img;
+} PyOFXPixelAddress;
+
+typedef struct {
+  PyObject_HEAD
+  ofx::ClipDescriptor *desc;
+} PyOFXClipDescriptor;
+
+typedef struct {
+  PyObject_HEAD
+  ofx::Clip *clip;
+} PyOFXClip;
 
 extern PyTypeObject PyOFXExceptionType;
 extern PyTypeObject PyOFXFailedErrorType;
@@ -189,6 +291,16 @@ extern PyTypeObject PyOFXCustomParameterDescriptorType;
 extern PyTypeObject PyOFXDoubleParameterDescriptorType;
 extern PyTypeObject PyOFXDouble2ParameterDescriptorType;
 extern PyTypeObject PyOFXDouble3ParameterDescriptorType;
+extern PyTypeObject PyOFXIntParameterDescriptorType;
+extern PyTypeObject PyOFXInt2ParameterDescriptorType;
+extern PyTypeObject PyOFXInt3ParameterDescriptorType;
+extern PyTypeObject PyOFXStringParameterDescriptorType;
+extern PyTypeObject PyOFXRGBParameterDescriptorType;
+extern PyTypeObject PyOFXRGBAParameterDescriptorType;
+extern PyTypeObject PyOFXParametricParameterDescriptorType;
+extern PyTypeObject PyOFXPageParameterDescriptorType;
+extern PyTypeObject PyOFXGroupParameterDescriptorType;
+extern PyTypeObject PyOFXPushButtonParameterDescriptorType;
 extern PyTypeObject PyOFXParameterType;
 extern PyTypeObject PyOFXValueParameterType;
 extern PyTypeObject PyOFXBooleanParameterType;
@@ -197,8 +309,22 @@ extern PyTypeObject PyOFXCustomParameterType;
 extern PyTypeObject PyOFXDoubleParameterType;
 extern PyTypeObject PyOFXDouble2ParameterType;
 extern PyTypeObject PyOFXDouble3ParameterType;
+extern PyTypeObject PyOFXIntParameterType;
+extern PyTypeObject PyOFXInt2ParameterType;
+extern PyTypeObject PyOFXInt3ParameterType;
+extern PyTypeObject PyOFXStringParameterType;
+extern PyTypeObject PyOFXRGBParameterType;
+extern PyTypeObject PyOFXRGBAParameterType;
+extern PyTypeObject PyOFXParametricParameterType;
+extern PyTypeObject PyOFXPageParameterType;
+extern PyTypeObject PyOFXGroupParameterType;
+extern PyTypeObject PyOFXPushButtonParameterType;
 extern PyTypeObject PyOFXParameterSetType;
 extern PyTypeObject PyOFXParameterSetDescriptorType;
+extern PyTypeObject PyOFXImageType;
+extern PyTypeObject PyOFXPixelAddressType;
+extern PyTypeObject PyOFXClipDescriptorType;
+extern PyTypeObject PyOFXClipType;
 
 
 class Receiver
@@ -335,6 +461,11 @@ extern bool PyOFX_InitTimeLine(PyObject *mod);
 extern bool PyOFX_InitHandle(PyObject *mod);
 extern bool PyOFX_InitProperty(PyObject *mod);
 extern bool PyOFX_InitParameter(PyObject *mod);
+extern bool PyOFX_InitParameterSet(PyObject *mod);
+extern bool PyOFX_InitImage(PyObject *mod);
+extern bool PyOFX_InitClip(PyObject *mod);
+//Interact
+//ImageEffect
 
 /*
 class PyCustomParameter : public ofx::CustomParameter

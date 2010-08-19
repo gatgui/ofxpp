@@ -33,6 +33,9 @@ defines = []
 if int(ARGUMENTS.get("forceOverlayRedraw", "1")) == 1:
   defines.append("FORCE_OVERLAY_REDRAW")
 
+ARGUMENTS["static"] = "1"
+SConscript("gcore/SConstruct")
+
 # Add openfx version define
 
 prjs = [
@@ -52,6 +55,15 @@ prjs = [
     "custom" : [python.Require],
     "prefix" : python.ModulePrefix(),
     "ext"    : python.ModuleExtension()
+  },
+  { "name"    : "pyOFX",
+    "type"    : "dynamicmodule",
+    "ext"     : ".ofx",
+    "defs"    : defines,
+    "srcs"    : glob.glob("src/python/plugin/*.cpp"),
+    "libs"    : ["ofxpp", "gcore"],
+    "custom"  : [python.Require],
+    "post"    : openfx.MakeBundle
   },
   { "name"    : "ellipseFade",
     "type"    : "dynamicmodule",

@@ -263,6 +263,11 @@ typedef struct {
   ofx::Clip *clip;
 } PyOFXClip;
 
+typedef struct {
+  PyObject_HEAD
+  class PyImageEffectDescriptor *desc;
+} PyOFXImageEffectDescriptor;
+
 extern PyTypeObject PyOFXExceptionType;
 extern PyTypeObject PyOFXFailedErrorType;
 extern PyTypeObject PyOFXFatalErrorType;
@@ -325,6 +330,7 @@ extern PyTypeObject PyOFXImageType;
 extern PyTypeObject PyOFXPixelAddressType;
 extern PyTypeObject PyOFXClipDescriptorType;
 extern PyTypeObject PyOFXClipType;
+extern PyTypeObject PyOFXImageEffectDescriptorType;
 
 
 class Receiver
@@ -369,6 +375,42 @@ class Receiver
   protected:
     
     PyObject *mRcv;
+};
+
+class PyImageEffectDescriptor : public ofx::ImageEffectDescriptor
+{
+  public:
+    
+    PyImageEffectDescriptor(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception);
+    PyImageEffectDescriptor(const PyImageEffectDescriptor &rhs);
+    virtual ~PyImageEffectDescriptor();
+    
+    PyImageEffectDescriptor& operator=(const PyImageEffectDescriptor &rhs);
+    
+    virtual OfxStatus describe();
+    virtual OfxStatus describeInContext(ofx::ImageEffectContext ctx);
+    
+    inline void self(PyObject *self)
+    {
+      if (mSelf)
+      {
+        Py_DECREF(mSelf);
+      }
+      mSelf = self;
+      if (mSelf)
+      {
+        Py_INCREF(mSelf);
+      }
+    }
+    
+    inline PyObject* self()
+    {
+      return mSelf;
+    }
+    
+  protected:
+    
+    PyObject *mSelf;
 };
 
 /*
@@ -464,6 +506,7 @@ extern bool PyOFX_InitParameter(PyObject *mod);
 extern bool PyOFX_InitParameterSet(PyObject *mod);
 extern bool PyOFX_InitImage(PyObject *mod);
 extern bool PyOFX_InitClip(PyObject *mod);
+extern bool PyOFX_InitImageEffect(PyObject *mod);
 //Interact
 //ImageEffect
 

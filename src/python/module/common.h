@@ -37,6 +37,7 @@ USA.
 #include <ofx/parameterset.h>
 #include <ofx/image.h>
 #include <ofx/clip.h>
+#include <ofx/imageeffect.h>
 #include <iostream>
 #include <map>
 

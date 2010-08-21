@@ -73,7 +73,8 @@ std::string PyInterpolator(ofx::ParameterSet &params,
 PyObject* PyOFXParameterSetDescriptor_New(PyTypeObject *t, PyObject *, PyObject *)
 {
   PyObject *self = t->tp_alloc(t, 0);
-  ((PyOFXParameterSetDescriptor*)self)->desc = new ofx::ParameterSetDescriptor();
+  //((PyOFXParameterSetDescriptor*)self)->desc = new ofx::ParameterSetDescriptor();
+  ((PyOFXParameterSetDescriptor*)self)->desc = 0;
   return self;
 }
 
@@ -84,11 +85,11 @@ int PyOFXParameterSetDescriptor_Init(PyObject *, PyObject *, PyObject *)
 
 void PyOFXParameterSetDescriptor_Delete(PyObject *self)
 {
-  PyOFXParameterSetDescriptor *pdesc = (PyOFXParameterSetDescriptor*) self;
-  if (pdesc->desc)
-  {
-    delete pdesc->desc;
-  }
+  //PyOFXParameterSetDescriptor *pdesc = (PyOFXParameterSetDescriptor*) self;
+  //if (pdesc->desc)
+  //{
+  //  delete pdesc->desc;
+  //}
   self->ob_type->tp_free(self);
 }
 
@@ -891,7 +892,8 @@ static PyMethodDef PyOFXParameterSetDescriptor_Methods[] =
 PyObject* PyOFXParameterSet_New(PyTypeObject *t, PyObject *, PyObject *)
 {
   PyObject *self = t->tp_alloc(t, 0);
-  ((PyOFXParameterSet*)self)->pset = new ofx::ParameterSet();
+  //((PyOFXParameterSet*)self)->pset = new ofx::ParameterSet();
+  ((PyOFXParameterSet*)self)->pset = 0;
   return self;
 }
 
@@ -902,11 +904,11 @@ int PyOFXParameterSet_Init(PyObject *, PyObject *, PyObject *)
 
 void PyOFXParameterSet_Delete(PyObject *self)
 {
-  PyOFXParameterSet *ppset = (PyOFXParameterSet*) self;
-  if (ppset->pset)
-  {
-    delete ppset->pset;
-  }
+  //PyOFXParameterSet *ppset = (PyOFXParameterSet*) self;
+  //if (ppset->pset)
+  //{
+  //  delete ppset->pset;
+  //}
   self->ob_type->tp_free(self);
 }
 

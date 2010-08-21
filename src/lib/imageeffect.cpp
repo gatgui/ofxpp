@@ -582,6 +582,30 @@ OfxImageMemoryHandle ImageEffect::alloc(size_t nBytes) throw(Exception) {
   return hdl;
 }
 
+OfxImageMemoryHandle ImageEffect::alloc(int w, int h, ImageComponent comps, BitDepth depth) throw(Exception)
+{
+  if (depth <= BitDepthNone || depth >= MaxBitDepth)
+  {
+    throw FailedError("ofx::ImageEffect::alloc: Invalid depth");
+  }
+  
+  if (comps <= ImageComponentNone || comps >= MaxImageComponent)
+  {
+    throw FailedError("ofx::ImageEffect::alloc: Invalid components");
+  }
+  
+  static size_t cs[] = {1, 2, 4};
+#ifdef OFX_API_1_2
+  static size_t cc[] = {3, 4, 1, 4};
+#else
+  static size_t cc[] = {4, 1, 4};
+#endif
+  
+  size_t sz = w * h * cc[comps] * cs[depth];
+  
+  return alloc(sz);
+}
+
 void* ImageEffect::lock(OfxImageMemoryHandle hdl) throw(Exception) {
   void *ptr = 0;
   OfxStatus stat = mHost->imageEffectSuite()->imageMemoryLock(hdl, &ptr);
@@ -665,7 +689,7 @@ OfxStatus ImageEffect::getClipPreferences(ImageEffect::GetClipPrefArgs &) {
   return kOfxStatReplyDefault;
 }
 
-OfxStatus ImageEffect::getTimeDomain(double &, double &) {
+OfxStatus ImageEffect::getTimeDomain(double *, double *) {
   return kOfxStatReplyDefault;
 }
 

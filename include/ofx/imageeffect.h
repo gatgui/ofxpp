@@ -305,6 +305,7 @@ namespace ofx {
       bool abort() throw(Exception);
       
       OfxImageMemoryHandle alloc(size_t nBytes) throw(Exception);
+      OfxImageMemoryHandle alloc(int w, int h, ImageComponent comps, BitDepth depth) throw(Exception);
       void* lock(OfxImageMemoryHandle hdl) throw(Exception);
       void unlock(OfxImageMemoryHandle hdl) throw(Exception);
       void free(OfxImageMemoryHandle hdl) throw(Exception);
@@ -359,7 +360,7 @@ namespace ofx {
       virtual OfxStatus beginSequenceRender(BeginSequenceArgs &args);
       virtual OfxStatus endSequenceRender(EndSequenceArgs &args);
       virtual OfxStatus getClipPreferences(GetClipPrefArgs &args);
-      virtual OfxStatus getTimeDomain(double &first, double &last);
+      virtual OfxStatus getTimeDomain(double *first, double *last);
     
     protected:
       

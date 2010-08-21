@@ -266,8 +266,13 @@ typedef struct {
 
 typedef struct {
   PyObject_HEAD
-  class PyImageEffectDescriptor *desc;
+  ofx::ImageEffectDescriptor *desc;
 } PyOFXImageEffectDescriptor;
+
+typedef struct {
+  PyObject_HEAD
+  ofx::ImageEffect *effect;
+} PyOFXImageEffect;
 
 extern PyTypeObject PyOFXExceptionType;
 extern PyTypeObject PyOFXFailedErrorType;
@@ -332,6 +337,7 @@ extern PyTypeObject PyOFXPixelAddressType;
 extern PyTypeObject PyOFXClipDescriptorType;
 extern PyTypeObject PyOFXClipType;
 extern PyTypeObject PyOFXImageEffectDescriptorType;
+extern PyTypeObject PyOFXImageEffectType;
 
 
 class Receiver
@@ -390,6 +396,53 @@ class PyImageEffectDescriptor : public ofx::ImageEffectDescriptor
     
     virtual OfxStatus describe();
     virtual OfxStatus describeInContext(ofx::ImageEffectContext ctx);
+    
+    inline void self(PyObject *self)
+    {
+      if (mSelf)
+      {
+        Py_DECREF(mSelf);
+      }
+      mSelf = self;
+      if (mSelf)
+      {
+        Py_INCREF(mSelf);
+      }
+    }
+    
+    inline PyObject* self()
+    {
+      return mSelf;
+    }
+    
+  protected:
+    
+    PyObject *mSelf;
+};
+
+class PyImageEffect : public ofx::ImageEffect
+{
+  public:
+    
+    PyImageEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl);
+    virtual ~PyImageEffect();
+    
+    virtual OfxStatus beginInstanceChanged(ofx::ChangeReason reason);
+    virtual OfxStatus endInstanceChanged(ofx::ChangeReason reason);
+    virtual OfxStatus instanceChanged(ofx::ImageEffect::InstanceChangedArgs &args);
+    virtual OfxStatus purgeCaches();
+    virtual OfxStatus syncPrivateData();
+    virtual OfxStatus beginInstanceEdit();
+    virtual OfxStatus endInstanceEdit();
+    virtual OfxStatus getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args);
+    virtual OfxStatus getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args);
+    virtual OfxStatus getFramesNeeded(ofx::ImageEffect::GetFramesNeededArgs &args);
+    virtual OfxStatus isIdentity(ofx::ImageEffect::IsIdentityArgs &args);
+    virtual OfxStatus render(ofx::ImageEffect::RenderArgs &args);
+    virtual OfxStatus beginSequenceRender(ofx::ImageEffect::BeginSequenceArgs &args);
+    virtual OfxStatus endSequenceRender(ofx::ImageEffect::EndSequenceArgs &args);
+    virtual OfxStatus getClipPreferences(ofx::ImageEffect::GetClipPrefArgs &args);
+    virtual OfxStatus getTimeDomain(double *first, double *last);
     
     inline void self(PyObject *self)
     {
@@ -509,7 +562,6 @@ extern bool PyOFX_InitImage(PyObject *mod);
 extern bool PyOFX_InitClip(PyObject *mod);
 extern bool PyOFX_InitImageEffect(PyObject *mod);
 //Interact
-//ImageEffect
 
 /*
 class PyCustomParameter : public ofx::CustomParameter

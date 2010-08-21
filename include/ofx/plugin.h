@@ -318,7 +318,7 @@ namespace ofx {
               return kOfxStatErrUnknown;
             }
             double first, last;
-            OfxStatus stat = effect->getTimeDomain(first, last);
+            OfxStatus stat = effect->getTimeDomain(&first, &last);
             if (stat == kOfxStatOK) {
               outArgs.setDouble(kOfxImageEffectPropFrameRange, 0, first);
               outArgs.setDouble(kOfxImageEffectPropFrameRange, 1, last);

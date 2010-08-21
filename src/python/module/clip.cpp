@@ -31,7 +31,7 @@ PyTypeObject PyOFXClipType;
 PyObject* PyOFXClipDescriptor_New(PyTypeObject *t, PyObject *, PyObject *)
 {
   PyObject *self = t->tp_alloc(t, 0);
-  ((PyOFXClipDescriptor*)self)->desc = 0;
+  ((PyOFXClipDescriptor*)self)->desc = new ofx::ClipDescriptor();
   return self;
 }
 
@@ -42,6 +42,11 @@ int PyOFXClipDescriptor_Init(PyObject *, PyObject *, PyObject *)
 
 void PyOFXClipDescriptor_Delete(PyObject *self)
 {
+  PyOFXClipDescriptor *pdesc = (PyOFXClipDescriptor*) self;
+  if (pdesc->desc)
+  {
+    delete pdesc->desc;
+  }
   self->ob_type->tp_free(self);
 }
 

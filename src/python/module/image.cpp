@@ -31,8 +31,15 @@ PyTypeObject PyOFXPixelAddressType;
 PyObject* PyOFXPixelAddress_New(PyTypeObject *t, PyObject *, PyObject *)
 {
   PyObject *self = t->tp_alloc(t, 0);
-  ((PyOFXPixelAddress*)self)->img = 0;
-  ((PyOFXPixelAddress*)self)->ptr = 0;
+  
+  PyOFXPixelAddress *padd = (PyOFXPixelAddress*)self;
+  padd->base = 0;
+  padd->ptr = 0;
+  padd->pixelBytes = 0;
+  padd->rowBytes = 0;
+  padd->components = ofx::ImageComponentNone;
+  padd->pixelDepth = ofx::BitDepthNone;
+  
   return self;
 }
 
@@ -46,21 +53,55 @@ void PyOFXPixelAddress_Delete(PyObject *self)
   self->ob_type->tp_free(self);
 }
 
-PyObject* PyOFXPixelAddress_GetR(PyObject *self, void*)
+PyObject* PyOFXPixelAddress_Goto(PyObject *self, PyObject *args)
 {
   PyOFXPixelAddress *paddr = (PyOFXPixelAddress*) self;
   
-  if (!paddr->ptr || !paddr->img)
+  if (!paddr->base)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  switch (paddr->img->components())
+  int x, y;
+  
+  if (!PyArg_ParseTuple(args, "ii", &x, &y))
+  {
+    return NULL;
+  }
+  
+  if (x <  paddr->bounds.x1 ||
+      x >= paddr->bounds.x2 ||
+      y <  paddr->bounds.y1 ||
+      y >= paddr->bounds.y2)
+  {
+    Py_RETURN_FALSE;
+  }
+  
+  char *bytesPtr = (char*) paddr->base;
+  bytesPtr += (y - paddr->bounds.y1) * paddr->rowBytes;
+  bytesPtr += (x - paddr->bounds.x1) * paddr->pixelBytes;
+  
+  paddr->ptr = (void*) bytesPtr;
+  
+  Py_RETURN_TRUE;
+}
+
+PyObject* PyOFXPixelAddress_GetR(PyObject *self, void*)
+{
+  PyOFXPixelAddress *paddr = (PyOFXPixelAddress*) self;
+  
+  if (!paddr->ptr)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  switch (paddr->components)
   {
 #ifdef OFX_API_1_2
   case ofx::ImageComponentRGB:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       return PyInt_FromLong(((ofx::RGBColour<unsigned char>*) paddr->ptr)->r);
@@ -73,7 +114,7 @@ PyObject* PyOFXPixelAddress_GetR(PyObject *self, void*)
     }
 #endif
   case ofx::ImageComponentRGBA:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       return PyInt_FromLong(((ofx::RGBAColour<unsigned char>*) paddr->ptr)->r);
@@ -93,17 +134,17 @@ PyObject* PyOFXPixelAddress_GetG(PyObject *self, void*)
 {
   PyOFXPixelAddress *paddr = (PyOFXPixelAddress*) self;
   
-  if (!paddr->ptr || !paddr->img)
+  if (!paddr->ptr)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  switch (paddr->img->components())
+  switch (paddr->components)
   {
 #ifdef OFX_API_1_2
   case ofx::ImageComponentRGB:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       return PyInt_FromLong(((ofx::RGBColour<unsigned char>*) paddr->ptr)->g);
@@ -116,7 +157,7 @@ PyObject* PyOFXPixelAddress_GetG(PyObject *self, void*)
     }
 #endif
   case ofx::ImageComponentRGBA:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       return PyInt_FromLong(((ofx::RGBAColour<unsigned char>*) paddr->ptr)->g);
@@ -136,17 +177,17 @@ PyObject* PyOFXPixelAddress_GetB(PyObject *self, void*)
 {
   PyOFXPixelAddress *paddr = (PyOFXPixelAddress*) self;
   
-  if (!paddr->ptr || !paddr->img)
+  if (!paddr->ptr)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  switch (paddr->img->components())
+  switch (paddr->components)
   {
 #ifdef OFX_API_1_2
   case ofx::ImageComponentRGB:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       return PyInt_FromLong(((ofx::RGBColour<unsigned char>*) paddr->ptr)->b);
@@ -159,7 +200,7 @@ PyObject* PyOFXPixelAddress_GetB(PyObject *self, void*)
     }
 #endif
   case ofx::ImageComponentRGBA:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       return PyInt_FromLong(((ofx::RGBAColour<unsigned char>*) paddr->ptr)->b);
@@ -179,16 +220,16 @@ PyObject* PyOFXPixelAddress_GetA(PyObject *self, void*)
 {
   PyOFXPixelAddress *paddr = (PyOFXPixelAddress*) self;
   
-  if (!paddr->ptr || !paddr->img)
+  if (!paddr->ptr)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  switch (paddr->img->components())
+  switch (paddr->components)
   {
   case ofx::ImageComponentAlpha:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       return PyInt_FromLong(*((unsigned char*) paddr->ptr));
@@ -200,7 +241,7 @@ PyObject* PyOFXPixelAddress_GetA(PyObject *self, void*)
       Py_RETURN_NONE;
     }
   case ofx::ImageComponentRGBA:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       return PyInt_FromLong(((ofx::RGBAColour<unsigned char>*) paddr->ptr)->a);
@@ -212,7 +253,7 @@ PyObject* PyOFXPixelAddress_GetA(PyObject *self, void*)
       Py_RETURN_NONE;
     }
   case ofx::ImageComponentYUVA:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       return PyInt_FromLong(((ofx::YUVAColour<unsigned char>*) paddr->ptr)->a);
@@ -232,19 +273,19 @@ PyObject* PyOFXPixelAddress_GetY(PyObject *self, void*)
 {
   PyOFXPixelAddress *paddr = (PyOFXPixelAddress*) self;
   
-  if (!paddr->ptr || !paddr->img)
+  if (!paddr->ptr)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  if (paddr->img->components() != ofx::ImageComponentYUVA)
+  if (paddr->components != ofx::ImageComponentYUVA)
   {
     Py_RETURN_NONE;
   }
   else
   {
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       return PyInt_FromLong(((ofx::YUVAColour<unsigned char>*) paddr->ptr)->y);
@@ -262,19 +303,19 @@ PyObject* PyOFXPixelAddress_GetU(PyObject *self, void*)
 {
   PyOFXPixelAddress *paddr = (PyOFXPixelAddress*) self;
   
-  if (!paddr->ptr || !paddr->img)
+  if (!paddr->ptr)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  if (paddr->img->components() != ofx::ImageComponentYUVA)
+  if (paddr->components != ofx::ImageComponentYUVA)
   {
     Py_RETURN_NONE;
   }
   else
   {
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       return PyInt_FromLong(((ofx::YUVAColour<unsigned char>*) paddr->ptr)->u);
@@ -292,19 +333,19 @@ PyObject* PyOFXPixelAddress_GetV(PyObject *self, void*)
 {
   PyOFXPixelAddress *paddr = (PyOFXPixelAddress*) self;
   
-  if (!paddr->ptr || !paddr->img)
+  if (!paddr->ptr)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
   }
   
-  if (paddr->img->components() != ofx::ImageComponentYUVA)
+  if (paddr->components != ofx::ImageComponentYUVA)
   {
     Py_RETURN_NONE;
   }
   else
   {
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       return PyInt_FromLong(((ofx::YUVAColour<unsigned char>*) paddr->ptr)->v);
@@ -322,17 +363,17 @@ int PyOFXPixelAddress_SetR(PyObject *self, PyObject *val, void*)
 {
   PyOFXPixelAddress *paddr = (PyOFXPixelAddress*) self;
   
-  if (!paddr->ptr || !paddr->img)
+  if (!paddr->ptr)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  switch (paddr->img->components())
+  switch (paddr->components)
   {
 #ifdef OFX_API_1_2
   case ofx::ImageComponentRGB:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       ((ofx::RGBColour<unsigned char>*) paddr->ptr)->r = (unsigned char) PyInt_AsLong(val);
@@ -349,7 +390,7 @@ int PyOFXPixelAddress_SetR(PyObject *self, PyObject *val, void*)
     break;
 #endif
   case ofx::ImageComponentRGBA:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       ((ofx::RGBAColour<unsigned char>*) paddr->ptr)->r = (unsigned char) PyInt_AsLong(val);
@@ -375,17 +416,17 @@ int PyOFXPixelAddress_SetG(PyObject *self, PyObject *val, void*)
 {
   PyOFXPixelAddress *paddr = (PyOFXPixelAddress*) self;
   
-  if (!paddr->ptr || !paddr->img)
+  if (!paddr->ptr)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  switch (paddr->img->components())
+  switch (paddr->components)
   {
 #ifdef OFX_API_1_2
   case ofx::ImageComponentRGB:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       ((ofx::RGBColour<unsigned char>*) paddr->ptr)->g = (unsigned char) PyInt_AsLong(val);
@@ -402,7 +443,7 @@ int PyOFXPixelAddress_SetG(PyObject *self, PyObject *val, void*)
     break;
 #endif
   case ofx::ImageComponentRGBA:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       ((ofx::RGBAColour<unsigned char>*) paddr->ptr)->g = (unsigned char) PyInt_AsLong(val);
@@ -428,17 +469,17 @@ int PyOFXPixelAddress_SetB(PyObject *self, PyObject *val, void*)
 {
   PyOFXPixelAddress *paddr = (PyOFXPixelAddress*) self;
   
-  if (!paddr->ptr || !paddr->img)
+  if (!paddr->ptr)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  switch (paddr->img->components())
+  switch (paddr->components)
   {
 #ifdef OFX_API_1_2
   case ofx::ImageComponentRGB:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       ((ofx::RGBColour<unsigned char>*) paddr->ptr)->b = (unsigned char) PyInt_AsLong(val);
@@ -455,7 +496,7 @@ int PyOFXPixelAddress_SetB(PyObject *self, PyObject *val, void*)
     break;
 #endif
   case ofx::ImageComponentRGBA:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       ((ofx::RGBAColour<unsigned char>*) paddr->ptr)->b = (unsigned char) PyInt_AsLong(val);
@@ -481,16 +522,16 @@ int PyOFXPixelAddress_SetA(PyObject *self, PyObject *val, void*)
 {
   PyOFXPixelAddress *paddr = (PyOFXPixelAddress*) self;
   
-  if (!paddr->ptr || !paddr->img)
+  if (!paddr->ptr)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  switch (paddr->img->components())
+  switch (paddr->components)
   {
   case ofx::ImageComponentAlpha:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       *((unsigned char*) paddr->ptr) = (unsigned char) PyInt_AsLong(val);
@@ -506,7 +547,7 @@ int PyOFXPixelAddress_SetA(PyObject *self, PyObject *val, void*)
     }
     break;
   case ofx::ImageComponentRGBA:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       ((ofx::RGBAColour<unsigned char>*) paddr->ptr)->a = (unsigned char) PyInt_AsLong(val);
@@ -522,7 +563,7 @@ int PyOFXPixelAddress_SetA(PyObject *self, PyObject *val, void*)
     }
     break;
   case ofx::ImageComponentYUVA:
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       ((ofx::YUVAColour<unsigned char>*) paddr->ptr)->a = (unsigned char) PyInt_AsLong(val);
@@ -548,15 +589,15 @@ int PyOFXPixelAddress_SetY(PyObject *self, PyObject *val, void*)
 {
   PyOFXPixelAddress *paddr = (PyOFXPixelAddress*) self;
   
-  if (!paddr->ptr || !paddr->img)
+  if (!paddr->ptr)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  if (paddr->img->components() == ofx::ImageComponentYUVA)
+  if (paddr->components == ofx::ImageComponentYUVA)
   {
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       ((ofx::YUVAColour<unsigned char>*) paddr->ptr)->y = (unsigned char) PyInt_AsLong(val);
@@ -579,15 +620,15 @@ int PyOFXPixelAddress_SetU(PyObject *self, PyObject *val, void*)
 {
   PyOFXPixelAddress *paddr = (PyOFXPixelAddress*) self;
   
-  if (!paddr->ptr || !paddr->img)
+  if (!paddr->ptr)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  if (paddr->img->components() == ofx::ImageComponentYUVA)
+  if (paddr->components == ofx::ImageComponentYUVA)
   {
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       ((ofx::YUVAColour<unsigned char>*) paddr->ptr)->u = (unsigned char) PyInt_AsLong(val);
@@ -610,15 +651,15 @@ int PyOFXPixelAddress_SetV(PyObject *self, PyObject *val, void*)
 {
   PyOFXPixelAddress *paddr = (PyOFXPixelAddress*) self;
   
-  if (!paddr->ptr || !paddr->img)
+  if (!paddr->ptr)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return -1;
   }
   
-  if (paddr->img->components() == ofx::ImageComponentYUVA)
+  if (paddr->components == ofx::ImageComponentYUVA)
   {
-    switch (paddr->img->pixelDepth())
+    switch (paddr->pixelDepth)
     {
     case ofx::BitDepthByte:
       ((ofx::YUVAColour<unsigned char>*) paddr->ptr)->v = (unsigned char) PyInt_AsLong(val);
@@ -653,7 +694,7 @@ PyObject* PyOFXPixelAddress_Next(PyObject *self, PyObject *)
 {
   PyOFXPixelAddress *paddr = (PyOFXPixelAddress*) self;
   
-  if (!paddr->ptr || !paddr->img)
+  if (!paddr->ptr)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
@@ -663,7 +704,7 @@ PyObject* PyOFXPixelAddress_Next(PyObject *self, PyObject *)
   
   // check boundaries?
   
-  bytePtr += paddr->img->pixelBytes();
+  bytePtr += paddr->pixelBytes;
   
   paddr->ptr = (void*) bytePtr;
   
@@ -674,7 +715,7 @@ PyObject* PyOFXPixelAddress_Prev(PyObject *self, PyObject *)
 {
   PyOFXPixelAddress *paddr = (PyOFXPixelAddress*) self;
   
-  if (!paddr->ptr || !paddr->img)
+  if (!paddr->ptr)
   {
     PyErr_SetString(PyExc_RuntimeError, "Unbound object");
     return NULL;
@@ -684,7 +725,7 @@ PyObject* PyOFXPixelAddress_Prev(PyObject *self, PyObject *)
   
   // check boundaries?
   
-  bytePtr -= paddr->img->pixelBytes();
+  bytePtr -= paddr->pixelBytes;
   
   paddr->ptr = (void*) bytePtr;
   
@@ -695,6 +736,7 @@ static PyMethodDef PyOFXPixelAddress_Methods[] =
 {
   {"next", PyOFXPixelAddress_Next, METH_VARARGS, NULL},
   {"prev", PyOFXPixelAddress_Prev, METH_VARARGS, NULL},
+  {"goto", PyOFXPixelAddress_Goto, METH_VARARGS, NULL},
   {NULL, NULL, NULL, NULL}
 };
 
@@ -1014,10 +1056,18 @@ PyObject* PyOFXImage_PixelAddress(PyObject *self, PyObject *args)
   }
   else
   {
-    PyObject *pptr = PyObject_CallObject((PyObject*)&PyOFXPixelAddressType, NULL);
-    ((PyOFXPixelAddress*)pptr)->ptr = ptr;
-    ((PyOFXPixelAddress*)pptr)->img = pimg->img;
-    return pptr;
+    PyObject *rv = PyObject_CallObject((PyObject*)&PyOFXPixelAddressType, NULL);
+    
+    PyOFXPixelAddress *padd = (PyOFXPixelAddress*)rv;
+    padd->ptr = ptr;
+    padd->base = pimg->img->data();
+    padd->bounds = pimg->img->bounds();
+    padd->pixelBytes = pimg->img->pixelBytes();
+    padd->rowBytes = pimg->img->rowBytes();
+    padd->components = pimg->img->components();
+    padd->pixelDepth = pimg->img->pixelDepth();
+    
+    return rv;
   }
 }
 

@@ -2159,9 +2159,9 @@ PyObject* PyOFXImageEffect_Alloc(PyObject *self, PyObject *args)
     return NULL;
   }
   
-  int sz = 0;
+  int w, h, comps, depth;
   
-  if (!PyArg_ParseTuple(args, "i", &sz))
+  if (!PyArg_ParseTuple(args, "iiii", &w, &h, &comps, &depth))
   {
     return NULL;
   }
@@ -2170,7 +2170,7 @@ PyObject* PyOFXImageEffect_Alloc(PyObject *self, PyObject *args)
   
   OfxImageMemoryHandle hdl = 0;
   
-  CATCH({hdl = peffect->effect->alloc(sz);}, failed);
+  CATCH({hdl = peffect->effect->alloc(w, h, ofx::ImageComponent(comps), ofx::BitDepth(depth));}, failed);
   
   if (failed)
   {
@@ -2183,10 +2183,14 @@ PyObject* PyOFXImageEffect_Alloc(PyObject *self, PyObject *args)
   }
   else
   {
-    PyObject *rv = PyObject_CallObject((PyObject*)&PyOFXHandleType, NULL);
+    PyObject *rv = PyObject_CallObject((PyObject*)&PyOFXImageMemoryHandleType, NULL);
     
-    PyOFXHandle *phdl = (PyOFXHandle*)rv;
-    phdl->handle = hdl;
+    PyOFXImageMemoryHandle *phdl = (PyOFXImageMemoryHandle*)rv;
+    phdl->base.handle = hdl;
+    phdl->w = w;
+    phdl->h = h;
+    phdl->components = (ofx::ImageComponent) comps;
+    phdl->pixelDepth = (ofx::BitDepth) depth;
     
     return rv;
   }

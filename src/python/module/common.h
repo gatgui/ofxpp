@@ -52,6 +52,14 @@ typedef struct {
 } PyOFXHandle;
 
 typedef struct {
+  PyOFXHandle base;
+  int w;
+  int h;
+  ofx::ImageComponent components;
+  ofx::BitDepth pixelDepth;
+} PyOFXImageMemoryHandle;
+
+typedef struct {
   PyObject_HEAD
   ofx::MessageSuite *suite;
 } PyOFXMessageSuite;
@@ -251,7 +259,12 @@ typedef struct {
 typedef struct {
   PyObject_HEAD
   void *ptr;
-  ofx::Image *img;
+  void *base;
+  ofx::Rect<int> bounds;
+  int pixelBytes;
+  int rowBytes;
+  ofx::ImageComponent components;
+  ofx::BitDepth pixelDepth;
 } PyOFXPixelAddress;
 
 typedef struct {
@@ -294,6 +307,7 @@ extern PyTypeObject PyOFXProgressSuiteType;
 extern PyTypeObject PyOFXTimeLineSuiteType;
 extern PyTypeObject PyOFXPropertySetType;
 extern PyTypeObject PyOFXHandleType;
+extern PyTypeObject PyOFXImageMemoryHandleType;
 extern PyTypeObject PyOFXParameterDescriptorType;
 extern PyTypeObject PyOFXValueParameterDescriptorType;
 extern PyTypeObject PyOFXBooleanParameterDescriptorType;

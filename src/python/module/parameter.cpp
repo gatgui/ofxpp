@@ -2896,8 +2896,8 @@ PyObject* PyOFXValueParameter_Copy(PyObject *self, PyObject *args)
       return NULL;
     }
     range = &_range;
-    range->first = PyFloat_AsDouble(PyTuple_GetItem(prange, 0));
-    range->second = PyFloat_AsDouble(PyTuple_GetItem(prange, 1));
+    range->min = PyFloat_AsDouble(PyTuple_GetItem(prange, 0));
+    range->max = PyFloat_AsDouble(PyTuple_GetItem(prange, 1));
   }
   
   bool failed = false;

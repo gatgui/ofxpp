@@ -527,7 +527,7 @@ OfxStatus PyImageEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &arg
           {
             PyObject *rod = PyObject_GetAttrString(oargs, "RoD");
             
-            if (!rod || !PyTuple_Check(rod) || PyTuple_Size(rod) != 4)
+            if (rod && PyTuple_Check(rod) && PyTuple_Size(rod) == 4)
             {
               args.RoD.x1 = PyFloat_AsDouble(PyTuple_GetItem(rod, 0));
               args.RoD.y1 = PyFloat_AsDouble(PyTuple_GetItem(rod, 1));
@@ -564,11 +564,212 @@ OfxStatus PyImageEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &arg
 
 OfxStatus PyImageEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args)
 {
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "getRegionsOfInterest");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      
+      PyObject_SetAttrString(oargs, "renderScaleX", PyFloat_FromDouble(args.renderScaleX));
+      PyObject_SetAttrString(oargs, "renderScaleY", PyFloat_FromDouble(args.renderScaleY));
+      PyObject_SetAttrString(oargs, "time", PyFloat_FromDouble(args.time));
+      Py_INCREF(Py_None);
+      PyObject_SetAttrString(oargs, "outRoI", Py_None);
+      PyObject *inRoIs = PyDict_New();
+      PyObject_SetAttrString(oargs, "inRoIs", inRoIs);
+      Py_DECREF(inRoIs);
+      
+      PyObject *pyargs = Py_BuildValue("O", oargs);
+      
+      PyObject *rv = PyObject_Call(meth, pyargs, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+          
+          if (stat == kOfxStatOK)
+          {
+            PyObject *outRoI = PyObject_GetAttrString(oargs, "outRoI");
+            inRoIs = PyObject_GetAttrString(oargs, "inRoIs");
+            
+            if (outRoI && PyTuple_Check(outRoI) && PyTuple_Size(outRoI) == 4)
+            {
+              args.outRoI.x1 = PyFloat_AsDouble(PyTuple_GetItem(outRoI, 0));
+              args.outRoI.y1 = PyFloat_AsDouble(PyTuple_GetItem(outRoI, 1));
+              args.outRoI.x2 = PyFloat_AsDouble(PyTuple_GetItem(outRoI, 2));
+              args.outRoI.y2 = PyFloat_AsDouble(PyTuple_GetItem(outRoI, 3));
+            }
+            else
+            {
+              stat = kOfxStatFailed;
+            }
+            
+            if (stat == kOfxStatOK && inRoIs && PyDict_Check(inRoIs))
+            {
+              Py_ssize_t idx = 0;
+              PyObject *key = 0, *val = 0;
+              ofx::Rect<double> RoI;
+              char *name = 0;
+              
+              while (PyDict_Next(inRoIs, &idx, &key, &val))
+              {
+                if (!PyString_Check(key) || !PyTuple_Check(val) || PyTuple_Size(val) != 4)
+                {
+                  continue;
+                }
+                
+                name = PyString_AsString(key);
+                
+                RoI.x1 = PyFloat_AsDouble(PyTuple_GetItem(val, 0));
+                RoI.y1 = PyFloat_AsDouble(PyTuple_GetItem(val, 1));
+                RoI.x2 = PyFloat_AsDouble(PyTuple_GetItem(val, 2));
+                RoI.y2 = PyFloat_AsDouble(PyTuple_GetItem(val, 3));
+                
+                args.inRoIs[name] = RoI;
+              }
+            }
+            else
+            {
+              stat = kOfxStatFailed;
+            }
+            
+            Py_XDECREF(outRoI);
+            Py_XDECREF(inRoIs);
+          }
+        }
+      }
+      
+      Py_DECREF(rv);
+      Py_DECREF(oargs);
+      Py_DECREF(pyargs);
+      Py_DECREF(meth);
+      
+      PyErr_Clear();
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
   return ofx::ImageEffect::getRegionsOfInterest(args);
 }
 
 OfxStatus PyImageEffect::getFramesNeeded(ofx::ImageEffect::GetFramesNeededArgs &args)
 {
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "getFramesNeeded");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      
+      //std::map<std::string, FrameRangeList> inRanges;
+      PyObject_SetAttrString(oargs, "time", PyFloat_FromDouble(args.time));
+      PyObject *inRanges = PyDict_New();
+      PyObject_SetAttrString(oargs, "inRanges", inRanges);
+      Py_DECREF(inRanges);
+      
+      PyObject *pyargs = Py_BuildValue("O", oargs);
+      
+      PyObject *rv = PyObject_Call(meth, pyargs, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+          
+          if (stat == kOfxStatOK)
+          {
+            inRanges = PyObject_GetAttrString(oargs, "inRanges");
+            
+            if (inRanges && PyDict_Check(inRanges))
+            {
+              Py_ssize_t idx = 0;
+              PyObject *key = 0, *val = 0, *range = 0;
+              char *name = 0;
+              ofx::FrameRange frange;
+              
+              while (PyDict_Next(inRanges, &idx, &key, &val))
+              {
+                if (!PyString_Check(key) || !PyList_Check(val))
+                {
+                  continue;
+                }
+                
+                name = PyString_AsString(key);
+                
+                Py_ssize_t n = PyList_Size(val);
+                for (Py_ssize_t i=0; i<n; ++i)
+                {
+                  range = PyList_GetItem(val, i);
+                  if (!PyTuple_Check(range) || PyTuple_Size(range) != 2)
+                  {
+                    continue;
+                  }
+                  frange.min = PyFloat_AsDouble(PyTuple_GetItem(range, 0));
+                  frange.max = PyFloat_AsDouble(PyTuple_GetItem(range, 1));
+                  args.inRanges[name].push_back(frange);
+                }
+              }
+            }
+            else
+            {
+              stat = kOfxStatFailed;
+            }
+            
+            Py_XDECREF(inRanges);
+          }
+        }
+      }
+      
+      Py_DECREF(rv);
+      Py_DECREF(oargs);
+      Py_DECREF(pyargs);
+      Py_DECREF(meth);
+      
+      PyErr_Clear();
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
   return ofx::ImageEffect::getFramesNeeded(args);
 }
 

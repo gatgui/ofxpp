@@ -373,8 +373,8 @@ void ImageEffect::GetFramesNeededArgs::setOutputs(PropertySet &outArgs) {
     FrameRangeList &frl = it->second;
     int i = 0;
     for (size_t j=0; j<frl.size(); ++j, i+=2) {
-      outArgs.setDouble(outName.c_str(), i, frl[j].first);
-      outArgs.setDouble(outName.c_str(), i+1, frl[j].second);
+      outArgs.setDouble(outName.c_str(), i, frl[j].min);
+      outArgs.setDouble(outName.c_str(), i+1, frl[j].max);
     }
     ++it;
   }
@@ -404,8 +404,8 @@ ImageEffect::SequenceArgs::SequenceArgs(ImageEffectHost *host, PropertySet &inAr
 
 ImageEffect::BeginSequenceArgs::BeginSequenceArgs(ImageEffectHost *host, PropertySet &inArgs)
   : ImageEffect::SequenceArgs(host, inArgs) {
-  range.first = inArgs.getDouble(kOfxImageEffectPropFrameRange, 0);
-  range.second = inArgs.getDouble(kOfxImageEffectPropFrameRange, 1);
+  range.min = inArgs.getDouble(kOfxImageEffectPropFrameRange, 0);
+  range.max = inArgs.getDouble(kOfxImageEffectPropFrameRange, 1);
   step = inArgs.getDouble(kOfxImageEffectPropFrameStep, 0);
 }
 

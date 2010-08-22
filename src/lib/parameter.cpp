@@ -555,8 +555,8 @@ void ValueParameter::copy(ValueParameter &from, Time offset, FrameRange *range) 
   OfxStatus stat;
   if (range != 0) {
     OfxRangeD frameRange;
-    frameRange.min = range->first;
-    frameRange.max = range->second;
+    frameRange.min = range->min;
+    frameRange.max = range->max;
     stat = mSuite->paramCopy(handle(), from.handle(), offset, &frameRange);
   } else {
     stat = mSuite->paramCopy(handle(), from.handle(), offset, NULL);

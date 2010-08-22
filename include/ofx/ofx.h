@@ -381,7 +381,7 @@ namespace ofx {
   typedef YUVAColour<float> YUVAColourF;
   typedef YUVAColour<double> YUVAColourD;
   
-  typedef std::pair<double, double> FrameRange;
+  typedef RangeD FrameRange;
   typedef std::vector<FrameRange> FrameRangeList;
   
   //const int IntMax = kOfxFlagInfiniteMax;

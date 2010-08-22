@@ -456,7 +456,7 @@ class PyImageEffect : public ofx::ImageEffect
     virtual OfxStatus beginSequenceRender(ofx::ImageEffect::BeginSequenceArgs &args);
     virtual OfxStatus endSequenceRender(ofx::ImageEffect::EndSequenceArgs &args);
     virtual OfxStatus getClipPreferences(ofx::ImageEffect::GetClipPrefArgs &args);
-    virtual OfxStatus getTimeDomain(double *first, double *last);
+    virtual OfxStatus getTimeDomain(ofx::ImageEffect::GetTimeDomainArgs &args);
     
     inline void self(PyObject *self)
     {

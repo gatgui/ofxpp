@@ -276,6 +276,14 @@ namespace ofx {
         void setInputPref(const std::string &name, const PixelPreferences &prefs);
       };
       
+      struct GetTimeDomainArgs {
+        double first;
+        double last;
+        
+        GetTimeDomainArgs(ImageEffectHost *host);
+        void setOutputs(PropertySet &out);
+      };
+      
     public:
       
       ImageEffect(ImageEffectHost *h, OfxImageEffectHandle hdl);
@@ -360,7 +368,8 @@ namespace ofx {
       virtual OfxStatus beginSequenceRender(BeginSequenceArgs &args);
       virtual OfxStatus endSequenceRender(EndSequenceArgs &args);
       virtual OfxStatus getClipPreferences(GetClipPrefArgs &args);
-      virtual OfxStatus getTimeDomain(double *first, double *last);
+      //virtual OfxStatus getTimeDomain(double *first, double *last);
+      virtual OfxStatus getTimeDomain(GetTimeDomainArgs &args);
     
     protected:
       

@@ -443,6 +443,16 @@ void ImageEffect::GetClipPrefArgs::setInputPref(const std::string &name, const P
 
 // ---
 
+ImageEffect::GetTimeDomainArgs::GetTimeDomainArgs(ImageEffectHost *) {
+}
+
+void ImageEffect::GetTimeDomainArgs::setOutputs(PropertySet &outArgs) {
+  outArgs.setDouble(kOfxImageEffectPropFrameRange, 0, first);
+  outArgs.setDouble(kOfxImageEffectPropFrameRange, 1, last);
+}
+
+// ---
+
 std::map<OfxImageEffectHandle, ImageEffect*> ImageEffect::msEffects;
 
 ImageEffect* ImageEffect::GetEffect(OfxImageEffectHandle handle) {
@@ -689,7 +699,7 @@ OfxStatus ImageEffect::getClipPreferences(ImageEffect::GetClipPrefArgs &) {
   return kOfxStatReplyDefault;
 }
 
-OfxStatus ImageEffect::getTimeDomain(double *, double *) {
+OfxStatus ImageEffect::getTimeDomain(ImageEffect::GetTimeDomainArgs &) {
   return kOfxStatReplyDefault;
 }
 

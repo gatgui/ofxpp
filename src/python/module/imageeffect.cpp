@@ -685,7 +685,6 @@ OfxStatus PyImageEffect::getFramesNeeded(ofx::ImageEffect::GetFramesNeededArgs &
       
       PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
       
-      //std::map<std::string, FrameRangeList> inRanges;
       PyObject_SetAttrString(oargs, "time", PyFloat_FromDouble(args.time));
       PyObject *inRanges = PyDict_New();
       PyObject_SetAttrString(oargs, "inRanges", inRanges);
@@ -775,32 +774,431 @@ OfxStatus PyImageEffect::getFramesNeeded(ofx::ImageEffect::GetFramesNeededArgs &
 
 OfxStatus PyImageEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args)
 {
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "isIdentity");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      
+      PyObject_SetAttrString(oargs, "renderScaleX", PyFloat_FromDouble(args.renderScaleX));
+      PyObject_SetAttrString(oargs, "renderScaleY", PyFloat_FromDouble(args.renderScaleY));
+      PyObject_SetAttrString(oargs, "time", PyFloat_FromDouble(args.time));
+      PyObject_SetAttrString(oargs, "field", PyInt_FromLong(args.field));
+      PyObject *rw = PyTuple_New(4);
+      PyTuple_SetItem(rw, 0, PyInt_FromLong(args.renderWindow.x1));
+      PyTuple_SetItem(rw, 1, PyInt_FromLong(args.renderWindow.y1));
+      PyTuple_SetItem(rw, 2, PyInt_FromLong(args.renderWindow.x2));
+      PyTuple_SetItem(rw, 3, PyInt_FromLong(args.renderWindow.y2));
+      PyObject_SetAttrString(oargs, "renderWindow", rw);
+      Py_DECREF(rw);
+#ifdef OFX_API_1_2
+      PyObject *b = (args.sequentialRender ? Py_True : Py_False);
+      Py_INCREF(b);
+      PyObject_SetAttrString(oargs, "sequentialRender", b);
+      b = (args.interactiveRender ? Py_True : Py_False);
+      Py_INCREF(b);
+      PyObject_SetAttrString(oargs, "interactiveRender", b);
+#endif
+      Py_INCREF(Py_None);
+      PyObject_SetAttrString(oargs, "idClip", Py_None);
+      Py_INCREF(Py_None);
+      PyObject_SetAttrString(oargs, "idTime", Py_None);
+      
+      PyObject *pyargs = Py_BuildValue("O", oargs);
+      
+      PyObject *rv = PyObject_Call(meth, pyargs, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        PyErr_Clear();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+          
+          if (stat == kOfxStatOK)
+          {
+            PyObject *ic = PyObject_GetAttrString(oargs, "idClip");
+            
+            if (ic && PyString_Check(ic))
+            {
+              args.idClip = PyString_AsString(ic);
+            }
+            else
+            {
+              stat = kOfxStatFailed;
+            }
+            
+            PyObject *it = PyObject_GetAttrString(oargs, "idTime");
+            
+            if (stat == kOfxStatOK && it && PyFloat_Check(it))
+            {
+              args.idTime = PyFloat_AsDouble(it);
+            }
+            else
+            {
+              stat = kOfxStatFailed;
+            }
+            
+            Py_XDECREF(ic);
+            Py_XDECREF(it);
+          }
+        }
+      }
+      
+      Py_DECREF(rv);
+      Py_DECREF(oargs);
+      Py_DECREF(pyargs);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
   return ofx::ImageEffect::isIdentity(args);
 }
 
 OfxStatus PyImageEffect::render(ofx::ImageEffect::RenderArgs &args)
 {
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "render");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      
+      PyObject_SetAttrString(oargs, "renderScaleX", PyFloat_FromDouble(args.renderScaleX));
+      PyObject_SetAttrString(oargs, "renderScaleY", PyFloat_FromDouble(args.renderScaleY));
+      PyObject_SetAttrString(oargs, "time", PyFloat_FromDouble(args.time));
+      PyObject_SetAttrString(oargs, "field", PyInt_FromLong(args.field));
+      PyObject *rw = PyTuple_New(4);
+      PyTuple_SetItem(rw, 0, PyInt_FromLong(args.renderWindow.x1));
+      PyTuple_SetItem(rw, 1, PyInt_FromLong(args.renderWindow.y1));
+      PyTuple_SetItem(rw, 2, PyInt_FromLong(args.renderWindow.x2));
+      PyTuple_SetItem(rw, 3, PyInt_FromLong(args.renderWindow.y2));
+      PyObject_SetAttrString(oargs, "renderWindow", rw);
+      Py_DECREF(rw);
+#ifdef OFX_API_1_2
+      PyObject *b = (args.sequentialRender ? Py_True : Py_False);
+      Py_INCREF(b);
+      PyObject_SetAttrString(oargs, "sequentialRender", b);
+      b = (args.interactiveRender ? Py_True : Py_False);
+      Py_INCREF(b);
+      PyObject_SetAttrString(oargs, "interactiveRender", b);
+#endif
+      
+      PyObject *pyargs = Py_BuildValue("O", oargs);
+      
+      PyObject *rv = PyObject_Call(meth, pyargs, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        PyErr_Clear();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+      }
+      
+      Py_DECREF(rv);
+      Py_DECREF(oargs);
+      Py_DECREF(pyargs);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
   return ofx::ImageEffect::render(args);
 }
 
 OfxStatus PyImageEffect::beginSequenceRender(ofx::ImageEffect::BeginSequenceArgs &args)
 {
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "beginSequenceRender");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      
+      PyObject_SetAttrString(oargs, "renderScaleX", PyFloat_FromDouble(args.renderScaleX));
+      PyObject_SetAttrString(oargs, "renderScaleY", PyFloat_FromDouble(args.renderScaleY));
+      PyObject *b = (args.interactive ? Py_True : Py_False);
+      Py_INCREF(b);
+      PyObject_SetAttrString(oargs, "interactive", b);
+#ifdef OFX_API_1_2
+      b = (args.sequentialRender ? Py_True : Py_False);
+      Py_INCREF(b);
+      PyObject_SetAttrString(oargs, "sequentialRender", b);
+      b = (args.interactiveRender ? Py_True : Py_False);
+      Py_INCREF(b);
+      PyObject_SetAttrString(oargs, "interactiveRender", b);
+#endif
+      PyObject *range = PyTuple_New(2);
+      PyTuple_SetItem(range, 0, PyFloat_FromDouble(args.range.min));
+      PyTuple_SetItem(range, 1, PyFloat_FromDouble(args.range.max));
+      PyObject_SetAttrString(oargs, "range", range);
+      Py_DECREF(range);
+      PyObject_SetAttrString(oargs, "step", PyFloat_FromDouble(args.step));
+      
+      PyObject *pyargs = Py_BuildValue("O", oargs);
+      
+      PyObject *rv = PyObject_Call(meth, pyargs, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        PyErr_Clear();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+      }
+      
+      Py_DECREF(rv);
+      Py_DECREF(oargs);
+      Py_DECREF(pyargs);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
   return ofx::ImageEffect::beginSequenceRender(args);
 }
 
 OfxStatus PyImageEffect::endSequenceRender(ofx::ImageEffect::EndSequenceArgs &args)
 {
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "endSequenceRender");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      
+      PyObject_SetAttrString(oargs, "renderScaleX", PyFloat_FromDouble(args.renderScaleX));
+      PyObject_SetAttrString(oargs, "renderScaleY", PyFloat_FromDouble(args.renderScaleY));
+      PyObject *b = (args.interactive ? Py_True : Py_False);
+      Py_INCREF(b);
+      PyObject_SetAttrString(oargs, "interactive", b);
+#ifdef OFX_API_1_2
+      b = (args.sequentialRender ? Py_True : Py_False);
+      Py_INCREF(b);
+      PyObject_SetAttrString(oargs, "sequentialRender", b);
+      b = (args.interactiveRender ? Py_True : Py_False);
+      Py_INCREF(b);
+      PyObject_SetAttrString(oargs, "interactiveRender", b);
+#endif
+      
+      PyObject *pyargs = Py_BuildValue("O", oargs);
+      
+      PyObject *rv = PyObject_Call(meth, pyargs, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        PyErr_Clear();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+      }
+      
+      Py_DECREF(rv);
+      Py_DECREF(oargs);
+      Py_DECREF(pyargs);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
   return ofx::ImageEffect::endSequenceRender(args);
 }
 
 OfxStatus PyImageEffect::getClipPreferences(ofx::ImageEffect::GetClipPrefArgs &args)
 {
+  /*
+  struct PixelPreferences {
+    ImageComponent components;
+    BitDepth bitDepth;
+    double pixelAspectRatio;
+  };
+  
+  struct ClipPreferences { // derive from PixelPreferences?
+    double frameRate;
+    ImageFieldOrder fieldOrder;
+    ImagePreMult preMult;
+    bool continuousSamples;
+    bool frameVarying;
+  };
+  
+  ClipPreferences outPref;
+  std::map<std::string, PixelPreferences> inPrefs;
+  
+  // all outputs [so getTimeDomain should be changed]
+  */
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "getClipPreferences");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      // TODO
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
   return ofx::ImageEffect::getClipPreferences(args);
 }
 
-OfxStatus PyImageEffect::getTimeDomain(double *first, double *last)
+OfxStatus PyImageEffect::getTimeDomain(ofx::ImageEffect::GetTimeDomainArgs &args)
 {
-  return ofx::ImageEffect::getTimeDomain(first, last);
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "getTimeDomain");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject_SetAttrString(oargs, "first", PyFloat_FromDouble(0.0));
+      PyObject_SetAttrString(oargs, "last", PyFloat_FromDouble(0.0));
+      
+      PyObject *pyargs = Py_BuildValue("O", oargs);
+      
+      PyObject *rv = PyObject_Call(meth, pyargs, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        PyErr_Clear();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+          
+          PyObject *of = PyObject_GetAttrString(oargs, "first");
+          
+          if (of && PyFloat_Check(of))
+          {
+            args.first = PyFloat_AsDouble(of);
+          }
+          else
+          {
+            stat = kOfxStatFailed;
+          }
+          
+          PyObject *ol = PyObject_GetAttrString(oargs, "last");
+          
+          if (stat == kOfxStatOK && ol && PyFloat_Check(ol))
+          {
+            args.last = PyFloat_AsDouble(ol);
+          }
+          else
+          {
+            stat = kOfxStatFailed;
+          }
+          
+          Py_XDECREF(of);
+          Py_XDECREF(ol);
+        }
+      }
+      
+      Py_DECREF(rv);
+      Py_DECREF(oargs);
+      Py_DECREF(pyargs);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
+  return ofx::ImageEffect::getTimeDomain(args);
 }
 
 // ---

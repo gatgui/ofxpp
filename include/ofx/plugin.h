@@ -317,11 +317,10 @@ namespace ofx {
               Log("*** Invalid effect");
               return kOfxStatErrUnknown;
             }
-            double first, last;
-            OfxStatus stat = effect->getTimeDomain(&first, &last);
+            ImageEffect::GetTimeDomainArgs args(host);
+            OfxStatus stat = effect->getTimeDomain(args);
             if (stat == kOfxStatOK) {
-              outArgs.setDouble(kOfxImageEffectPropFrameRange, 0, first);
-              outArgs.setDouble(kOfxImageEffectPropFrameRange, 1, last);
+              args.setOutputs(outArgs);
             }
             return stat;
           }

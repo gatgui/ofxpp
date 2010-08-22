@@ -284,6 +284,22 @@ typedef struct {
 
 typedef struct {
   PyObject_HEAD
+  PyObject *components;
+  PyObject *bitDepth;
+  PyObject *pixelAspectRatio;
+} PyOFXInputClipPreferences;
+
+typedef struct {
+  PyObject_HEAD
+  PyObject *frameRate;
+  PyObject *fieldOrder;
+  PyObject *preMult;
+  PyObject *continuousSamples;
+  PyObject *frameVarying;
+} PyOFXOutputClipPreferences;
+
+typedef struct {
+  PyObject_HEAD
   ofx::ImageEffect *effect;
 } PyOFXImageEffect;
 
@@ -352,6 +368,8 @@ extern PyTypeObject PyOFXClipDescriptorType;
 extern PyTypeObject PyOFXClipType;
 extern PyTypeObject PyOFXImageEffectDescriptorType;
 extern PyTypeObject PyOFXImageEffectType;
+extern PyTypeObject PyOFXInputClipPreferencesType;
+extern PyTypeObject PyOFXOutputClipPreferencesType;
 
 
 class Receiver

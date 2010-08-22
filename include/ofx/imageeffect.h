@@ -38,14 +38,14 @@ namespace ofx {
   class ImageEffectHost;
   
   
-  struct PixelPreferences {
+  struct InputClipPreferences {
     ImageComponent components;
     BitDepth bitDepth;
     double pixelAspectRatio;
   };
   
   
-  struct ClipPreferences { // derive from PixelPreferences?
+  struct OutputClipPreferences {
     double frameRate;
     ImageFieldOrder fieldOrder;
     ImagePreMult preMult;
@@ -268,12 +268,12 @@ namespace ofx {
       typedef SequenceArgs EndSequenceArgs;
       
       struct GetClipPrefArgs {
-        ClipPreferences outPref;
-        std::map<std::string, PixelPreferences> inPrefs;
+        OutputClipPreferences outPref;
+        std::map<std::string, InputClipPreferences> inPrefs;
         
         GetClipPrefArgs(ImageEffectHost *host);
         void setOutputs(PropertySet &out);
-        void setInputPref(const std::string &name, const PixelPreferences &prefs);
+        void setInputPref(const std::string &name, const InputClipPreferences &prefs);
       };
       
       struct GetTimeDomainArgs {

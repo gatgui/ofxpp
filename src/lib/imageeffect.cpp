@@ -419,7 +419,7 @@ void ImageEffect::GetClipPrefArgs::setOutputs(PropertySet &outArgs) {
   static std::string depthBase = "OfxImageClipPropDepth_";
   static std::string parBase = "OfxImageClipPropPAR_";
   
-  std::map<std::string, PixelPreferences>::iterator it = inPrefs.begin();
+  std::map<std::string, InputClipPreferences>::iterator it = inPrefs.begin();
   while (it != inPrefs.end()) {
     std::string name;
     name = compBase + it->first;
@@ -437,7 +437,7 @@ void ImageEffect::GetClipPrefArgs::setOutputs(PropertySet &outArgs) {
   outArgs.setInt(kOfxImageEffectFrameVarying, 0, (outPref.frameVarying ? 1 : 0));
 }
 
-void ImageEffect::GetClipPrefArgs::setInputPref(const std::string &name, const PixelPreferences &prefs) {
+void ImageEffect::GetClipPrefArgs::setInputPref(const std::string &name, const InputClipPreferences &prefs) {
   inPrefs[name] = prefs;
 }
 

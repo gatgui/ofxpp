@@ -2015,6 +2015,59 @@ int PyOFXImageEffect_SetSequentialRender(PyObject *self, PyObject *val, void*)
   return 0;
 }
 
+PyObject* PyOFXImageEffect_GetInstanceData(PyObject *self, void*)
+{
+  PyOFXImageEffect *peffect = (PyOFXImageEffect*)self;
+  
+  if (!peffect->effect)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  bool failed = false;
+  
+  void *data = 0;
+  
+  CATCH({data = peffect->effect->instanceData();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  if (!data)
+  {
+    Py_RETURN_NONE;
+  }
+  else
+  {
+    return (PyObject*)data;
+  }
+}
+
+int PyOFXImageEffect_SetInstanceData(PyObject *self, PyObject *val, void*)
+{
+  PyOFXImageEffect *peffect = (PyOFXImageEffect*)self;
+  
+  if (!peffect->effect)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return -1;
+  }
+  
+  bool failed = false;
+  
+  CATCH({peffect->effect->instanceData((void*)val);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
+  
+  return 0;
+}
+
 #ifdef OFX_API_1_2
 
 PyObject* PyOFXImageEffect_GetDescription(PyObject *self, void*)
@@ -2059,6 +2112,7 @@ static PyGetSetDef PyOFXImageEffect_GetSeters[] =
   {(char*)"isInteractive", PyOFXImageEffect_GetIsInteractive, NULL, NULL, NULL},
   {(char*)"inAnalysis", PyOFXImageEffect_GetInAnalysis, PyOFXImageEffect_SetInAnalysis, NULL, NULL},
   {(char*)"sequentialRender", PyOFXImageEffect_GetSequentialRender, PyOFXImageEffect_SetSequentialRender, NULL, NULL},
+  {(char*)"instanceData", PyOFXImageEffect_GetInstanceData, PyOFXImageEffect_SetInstanceData, NULL, NULL},
 #ifdef OFX_API_1_2
   {(char*)"description", PyOFXImageEffect_GetDescription, NULL, NULL, NULL},
 #endif
@@ -2067,19 +2121,9 @@ static PyGetSetDef PyOFXImageEffect_GetSeters[] =
 
 /*
 // properties
-void* instanceData();
-void instanceData(void *data);
 
 ImageEffectDescriptor descriptor();
 
-// suite
-Clip getClip(const std::string &name) throw(Exception);
-bool abort() throw(Exception);
-
-OfxImageMemoryHandle alloc(size_t nBytes) throw(Exception);
-void* lock(OfxImageMemoryHandle hdl) throw(Exception);
-void unlock(OfxImageMemoryHandle hdl) throw(Exception);
-void free(OfxImageMemoryHandle hdl) throw(Exception);
 */
 
 PyObject* PyOFXImageEffect_GetClip(PyObject *self, PyObject *args)
@@ -2198,21 +2242,125 @@ PyObject* PyOFXImageEffect_Alloc(PyObject *self, PyObject *args)
 
 PyObject* PyOFXImageEffect_Lock(PyObject *self, PyObject *args)
 {
-  // -> Components? BitDepth? Width? Height?
-  // -> use as arguments to alloc
-  // -> review this API in base library
-  // -> review the PixelIterator not to reference image directly
-  // we actually want a pixel iterator
-  Py_RETURN_NONE;
+  PyOFXImageEffect *peffect = (PyOFXImageEffect*)self;
+  
+  if (!peffect->effect)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  PyObject *phdl = 0;
+  
+  if (!PyArg_ParseTuple(args, "O", &phdl))
+  {
+    return NULL;
+  }
+  
+  if (PyObject_TypeCheck(phdl, &PyOFXImageMemoryHandleType))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a ofx.ImageMemoryHandle");
+    return NULL;
+  }
+  
+  PyOFXImageMemoryHandle *hdl = (PyOFXImageMemoryHandle*) phdl;
+  
+  bool failed = false;
+  
+  void *ptr = 0;
+  
+  CATCH({ptr = peffect->effect->lock((OfxImageMemoryHandle)hdl->base.handle);}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  PyObject *rv = PyObject_CallObject((PyObject*)&PyOFXPixelAddressType, NULL);
+  
+  static int compSize[] = {1, 2, 4};
+#ifdef OFX_API_1_2
+  static int compCount[] = {3, 4, 1, 4};
+#else
+  static int compCount[] = {4, 1, 4};
+#endif
+  
+  PyOFXPixelAddress *padd = (PyOFXPixelAddress*)rv;
+  padd->ptr = ptr;
+  padd->base = ptr;
+  padd->bounds.x1 = 0;
+  padd->bounds.y1 = 0;
+  padd->bounds.x2 = hdl->w;
+  padd->bounds.y2 = hdl->h;
+  padd->components = hdl->components;
+  padd->pixelDepth = hdl->pixelDepth;
+  padd->pixelBytes = compSize[padd->pixelDepth] * compCount[padd->components];
+  padd->rowBytes = hdl->w * padd->pixelBytes;
+  
+  return rv;
 }
 
 PyObject* PyOFXImageEffect_Unlock(PyObject *self, PyObject *args)
 {
+  PyOFXImageEffect *peffect = (PyOFXImageEffect*)self;
+
+  if (!peffect->effect)
+  {
+   PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+   return NULL;
+  }
+
+  PyObject *phdl = 0;
+
+  if (!PyArg_ParseTuple(args, "O", &phdl))
+  {
+   return NULL;
+  }
+
+  if (PyObject_TypeCheck(phdl, &PyOFXImageMemoryHandleType))
+  {
+   PyErr_SetString(PyExc_TypeError, "Expected a ofx.ImageMemoryHandle");
+   return NULL;
+  }
+
+  PyOFXHandle *hdl = (PyOFXHandle*) phdl;
+
+  bool failed = false;
+
+  CATCH({peffect->effect->unlock((OfxImageMemoryHandle)hdl->handle);}, failed);
+   
   Py_RETURN_NONE;
 }
 
 PyObject* PyOFXImageEffect_Free(PyObject *self, PyObject *args)
 {
+  PyOFXImageEffect *peffect = (PyOFXImageEffect*)self;
+
+  if (!peffect->effect)
+  {
+   PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+   return NULL;
+  }
+
+  PyObject *phdl = 0;
+
+  if (!PyArg_ParseTuple(args, "O", &phdl))
+  {
+   return NULL;
+  }
+
+  if (PyObject_TypeCheck(phdl, &PyOFXImageMemoryHandleType))
+  {
+   PyErr_SetString(PyExc_TypeError, "Expected a ofx.ImageMemoryHandle");
+   return NULL;
+  }
+
+  PyOFXHandle *hdl = (PyOFXHandle*) phdl;
+
+  bool failed = false;
+
+  CATCH({peffect->effect->free((OfxImageMemoryHandle)hdl->handle);}, failed);
+   
   Py_RETURN_NONE;
 }
 

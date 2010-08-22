@@ -51,13 +51,93 @@ PyImageEffectDescriptor& PyImageEffectDescriptor::operator=(const PyImageEffectD
 
 OfxStatus PyImageEffectDescriptor::describe()
 {
-  // Call python
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "describe");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *rv = PyObject_CallObject(meth, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        PyErr_Clear();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+      }
+      
+      Py_DECREF(rv);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
   return ofx::ImageEffectDescriptor::describe();
 }
 
 OfxStatus PyImageEffectDescriptor::describeInContext(ofx::ImageEffectContext ctx)
 {
-  // Call python
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "describeInContext");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *args = Py_BuildValue("i", int(ctx));
+      PyObject *rv = PyObject_Call(meth, args, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        PyErr_Clear();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+      }
+      
+      Py_DECREF(rv);
+      Py_DECREF(args);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
   return ofx::ImageEffectDescriptor::describeInContext(ctx);
 }
 
@@ -75,41 +155,410 @@ PyImageEffect::~PyImageEffect()
 
 OfxStatus PyImageEffect::beginInstanceChanged(ofx::ChangeReason reason)
 {
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "beginInstanceChanged");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *args = Py_BuildValue("i", int(reason));
+      PyObject *rv = PyObject_Call(meth, args, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        PyErr_Clear();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+      }
+      
+      Py_DECREF(rv);
+      Py_DECREF(args);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
   return ofx::ImageEffect::beginInstanceChanged(reason);
 }
 
 OfxStatus PyImageEffect::endInstanceChanged(ofx::ChangeReason reason)
 {
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "endInstanceChanged");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *args = Py_BuildValue("i", int(reason));
+      PyObject *rv = PyObject_Call(meth, args, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        PyErr_Clear();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+      }
+      
+      Py_DECREF(rv);
+      Py_DECREF(args);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
   return ofx::ImageEffect::endInstanceChanged(reason);
 }
 
 OfxStatus PyImageEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &args)
 {
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "instanceChanged");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      
+      PyObject_SetAttrString(oargs, "renderScaleX", PyFloat_FromDouble(args.renderScaleX));
+      PyObject_SetAttrString(oargs, "renderScaleY", PyFloat_FromDouble(args.renderScaleY));
+      PyObject_SetAttrString(oargs, "time", PyFloat_FromDouble(args.time));
+      PyObject_SetAttrString(oargs, "type", PyInt_FromLong(args.type));
+      PyObject_SetAttrString(oargs, "name", PyString_FromString(args.name.c_str()));
+      PyObject_SetAttrString(oargs, "reason", PyInt_FromLong(args.reason));
+      
+      PyObject *pyargs = Py_BuildValue("O", oargs);
+      
+      PyObject *rv = PyObject_Call(meth, pyargs, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        PyErr_Clear();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+      }
+      
+      Py_DECREF(rv);
+      Py_DECREF(oargs);
+      Py_DECREF(pyargs);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
   return ofx::ImageEffect::instanceChanged(args);
 }
 
 OfxStatus PyImageEffect::purgeCaches()
 {
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "purgeCaches");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *rv = PyObject_CallObject(meth, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        PyErr_Clear();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+      }
+      
+      Py_DECREF(rv);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
   return ofx::ImageEffect::purgeCaches();
 }
 
 OfxStatus PyImageEffect::syncPrivateData()
 {
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "syncPrivateData");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *rv = PyObject_CallObject(meth, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        PyErr_Clear();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+      }
+      
+      Py_DECREF(rv);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
   return ofx::ImageEffect::syncPrivateData();
 }
 
 OfxStatus PyImageEffect::beginInstanceEdit()
 {
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "beginInstanceEdit");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *rv = PyObject_CallObject(meth, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        PyErr_Clear();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+      }
+      
+      Py_DECREF(rv);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
   return ofx::ImageEffect::beginInstanceEdit();
 }
 
 OfxStatus PyImageEffect::endInstanceEdit()
 {
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "endInstanceEdit");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *rv = PyObject_CallObject(meth, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        PyErr_Clear();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+      }
+      
+      Py_DECREF(rv);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
   return ofx::ImageEffect::endInstanceEdit();
 }
 
 OfxStatus PyImageEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args)
 {
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "getRegionOfDefinition");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+
+      PyObject_SetAttrString(oargs, "renderScaleX", PyFloat_FromDouble(args.renderScaleX));
+      PyObject_SetAttrString(oargs, "renderScaleY", PyFloat_FromDouble(args.renderScaleY));
+      PyObject_SetAttrString(oargs, "time", PyFloat_FromDouble(args.time));
+      Py_INCREF(Py_None);
+      PyObject_SetAttrString(oargs, "RoD", Py_None);
+      
+      PyObject *pyargs = Py_BuildValue("O", oargs);
+      
+      PyObject *rv = PyObject_Call(meth, pyargs, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+          
+          if (stat == kOfxStatOK)
+          {
+            PyObject *rod = PyObject_GetAttrString(oargs, "RoD");
+            
+            if (!rod || !PyTuple_Check(rod) || PyTuple_Size(rod) != 4)
+            {
+              args.RoD.x1 = PyFloat_AsDouble(PyTuple_GetItem(rod, 0));
+              args.RoD.y1 = PyFloat_AsDouble(PyTuple_GetItem(rod, 1));
+              args.RoD.x2 = PyFloat_AsDouble(PyTuple_GetItem(rod, 2));
+              args.RoD.y2 = PyFloat_AsDouble(PyTuple_GetItem(rod, 3));
+            }
+            else
+            {
+              stat = kOfxStatFailed;
+            }
+            
+            Py_XDECREF(rod);
+          }
+        }
+      }
+      
+      Py_DECREF(rv);
+      Py_DECREF(oargs);
+      Py_DECREF(pyargs);
+      Py_DECREF(meth);
+      
+      PyErr_Clear();
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
   return ofx::ImageEffect::getRegionOfDefinition(args);
 }
 
@@ -2119,12 +2568,7 @@ static PyGetSetDef PyOFXImageEffect_GetSeters[] =
   {NULL, NULL, NULL, NULL, NULL}
 };
 
-/*
-// properties
-
-ImageEffectDescriptor descriptor();
-
-*/
+//ImageEffectDescriptor descriptor();
 
 PyObject* PyOFXImageEffect_GetClip(PyObject *self, PyObject *args)
 {

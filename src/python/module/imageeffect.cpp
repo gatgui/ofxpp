@@ -104,7 +104,7 @@ OfxStatus PyImageEffectDescriptor::describeInContext(ofx::ImageEffectContext ctx
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *args = Py_BuildValue("i", int(ctx));
+      PyObject *args = Py_BuildValue("(i)", int(ctx));
       PyObject *rv = PyObject_Call(meth, args, NULL);
       
       PyObject *err = PyErr_Occurred();
@@ -163,7 +163,7 @@ OfxStatus PyImageEffect::beginInstanceChanged(ofx::ChangeReason reason)
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *args = Py_BuildValue("i", int(reason));
+      PyObject *args = Py_BuildValue("(i)", int(reason));
       PyObject *rv = PyObject_Call(meth, args, NULL);
       
       PyObject *err = PyErr_Occurred();
@@ -210,7 +210,7 @@ OfxStatus PyImageEffect::endInstanceChanged(ofx::ChangeReason reason)
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *args = Py_BuildValue("i", int(reason));
+      PyObject *args = Py_BuildValue("(i)", int(reason));
       PyObject *rv = PyObject_Call(meth, args, NULL);
       
       PyObject *err = PyErr_Occurred();
@@ -258,15 +258,33 @@ OfxStatus PyImageEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &
       OfxStatus stat = kOfxStatFailed;
       
       PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oarg;
       
-      PyObject_SetAttrString(oargs, "renderScaleX", PyFloat_FromDouble(args.renderScaleX));
-      PyObject_SetAttrString(oargs, "renderScaleY", PyFloat_FromDouble(args.renderScaleY));
-      PyObject_SetAttrString(oargs, "time", PyFloat_FromDouble(args.time));
-      PyObject_SetAttrString(oargs, "type", PyInt_FromLong(args.type));
-      PyObject_SetAttrString(oargs, "name", PyString_FromString(args.name.c_str()));
-      PyObject_SetAttrString(oargs, "reason", PyInt_FromLong(args.reason));
+      oarg = PyFloat_FromDouble(args.renderScaleX);
+      PyObject_SetAttrString(oargs, "renderScaleX", oarg);
+      Py_DECREF(oarg);
       
-      PyObject *pyargs = Py_BuildValue("O", oargs);
+      oarg = PyFloat_FromDouble(args.renderScaleY);
+      PyObject_SetAttrString(oargs, "renderScaleY", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyFloat_FromDouble(args.time);
+      PyObject_SetAttrString(oargs, "time", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyInt_FromLong(args.type);
+      PyObject_SetAttrString(oargs, "type", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyString_FromString(args.name.c_str());
+      PyObject_SetAttrString(oargs, "name", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyInt_FromLong(args.reason);
+      PyObject_SetAttrString(oargs, "reason", oarg);
+      Py_DECREF(oarg);
+      
+      PyObject *pyargs = Py_BuildValue("(O)", oargs);
       
       PyObject *rv = PyObject_Call(meth, pyargs, NULL);
       
@@ -496,14 +514,23 @@ OfxStatus PyImageEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &arg
       OfxStatus stat = kOfxStatFailed;
       
       PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
-
-      PyObject_SetAttrString(oargs, "renderScaleX", PyFloat_FromDouble(args.renderScaleX));
-      PyObject_SetAttrString(oargs, "renderScaleY", PyFloat_FromDouble(args.renderScaleY));
-      PyObject_SetAttrString(oargs, "time", PyFloat_FromDouble(args.time));
-      Py_INCREF(Py_None);
+      PyObject *oarg;
+      
+      oarg = PyFloat_FromDouble(args.renderScaleX);
+      PyObject_SetAttrString(oargs, "renderScaleX", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyFloat_FromDouble(args.renderScaleY);
+      PyObject_SetAttrString(oargs, "renderScaleY", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyFloat_FromDouble(args.time);
+      PyObject_SetAttrString(oargs, "time", oarg);
+      Py_DECREF(oarg);
+      
       PyObject_SetAttrString(oargs, "RoD", Py_None);
       
-      PyObject *pyargs = Py_BuildValue("O", oargs);
+      PyObject *pyargs = Py_BuildValue("(O)", oargs);
       
       PyObject *rv = PyObject_Call(meth, pyargs, NULL);
       
@@ -573,17 +600,27 @@ OfxStatus PyImageEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args
       OfxStatus stat = kOfxStatFailed;
       
       PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oarg;
       
-      PyObject_SetAttrString(oargs, "renderScaleX", PyFloat_FromDouble(args.renderScaleX));
-      PyObject_SetAttrString(oargs, "renderScaleY", PyFloat_FromDouble(args.renderScaleY));
-      PyObject_SetAttrString(oargs, "time", PyFloat_FromDouble(args.time));
-      Py_INCREF(Py_None);
+      oarg = PyFloat_FromDouble(args.renderScaleX);
+      PyObject_SetAttrString(oargs, "renderScaleX", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyFloat_FromDouble(args.renderScaleY);
+      PyObject_SetAttrString(oargs, "renderScaleY", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyFloat_FromDouble(args.time);
+      PyObject_SetAttrString(oargs, "time", oarg);
+      Py_DECREF(oarg);
+      
       PyObject_SetAttrString(oargs, "outRoI", Py_None);
+      
       PyObject *inRoIs = PyDict_New();
       PyObject_SetAttrString(oargs, "inRoIs", inRoIs);
       Py_DECREF(inRoIs);
       
-      PyObject *pyargs = Py_BuildValue("O", oargs);
+      PyObject *pyargs = Py_BuildValue("(O)", oargs);
       
       PyObject *rv = PyObject_Call(meth, pyargs, NULL);
       
@@ -684,13 +721,17 @@ OfxStatus PyImageEffect::getFramesNeeded(ofx::ImageEffect::GetFramesNeededArgs &
       OfxStatus stat = kOfxStatFailed;
       
       PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oarg;
       
-      PyObject_SetAttrString(oargs, "time", PyFloat_FromDouble(args.time));
+      oarg = PyFloat_FromDouble(args.time);
+      PyObject_SetAttrString(oargs, "time", oarg);
+      Py_DECREF(oarg);
+      
       PyObject *inRanges = PyDict_New();
       PyObject_SetAttrString(oargs, "inRanges", inRanges);
       Py_DECREF(inRanges);
       
-      PyObject *pyargs = Py_BuildValue("O", oargs);
+      PyObject *pyargs = Py_BuildValue("(O)", oargs);
       
       PyObject *rv = PyObject_Call(meth, pyargs, NULL);
       
@@ -783,32 +824,45 @@ OfxStatus PyImageEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args)
       OfxStatus stat = kOfxStatFailed;
       
       PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oarg;
       
-      PyObject_SetAttrString(oargs, "renderScaleX", PyFloat_FromDouble(args.renderScaleX));
-      PyObject_SetAttrString(oargs, "renderScaleY", PyFloat_FromDouble(args.renderScaleY));
-      PyObject_SetAttrString(oargs, "time", PyFloat_FromDouble(args.time));
-      PyObject_SetAttrString(oargs, "field", PyInt_FromLong(args.field));
-      PyObject *rw = PyTuple_New(4);
-      PyTuple_SetItem(rw, 0, PyInt_FromLong(args.renderWindow.x1));
-      PyTuple_SetItem(rw, 1, PyInt_FromLong(args.renderWindow.y1));
-      PyTuple_SetItem(rw, 2, PyInt_FromLong(args.renderWindow.x2));
-      PyTuple_SetItem(rw, 3, PyInt_FromLong(args.renderWindow.y2));
-      PyObject_SetAttrString(oargs, "renderWindow", rw);
-      Py_DECREF(rw);
+      oarg = PyFloat_FromDouble(args.renderScaleX);
+      PyObject_SetAttrString(oargs, "renderScaleX", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyFloat_FromDouble(args.renderScaleY);
+      PyObject_SetAttrString(oargs, "renderScaleY", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyFloat_FromDouble(args.time);
+      PyObject_SetAttrString(oargs, "time", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyInt_FromLong(args.field);
+      PyObject_SetAttrString(oargs, "field", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyTuple_New(4);
+      PyTuple_SetItem(oarg, 0, PyInt_FromLong(args.renderWindow.x1));
+      PyTuple_SetItem(oarg, 1, PyInt_FromLong(args.renderWindow.y1));
+      PyTuple_SetItem(oarg, 2, PyInt_FromLong(args.renderWindow.x2));
+      PyTuple_SetItem(oarg, 3, PyInt_FromLong(args.renderWindow.y2));
+      PyObject_SetAttrString(oargs, "renderWindow", oarg);
+      Py_DECREF(oarg);
+      
 #ifdef OFX_API_1_2
-      PyObject *b = (args.sequentialRender ? Py_True : Py_False);
-      Py_INCREF(b);
-      PyObject_SetAttrString(oargs, "sequentialRender", b);
-      b = (args.interactiveRender ? Py_True : Py_False);
-      Py_INCREF(b);
-      PyObject_SetAttrString(oargs, "interactiveRender", b);
+      oarg = (args.sequentialRender ? Py_True : Py_False);
+      PyObject_SetAttrString(oargs, "sequentialRender", oarg);
+      
+      oarg = (args.interactiveRender ? Py_True : Py_False);
+      PyObject_SetAttrString(oargs, "interactiveRender", oarg);
 #endif
-      Py_INCREF(Py_None);
+      
       PyObject_SetAttrString(oargs, "idClip", Py_None);
-      Py_INCREF(Py_None);
+      
       PyObject_SetAttrString(oargs, "idTime", Py_None);
       
-      PyObject *pyargs = Py_BuildValue("O", oargs);
+      PyObject *pyargs = Py_BuildValue("(O)", oargs);
       
       PyObject *rv = PyObject_Call(meth, pyargs, NULL);
       
@@ -886,28 +940,41 @@ OfxStatus PyImageEffect::render(ofx::ImageEffect::RenderArgs &args)
       OfxStatus stat = kOfxStatFailed;
       
       PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oarg;
       
-      PyObject_SetAttrString(oargs, "renderScaleX", PyFloat_FromDouble(args.renderScaleX));
-      PyObject_SetAttrString(oargs, "renderScaleY", PyFloat_FromDouble(args.renderScaleY));
-      PyObject_SetAttrString(oargs, "time", PyFloat_FromDouble(args.time));
-      PyObject_SetAttrString(oargs, "field", PyInt_FromLong(args.field));
-      PyObject *rw = PyTuple_New(4);
-      PyTuple_SetItem(rw, 0, PyInt_FromLong(args.renderWindow.x1));
-      PyTuple_SetItem(rw, 1, PyInt_FromLong(args.renderWindow.y1));
-      PyTuple_SetItem(rw, 2, PyInt_FromLong(args.renderWindow.x2));
-      PyTuple_SetItem(rw, 3, PyInt_FromLong(args.renderWindow.y2));
-      PyObject_SetAttrString(oargs, "renderWindow", rw);
-      Py_DECREF(rw);
+      oarg = PyFloat_FromDouble(args.renderScaleX);
+      PyObject_SetAttrString(oargs, "renderScaleX", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyFloat_FromDouble(args.renderScaleY);
+      PyObject_SetAttrString(oargs, "renderScaleY", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyFloat_FromDouble(args.time);
+      PyObject_SetAttrString(oargs, "time", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyInt_FromLong(args.field);
+      PyObject_SetAttrString(oargs, "field", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyTuple_New(4);
+      PyTuple_SetItem(oarg, 0, PyInt_FromLong(args.renderWindow.x1));
+      PyTuple_SetItem(oarg, 1, PyInt_FromLong(args.renderWindow.y1));
+      PyTuple_SetItem(oarg, 2, PyInt_FromLong(args.renderWindow.x2));
+      PyTuple_SetItem(oarg, 3, PyInt_FromLong(args.renderWindow.y2));
+      PyObject_SetAttrString(oargs, "renderWindow", oarg);
+      Py_DECREF(oarg);
+      
 #ifdef OFX_API_1_2
-      PyObject *b = (args.sequentialRender ? Py_True : Py_False);
-      Py_INCREF(b);
-      PyObject_SetAttrString(oargs, "sequentialRender", b);
-      b = (args.interactiveRender ? Py_True : Py_False);
-      Py_INCREF(b);
-      PyObject_SetAttrString(oargs, "interactiveRender", b);
+      oarg = (args.sequentialRender ? Py_True : Py_False);
+      PyObject_SetAttrString(oargs, "sequentialRender", oarg);
+      
+      oarg = (args.interactiveRender ? Py_True : Py_False);
+      PyObject_SetAttrString(oargs, "interactiveRender", oarg);
 #endif
       
-      PyObject *pyargs = Py_BuildValue("O", oargs);
+      PyObject *pyargs = Py_BuildValue("(O)", oargs);
       
       PyObject *rv = PyObject_Call(meth, pyargs, NULL);
       
@@ -957,28 +1024,38 @@ OfxStatus PyImageEffect::beginSequenceRender(ofx::ImageEffect::BeginSequenceArgs
       OfxStatus stat = kOfxStatFailed;
       
       PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oarg;
       
-      PyObject_SetAttrString(oargs, "renderScaleX", PyFloat_FromDouble(args.renderScaleX));
-      PyObject_SetAttrString(oargs, "renderScaleY", PyFloat_FromDouble(args.renderScaleY));
-      PyObject *b = (args.interactive ? Py_True : Py_False);
-      Py_INCREF(b);
-      PyObject_SetAttrString(oargs, "interactive", b);
+      oarg = PyFloat_FromDouble(args.renderScaleX);
+      PyObject_SetAttrString(oargs, "renderScaleX", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyFloat_FromDouble(args.renderScaleY);
+      PyObject_SetAttrString(oargs, "renderScaleY", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = (args.interactive ? Py_True : Py_False);
+      PyObject_SetAttrString(oargs, "interactive", oarg);
+      
 #ifdef OFX_API_1_2
-      b = (args.sequentialRender ? Py_True : Py_False);
-      Py_INCREF(b);
-      PyObject_SetAttrString(oargs, "sequentialRender", b);
-      b = (args.interactiveRender ? Py_True : Py_False);
-      Py_INCREF(b);
-      PyObject_SetAttrString(oargs, "interactiveRender", b);
-#endif
-      PyObject *range = PyTuple_New(2);
-      PyTuple_SetItem(range, 0, PyFloat_FromDouble(args.range.min));
-      PyTuple_SetItem(range, 1, PyFloat_FromDouble(args.range.max));
-      PyObject_SetAttrString(oargs, "range", range);
-      Py_DECREF(range);
-      PyObject_SetAttrString(oargs, "step", PyFloat_FromDouble(args.step));
+      oarg = (args.sequentialRender ? Py_True : Py_False);
+      PyObject_SetAttrString(oargs, "sequentialRender", oarg);
       
-      PyObject *pyargs = Py_BuildValue("O", oargs);
+      oarg = (args.interactiveRender ? Py_True : Py_False);
+      PyObject_SetAttrString(oargs, "interactiveRender", oarg);
+#endif
+      
+      oarg = PyTuple_New(2);
+      PyTuple_SetItem(oarg, 0, PyFloat_FromDouble(args.range.min));
+      PyTuple_SetItem(oarg, 1, PyFloat_FromDouble(args.range.max));
+      PyObject_SetAttrString(oargs, "range", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyFloat_FromDouble(args.step);
+      PyObject_SetAttrString(oargs, "step", oarg);
+      Py_DECREF(oarg);
+      
+      PyObject *pyargs = Py_BuildValue("(O)", oargs);
       
       PyObject *rv = PyObject_Call(meth, pyargs, NULL);
       
@@ -1028,22 +1105,28 @@ OfxStatus PyImageEffect::endSequenceRender(ofx::ImageEffect::EndSequenceArgs &ar
       OfxStatus stat = kOfxStatFailed;
       
       PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oarg;
       
-      PyObject_SetAttrString(oargs, "renderScaleX", PyFloat_FromDouble(args.renderScaleX));
-      PyObject_SetAttrString(oargs, "renderScaleY", PyFloat_FromDouble(args.renderScaleY));
-      PyObject *b = (args.interactive ? Py_True : Py_False);
-      Py_INCREF(b);
-      PyObject_SetAttrString(oargs, "interactive", b);
+      oarg = PyFloat_FromDouble(args.renderScaleX);
+      PyObject_SetAttrString(oargs, "renderScaleX", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyFloat_FromDouble(args.renderScaleY);
+      PyObject_SetAttrString(oargs, "renderScaleY", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = (args.interactive ? Py_True : Py_False);
+      PyObject_SetAttrString(oargs, "interactive", oarg);
+      
 #ifdef OFX_API_1_2
-      b = (args.sequentialRender ? Py_True : Py_False);
-      Py_INCREF(b);
-      PyObject_SetAttrString(oargs, "sequentialRender", b);
-      b = (args.interactiveRender ? Py_True : Py_False);
-      Py_INCREF(b);
-      PyObject_SetAttrString(oargs, "interactiveRender", b);
+      oarg = (args.sequentialRender ? Py_True : Py_False);
+      PyObject_SetAttrString(oargs, "sequentialRender", oarg);
+      
+      oarg = (args.interactiveRender ? Py_True : Py_False);
+      PyObject_SetAttrString(oargs, "interactiveRender", oarg);
 #endif
       
-      PyObject *pyargs = Py_BuildValue("O", oargs);
+      PyObject *pyargs = Py_BuildValue("(O)", oargs);
       
       PyObject *rv = PyObject_Call(meth, pyargs, NULL);
       
@@ -1134,10 +1217,17 @@ OfxStatus PyImageEffect::getTimeDomain(ofx::ImageEffect::GetTimeDomainArgs &args
       OfxStatus stat = kOfxStatFailed;
       
       PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
-      PyObject_SetAttrString(oargs, "first", PyFloat_FromDouble(0.0));
-      PyObject_SetAttrString(oargs, "last", PyFloat_FromDouble(0.0));
+      PyObject *oarg;
       
-      PyObject *pyargs = Py_BuildValue("O", oargs);
+      oarg = PyFloat_FromDouble(0.0);
+      PyObject_SetAttrString(oargs, "first", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyFloat_FromDouble(0.0);
+      PyObject_SetAttrString(oargs, "last", oarg);
+      Py_DECREF(oarg);
+      
+      PyObject *pyargs = Py_BuildValue("(O)", oargs);
       
       PyObject *rv = PyObject_Call(meth, pyargs, NULL);
       

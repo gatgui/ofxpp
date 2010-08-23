@@ -1110,18 +1110,6 @@ static PyGetSetDef PyOFXImageEffectHost_GetSeters[] =
   {NULL, NULL, NULL, NULL, NULL}
 };
 
-/*
-int supportedComponentsCount();
-ImageComponent supportedComponent(int idx);
-
-int supportedContextsCount();
-ImageEffectContext supportedContext(int idx);
-
-int supportedPixelDepthsCount();
-BitDepth supportedPixelDepth(int idx);
-
-*/
-
 PyObject* PyOFXImageEffectHost_SupportedComponentsCount(PyObject *self, PyObject *)
 {
   PyOFXHost *phost = (PyOFXHost*)self;

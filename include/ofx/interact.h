@@ -133,7 +133,7 @@ namespace ofx {
       
       void pixelScale(double *sx, double *sy);
       
-      RGBAColour<double> backgroundColor();
+      RGBAColour<double> backgroundColour();
       
       void viewportSize(int *w, int *h);
       
@@ -178,8 +178,8 @@ namespace ofx {
   OfxStatus InteractEntryPoint(const char *action,
                                const void *handle,
                                OfxPropertySetHandle hInArgs,
-                               OfxPropertySetHandle) {
-    
+                               OfxPropertySetHandle)
+  {
     ImageEffectHost *host = PluginClass::Instance()->host();
     
     OfxInteractHandle hInteract = (OfxInteractHandle) handle;

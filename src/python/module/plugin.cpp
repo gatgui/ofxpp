@@ -23,43 +23,638 @@ USA.
 
 #include "common.h"
 
-/*
-PyTypeObject PyOFXPlugin;
-PyTypeObject PyOFXImageEffectPlugin;
+PyTypeObject PyOFXPluginType;
+PyTypeObject PyOFXImageEffectPluginType;
 
 // ---
 
-PyObject* PyOFXPlugin_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
+std::map<const void*, PyImageEffectPlugin*> gPlugins;
+OfxHost *gHost = 0;
+PyImageEffectPlugin *gCurPlugin = 0; // this is not elegant at all
+
+void PyOFX_SetHost(OfxHost *h)
+{
+  if (gHost != 0 && gHost != h)
+  {
+    throw std::runtime_error("PyOFX cannot be run on different host at the same time.");
+  }
+  gHost = h;
+  // Instance()->setHost(h);
+}
+  
+OfxStatus PyOFX_Main(const char *action,
+                     const void *handle,
+                     OfxPropertySetHandle hInArgs,
+                     OfxPropertySetHandle hOutArgs)
+{
+  // SelfType *plugin = Instance();
+  PyImageEffectPlugin *plugin = 0;
+  
+  std::map<const void*, PyImageEffectPlugin*>::iterator plugIt = gPlugins.find(handle);
+  
+  if (plugIt == gPlugins.end())
+  {
+    // use gCurPlugin, will have been set by OfxGetPlugin
+    // just hope that Load action is called right after...
+    // if host does first a OfxGetPlugin on all plugins
+    // then do the loads, we're fucked (host plugin cache)
+    // this is highly probable...
+    
+    // isn't there any other way to do that
+    // can we manage to get the plugin unique id from handle?
+    
+    if (gCurPlugin != NULL)
+    {
+      gPlugins[handle] = gCurPlugin;
+      gCurPlugin = NULL;
+      plugIt = gPlugins.find(handle);
+    }
+    else
+    {
+      return kOfxStatErrFatal;
+    }
+  }
+  
+  plugin = plugIt->second;
+  
+  if (!plugin->host())
+  {
+    // This could not be done in PyOFX_SetHost
+    plugin->setHost(gHost);
+  }
+  
+  ofx::ImageEffectHost *host = plugin->host();
+  
+  if (!host)
+  {
+    ofx::Log("*** Invalid host");
+    return kOfxStatErrFatal;
+  }
+  
+  ofx::PropertySet inArgs(host, hInArgs);
+  ofx::PropertySet outArgs(host, hOutArgs);
+  
+  OfxImageEffectHandle hEffect = (OfxImageEffectHandle) handle;
+  
+  ofx::Action a = ofx::StringToAction(action);
+  
+  try
+  {
+    switch (a)
+    {
+    case ofx::ActionLoad:
+    {
+      ofx::Log("OFX Image Effect Plugin: Load");
+      host->init();
+      return plugin->load();
+    }
+    case ofx::ActionUnload:
+    {
+      ofx::Log("OFX Image Effect Plugin: Unload");
+      plugin = gPlugins[handle];
+      OfxStatus stat = plugin->unload();
+      delete plugin;
+      gPlugins.erase(plugIt);
+      return stat;
+    }
+    case ofx::ActionDescribe:
+    {
+      ofx::Log("OFX Image Effect Plugin: Describe");
+      PyImageEffectDescriptor desc = plugin->descriptor(hEffect);
+      return desc.describe();
+    }
+    case ofx::ActionImageEffectDescribeInContext:
+    {
+      ofx::Log("OFX Image Effect Plugin: Describe in context");
+      // might not be the same handle as in ActionDescribe
+      PyImageEffectDescriptor desc = plugin->descriptor(hEffect);
+      ofx::ImageEffectContext ctx = ofx::StringToImageEffectContext(inArgs.getString(kOfxImageEffectPropContext, 0));
+      return desc.describeInContext(ctx);
+    }
+    case ofx::ActionCreateInstance:
+    {
+      ofx::Log("OFX Image Effect Plugin: Create instance");
+      plugin->addEffect(hEffect);
+      return kOfxStatOK;
+    }
+    case ofx::ActionDestroyInstance:
+    {
+      ofx::Log("OFX Image Effect Plugin: Destroy instance");
+      plugin->removeEffect(hEffect);
+      return kOfxStatOK;
+    }
+    case ofx::ActionBeginInstanceChanged:
+    {
+      ofx::Log("OFX Image Effect Plugin: Begin instance changed");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        return kOfxStatErrUnknown;
+      }
+      ofx::ChangeReason reason = ofx::StringToChangeReason(inArgs.getString(kOfxPropChangeReason, 0));
+      return effect->beginInstanceChanged(reason);
+    }
+    case ofx::ActionEndInstanceChanged:
+    {
+      ofx::Log("OFX Image Effect Plugin: End instance changed");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        return kOfxStatErrUnknown;
+      }
+      ofx::ChangeReason reason = ofx::StringToChangeReason(inArgs.getString(kOfxPropChangeReason, 0));
+      return effect->endInstanceChanged(reason);
+    }
+    case ofx::ActionInstanceChanged:
+    {
+      ofx::Log("OFX Image Effect Plugin: Instance changed");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        return kOfxStatErrUnknown;
+      }
+      ofx::ImageEffect::InstanceChangedArgs args(host, inArgs);
+      return effect->instanceChanged(args);
+    }
+    case ofx::ActionPurgeCaches:
+    {
+      ofx::Log("OFX Image Effect Plugin: Purge caches");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        return kOfxStatErrUnknown;
+      }
+      return effect->purgeCaches();
+    }
+    case ofx::ActionSyncPrivateData:
+    {
+      ofx::Log("OFX Image Effect Plugin: Sync private data");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        return kOfxStatErrUnknown;
+      }
+      return effect->syncPrivateData();
+    }
+    case ofx::ActionBeginInstanceEdit:
+    {
+      ofx::Log("OFX Image Effect Plugin: Begin instance edit");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        return kOfxStatErrUnknown;
+      }
+      return effect->beginInstanceEdit();
+    }
+    case ofx::ActionEndInstanceEdit:
+    {
+      ofx::Log("OFX Image Effect Plugin: End instance edit");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        return kOfxStatErrUnknown;
+      }
+      return effect->endInstanceEdit();
+    }
+    case ofx::ActionImageEffectGetRoD:
+    {
+      ofx::Log("OFX Image Effect Plugin: Get region of definition");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        return kOfxStatErrUnknown;
+      }
+      ofx::ImageEffect::GetRoDArgs args(host, inArgs);
+      OfxStatus stat = effect->getRegionOfDefinition(args);
+      if (stat == kOfxStatOK)
+      {
+        args.setOutputs(outArgs);
+      }
+      return stat;
+    }
+    case ofx::ActionImageEffectGetRoI:
+    {
+      ofx::Log("OFX Image Effect Plugin: Get regions of interest");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        return kOfxStatErrUnknown;
+      }
+      ofx::ImageEffect::GetRoIArgs args(host, inArgs);
+      OfxStatus stat = effect->getRegionsOfInterest(args);
+      if (stat == kOfxStatOK)
+      {
+        args.setOutputs(outArgs);
+      }
+      return stat;
+    }
+    case ofx::ActionImageEffectGetFramesNeeded:
+    {
+      ofx::Log("OFX Image Effect Plugin: Get frames needed");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        return kOfxStatErrUnknown;
+      }
+      ofx::ImageEffect::GetFramesNeededArgs args(host, inArgs);
+      OfxStatus stat = effect->getFramesNeeded(args);
+      if (stat == kOfxStatOK)
+      {
+        args.setOutputs(outArgs);
+      }
+      return stat;
+    }
+    case ofx::ActionImageEffectIsIdentity:
+    {
+      ofx::Log("OFX Image Effect Plugin: Is identity");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        return kOfxStatErrUnknown;
+      }
+      ofx::ImageEffect::IsIdentityArgs args(host, inArgs);
+      OfxStatus stat =  effect->isIdentity(args);
+      if (stat == kOfxStatOK)
+      {
+        args.setOutputs(outArgs);
+      }
+      return stat;
+    }
+    case ofx::ActionImageEffectRender:
+    {
+      ofx::Log("OFX Image Effect Plugin: Render");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        return kOfxStatErrUnknown;
+      }
+      ofx::ImageEffect::RenderArgs args(host, inArgs);
+      return effect->render(args);
+    }
+    case ofx::ActionImageEffectBeginSequenceRender:
+    {
+      ofx::Log("OFX Image Effect Plugin: Begin sequence render");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        return kOfxStatErrUnknown;
+      }
+      ofx::ImageEffect::BeginSequenceArgs args(host, inArgs);
+      return effect->beginSequenceRender(args);
+    }
+    case ofx::ActionImageEffectEndSequenceRender:
+    {
+      ofx::Log("OFX Image Effect Plugin: End sequence render");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        return kOfxStatErrUnknown;
+      }
+      ofx::ImageEffect::EndSequenceArgs args(host, inArgs);
+      return effect->endSequenceRender(args);
+    }
+    case ofx::ActionImageEffectGetClipPreferences:
+    {
+      ofx::Log("OFX Image Effect Plugin: Get clip preferences");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        return kOfxStatErrUnknown;
+      }
+      ofx::ImageEffect::GetClipPrefArgs args(host);
+      OfxStatus stat = effect->getClipPreferences(args);
+      if (stat == kOfxStatOK)
+      {
+        args.setOutputs(outArgs);
+      }
+      return stat;
+    }
+    case ofx::ActionImageEffectGetTimeDomain:
+    {
+      ofx::Log("OFX Image Effect Plugin: Get time domain");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        return kOfxStatErrUnknown;
+      }
+      ofx::ImageEffect::GetTimeDomainArgs args(host);
+      OfxStatus stat = effect->getTimeDomain(args);
+      if (stat == kOfxStatOK)
+      {
+        args.setOutputs(outArgs);
+      }
+      return stat;
+    }
+    default:
+      return kOfxStatReplyDefault;
+    }
+    
+  }
+  catch (ofx::Exception &e)
+  {
+    ofx::Log("*** Caught exception");
+    ofx::Log("***   %s", e.what());
+    return e.status();
+    
+  }
+}
+  
+
+// ---
+
+PyPlugin::PyPlugin()
+  : ofx::Plugin(), mSelf(0)
+{
+}
+  
+PyPlugin::~PyPlugin()
+{
+  self(0);
+}
+
+// ---
+
+PyImageEffectPlugin::PyImageEffectPlugin(PyTypeObject *descClass, PyTypeObject *instClass)
+  : PyPlugin(), mDescClass(descClass), mInstClass(instClass), mHost(0)
+{
+  Py_INCREF(descClass);
+  Py_INCREF(instClass);
+  
+  OfxPlugin *plugin = description();
+  plugin->pluginApi = kOfxImageEffectPluginApi;
+  plugin->apiVersion = kOfxImageEffectPluginApiVersion;
+  plugin->setHost = PyOFX_SetHost;
+  plugin->mainEntry = PyOFX_Main;
+}
+
+PyImageEffectPlugin::~PyImageEffectPlugin()
+{
+  if (mHost)
+  {
+    delete mHost;
+  }
+  
+  EffectMap::iterator it = mEffects.begin();
+  while (it != mEffects.end())
+  {
+    delete it->second;
+    ++it;
+  }
+  mEffects.clear();
+  
+  Py_DECREF(mDescClass);
+  Py_DECREF(mInstClass);
+}
+
+void PyImageEffectPlugin::setHost(OfxHost *h)
+{
+  if (!mHost)
+  {
+    mHost = new ofx::ImageEffectHost(h);
+  }
+}
+
+ofx::ImageEffectHost* PyImageEffectPlugin::host()
+{
+  return mHost;
+}
+
+PyImageEffectDescriptor PyImageEffectPlugin::descriptor(OfxImageEffectHandle hdl)
+{
+  if (!mHost)
+  {
+    return PyImageEffectDescriptor();
+  }
+  
+  PyObject *args = PyTuple_New(2);
+    
+  PyObject *phost = PyObject_CallObject((PyObject*)&PyOFXImageEffectHostType, NULL);
+  ((PyOFXHost*)phost)->host = mHost;
+  PyTuple_SetItem(args, 0, phost);
+  
+  PyObject *phandle = PyObject_CallObject((PyObject*)&PyOFXHandleType, NULL);
+  ((PyOFXHandle*)phandle)->handle = hdl;
+  PyTuple_SetItem(args, 1, phandle);
+  
+  PyObject *pdesc = PyObject_CallObject((PyObject*)mDescClass, args);
+  
+  Py_DECREF(args);
+  
+  PyImageEffectDescriptor desc = *( (PyImageEffectDescriptor*) ((PyOFXImageEffectDescriptor*)pdesc)->desc );
+  
+  Py_DECREF(pdesc);
+  
+  return desc;
+}
+
+PyImageEffect* PyImageEffectPlugin::addEffect(OfxImageEffectHandle hdl)
+{
+  if (!mHost)
+  {
+    return NULL;
+  }
+  
+  EffectMap::iterator it = mEffects.find(hdl);
+  
+  if (it == mEffects.end())
+  {
+    PyObject *args = PyTuple_New(2);
+    
+    PyObject *phost = PyObject_CallObject((PyObject*)&PyOFXImageEffectHostType, NULL);
+    ((PyOFXHost*)phost)->host = mHost;
+    PyTuple_SetItem(args, 0, phost);
+    
+    PyObject *phandle = PyObject_CallObject((PyObject*)&PyOFXHandleType, NULL);
+    ((PyOFXHandle*)phandle)->handle = hdl;
+    PyTuple_SetItem(args, 1, phandle);
+    
+    PyObject *peffect = PyObject_CallObject((PyObject*)mInstClass, args);
+    
+    Py_DECREF(args);
+    
+    PyImageEffect *effect = (PyImageEffect*) ((PyOFXImageEffect*)peffect)->effect;
+    
+    Py_DECREF(peffect);
+    
+    mEffects[hdl] = effect;
+    
+    return effect;
+  }
+  else
+  {
+    return it->second;
+  }
+}
+
+void PyImageEffectPlugin::removeEffect(OfxImageEffectHandle hdl)
+{
+  EffectMap::iterator it = mEffects.find(hdl);
+  if (it != mEffects.end())
+  {
+    delete it->second;
+    mEffects.erase(it);
+  }
+}
+
+PyImageEffect* PyImageEffectPlugin::getEffect(OfxImageEffectHandle hdl)
+{
+  EffectMap::iterator it = mEffects.find(hdl);
+  if (it != mEffects.end())
+  {
+    return it->second;
+  }
+  return NULL;
+}
+
+OfxStatus PyImageEffectPlugin::load()
+{
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "load");
+    
+    if (meth != 0)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *rv = PyObject_CallObject(meth, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        PyErr_Clear();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+      }
+      
+      Py_XDECREF(rv);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+    
+  return kOfxStatFailed;
+}
+  
+OfxStatus PyImageEffectPlugin::unload()
+{
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "unload");
+    
+    if (meth != 0)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *rv = PyObject_CallObject(meth, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        PyErr_Clear();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+      }
+      
+      Py_XDECREF(rv);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
+  return kOfxStatFailed;
+}
+
+// ---
+
+PyObject* PyOFXPlugin_New(PyTypeObject *type, PyObject *, PyObject *)
 {
   PyObject *self = type->tp_alloc(type, 1);
   PyOFXPlugin *pplugin = (PyOFXPlugin*) self;
-  pplugin->plugin = new ofx::Plugin();
+  pplugin->plugin = 0;
   return self;
 }
 
-int PyOFXPlugin_init(PyObject *self, PyObject *args, PyObject *kwargs)
+int PyOFXPlugin_Init(PyObject *, PyObject *, PyObject *)
 {
   return 0;
 }
 
-void PyOFXPlugin_delete(PyObject *self)
+void PyOFXPlugin_Delete(PyObject *self)
 {
-  PyOFXPlugin *pplugin = (PyOFXPlugin*) self;
-  if (pplugin->plugin && pplugin->owns)
-  {
-    delete pplugin->plugin;
-  }
   self->ob_type->tp_free(self);
 }
 
-PyObject* PyOFXPlugin_getMajorVersion(PyObject *self, void*)
+PyObject* PyOFXPlugin_GetMajorVersion(PyObject *self, void*)
 {
   PyOFXPlugin *pplugin = (PyOFXPlugin*) self;
-  return PyInt_FromLong(pplugin->plugin->getMajorVersion());
+  
+  if (!pplugin->plugin)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  return PyInt_FromLong(pplugin->plugin->majorVersion());
 }
 
-int PyOFXPlugin_setMajorVersion(PyObject *self, PyObject *value, void*)
+int PyOFXPlugin_SetMajorVersion(PyObject *self, PyObject *value, void*)
 {
+  PyOFXPlugin *pplugin = (PyOFXPlugin*) self;
+  
+  if (!pplugin->plugin)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return -1;
+  }
+  
   if (!PyInt_Check(value))
   {
     PyErr_SetString(PyExc_TypeError, "Expected an integer");
@@ -68,20 +663,34 @@ int PyOFXPlugin_setMajorVersion(PyObject *self, PyObject *value, void*)
   
   int v = PyInt_AsLong(value);
   
-  PyOFXPlugin *pplugin = (PyOFXPlugin*) self;
-  pplugin->plugin->setMajorVersion(v);
+  pplugin->plugin->majorVersion(v);
   
   return 0;
 }
 
-PyObject* PyOFXPlugin_getMinorVersion(PyObject *self, void*)
+PyObject* PyOFXPlugin_GetMinorVersion(PyObject *self, void*)
 {
   PyOFXPlugin *pplugin = (PyOFXPlugin*) self;
-  return PyInt_FromLong(pplugin->plugin->getMinorVersion());
+  
+  if (!pplugin->plugin)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  return PyInt_FromLong(pplugin->plugin->minorVersion());
 }
 
-int PyOFXPlugin_setMinorVersion(PyObject *self, PyObject *value, void*)
+int PyOFXPlugin_SetMinorVersion(PyObject *self, PyObject *value, void*)
 {
+  PyOFXPlugin *pplugin = (PyOFXPlugin*) self;
+  
+  if (!pplugin->plugin)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return -1;
+  }
+  
   if (!PyInt_Check(value))
   {
     PyErr_SetString(PyExc_TypeError, "Expected an integer");
@@ -90,20 +699,34 @@ int PyOFXPlugin_setMinorVersion(PyObject *self, PyObject *value, void*)
   
   int v = PyInt_AsLong(value);
   
-  PyOFXPlugin *pplugin = (PyOFXPlugin*) self;
-  pplugin->plugin->setMinorVersion(v);
+  pplugin->plugin->minorVersion(v);
   
   return 0;
 }
 
-PyObject* PyOFXPlugin_getID(PyObject *self, void*)
+PyObject* PyOFXPlugin_GetIdentifier(PyObject *self, void*)
 {
   PyOFXPlugin *pplugin = (PyOFXPlugin*) self;
-  return PyString_FromString(pplugin->plugin->getID());
+  
+  if (!pplugin->plugin)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  return PyString_FromString(pplugin->plugin->identifier());
 }
 
-int PyOFXPlugin_setID(PyObject *self, PyObject *value, void*)
+int PyOFXPlugin_SetIdentifier(PyObject *self, PyObject *value, void*)
 {
+  PyOFXPlugin *pplugin = (PyOFXPlugin*) self;
+  
+  if (!pplugin->plugin)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return -1;
+  }
+  
   if (!PyString_Check(value))
   {
     PyErr_SetString(PyExc_TypeError, "Expected a string");
@@ -112,36 +735,83 @@ int PyOFXPlugin_setID(PyObject *self, PyObject *value, void*)
   
   const char *id = PyString_AsString(value);
   
-  PyOFXPlugin *pplugin = (PyOFXPlugin*) self;
-  pplugin->plugin->setID(id);
+  pplugin->plugin->identifier(id);
   
   return 0;
 }
 
-static PyGetSetDef PyOFXPlugin_getsetters[] =
+static PyGetSetDef PyOFXPlugin_GetSeters[] =
 {
-  {"majorVersion", PyOFXPlugin_getMajorVersion, PyOFXPlugin_setMajorVersion, 0},
-  {"minorVersion", PyOFXPlugin_getMinorVersion, PyOFXPlugin_setMinorVersion, 0},
-  {"majorVersion", PyOFXPlugin_getID, PyOFXPlugin_setID, 0},
-  {NULL}
+  {(char*)"majorVersion", PyOFXPlugin_GetMajorVersion, PyOFXPlugin_SetMajorVersion, NULL, NULL},
+  {(char*)"minorVersion", PyOFXPlugin_GetMinorVersion, PyOFXPlugin_SetMinorVersion, NULL, NULL},
+  {(char*)"identifier", PyOFXPlugin_GetIdentifier, PyOFXPlugin_SetIdentifier, NULL, NULL},
+  {NULL, NULL, NULL, NULL, NULL}
 };
 
-PyObject* PyOFXImageEffectPlugin_load(PyObject *self, PyObject *)
-{
-}
-
-PyObject* PyOFXImageEffectPlugin_unload(PyObject *self, PyObject *)
-{
-}
-
-PyObject* PyOFXImageEffectPlugin_getHost(PyObject *self, PyObject *)
-{
-}
-*/
 // ---
 
-bool PyOFX_InitPlugin(PyObject *)
+int PyOFXImageEffectPlugin_Init(PyObject *self, PyObject *args, PyObject *)
 {
+  PyOFXPlugin *pplugin = (PyOFXPlugin*)self;
+  
+  PyObject *desc = 0, *inst = 0;
+  
+  if (!PyArg_ParseTuple(args, "OO", &desc, &inst))
+  {
+    return -1;
+  }
+  
+  if (!PyObject_IsSubclass(desc, (PyObject*)&PyOFXImageEffectDescriptorType))
+  {
+    PyErr_SetString(PyExc_TypeError, "First argument must be a subclass of ofx.ImageEffectDescriptor");
+    return -1;
+  }
+  
+  if (!PyObject_IsSubclass(inst, (PyObject*)&PyOFXImageEffectType))
+  {
+    PyErr_SetString(PyExc_TypeError, "Second argument must be a subclass of ofx.ImageEffect");
+    return -1;
+  }
+  
+  PyImageEffectPlugin *plugin = new PyImageEffectPlugin((PyTypeObject*)desc, (PyTypeObject*)inst);
+  plugin->self(self);
+  
+  pplugin->plugin = plugin;
+  
+  return 0;
+}
+
+// ---
+
+bool PyOFX_InitPlugin(PyObject *mod)
+{
+  INIT_TYPE(PyOFXPluginType, "ofx.Plugin", PyOFXPlugin);
+  PyOFXPluginType.tp_flags = Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE;
+  PyOFXPluginType.tp_new = PyOFXPlugin_New;
+  PyOFXPluginType.tp_dealloc = PyOFXPlugin_Delete;
+  PyOFXPluginType.tp_init = PyOFXPlugin_Init;
+  PyOFXPluginType.tp_getset = PyOFXPlugin_GetSeters;
+  
+  INIT_TYPE(PyOFXImageEffectPluginType, "ofx.ImageEffectPlugin", PyOFXImageEffectPlugin);
+  PyOFXImageEffectPluginType.tp_flags = Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE;
+  PyOFXImageEffectPluginType.tp_init = PyOFXImageEffectPlugin_Init;
+  
+  if (PyType_Ready(&PyOFXPluginType) < 0)
+  {
+    return false;
+  }
+  
+  if (PyType_Ready(&PyOFXImageEffectPluginType) < 0)
+  {
+    return false;
+  }
+  
+  Py_INCREF(&PyOFXPluginType);
+  PyModule_AddObject(mod, "Plugin", (PyObject*)&PyOFXPluginType);
+  
+  Py_INCREF(&PyOFXImageEffectPluginType);
+  PyModule_AddObject(mod, "ImageEffectPlugin", (PyObject*)&PyOFXImageEffectPluginType);
+  
   return true;
 }
 

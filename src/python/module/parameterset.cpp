@@ -27,49 +27,6 @@ PyTypeObject PyOFXParameterSetDescriptorType;
 
 // ---
 
-std::map<PyInterpolatorKey, PyObject*> gPyInterpolators;
-
-std::string PyInterpolator(ofx::ParameterSet &params,
-                           const std::string &paramName,
-                           ofx::Time t,
-                           ofx::Time t0, const std::string &v0,
-                           ofx::Time t1, const std::string &v1,
-                           double amount)
-{
-  PyInterpolatorKey key = {params.handle(), paramName};
-  
-  std::map<PyInterpolatorKey, PyObject*>::iterator it = gPyInterpolators.find(key);
-  
-  if (it == gPyInterpolators.end())
-  {
-    throw ofx::FailedError("No associated python interpolation function");
-  }
-  
-  PyObject *ppset = PyObject_CallObject((PyObject*)&PyOFXParameterSetType, NULL);
-  ofx::ParameterSet *pset = ((PyOFXParameterSet*)ppset)->pset;
-  *pset = params;
-  
-  PyObject *args = Py_BuildValue("Osddsdsd", ppset, paramName.c_str(), t, t0, v0.c_str(), t1, v1.c_str(), amount);
-  
-  PyObject *iv = PyObject_CallObject(it->second, args);
-  
-  Py_DECREF(args);
-  Py_DECREF(ppset);
-  
-  if (!PyString_Check(iv))
-  {
-    Py_DECREF(iv);
-    throw ofx::ValueError("Python interpolation function should return a string");
-  }
-  
-  std::string rv = PyString_AsString(iv);
-  Py_DECREF(iv);
-  
-  return rv;
-}
-
-// ---
-
 PyObject* PyOFXParameterSetDescriptor_New(PyTypeObject *t, PyObject *, PyObject *)
 {
   PyObject *self = t->tp_alloc(t, 0);

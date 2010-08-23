@@ -538,6 +538,24 @@ PyMODINIT_FUNC initofx(void)
     return;
   }
   
+  if (!PyOFX_InitInteract(mod))
+  {
+    Py_DECREF(mod);
+    return;
+  }
+  
+  if (!PyOFX_InitImageEffect(mod))
+  {
+    Py_DECREF(mod);
+    return;
+  }
+  
+  if (!PyOFX_InitPlugin(mod))
+  {
+    Py_DECREF(mod);
+    return;
+  }
+  
   if (!PyOFX_InitTest(mod))
   {
     Py_DECREF(mod);

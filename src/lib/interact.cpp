@@ -189,13 +189,13 @@ void Interact::pixelScale(double *sx, double *sy) {
   *sy = mProps.getDouble(kOfxInteractPropPixelScale, 1);
 }
 
-RGBAColour<double> Interact::backgroundColor() {
-  RGBAColour<double> color;
-  color.r = mProps.getDouble(kOfxInteractPropBackgroundColour, 0);
-  color.g = mProps.getDouble(kOfxInteractPropBackgroundColour, 1);
-  color.b = mProps.getDouble(kOfxInteractPropBackgroundColour, 2);
-  color.a = 1.0;
-  return color;
+RGBAColour<double> Interact::backgroundColour() {
+  RGBAColour<double> colour;
+  colour.r = mProps.getDouble(kOfxInteractPropBackgroundColour, 0);
+  colour.g = mProps.getDouble(kOfxInteractPropBackgroundColour, 1);
+  colour.b = mProps.getDouble(kOfxInteractPropBackgroundColour, 2);
+  colour.a = 1.0;
+  return colour;
 }
 
 void Interact::viewportSize(int *w, int *h) {

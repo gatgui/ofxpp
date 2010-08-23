@@ -52,7 +52,8 @@ namespace ofx {
       }
       
       inline void identifier(const char *ID) {
-        mPlugin.pluginIdentifier = ID;
+        mIdentifier = ID;
+        mPlugin.pluginIdentifier = mIdentifier.c_str();
       }
       
       inline int majorVersion() const {
@@ -70,6 +71,7 @@ namespace ofx {
     protected:
       
       OfxPlugin mPlugin;
+      std::string mIdentifier;
   };
   
   template <class Descriptor, class Effect, class BaseClass=Plugin>
@@ -89,8 +91,8 @@ namespace ofx {
       
       static OfxStatus Main(const char *action, const void *handle,
                             OfxPropertySetHandle hInArgs,
-                            OfxPropertySetHandle hOutArgs) {
-        
+                            OfxPropertySetHandle hOutArgs)
+      {
         SelfType *plugin = Instance();
         if (!plugin) {
           Log("*** Invalid plugin");

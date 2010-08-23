@@ -30,14 +30,23 @@ PyTypeObject PyOFXOutputClipPreferencesType;
 
 // ---
 
+PyImageEffectDescriptor::PyImageEffectDescriptor()
+  : ofx::ImageEffectDescriptor(), mSelf(0)
+{
+}
+
 PyImageEffectDescriptor::PyImageEffectDescriptor(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception)
   : ofx::ImageEffectDescriptor(h, hdl), mSelf(0)
 {  
 }
 
 PyImageEffectDescriptor::PyImageEffectDescriptor(const PyImageEffectDescriptor &rhs)
-  : ofx::ImageEffectDescriptor(rhs)
+  : ofx::ImageEffectDescriptor(rhs), mSelf(rhs.mSelf)
 {
+  if (mSelf != 0)
+  {
+    Py_INCREF(mSelf);
+  }
 }
 
 PyImageEffectDescriptor::~PyImageEffectDescriptor()
@@ -48,6 +57,7 @@ PyImageEffectDescriptor::~PyImageEffectDescriptor()
 PyImageEffectDescriptor& PyImageEffectDescriptor::operator=(const PyImageEffectDescriptor &rhs)
 {
   ofx::ImageEffectDescriptor::operator=(rhs);
+  self(rhs.self());
   return *this;
 }
 
@@ -82,7 +92,7 @@ OfxStatus PyImageEffectDescriptor::describe()
         }
       }
       
-      Py_DECREF(rv);
+      Py_XDECREF(rv);
       Py_DECREF(meth);
       
       return stat;
@@ -128,7 +138,7 @@ OfxStatus PyImageEffectDescriptor::describeInContext(ofx::ImageEffectContext ctx
         }
       }
       
-      Py_DECREF(rv);
+      Py_XDECREF(rv);
       Py_DECREF(args);
       Py_DECREF(meth);
       
@@ -145,8 +155,13 @@ OfxStatus PyImageEffectDescriptor::describeInContext(ofx::ImageEffectContext ctx
 
 // ---
 
+PyImageEffect::PyImageEffect()
+  : ofx::ImageEffect(), mSelf(0)
+{
+}
+
 PyImageEffect::PyImageEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl)
-  : ofx::ImageEffect(h, hdl)
+  : ofx::ImageEffect(h, hdl), mSelf(0)
 {
 }
 
@@ -187,7 +202,7 @@ OfxStatus PyImageEffect::beginInstanceChanged(ofx::ChangeReason reason)
         }
       }
       
-      Py_DECREF(rv);
+      Py_XDECREF(rv);
       Py_DECREF(args);
       Py_DECREF(meth);
       
@@ -234,7 +249,7 @@ OfxStatus PyImageEffect::endInstanceChanged(ofx::ChangeReason reason)
         }
       }
       
-      Py_DECREF(rv);
+      Py_XDECREF(rv);
       Py_DECREF(args);
       Py_DECREF(meth);
       
@@ -309,7 +324,7 @@ OfxStatus PyImageEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &
         }
       }
       
-      Py_DECREF(rv);
+      Py_XDECREF(rv);
       Py_DECREF(oargs);
       Py_DECREF(pyargs);
       Py_DECREF(meth);
@@ -356,7 +371,7 @@ OfxStatus PyImageEffect::purgeCaches()
         }
       }
       
-      Py_DECREF(rv);
+      Py_XDECREF(rv);
       Py_DECREF(meth);
       
       return stat;
@@ -401,7 +416,7 @@ OfxStatus PyImageEffect::syncPrivateData()
         }
       }
       
-      Py_DECREF(rv);
+      Py_XDECREF(rv);
       Py_DECREF(meth);
       
       return stat;
@@ -446,7 +461,7 @@ OfxStatus PyImageEffect::beginInstanceEdit()
         }
       }
       
-      Py_DECREF(rv);
+      Py_XDECREF(rv);
       Py_DECREF(meth);
       
       return stat;
@@ -491,7 +506,7 @@ OfxStatus PyImageEffect::endInstanceEdit()
         }
       }
       
-      Py_DECREF(rv);
+      Py_XDECREF(rv);
       Py_DECREF(meth);
       
       return stat;
@@ -573,7 +588,7 @@ OfxStatus PyImageEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &arg
         }
       }
       
-      Py_DECREF(rv);
+      Py_XDECREF(rv);
       Py_DECREF(oargs);
       Py_DECREF(pyargs);
       Py_DECREF(meth);
@@ -694,7 +709,7 @@ OfxStatus PyImageEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args
         }
       }
       
-      Py_DECREF(rv);
+      Py_XDECREF(rv);
       Py_DECREF(oargs);
       Py_DECREF(pyargs);
       Py_DECREF(meth);
@@ -797,7 +812,7 @@ OfxStatus PyImageEffect::getFramesNeeded(ofx::ImageEffect::GetFramesNeededArgs &
         }
       }
       
-      Py_DECREF(rv);
+      Py_XDECREF(rv);
       Py_DECREF(oargs);
       Py_DECREF(pyargs);
       Py_DECREF(meth);
@@ -915,7 +930,7 @@ OfxStatus PyImageEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args)
         }
       }
       
-      Py_DECREF(rv);
+      Py_XDECREF(rv);
       Py_DECREF(oargs);
       Py_DECREF(pyargs);
       Py_DECREF(meth);
@@ -999,7 +1014,7 @@ OfxStatus PyImageEffect::render(ofx::ImageEffect::RenderArgs &args)
         }
       }
       
-      Py_DECREF(rv);
+      Py_XDECREF(rv);
       Py_DECREF(oargs);
       Py_DECREF(pyargs);
       Py_DECREF(meth);
@@ -1080,7 +1095,7 @@ OfxStatus PyImageEffect::beginSequenceRender(ofx::ImageEffect::BeginSequenceArgs
         }
       }
       
-      Py_DECREF(rv);
+      Py_XDECREF(rv);
       Py_DECREF(oargs);
       Py_DECREF(pyargs);
       Py_DECREF(meth);
@@ -1151,7 +1166,7 @@ OfxStatus PyImageEffect::endSequenceRender(ofx::ImageEffect::EndSequenceArgs &ar
         }
       }
       
-      Py_DECREF(rv);
+      Py_XDECREF(rv);
       Py_DECREF(oargs);
       Py_DECREF(pyargs);
       Py_DECREF(meth);
@@ -1169,13 +1184,6 @@ OfxStatus PyImageEffect::endSequenceRender(ofx::ImageEffect::EndSequenceArgs &ar
 
 OfxStatus PyImageEffect::getClipPreferences(ofx::ImageEffect::GetClipPrefArgs &args)
 {
-  /*
-  s
-  ClipPreferences outPref;
-  std::map<std::string, PixelPreferences> inPrefs;
-  
-  // all outputs [so getTimeDomain should be changed]
-  */
   if (mSelf != 0)
   {
     PyObject *meth = PyObject_GetAttrString(mSelf, "getClipPreferences");
@@ -1184,7 +1192,100 @@ OfxStatus PyImageEffect::getClipPreferences(ofx::ImageEffect::GetClipPrefArgs &a
     {
       OfxStatus stat = kOfxStatFailed;
       
-      // TODO
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oarg;
+      
+      oarg = PyObject_CallObject((PyObject*)&PyOFXOutputClipPreferencesType, NULL);
+      PyObject_SetAttrString(oargs, "outPref", oarg);
+      Py_DECREF(oarg);
+      
+      oarg = PyDict_New();
+      PyObject_SetAttrString(oargs, "inPrefs", oarg);
+      Py_DECREF(oarg);
+      
+      PyObject *pyargs = Py_BuildValue("(O)", oargs);
+      
+      PyObject *rv = PyObject_Call(meth, pyargs, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        PyErr_Clear();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+          
+          if (stat == kOfxStatOK)
+          {
+            // fill results
+            PyObject *opref = PyObject_GetAttrString(oargs, "outPref");
+            
+            if (opref && PyObject_TypeCheck(opref, &PyOFXOutputClipPreferencesType))
+            {
+              PyOFXOutputClipPreferences *ppref = (PyOFXOutputClipPreferences*)opref;
+              
+              args.outPref.frameRate = PyFloat_AsDouble(ppref->frameRate);
+              args.outPref.fieldOrder = ofx::ImageFieldOrder(PyInt_AsLong(ppref->fieldOrder));
+              args.outPref.preMult = ofx::ImagePreMult(PyInt_AsLong(ppref->preMult));
+              args.outPref.continuousSamples = (ppref->continuousSamples == Py_True);
+              args.outPref.frameVarying = (ppref->frameVarying == Py_True);
+            }
+            else
+            {
+              stat = kOfxStatFailed;
+            }
+            
+            PyObject *iprefs = PyObject_GetAttrString(oargs, "inPrefs");
+            
+            if (stat == kOfxStatOK && iprefs && PyDict_Check(iprefs))
+            {
+              Py_ssize_t i = 0;
+              PyObject *clipName, *ipref;
+              char *name;
+              ofx::InputClipPreferences pref;
+              
+              while (PyDict_Next(iprefs, &i, &clipName, &ipref))
+              {
+                if (!PyString_Check(clipName) || !PyObject_TypeCheck(ipref, &PyOFXInputClipPreferencesType))
+                {
+                  continue;
+                }
+                
+                PyOFXInputClipPreferences *ppref = (PyOFXInputClipPreferences*)ipref;
+                
+                name = PyString_AsString(clipName);
+                
+                pref.components = ofx::ImageComponent(PyInt_AsLong(ppref->components));
+                pref.bitDepth = ofx::BitDepth(PyInt_AsLong(ppref->bitDepth));
+                pref.pixelAspectRatio = PyFloat_AsDouble(ppref->pixelAspectRatio);
+                
+                args.inPrefs[name] = pref;
+              }
+            }
+            else
+            {
+              stat = kOfxStatFailed;
+            }
+            
+            Py_XDECREF(opref);
+            Py_XDECREF(iprefs);
+          }
+        }
+      }
+      
+      Py_XDECREF(rv);
+      Py_DECREF(pyargs);
+      Py_DECREF(oargs);
+      Py_DECREF(meth);
     }
     else
     {
@@ -1264,7 +1365,7 @@ OfxStatus PyImageEffect::getTimeDomain(ofx::ImageEffect::GetTimeDomainArgs &args
         }
       }
       
-      Py_DECREF(rv);
+      Py_XDECREF(rv);
       Py_DECREF(oargs);
       Py_DECREF(pyargs);
       Py_DECREF(meth);
@@ -1339,8 +1440,35 @@ PyObject* PyOFXImageEffectDescriptor_New(PyTypeObject *t, PyObject *, PyObject *
   return self;
 }
 
-int PyOFXImageEffectDescriptor_Init(PyObject *, PyObject *, PyObject *)
+int PyOFXImageEffectDescriptor_Init(PyObject *self, PyObject *args, PyObject *)
 {
+  if (PyTuple_Size(args) == 2)
+  {
+    PyOFXImageEffectDescriptor *pdesc = (PyOFXImageEffectDescriptor*) self;
+    
+    PyObject *phost = PyTuple_GetItem(args, 0);
+    PyObject *phandle = PyTuple_GetItem(args, 1);
+    
+    if (!PyObject_TypeCheck(phost, &PyOFXImageEffectHostType))
+    {
+      PyErr_SetString(PyExc_TypeError, "First argument must be a object of class ofx.ImageEffectHost");
+      return -1;
+    }
+    
+    if (!PyObject_TypeCheck(phandle, &PyOFXHandleType))
+    {
+      PyErr_SetString(PyExc_TypeError, "Second argument must be a object of class ofx.Handle");
+      return -1;
+    }
+    
+    ofx::ImageEffectHost *host = (ofx::ImageEffectHost*) ((PyOFXHost*)phost)->host;
+    OfxImageEffectHandle handle = (OfxImageEffectHandle) ((PyOFXHandle*)phandle)->handle;
+    
+    PyImageEffectDescriptor *desc = new PyImageEffectDescriptor(host, handle);
+    desc->self(self);
+    
+    pdesc->desc = desc;
+  }
   return 0;
 }
 
@@ -2785,8 +2913,35 @@ PyObject* PyOFXImageEffect_New(PyTypeObject *t, PyObject *, PyObject *)
   return self;
 }
 
-int PyOFXImageEffect_Init(PyObject *, PyObject *, PyObject *)
+int PyOFXImageEffect_Init(PyObject *self, PyObject *args, PyObject *)
 {
+  if (PyTuple_Size(args) == 2)
+  {
+    PyOFXImageEffect *peffect = (PyOFXImageEffect*) self;
+    
+    PyObject *phost = PyTuple_GetItem(args, 0);
+    PyObject *phandle = PyTuple_GetItem(args, 1);
+    
+    if (!PyObject_TypeCheck(phost, &PyOFXImageEffectHostType))
+    {
+      PyErr_SetString(PyExc_TypeError, "First argument must be a object of class ofx.ImageEffectHost");
+      return -1;
+    }
+    
+    if (!PyObject_TypeCheck(phandle, &PyOFXHandleType))
+    {
+      PyErr_SetString(PyExc_TypeError, "Second argument must be a object of class ofx.Handle");
+      return -1;
+    }
+    
+    ofx::ImageEffectHost *host = (ofx::ImageEffectHost*) ((PyOFXHost*)phost)->host;
+    OfxImageEffectHandle handle = (OfxImageEffectHandle) ((PyOFXHandle*)phandle)->handle;
+    
+    PyImageEffect *effect = new PyImageEffect(host, handle);
+    effect->self(self);
+    
+    peffect->effect = effect;
+  }
   return 0;
 }
 

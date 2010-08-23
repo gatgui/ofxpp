@@ -17,9 +17,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 # USA.
 
-import PyOpenGL
+#import PyOpenGL
 import ofx
 
+"""
 class Interact(ofx.Interact):
   
   # Host application
@@ -35,8 +36,8 @@ class Interact(ofx.Interact):
   DO_WIDTH = 2
   DO_HEIGHT = 3
   
-  def __init__(self, host):
-    ofx.Interact.__init__(self, host)
+  def __init__(self, host, handle):
+    ofx.Interact.__init__(self, host, handle)
     self.dragOp = DO_NONE
     self.widthSelected = False
     self.heightSelected = False
@@ -52,20 +53,16 @@ class Interact(ofx.Interact):
       self.hostApp = HA_TOXIK
     elif self.host.name == "com.eyeonline.Fusion":
       self.hostApp = HA_FUSION
-    self.setSlaveParam(0, "center")
-    self.setSlaveParam(1, "width")
-    self.setSlaveParam(2, "height")
+    self.slaveToParam(0, "center")
+    self.slaveToParam(1, "width")
+    self.slaveToParam(2, "height")
   
   def draw(self, args):
     pass
   
   def penMotion(self, args):
-    pC = None #((EllipseFadeEffect*) args.effect)->pCenter;
-    pW = None #((EllipseFadeEffect*) args.effect)->pWidth;
-    pH = None #((EllipseFadeEffect*) args.effect)->pHeight;
-    # args.effect.parameters.getDouble2Param("center")... No
-    # should be able to access python object members: args.effect.center
-    
+    pass
+  
   def penDown(self, args):
     pass
   
@@ -73,49 +70,50 @@ class Interact(ofx.Interact):
     pass
   
 
+"""
 
 class Descriptor(ofx.ImageEffectDescriptor):
   
-  def __init__(self, host, hdl):
-    ofx.ImageEffectDescriptor.__init__(self, host, hdl)
-    
+  def __init__(self, host, handle):
+    ofx.ImageEffectDescriptor.__init__(self, host, handle)
+  
   def describe(self):
     self.label = "ellipseFade"
     self.shortLabel = "ellipseFade"
     self.longLabel = "ellipseFade"
     self.group = "gatgui"
     self.singleInstance = False
-    # Do not leave frame threading to hist
+    # Do not leave frame threading to host
     self.hostFrameThreading = False
     # Python plugin are not even instance safe
     self.renderThreadSafety = ofx.RenderThreadUnsafe
-    self.setSupportedPixelDepth(0, ofx.BitDepthFloat)
-    self.setSupportedContext(0, ofx.ImageEffectContextFilter)
+    self.supportedPixelDepth(0, ofx.BitDepthFloat)
+    self.supportedContext(0, ofx.ImageEffectContextFilter)
     self.temporalClipAccess = False
-    self.tilesSupport = True
-    self.alwaysRenderFieldTwice = True
-    self.multipleClipDepthsSupport = False
-    self.multipleClipPARsSupport = False
-    self.multiResolutionSupport = False
-    if self.host.supportOverlays:
-      self.setOverlayInteract(Plugin, ofx.InteractDescriptor, Interact)
+    self.supportsTiles = True
+    self.fieldRenderTwiceAlways = True
+    self.supportsMultipleClipDepths = False
+    self.supportsMultipleClipPARs = False
+    self.supportsMultiResolution = False
+    #if self.host.supportsOverlays:
+    #  self.overlayInteract = ofx.MakeOverlay(ofx.DefaultInteractDescriptor, Interact)
     return ofx.StatOK;
   
   def describeInContext(self, ctx):
     
     clip = self.defineClip("Output");
-    clip.setSupportedComponent(0, ofx.ImageComponentRGBA)
+    clip.supportedComponent(0, ofx.ImageComponentRGBA)
     
     clip = self.defineClip("Source");
-    clip.setSupportedComponent(0, ofx.ImageComponentRGBA)
+    clip.supportedComponent(0, ofx.ImageComponentRGBA)
     
     c = self.parameters.defineDouble2Param("center");
     c.default = (0.5, 0.5)
     c.min = (0, 0)
     c.max = (1, 1)
     c.digits = 3
-    c.setDimensionLabel(0, "X")
-    c.setDimensionLabel(1, "Y")
+    c.dimensionLabel(0, "X")
+    c.dimensionLabel(1, "Y")
     c.persistant = True
     c.animateable = True
     c.doubleType = ofx.DoubleParamNormalisedXY
@@ -151,8 +149,8 @@ class Descriptor(ofx.ImageEffectDescriptor):
 
 class Effect(ofx.ImageEffect):
   
-  def __init__(self, host, hdl):
-    ofx.ImageEffect.__init__(self, host, hdl)
+  def __init__(self, host, handle):
+    ofx.ImageEffect.__init__(self, host, handle)
     self.center = self.parameters.getDouble2Param("center")
     self.width = self.parameters.getDoubleParam("width")
     self.height = self.parameters.getDoubleParam("height")
@@ -164,7 +162,7 @@ class Effect(ofx.ImageEffect):
     return (dx*dx + dy*dy);
     
   def isIdentity(self, args):
-    if self.width.value <= 0.0 or self.height.value <= 0.0:
+    if self.width.getValue() <= 0.0 or self.height.getValue() <= 0.0:
       args.idClip = "Source"
       args.idTime = args.time
       return ofx.StatOK
@@ -172,7 +170,6 @@ class Effect(ofx.ImageEffect):
       return ofx.StatReplyDefault
   
   def render(self, args):
-    # Note: args.renderWindow is in pixels, not canonical coords
     cSrc = self.getClip("Source")
     cOut = self.getClip("Output")
     
@@ -197,41 +194,59 @@ class Effect(ofx.ImageEffect):
       for y in xrange(args.renderWindow.y1, args.renderWindow.y2):
         if self.abort():
           break
-        dstPix = iOut.getPixelAddress(args.renderWindow.x1, y)
+        dstPix = iOut.pixelAddress(args.renderWindow.x1, y)
         if not dstPix:
           continue
         for x in xrange(args.renderWindow.x1, args.renderWindow.x2):
           pcx, pcy = ofx.PixelToCanonicalCoords(x, y, par, args.renderScaleX, args.renderScaleY, args.field)
-          srcPix = iSrc.getPixelAddress(x, y)
+          srcPix = iSrc.pixelAddress(x, y)
           if not srcPix:
-            dstPix.set(0, 0, 0, 1)
+            dstPix.r = 0
+            dstPix.g = 0
+            dstPix.b = 0
+            dstPix.a = 1
           else:
             d = self.normalisedDistanceToEllipseCenter(cx, cy, cw, ch, pcx, pcy)
             if d <= 1.0:
               falloff = d * d
-              dstPix.set(falloff*srcPix.r, falloff*srcPix.g, falloff*srcPix.b, srcPix.a)
+              dstPix.r = falloff * srcPix.r
+              dstPix.g = falloff * srcPix.g
+              dstPix.b = falloff * srcPix.b
+              dstPix.a = srcPix.a
             else:
-              dstPix = srcPix
+              dstPix.r = srcPix.r
+              dstPix.g = srcPix.g
+              dstPix.b = srcPix.b
+              dstPix.a = srcPix.a
           dstPix.next()
     else:
       for y in xrange(args.renderWindow.y1, args.renderWindow.y2):
         if self.abort():
           break
-        dstPix = iOut.getPixelAddress(args.renderWindow.x1, y)
+        dstPix = iOut.pixelAddress(args.renderWindow.x1, y)
         if not dstPix:
           continue
         for x in xrange(args.renderWindow.x1, args.renderWindow.x2):
           pcx, pcy = ofx.PixelToCanonicalCoords(x, y, par, args.renderScaleX, args.renderScaleY, args.field)
-          srcPix = iSrc.getPixelAddress(x, y)
+          srcPix = iSrc.pixelAddress(x, y)
           if not srcPix:
-            dstPix.set(0, 0, 0, 1)
+            dstPix.r = 0
+            dstPix.g = 0
+            dstPix.b = 0
+            dstPix.a = 1
           else:
             d = self.normalisedDistanceToEllipseCenter(cx, cy, cw, ch, pcx, pcy)
             if d <= 1.0:
               falloff = 1.0 - d * d
-              dstPix.set(falloff*srcPix.r, falloff*srcPix.g, falloff*srcPix.b, srcPix.a)
+              dstPix.r = falloff * srcPix.r
+              dstPix.g = falloff * srcPix.g
+              dstPix.b = falloff * srcPix.b
+              dstPix.a = srcPix.a
             else:
-              dstPix.set(0, 0, 0, srcPix.a)
+              dstPix.r = 0
+              dstPix.g = 0
+              dstPix.b = 0
+              dstPix.a = srcPix.a
           dstPix.next()
     
     iSrc.release()
@@ -241,26 +256,20 @@ class Effect(ofx.ImageEffect):
   
 
 
-# in C++
-#class Plugin : public ofx::ImageEffectPlugin<Descriptor, Effect> {
-#  public:
-#    Plugin();
-#    virtual ~Plugin();
-#};
 class Plugin(ofx.ImageEffectPlugin):
   def __init__(self):
     ofx.ImageEffectPlugin.__init__(Descriptor, Effect)
     self.majorVersion = 1
     self.minorVersion = 0
-    self.id = "gatgui.filter.pyEllipseFade";
+    self.identifier = "gatgui.filter.pyEllipseFade";
 
 
 # The entry points PythonOfxLoader will look for
 
-def GetNumberOfPlugins():
+def OfxGetNumberOfPlugins():
   return 1
 
-def GetPlugin(i):
+def OfxGetPlugin(i):
   if i == 0:
     return Plugin()
   else:

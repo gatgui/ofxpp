@@ -255,6 +255,7 @@ std::string ParameterSet::pageOrder(int idx) {
   return mProps.getString(kOfxPluginPropParamPageOrder, idx);
 }
 
+#ifdef OFX_API_1_2
 bool ParameterSet::needsSyncing() {
   return (mProps.getInt(kOfxPropParamSetNeedsSyncing, 0) == 1);
 }
@@ -262,6 +263,7 @@ bool ParameterSet::needsSyncing() {
 void ParameterSet::needsSyncing(bool v) {
   mProps.setInt(kOfxPropParamSetNeedsSyncing, 0, (v ? 1 : 0));
 }
+#endif
 
 IntParameter ParameterSet::getIntParam(const std::string &name) throw(Exception) {
   OfxParamHandle hParam;

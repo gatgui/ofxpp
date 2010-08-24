@@ -2941,7 +2941,9 @@ extern bool PyOFX_InitParameter_RGB(PyObject *mod);
 extern bool PyOFX_InitParameter_RGBA(PyObject *mod);
 extern bool PyOFX_InitParameter_Group(PyObject *mod);
 extern bool PyOFX_InitParameter_PushButton(PyObject *mod);
+#ifdef OFX_API_1_2
 extern bool PyOFX_InitParameter_Parametric(PyObject *mod);
+#endif
 
 bool PyOFX_InitParameter(PyObject *mod)
 {
@@ -3063,10 +3065,12 @@ bool PyOFX_InitParameter(PyObject *mod)
     return false;
   }
   
+#ifdef OFX_API_1_2
   if (!PyOFX_InitParameter_Parametric(mod))
   {
     return false;
   }
+#endif
   
   Py_INCREF(&PyOFXParameterDescriptorType);
   PyModule_AddObject(mod, "ParameterDescriptor", (PyObject*)&PyOFXParameterDescriptorType);

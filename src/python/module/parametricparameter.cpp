@@ -23,6 +23,8 @@ USA.
 
 #include "common.h"
 
+#ifdef OFX_API_1_2
+
 PyTypeObject PyOFXParametricParameterDescriptorType;
 PyTypeObject PyOFXParametricParameterType;
 
@@ -757,3 +759,5 @@ bool PyOFX_InitParameter_Parametric(PyObject *mod)
   
   return true;
 }
+
+#endif

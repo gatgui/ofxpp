@@ -79,6 +79,7 @@ USA.
     }\
   }
 
+
 namespace ofx {
   
   enum Type {

@@ -32,6 +32,8 @@ ofxNewMacPackaging = (int(ARGUMENTS.get("ofxNewMacPackaging", "0")) != 0)
 defines = []
 if int(ARGUMENTS.get("forceOverlayRedraw", "1")) == 1:
   defines.append("FORCE_OVERLAY_REDRAW")
+if str(Platform()) == "win32":
+  defines.append("NOMINMAX")
 
 ARGUMENTS["static"] = "1"
 SConscript("gcore/SConstruct")
@@ -59,7 +61,8 @@ prjs = [
   { "name"    : "pyOFX",
     "type"    : "dynamicmodule",
     "ext"     : ".ofx",
-    "defs"    : defines,
+    "defs"    : defines+["GCORE_STATIC"],
+    "incdirs" : ["gcore/include"],
     "srcs"    : glob.glob("src/python/plugin/*.cpp"),
     "libs"    : ["ofxpp", "gcore"],
     "custom"  : [python.Require],

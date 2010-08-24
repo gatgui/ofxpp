@@ -167,10 +167,12 @@ typedef struct
   PyOFXValueParameterDescriptor base;
 } PyOFXRGBAParameterDescriptor;
 
+#ifdef OFX_API_1_2
 typedef struct
 {
   PyOFXValueParameterDescriptor base;
 } PyOFXParametricParameterDescriptor;
+#endif
 
 typedef struct
 {
@@ -258,10 +260,12 @@ typedef struct
   PyOFXValueParameter base;
 } PyOFXRGBAParameter;
 
+#ifdef OFX_API_1_2
 typedef struct
 {
   PyOFXValueParameter base;
 } PyOFXParametricParameter;
+#endif
 
 typedef struct
 {
@@ -419,7 +423,9 @@ extern PyTypeObject PyOFXInt3ParameterDescriptorType;
 extern PyTypeObject PyOFXStringParameterDescriptorType;
 extern PyTypeObject PyOFXRGBParameterDescriptorType;
 extern PyTypeObject PyOFXRGBAParameterDescriptorType;
+#ifdef OFX_API_1_2
 extern PyTypeObject PyOFXParametricParameterDescriptorType;
+#endif
 extern PyTypeObject PyOFXPageParameterDescriptorType;
 extern PyTypeObject PyOFXGroupParameterDescriptorType;
 extern PyTypeObject PyOFXPushButtonParameterDescriptorType;
@@ -437,7 +443,9 @@ extern PyTypeObject PyOFXInt3ParameterType;
 extern PyTypeObject PyOFXStringParameterType;
 extern PyTypeObject PyOFXRGBParameterType;
 extern PyTypeObject PyOFXRGBAParameterType;
+#ifdef OFX_API_1_2
 extern PyTypeObject PyOFXParametricParameterType;
+#endif
 extern PyTypeObject PyOFXPageParameterType;
 extern PyTypeObject PyOFXGroupParameterType;
 extern PyTypeObject PyOFXPushButtonParameterType;
@@ -726,25 +734,6 @@ class PyImageEffectPlugin : public PyPlugin
     EffectMap mEffects;
 };
 
-struct PyInterpolatorKey
-{
-  OfxParamSetHandle paramSet;
-  std::string paramName;
-  
-  inline bool operator<(const PyInterpolatorKey &k) const
-  {
-    return (paramSet < k.paramSet);
-  }
-};
-
-extern std::map<PyInterpolatorKey, PyObject*> gPyInterpolators;
-
-extern std::string PyInterpolator(ofx::ParameterSet &params,
-                                  const std::string &paramName,
-                                  ofx::Time t,
-                                  ofx::Time t0, const std::string &v0,
-                                  ofx::Time t1, const std::string &v1,
-                                  double amount);
 
 extern bool PyOFX_InitException(PyObject *mod);
 extern bool PyOFX_InitTest(PyObject *mod);

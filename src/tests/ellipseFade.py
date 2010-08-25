@@ -17,7 +17,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 # USA.
 
-#import PyOpenGL
+from PyOpenGL import *
 import ofx
 
 """
@@ -83,10 +83,6 @@ class Descriptor(ofx.ImageEffectDescriptor):
     self.longLabel = "ellipseFade"
     self.group = "gatgui"
     self.singleInstance = False
-    # Do not leave frame threading to host
-    self.hostFrameThreading = False
-    # Python plugin are not even instance safe
-    self.renderThreadSafety = ofx.RenderThreadUnsafe
     self.supportedPixelDepth(0, ofx.BitDepthFloat)
     self.supportedContext(0, ofx.ImageEffectContextFilter)
     self.temporalClipAccess = False
@@ -96,7 +92,7 @@ class Descriptor(ofx.ImageEffectDescriptor):
     self.supportsMultipleClipPARs = False
     self.supportsMultiResolution = False
     #if self.host.supportsOverlays:
-    #  self.overlayInteract = ofx.MakeOverlay(ofx.DefaultInteractDescriptor, Interact)
+    #  self.overlayInteract = (ofx.InteractDescriptor, Interact)
     return ofx.StatOK;
   
   def describeInContext(self, ctx):
@@ -187,8 +183,8 @@ class Effect(ofx.ImageEffect):
     wext, hext = self.projectExtent
     par = self.projectPixelAspectRatio
     
-    cx, cy = ofx.NormalisedToCanonicalCoords((nx, ny), (wext, hext), (xoff, yoff), True)
-    cw, ch = ofx.NormalisedToCanonicalCoords((w*0.5, h*0.5), (wext, hext), (0, 0), False)
+    cx, cy = ofx.NormalisedToCanonicalCoords(nx, ny, wext, hext, xoff, yoff, True)
+    cw, ch = ofx.NormalisedToCanonicalCoords(w*0.5, h*0.5, wext, hext, 0, 0, False)
     
     if self.invert.value:
       for y in xrange(args.renderWindow.y1, args.renderWindow.y2):

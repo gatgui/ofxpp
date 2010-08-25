@@ -49,7 +49,7 @@ prjs = [
                  "include/ofx/parameter" : glob.glob("include/ofx/parameter/*.h")}
   },
   { "name"   : "ofx",
-    "alias"  : "ofxpy",
+    "alias"  : "pyofx",
     "type"   : "dynamicmodule",
     "incdirs": ["src/python/module"],
     "srcs"   : glob.glob("src/python/module/*.cpp"),
@@ -58,7 +58,7 @@ prjs = [
     "prefix" : python.ModulePrefix(),
     "ext"    : python.ModuleExtension()
   },
-  { "name"    : "pyOFX",
+  { "name"    : "pyplugin",
     "type"    : "dynamicmodule",
     "ext"     : ".ofx",
     "defs"    : defines+["GCORE_STATIC"],

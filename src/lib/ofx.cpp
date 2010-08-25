@@ -36,6 +36,9 @@ USA.
 #endif
 #include <ctime>
 #include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <cstdarg>
 
 namespace ofx {
 
@@ -219,11 +222,6 @@ BEGIN_ENUM_MAP(MessageType)
   ADD_ENUM_MAPPING_CUSTOM(MessageType, MessageTypeQuestion, kOfxMessageQuestion)
 END_ENUM_MAP(MessageType)
 
-#ifdef _DEBUG
-
-#include <cstdio>
-#include <cstdlib>
-#include <cstdarg>
 
 static FILE *gLog = 0;
 
@@ -276,6 +274,5 @@ void Log(const char *msg, ...) {
   fflush(gLog);
 }
 
-#endif
 
 }

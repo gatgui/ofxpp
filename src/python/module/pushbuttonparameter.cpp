@@ -22,6 +22,7 @@ USA.
 */
 
 #include "common.h"
+#include "entrypoints.h"
 
 PyTypeObject PyOFXPushButtonParameterDescriptorType;
 PyTypeObject PyOFXPushButtonParameterType;
@@ -45,20 +46,45 @@ PyObject* PyOFXPushButtonParameterDescriptor_GetInteract(PyObject *self, void*)
     return NULL;
   }
   
-  //ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
+  ofx::PushButtonParameterDescriptor *desc = (ofx::PushButtonParameterDescriptor*) pdesc->desc;
   
-  // typedef OfxStatus (*EntryPoint)(const char*, const void*, OfxPropertySetHandle, OfxPropertySetHandle);
-  //ofx::EntryPoint interact = desc->interact();
+  ofx::EntryPoint func = 0;
   
-  // -> wrap as a python method?
+  bool failed = false;
   
-  Py_INCREF(Py_None);
-  return Py_None;
+  CATCH({func = desc->interact();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  PyObject *rv = PyTuple_New(2);
+  
+  int idx = PyOFX_GetInteractFuncIndex(func);
+  
+  if (idx < 0 || idx >= PYOFX_MAX_ENTRY)
+  {
+    Py_INCREF(Py_None);
+    PyTuple_SetItem(rv, 0, Py_None);
+    
+    Py_INCREF(Py_None);
+    PyTuple_SetItem(rv, 1, Py_None);
+  }
+  else
+  {
+    Py_INCREF(gInteractDescClasses[idx]);
+    PyTuple_SetItem(rv, 0, gInteractDescClasses[idx]);
+    
+    Py_INCREF(gInteractClasses[idx]);
+    PyTuple_SetItem(rv, 1, gInteractClasses[idx]);
+  }
+  
+  return rv;
 }
 
-int PyOFXPushButtonParameterDescriptor_SetInteract(PyObject *self, PyObject *, void*)
+int PyOFXPushButtonParameterDescriptor_SetInteract(PyObject *self, PyObject *val, void*)
 {
-  // val is a callable
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
   if (!pdesc->desc)
@@ -67,7 +93,42 @@ int PyOFXPushButtonParameterDescriptor_SetInteract(PyObject *self, PyObject *, v
     return -1;
   }
   
-  //ofx::PushButtonParameterDescriptor *desc = (ofx::PushButtonParameterDescriptor*) pdesc->desc;
+  if (!PyTuple_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a tuple");
+    return -1;
+  }
+  
+  if (PyTuple_Size(val) != 2)
+  {
+    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 2 elements");
+    return -1;
+  }
+  
+  PyObject *descClass = PyTuple_GetItem(val, 0);
+  if (!PyObject_IsSubclass(descClass, (PyObject*)&PyOFXInteractDescriptorType))
+  {
+    PyErr_SetString(PyExc_TypeError, "Tuple first element must be a sub class of ofx.InteractDescriptor");
+    return -1;
+  }
+  
+  PyObject *instClass = PyTuple_GetItem(val, 1);
+  if (!PyObject_IsSubclass(instClass, (PyObject*)&PyOFXInteractType))
+  {
+    PyErr_SetString(PyExc_TypeError, "Tuple second element must be a sub class of ofx.Interact");
+    return -1;
+  }
+  
+  ofx::PushButtonParameterDescriptor *desc = (ofx::PushButtonParameterDescriptor*) pdesc->desc;
+  
+  bool failed = false;
+  
+  CATCH({desc->interact(PyOFX_GetInteractFunc(descClass, instClass));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -388,15 +449,41 @@ PyObject* PyOFXPushButtonParameter_GetInteract(PyObject *self, void*)
     return NULL;
   }
   
-  //ofx::ValueParameterDescriptor *desc = (ofx::ValueParameterDescriptor*) pdesc->desc;
+  ofx::PushButtonParameter *param = (ofx::PushButtonParameter*) pparam->param;
   
-  // typedef OfxStatus (*EntryPoint)(const char*, const void*, OfxPropertySetHandle, OfxPropertySetHandle);
-  //ofx::EntryPoint interact = desc->interact();
+  ofx::EntryPoint func = 0;
   
-  // -> wrap as a python method?
+  bool failed = false;
   
-  Py_INCREF(Py_None);
-  return Py_None;
+  CATCH({func = param->interact();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  PyObject *rv = PyTuple_New(2);
+  
+  int idx = PyOFX_GetInteractFuncIndex(func);
+  
+  if (idx < 0 || idx >= PYOFX_MAX_ENTRY)
+  {
+    Py_INCREF(Py_None);
+    PyTuple_SetItem(rv, 0, Py_None);
+    
+    Py_INCREF(Py_None);
+    PyTuple_SetItem(rv, 1, Py_None);
+  }
+  else
+  {
+    Py_INCREF(gInteractDescClasses[idx]);
+    PyTuple_SetItem(rv, 0, gInteractDescClasses[idx]);
+    
+    Py_INCREF(gInteractClasses[idx]);
+    PyTuple_SetItem(rv, 1, gInteractClasses[idx]);
+  }
+  
+  return rv;
 }
 
 PyObject* PyOFXPushButtonParameter_GetInteractSizeAspect(PyObject *self, void*)

@@ -50,8 +50,8 @@ PyImageEffectPlugin::PyImageEffectPlugin(PyTypeObject *descClass, PyTypeObject *
   OfxPlugin *plugin = description();
   plugin->pluginApi = kOfxImageEffectPluginApi;
   plugin->apiVersion = kOfxImageEffectPluginApiVersion;
-  plugin->setHost = PySetHost;
-  plugin->mainEntry = PyAddEffectPlugin(this);
+  plugin->setHost = PyOFX_GetSetHostFunc(this);
+  plugin->mainEntry = PyOFX_GetMainFunc(this);
 }
 
 PyImageEffectPlugin::~PyImageEffectPlugin()

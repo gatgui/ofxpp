@@ -26,238 +26,74 @@ USA.
 
 static PyObject* PyOFX_CanonicalToPixelCoords(PyObject *, PyObject *args)
 {
-  PyObject *pos = 0;
-  double par = 1.0;
-  PyObject *renderScale = 0;
+  double x = 0, y = 0;
+  double par = 1;
+  double rsx = 1, rsy = 1;
   int field = 0;
   
-  if (!PyArg_ParseTuple(args, "OdOi", &pos, &par, &renderScale, &field))
+  if (!PyArg_ParseTuple(args, "dddddi", &x, &y, &par, &rsx, &rsy, &field))
   {
     return NULL;
   }
-  
-  if (!PyTuple_Check(pos))
-  {
-    PyErr_SetString(PyExc_TypeError, "Expected a tuple object");
-    return NULL;
-  }
-  
-  if (!PyTuple_Check(renderScale))
-  {
-    PyErr_SetString(PyExc_TypeError, "Expected a tuple object");
-    return NULL;
-  }
-  
-  if (PyTuple_Size(pos) != 2)
-  {
-    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 2 values");
-    return NULL;
-  }
-  
-  if (PyTuple_Size(renderScale) != 2)
-  {
-    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 2 values");
-    return NULL;
-  }
-  
-  double inX = PyFloat_AsDouble(PyTuple_GetItem(pos, 0));
-  double inY = PyFloat_AsDouble(PyTuple_GetItem(pos, 1));
-  double rsX = PyFloat_AsDouble(PyTuple_GetItem(renderScale, 0));
-  double rsY = PyFloat_AsDouble(PyTuple_GetItem(renderScale, 1));
   
   int outX, outY;
   
-  ofx::CanonicalToPixelCoords(inX, inY, par, rsX, rsY, ofx::ImageField(field), &outX, &outY);
+  ofx::CanonicalToPixelCoords(x, y, par, rsx, rsy, ofx::ImageField(field), &outX, &outY);
   
-  PyObject *rv = PyTuple_New(2);
-  PyTuple_SetItem(rv, 0, PyInt_FromLong(outX));
-  PyTuple_SetItem(rv, 1, PyInt_FromLong(outY));
-  
-  return rv;
+  return Py_BuildValue("ii", outX, outY);
 }
 
 static PyObject* PyOFX_PixelToCanonicalCoords(PyObject *, PyObject *args)
 {
-  PyObject *pos = 0;
-  double par = 1.0;
-  PyObject *renderScale = 0;
+  int x = 0, y = 0;
+  double par = 1;
+  double rsx = 1, rsy = 1;
   int field = 0;
   
-  if (!PyArg_ParseTuple(args, "OdOi", &pos, &par, &renderScale, &field))
+  if (!PyArg_ParseTuple(args, "iidddi", &x, &y, &par, &rsx, &rsy, &field))
   {
     return NULL;
   }
-  
-  if (!PyTuple_Check(pos))
-  {
-    PyErr_SetString(PyExc_TypeError, "Expected a tuple object");
-    return NULL;
-  }
-  
-  if (!PyTuple_Check(renderScale))
-  {
-    PyErr_SetString(PyExc_TypeError, "Expected a tuple object");
-    return NULL;
-  }
-  
-  if (PyTuple_Size(pos) != 2)
-  {
-    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 2 values");
-    return NULL;
-  }
-  
-  if (PyTuple_Size(renderScale) != 2)
-  {
-    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 2 values");
-    return NULL;
-  }
-  
-  int inX = PyInt_AsLong(PyTuple_GetItem(pos, 0));
-  int inY = PyInt_AsLong(PyTuple_GetItem(pos, 1));
-  double rsX = PyFloat_AsDouble(PyTuple_GetItem(renderScale, 0));
-  double rsY = PyFloat_AsDouble(PyTuple_GetItem(renderScale, 1));
   
   double outX, outY;
   
-  ofx::PixelToCanonicalCoords(inX, inY, par, rsX, rsY, ofx::ImageField(field), &outX, &outY);
+  ofx::PixelToCanonicalCoords(x, y, par, rsx, rsy, ofx::ImageField(field), &outX, &outY);
   
-  PyObject *rv = PyTuple_New(2);
-  PyTuple_SetItem(rv, 0, PyFloat_FromDouble(outX));
-  PyTuple_SetItem(rv, 1, PyFloat_FromDouble(outY));
-  
-  return rv;
+  return Py_BuildValue("dd", outX, outY);
 }
 
 static PyObject* PyOFX_NormalisedToCanonicalCoords(PyObject *, PyObject *args)
 {
-  PyObject *pos = 0;
-  PyObject *ext = 0;
-  PyObject *off = 0;
+  double inX, inY, extW, extH, offX, offY;
   bool absolute = false;
   
-  if (!PyArg_ParseTuple(args, "OOOB", &pos, &ext, &off, &absolute))
+  if (!PyArg_ParseTuple(args, "ddddddB", &inX, &inY, &extW, &extH, &offX, &offY, &absolute))
   {
     return NULL;
   }
-  
-  if (!PyTuple_Check(pos))
-  {
-    PyErr_SetString(PyExc_TypeError, "Expected a tuple object");
-    return NULL;
-  }
-  
-  if (!PyTuple_Check(ext))
-  {
-    PyErr_SetString(PyExc_TypeError, "Expected a tuple object");
-    return NULL;
-  }
-  
-  if (!PyTuple_Check(off))
-  {
-    PyErr_SetString(PyExc_TypeError, "Expected a tuple object");
-    return NULL;
-  }
-  
-  if (PyTuple_Size(pos) != 2)
-  {
-    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 2 values");
-    return NULL;
-  }
-  
-  if (PyTuple_Size(ext) != 2)
-  {
-    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 2 values");
-    return NULL;
-  }
-  
-  if (PyTuple_Size(off) != 2)
-  {
-    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 2 values");
-    return NULL;
-  }
-  
-  double inX = PyFloat_AsDouble(PyTuple_GetItem(pos, 0));
-  double inY = PyFloat_AsDouble(PyTuple_GetItem(pos, 1));
-  double extW = PyFloat_AsDouble(PyTuple_GetItem(ext, 0));
-  double extH = PyFloat_AsDouble(PyTuple_GetItem(ext, 1));
-  double offX = PyFloat_AsDouble(PyTuple_GetItem(off, 0));
-  double offY = PyFloat_AsDouble(PyTuple_GetItem(off, 1));
   
   double outX, outY;
   
   ofx::NormalisedToCanonicalCoords(inX, inY, extW, extH, offX, offY, absolute, &outX, &outY);
   
-  PyObject *rv = PyTuple_New(2);
-  PyTuple_SetItem(rv, 0, PyFloat_FromDouble(outX));
-  PyTuple_SetItem(rv, 1, PyFloat_FromDouble(outY));
-  
-  return rv;
+  return Py_BuildValue("dd", outX, outY);
 }
 
 static PyObject* PyOFX_CanonicalToNormalisedCoords(PyObject *, PyObject *args)
 {
-  PyObject *pos = 0;
-  PyObject *ext = 0;
-  PyObject *off = 0;
+  double inX, inY, extW, extH, offX, offY;
   bool absolute = false;
   
-  if (!PyArg_ParseTuple(args, "OOOB", &pos, &ext, &off, &absolute))
+  if (!PyArg_ParseTuple(args, "ddddddB", &inX, &inY, &extW, &extH, &offX, &offY, &absolute))
   {
     return NULL;
   }
-  
-  if (!PyTuple_Check(pos))
-  {
-    PyErr_SetString(PyExc_TypeError, "Expected a tuple object");
-    return NULL;
-  }
-  
-  if (!PyTuple_Check(ext))
-  {
-    PyErr_SetString(PyExc_TypeError, "Expected a tuple object");
-    return NULL;
-  }
-  
-  if (!PyTuple_Check(off))
-  {
-    PyErr_SetString(PyExc_TypeError, "Expected a tuple object");
-    return NULL;
-  }
-  
-  if (PyTuple_Size(pos) != 2)
-  {
-    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 2 values");
-    return NULL;
-  }
-  
-  if (PyTuple_Size(ext) != 2)
-  {
-    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 2 values");
-    return NULL;
-  }
-  
-  if (PyTuple_Size(off) != 2)
-  {
-    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 2 values");
-    return NULL;
-  }
-  
-  double inX = PyFloat_AsDouble(PyTuple_GetItem(pos, 0));
-  double inY = PyFloat_AsDouble(PyTuple_GetItem(pos, 1));
-  double extW = PyFloat_AsDouble(PyTuple_GetItem(ext, 0));
-  double extH = PyFloat_AsDouble(PyTuple_GetItem(ext, 1));
-  double offX = PyFloat_AsDouble(PyTuple_GetItem(off, 0));
-  double offY = PyFloat_AsDouble(PyTuple_GetItem(off, 1));
   
   double outX, outY;
   
   ofx::CanonicalToNormalisedCoords(inX, inY, extW, extH, offX, offY, absolute, &outX, &outY);
   
-  PyObject *rv = PyTuple_New(2);
-  PyTuple_SetItem(rv, 0, PyFloat_FromDouble(outX));
-  PyTuple_SetItem(rv, 1, PyFloat_FromDouble(outY));
-  
-  return rv;
+  return Py_BuildValue("dd", outX, outY);
 }
 
 PyObject* PyOFX_Log(PyObject *, PyObject *args)

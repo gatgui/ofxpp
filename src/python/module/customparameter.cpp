@@ -104,20 +104,29 @@ PyObject* PyOFXCustomParameterDescriptor_GetInterpCallback(PyObject *self, void*
     return NULL;
   }
   
-  //ofx::CustomParameterDescriptor *desc = (ofx::CustomParameterDescriptor*) pdesc->desc;
+  ofx::CustomParameterDescriptor *desc = (ofx::CustomParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
-  // this -> need to get PyInterpolatorKey from this... 
-  //      -> need to get parameter set handle and parameter name 
-  //      -> for descriptor, we don't have yet and parametersethandle anyway
+  OfxInterpFunc rv = 0;
+  
+  CATCH({rv = desc->interpCallback();}, failed);
   
   if (failed)
   {
     return NULL;
   }
   
-  Py_RETURN_NONE;
+  int idx = PyOFX_GetInterpFuncIndex(rv);
+  
+  if (idx < 0 || idx >= PYOFX_MAX_ENTRY)
+  {
+    Py_RETURN_NONE;
+  }
+  else
+  {
+    return gInterpFuncObjs[idx];
+  }
 }
 
 int PyOFXCustomParameterDescriptor_SetInterpCallback(PyObject *self, PyObject *val, void*)
@@ -138,7 +147,7 @@ int PyOFXCustomParameterDescriptor_SetInterpCallback(PyObject *self, PyObject *v
   
   ofx::CustomParameterDescriptor *desc = (ofx::CustomParameterDescriptor*) pdesc->desc;
   
-  desc->interpCallback(PyAddInterpFunc(val));
+  desc->interpCallback(PyOFX_GetInterpFunc(val));
   
   return 0;
 }
@@ -195,20 +204,29 @@ PyObject* PyOFXCustomParameter_GetInterpCallback(PyObject *self, void*)
     return NULL;
   }
   
-  //ofx::CustomParameter *param = (ofx::CustomParameter*) pparam->param;
+  ofx::CustomParameter *param = (ofx::CustomParameter*) pparam->param;
   
   bool failed = false;
   
-  // this -> need to get PyInterpolatorKey from this... 
-  //      -> need to get parameter set handle and parameter name 
-  //      -> for descriptor, we don't have yet and parametersethandle anyway
+  OfxInterpFunc rv = 0;
+  
+  CATCH({rv = param->interpCallback();}, failed);
   
   if (failed)
   {
     return NULL;
   }
   
-  Py_RETURN_NONE;
+  int idx = PyOFX_GetInterpFuncIndex(rv);
+  
+  if (idx < 0 || idx >= PYOFX_MAX_ENTRY)
+  {
+    Py_RETURN_NONE;
+  }
+  else
+  {
+    return gInterpFuncObjs[idx];
+  }
 }
 
 static PyGetSetDef PyOFXCustomParameter_GetSeters[] =

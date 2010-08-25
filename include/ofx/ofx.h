@@ -435,10 +435,11 @@ namespace ofx {
     *ny = (cy - (absolute ? yoff : 0.0)) / hsize;
   }
   
-#ifdef _DEBUG
   void Log(const char *msg, ...);
+#ifdef _DEBUG
+  #define DebugLog Log
 #else
-  inline void Log(const char *, ...) {}
+  inline void DebugLog(const char *, ...) {}
 #endif
 }
 

@@ -25,39 +25,52 @@ USA.
 #define __pyofx_entrypoints_h__
 
 #include "common.h"
-#include "macros.h"
 
+#if 1
+# define PYOFX_USE_MACROS
+#endif
+
+#ifdef PYOFX_USE_MACROS
+// visual c++ limit to nested macros...
+# define PYOFX_MAX_ENTRY 122
+#else
 // up to 499 entries [default limit to 500 on template recursion depth fof g++ on OSX]
-#define OFXPY_MAX_ENTRY 499
+// compile time explodes
+# define PYOFX_MAX_ENTRY 499
+#endif
 
-extern PyImageEffectPlugin* gEffectPlugins[OFXPY_MAX_ENTRY];
-extern PyObject* gInteractDescClasses[OFXPY_MAX_ENTRY];
-extern PyObject* gInteractClasses[OFXPY_MAX_ENTRY];
-extern PyObject* gInterpolators[OFXPY_MAX_ENTRY];
-extern OfxHost* gHost;
+typedef void (*OfxSetHostFunc)(OfxHost*);
+
+extern PyImageEffectPlugin* gEffectPlugins[PYOFX_MAX_ENTRY];
+extern PyObject*            gInteractDescClasses[PYOFX_MAX_ENTRY];
+extern PyObject*            gInteractClasses[PYOFX_MAX_ENTRY];
+extern PyObject*            gInterpFuncObjs[PYOFX_MAX_ENTRY];
 
 
-extern void PySetHost(OfxHost *);
+extern ofx::EntryPoint PyOFX_GetInteractFunc(PyObject *descClass, PyObject *instClass);
+extern OfxSetHostFunc  PyOFX_GetSetHostFunc(PyImageEffectPlugin *plugin);
+extern ofx::EntryPoint PyOFX_GetMainFunc(PyImageEffectPlugin *plugin);
+extern OfxInterpFunc   PyOFX_GetInterpFunc(PyObject *funcObj);
 
-extern ofx::EntryPoint PyAddInteract(PyObject *descClass, PyObject *instClass);
-extern ofx::EntryPoint PyAddEffectPlugin(PyImageEffectPlugin *plugin);
-extern OfxInterpFunc PyAddInterpFunc(PyObject *funcObj);
-
-//extern int PyEffectPluginIndex(PyImageEffectPlugin *plugin);
-//extern int PyInterpFuncIndex(ofx::InterpFunc func);
-//extern int PyInteractIndex(ofx::EntryPoint entryPoint);
-
+extern int PyOFX_GetInteractFuncIndex(ofx::EntryPoint func);
+extern int PyOFX_GetSetHostFuncIndex(OfxSetHostFunc func);
+extern int PyOFX_GetMainFuncIndex(ofx::EntryPoint func);
+extern int PyOFX_GetInterpFuncIndex(OfxInterpFunc func);
 
 template <int IDX>
-std::string PyInterpFunc(ofx::ParameterSet &params,
-                         const std::string &paramName,
-                         ofx::Time t,
-                         ofx::Time t0, const std::string &v0,
-                         ofx::Time t1, const std::string &v1,
-                         double amount)
+std::string PyOFX_InterpFunc(ofx::ParameterSet &params,
+                             const std::string &paramName,
+                             ofx::Time t,
+                             ofx::Time t0, const std::string &v0,
+                             ofx::Time t1, const std::string &v1,
+                             double amount)
 {
-  if (gInterpolators[IDX] == 0)
+  PyGILState_STATE gstate = PyGILState_Ensure();
+  
+  if (gInterpFuncObjs[IDX] == 0)
   {
+    PyGILState_Release(gstate);
+    
     throw ofx::FailedError("No associated python interpolation function");
   }
   
@@ -67,7 +80,7 @@ std::string PyInterpFunc(ofx::ParameterSet &params,
   
   PyObject *args = Py_BuildValue("Osddsdsd", ppset, paramName.c_str(), t, t0, v0.c_str(), t1, v1.c_str(), amount);
   
-  PyObject *iv = PyObject_CallObject(gInterpolators[IDX], args);
+  PyObject *iv = PyObject_CallObject(gInterpFuncObjs[IDX], args);
   
   Py_DECREF(args);
   Py_DECREF(ppset);
@@ -75,38 +88,56 @@ std::string PyInterpFunc(ofx::ParameterSet &params,
   if (!PyString_Check(iv))
   {
     Py_DECREF(iv);
+    
+    PyGILState_Release(gstate);
+    
     throw ofx::ValueError("Python interpolation function should return a string");
   }
   
   std::string rv = PyString_AsString(iv);
   Py_DECREF(iv);
   
+  PyGILState_Release(gstate);
+  
   return rv;
 }
 
 template <int IDX>
-OfxStatus PyEffectEntry(const char *action,
-                        const void *handle,
-                        OfxPropertySetHandle hInArgs,
-                        OfxPropertySetHandle hOutArgs)
+void PyOFX_SetHost(OfxHost *host)
 {
+  PyGILState_STATE gstate = PyGILState_Ensure();
+  
+  PyImageEffectPlugin *plugin = gEffectPlugins[IDX];
+  
+  if (plugin != 0)
+  {
+    plugin->setHost(host);
+  }
+  
+  PyGILState_Release(gstate);
+}
+
+template <int IDX>
+OfxStatus PyOFX_Main(const char *action,
+                     const void *handle,
+                     OfxPropertySetHandle hInArgs,
+                     OfxPropertySetHandle hOutArgs)
+{
+  PyGILState_STATE gstate = PyGILState_Ensure();
+  
   PyImageEffectPlugin *plugin = gEffectPlugins[IDX];
   
   if (!plugin)
   {
+    PyGILState_Release(gstate);
     return kOfxStatErrBadHandle;
-  }
-  
-  if (!plugin->host())
-  {
-    // This could not be done in PyOFX_SetHost
-    plugin->setHost(gHost);
   }
   
   ofx::ImageEffectHost *host = plugin->host();
   
   if (!host)
   {
+    PyGILState_Release(gstate);
     ofx::Log("*** Invalid host");
     return kOfxStatErrFatal;
   }
@@ -457,16 +488,18 @@ OfxStatus PyEffectEntry(const char *action,
     rv = e.status();
   }
   
+  PyGILState_Release(gstate);
+  
   return rv;
 }
 
 template <int IDX>
-OfxStatus PyInteractEntry(const char *action,
-                          const void *handle,
-                          OfxPropertySetHandle hInArgs,
-                          OfxPropertySetHandle)
+OfxStatus PyOFX_InteractMain(const char *action,
+                             const void *handle,
+                             OfxPropertySetHandle hInArgs,
+                             OfxPropertySetHandle)
 {
-  // Acquire GIL
+  PyGILState_STATE gstate = PyGILState_Ensure();
   
   OfxStatus rv = kOfxStatReplyDefault;
   
@@ -661,7 +694,7 @@ OfxStatus PyInteractEntry(const char *action,
     rv = e.status();
   }
   
-  // release GIL
+  PyGILState_Release(gstate);
   
   return rv;
 }

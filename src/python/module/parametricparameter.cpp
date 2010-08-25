@@ -22,6 +22,7 @@ USA.
 */
 
 #include "common.h"
+#include "entrypoints.h"
 
 #ifdef OFX_API_1_2
 
@@ -164,12 +165,44 @@ PyObject* PyOFXParametricParameterDescriptor_GetInteractBackground(PyObject *sel
     return NULL;
   }
   
-  //ofx::ParametricParameterDescriptor *desc = (ofx::ParametricParameterDescriptor*) pdesc->desc;
+  ofx::ParametricParameterDescriptor *desc = (ofx::ParametricParameterDescriptor*) pdesc->desc;
   
-  Py_RETURN_NONE;
+  ofx::EntryPoint func = 0;
+  
+  bool failed = false;
+  
+  CATCH({func = desc->interactBackground();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  PyObject *rv = PyTuple_New(2);
+  
+  int idx = PyOFX_GetInteractFuncIndex(func);
+  
+  if (idx < 0 || idx >= PYOFX_MAX_ENTRY)
+  {
+    Py_INCREF(Py_None);
+    PyTuple_SetItem(rv, 0, Py_None);
+    
+    Py_INCREF(Py_None);
+    PyTuple_SetItem(rv, 1, Py_None);
+  }
+  else
+  {
+    Py_INCREF(gInteractDescClasses[idx]);
+    PyTuple_SetItem(rv, 0, gInteractDescClasses[idx]);
+    
+    Py_INCREF(gInteractClasses[idx]);
+    PyTuple_SetItem(rv, 1, gInteractClasses[idx]);
+  }
+  
+  return rv;
 }
 
-int PyOFXParametricParameterDescriptor_SetInteractBackground(PyObject *self, PyObject *, void*)
+int PyOFXParametricParameterDescriptor_SetInteractBackground(PyObject *self, PyObject *val, void*)
 {
   PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
   
@@ -179,7 +212,42 @@ int PyOFXParametricParameterDescriptor_SetInteractBackground(PyObject *self, PyO
     return -1;
   }
   
-  //ofx::ParametricParameterDescriptor *desc = (ofx::ParametricParameterDescriptor*) pdesc->desc;
+  if (!PyTuple_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a tuple");
+    return -1;
+  }
+  
+  if (PyTuple_Size(val) != 2)
+  {
+    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 2 elements");
+    return -1;
+  }
+  
+  PyObject *descClass = PyTuple_GetItem(val, 0);
+  if (!PyObject_IsSubclass(descClass, (PyObject*)&PyOFXInteractDescriptorType))
+  {
+    PyErr_SetString(PyExc_TypeError, "Tuple first element must be a sub class of ofx.InteractDescriptor");
+    return -1;
+  }
+  
+  PyObject *instClass = PyTuple_GetItem(val, 1);
+  if (!PyObject_IsSubclass(instClass, (PyObject*)&PyOFXInteractType))
+  {
+    PyErr_SetString(PyExc_TypeError, "Tuple second element must be a sub class of ofx.Interact");
+    return -1;
+  }
+  
+  ofx::ParametricParameterDescriptor *desc = (ofx::ParametricParameterDescriptor*) pdesc->desc;
+  
+  bool failed = false;
+  
+  CATCH({desc->interactBackground(PyOFX_GetInteractFunc(descClass, instClass));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -188,7 +256,7 @@ static PyGetSetDef PyOFXParametricParameterDescriptor_GetSeters[] =
 {
   {(char*)"dimension", PyOFXParametricParameterDescriptor_GetDimension, PyOFXParametricParameterDescriptor_SetDimension, NULL, NULL},
   {(char*)"range", PyOFXParametricParameterDescriptor_GetRange, PyOFXParametricParameterDescriptor_SetRange, NULL, NULL},
-  {(char*)"interactBackgroup", PyOFXParametricParameterDescriptor_GetInteractBackground, PyOFXParametricParameterDescriptor_SetInteractBackground, NULL, NULL},
+  {(char*)"interactBackground", PyOFXParametricParameterDescriptor_GetInteractBackground, PyOFXParametricParameterDescriptor_SetInteractBackground, NULL, NULL},
   {NULL, NULL, NULL, NULL, NULL}
 };
 
@@ -393,16 +461,48 @@ PyObject* PyOFXParametricParameter_GetInteractBackground(PyObject *self, void*)
     return NULL;
   }
   
-  //ofx::ParametricParameter *param = (ofx::ParametricParameter*) pparam->param;
+  ofx::ParametricParameter *param = (ofx::ParametricParameter*) pparam->param;
   
-  Py_RETURN_NONE;
+  ofx::EntryPoint func = 0;
+  
+  bool failed = false;
+  
+  CATCH({func = param->interactBackground();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  PyObject *rv = PyTuple_New(2);
+  
+  int idx = PyOFX_GetInteractFuncIndex(func);
+  
+  if (idx < 0 || idx >= PYOFX_MAX_ENTRY)
+  {
+    Py_INCREF(Py_None);
+    PyTuple_SetItem(rv, 0, Py_None);
+    
+    Py_INCREF(Py_None);
+    PyTuple_SetItem(rv, 1, Py_None);
+  }
+  else
+  {
+    Py_INCREF(gInteractDescClasses[idx]);
+    PyTuple_SetItem(rv, 0, gInteractDescClasses[idx]);
+    
+    Py_INCREF(gInteractClasses[idx]);
+    PyTuple_SetItem(rv, 1, gInteractClasses[idx]);
+  }
+  
+  return rv;
 }
 
 static PyGetSetDef PyOFXParametricParameter_GetSeters[] =
 {
   {(char*)"dimension", PyOFXParametricParameter_GetDimension, NULL, NULL, NULL},
   {(char*)"range", PyOFXParametricParameter_GetRange, NULL, NULL, NULL},
-  {(char*)"interactBackgroup", PyOFXParametricParameter_GetInteractBackground, NULL, NULL, NULL},
+  {(char*)"interactBackground", PyOFXParametricParameter_GetInteractBackground, NULL, NULL, NULL},
   {NULL, NULL, NULL, NULL, NULL}
 };
 

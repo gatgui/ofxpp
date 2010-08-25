@@ -103,6 +103,10 @@ OfxStatus PyImageEffectDescriptor::describe()
     }
   }
   
+  // no threading in python
+  hostFrameThreading(false);
+  renderThreadSafety(ofx::RenderThreadUnsafe);
+  
   return ofx::ImageEffectDescriptor::describe();
 }
 

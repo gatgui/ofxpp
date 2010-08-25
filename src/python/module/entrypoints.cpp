@@ -23,142 +23,218 @@ USA.
 
 #include "entrypoints.h"
 
-/*
+PyImageEffectPlugin *gEffectPlugins[PYOFX_MAX_ENTRY] = {0};
+PyObject* gInteractDescClasses[PYOFX_MAX_ENTRY] = {0};
+PyObject* gInteractClasses[PYOFX_MAX_ENTRY] = {0};
+PyObject* gInterpFuncObjs[PYOFX_MAX_ENTRY] = {0};
+
+// also keep those to get an index back
+OfxSetHostFunc gSetHostFuncs[PYOFX_MAX_ENTRY] = {0};
+ofx::EntryPoint gMainFuncs[PYOFX_MAX_ENTRY] = {0};
+ofx::EntryPoint gInteractFuncs[PYOFX_MAX_ENTRY] = {0};
+OfxInterpFunc gInterpFuncs[PYOFX_MAX_ENTRY] = {0};
+
+#ifdef PYOFX_USE_MACROS
 
 #include "macros.h"
 
-#define FIND_INTERACT_SLOT(N, MAX, descClass, instClass)\
-  if (N >= MAX) {\
-    return 0;\
-  } else if (gInteractDescClasses[N] == 0 && gInteractClasses[N] == 0) {\
-    gInteractDescClasses[N] = descClass;\
-    gInteractClasses[N] = instClass;\
-    return PyInteractEntry<N>;\
-  } else {\
-    FIND_INTERACT_SLOT(TPL_INCR(N), MAX, descClass, instClass);\
+#define FIND_INTERACT(N, RV, DESC, INST)\
+  if ((gInteractDescClasses[N] == 0 && gInteractClasses[N] == 0) ||\
+      (gInteractDescClasses[N] == DESC && gInteractClasses[N] == INST))\
+  {\
+    gInteractDescClasses[N] = DESC;\
+    gInteractClasses[N] = INST;\
+    rv = PyOFX_InteractMain<N>;\
+    gInteractFuncs[N] = rv;\
+  }\
+  else
+
+#define FIND_INTERACT_LAST(N, RV, DESC, INST)\
+  {\
+    rv = 0;\
   }
 
-#define FIND_EFFECT_SLOT(N, MAX, plugin) \
-  if (N >= MAX) {\
-    return 0;\
-  } else if (gEffectPlugins[N] == 0) {\
-    gEffectPlugins[N] = plugin;\
-    return PyEffectEntry<N>;\
-  } else {\
-    FIND_EFFECT_SLOT(TPL_INCR(N), MAX, plugin);\
+ofx::EntryPoint PyOFX_GetInteractFunc(PyObject *descClass, PyObject *instClass)
+{
+  ofx::EntryPoint rv = 0;
+  
+  MCR_REP(PYOFX_MAX_ENTRY, FIND_INTERACT, FIND_INTERACT_LAST, rv, descClass, instClass);
+  return rv;
+}
+
+#define FIND_HOST(N, RV, PLUGIN, DUMMY)\
+  if (gEffectPlugins[N] == 0 || gEffectPlugins[N] == PLUGIN)\
+  {\
+    gEffectPlugins[N] = PLUGIN;\
+    rv = PyOFX_SetHost<N>;\
+    gSetHostFuncs[N] = rv;\
+  }\
+  else
+
+#define FIND_HOST_LAST(N, RV, PLUGIN, DUMMY)\
+  {\
+    rv = 0;\
   }
 
-#define FIND_INTERPFUNC_SLOT(N, MAX, funcObj)\
-  if (N >= MAX) {\
-    return 0;\
-  } else if (gInterpolators[N] == 0) {\
-    gInterpolators[N] = funcObj;\
-    return ofx::InterpFuncWrap<PyInterpFunc<N> >;\
-  } else {\
-    FIND_INTERPOLATOR_SLOT(TPL_INCR(N), MAX, funcObj);\
+OfxSetHostFunc PyOFX_GetSetHostFunc(PyImageEffectPlugin *plugin)
+{
+  OfxSetHostFunc rv = 0;
+  
+  MCR_REP(PYOFX_MAX_ENTRY, FIND_HOST, FIND_HOST_LAST, rv, plugin, 0);
+  return rv;
+}
+
+#define FIND_EFFECT(N, RV, PLUGIN, DUMMY)\
+  if (gEffectPlugins[N] == 0 || gEffectPlugins[N] == PLUGIN)\
+  {\
+    gEffectPlugins[N] = PLUGIN;\
+    rv = PyOFX_Main<N>;\
+    gMainFuncs[N] = rv;\
+  }\
+  else
+
+#define FIND_EFFECT_LAST(N, RV, PLUGIN, DUMMY)\
+  {\
+    rv = 0;\
   }
 
-*/
+ofx::EntryPoint PyOFX_GetMainFunc(PyImageEffectPlugin *plugin)
+{
+  ofx::EntryPoint rv = 0;
+  
+  MCR_REP(PYOFX_MAX_ENTRY, FIND_EFFECT, FIND_EFFECT_LAST, rv, plugin, 0);
+  return rv;
+}
 
-PyImageEffectPlugin *gEffectPlugins[OFXPY_MAX_ENTRY] = {0};
-PyObject* gInteractDescClasses[OFXPY_MAX_ENTRY] = {0};
-PyObject* gInteractClasses[OFXPY_MAX_ENTRY] = {0};
-PyObject* gInterpolators[OFXPY_MAX_ENTRY] = {0};
-OfxHost* gHost;
+#define FIND_INTERPFUNC(N, RV, FUNCOBJ, DUMMY)\
+  if (gInterpFuncObjs[N] == 0 || gInterpFuncObjs[N] == FUNCOBJ)\
+  {\
+    gInterpFuncObjs[N] = FUNCOBJ;\
+    rv = ofx::InterpFuncWrap<PyOFX_InterpFunc<N> >;\
+    gInterpFuncs[N] = rv;\
+  }\
+  else
+
+#define FIND_INTERPFUNC_LAST(N, RV, FUNCOBJ, DUMMY)\
+  {\
+    rv = 0;\
+  }
+
+OfxInterpFunc PyOFX_GetInterpFunc(PyObject *funcObj)
+{
+  OfxInterpFunc rv = 0;
+  
+  MCR_REP(PYOFX_MAX_ENTRY, FIND_INTERPFUNC, FIND_INTERPFUNC_LAST, rv, funcObj, 0);
+  return rv;
+}
+
+#else
 
 template <int IDX, int MAXIDX>
-struct Adder
+struct Functions
 {
-  static ofx::EntryPoint AddEffect(PyImageEffectPlugin *plugin)
+  static OfxSetHostFunc GetSetHostFunc(PyImageEffectPlugin *plugin)
   {
     if (gEffectPlugins[IDX] == 0 || gEffectPlugins[IDX] == plugin)
     {
-      return PyEffectEntry<IDX>;
+      gEffectPlugins[IDX] = plugin;
+      OfxSetHostFunc rv = PyOFX_SetHost<IDX>;
+      gSetHostFuncs[IDX] = rv;
+      return rv;
     }
-    else
-    {
-      return Adder<IDX+1, MAXIDX>::AddEffect(plugin);
-    }
+    return Functions<IDX+1, MAXIDX>::GetSetHostFunc(plugin);
   }
   
-  static ofx::EntryPoint AddInteract(PyObject *descClass, PyObject *instClass)
+  static ofx::EntryPoint GetMainFunc(PyImageEffectPlugin *plugin)
+  {
+    if (gEffectPlugins[IDX] == 0 || gEffectPlugins[IDX] == plugin)
+    {
+      gEffectPlugins[IDX] = plugin;
+      ofx::EntryPoint rv = PyOFX_Main<IDX>;
+      gMainFuncs[IDX] = rv;
+      return rv;
+    }
+    return Functions<IDX+1, MAXIDX>::GetMainFunc(plugin);
+  }
+  
+  static ofx::EntryPoint GetInteractFunc(PyObject *descClass, PyObject *instClass)
   {
     if ((gInteractDescClasses[IDX] == 0 && gInteractClasses[IDX] == 0) ||
         (gInteractDescClasses[IDX] == descClass && gInteractClasses[IDX] == instClass))
     {
       gInteractDescClasses[IDX] = descClass;
       gInteractClasses[IDX] = instClass;
-      return PyInteractEntry<IDX>;
+      ofx::EntryPoint rv = PyOFX_InteractMain<IDX>;
+      gInteractFuncs[IDX] = rv;
+      return rv;
     }
-    else
-    {
-      return Adder<IDX+1, MAXIDX>::AddInteract(descClass, instClass);
-    }
+    return Functions<IDX+1, MAXIDX>::GetInteractFunc(descClass, instClass);
   }
   
-  static OfxInterpFunc AddInterpFunc(PyObject *funcObj)
+  static OfxInterpFunc GetInterpFunc(PyObject *funcObj)
   {
-    if (gInterpolators[IDX] == 0 || gInterpolators[IDX] == funcObj)
+    if (gInterpFuncObjs[IDX] == 0 || gInterpFuncObjs[IDX] == funcObj)
     {
-      return ofx::InterpFuncWrap<PyInterpFunc<IDX> >;
+      gInterpFuncObjs[IDX] = funcObj;
+      OfxInterpFunc rv = ofx::InterpFuncWrap<PyOFX_InterpFunc<IDX> >;
+      gInterpFuncs[IDX] = rv;
+      return rv;
     }
-    else
-    {
-      return Adder<IDX+1, MAXIDX>::AddInterpFunc(funcObj);
-    }
+    return Functions<IDX+1, MAXIDX>::GetInterpFunc(funcObj);
   }
 };
 
 template <int IDX>
-struct Adder<IDX, IDX>
+struct Functions<IDX, IDX>
 {
-  static ofx::EntryPoint AddEffect(PyImageEffectPlugin *)
+  static OfxSetHostFunc GetSetHostFunc(PyImageEffectPlugin *)
   {
     return 0;
   }
   
-  static ofx::EntryPoint AddInteract(PyObject *, PyObject *)
+  static ofx::EntryPoint GetMainFunc(PyImageEffectPlugin *)
   {
     return 0;
   }
   
-  static OfxInterpFunc AddInterpFunc(PyObject *)
+  static ofx::EntryPoint GetInteractFunc(PyObject *, PyObject *)
+  {
+    return 0;
+  }
+  
+  static OfxInterpFunc GetInterpFunc(PyObject *)
   {
     return 0;
   }
 };
 
-// ---
-
-void PySetHost(OfxHost *h)
+ofx::EntryPoint PyOFX_GetInteractFunc(PyObject *descClass, PyObject *instClass)
 {
-  if (gHost != 0 && gHost != h)
+  return Functions<0, PYOFX_MAX_ENTRY>::GetInteractFunc(descClass, instClass);
+}
+
+OfxSetHostFunc PyOFX_GetSetHostFunc(PyImageEffectPlugin *plugin)
+{
+  return Functions<0, PYOFX_MAX_ENTRY>::GetSetHostFunc(plugin);
+}
+
+ofx::EntryPoint PyOFX_GetMainFunc(PyImageEffectPlugin *plugin)
+{
+  return Functions<0, PYOFX_MAX_ENTRY>::GetMainFunc(plugin);
+}
+
+OfxInterpFunc PyOFX_GetInterpFunc(PyObject *funcObj)
+{
+  return Functions<0, PYOFX_MAX_ENTRY>::GetInterpFunc(funcObj);
+}
+
+#endif
+
+int PyOFX_GetInteractFuncIndex(ofx::EntryPoint func)
+{
+  for (int i=0; i<PYOFX_MAX_ENTRY; ++i)
   {
-    throw std::runtime_error("PyOFX cannot be run on different host at the same time.");
-  }
-  gHost = h;
-}
-
-ofx::EntryPoint PyAddInteract(PyObject *descClass, PyObject *instClass)
-{
-  return Adder<0, OFXPY_MAX_ENTRY>::AddInteract(descClass, instClass);
-}
-
-ofx::EntryPoint PyAddEffectPlugin(PyImageEffectPlugin *plugin)
-{
-  return Adder<0, OFXPY_MAX_ENTRY>::AddEffect(plugin);
-}
-
-OfxInterpFunc PyAddInterpFunc(PyObject *funcObj)
-{
-  return Adder<0, OFXPY_MAX_ENTRY>::AddInterpFunc(funcObj);
-}
-
-int PyEffectPluginIndex(PyImageEffectPlugin *plugin)
-{
-  for (int i=0; i<OFXPY_MAX_ENTRY; ++i)
-  {
-    if (gEffectPlugins[i] == plugin)
+    if (gInteractFuncs[i] == func)
     {
       return i;
     }
@@ -166,12 +242,39 @@ int PyEffectPluginIndex(PyImageEffectPlugin *plugin)
   return -1;
 }
 
-int PyInterpFuncIndex(ofx::InterpFunc)
+int PyOFX_GetSetHostFuncIndex(OfxSetHostFunc func)
 {
+  for (int i=0; i<PYOFX_MAX_ENTRY; ++i)
+  {
+    if (gSetHostFuncs[i] == func)
+    {
+      return i;
+    }
+  }
   return -1;
 }
 
-int PyInteractIndex(ofx::EntryPoint)
+int PyOFX_GetMainFuncIndex(ofx::EntryPoint func)
 {
+  for (int i=0; i<PYOFX_MAX_ENTRY; ++i)
+  {
+    if (gMainFuncs[i] == func)
+    {
+      return i;
+    }
+  }
   return -1;
 }
+
+int PyOFX_GetInterpFuncIndex(OfxInterpFunc func)
+{
+  for (int i=0; i<PYOFX_MAX_ENTRY; ++i)
+  {
+    if (gInterpFuncs[i] == func)
+    {
+      return i;
+    }
+  }
+  return -1;
+}
+

@@ -3,3 +3,5 @@ release
 debug
 .DS_Store
 ofx.log
+*.pyc
+

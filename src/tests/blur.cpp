@@ -103,12 +103,8 @@ class BlurEffect : public ofx::ImageEffect {
     
     virtual OfxStatus isIdentity(ofx::ImageEffect::IsIdentityArgs &args);
     virtual OfxStatus render(ofx::ImageEffect::RenderArgs &args);
-    virtual OfxStatus instanceChanged(ofx::ImageEffect::InstanceChangedArgs &args);
-    
-    // getRegionOfDefinition
-    // getRegionsOfInterest
-    // beginInstanceChanged
-    // endInstanceChanged
+    //virtual OfxStatus getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args);
+    //virtual OfxStatus getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args);
     
   protected:
     
@@ -162,10 +158,10 @@ OfxStatus BlurDescriptor::describe() {
   group("gatgui");
   supportedContext(0, ofx::ImageEffectContextFilter);
   singleInstance(false);
-  renderThreadSafety(ofx::RenderThreadFullySafe);
   hostFrameThreading(true);
+  renderThreadSafety(ofx::RenderThreadFullySafe);
   supportedPixelDepth(0, ofx::BitDepthFloat);
-  supportsTiles(true);
+  supportsTiles(false);
   temporalClipAccess(false);
   supportsMultipleClipDepths(false);
   supportsMultipleClipPARs(false);
@@ -280,34 +276,6 @@ BlurEffect::BlurEffect(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl)
 BlurEffect::~BlurEffect() {
 }
 
-OfxStatus BlurEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &/*args*/) {
-  /*
-  if (args.name == "type") {
-    if (pType.getValue() == 1) {
-      // directional blur
-      pAngle.enable(true);
-      pZoom.enable(false);
-      pCenter.enable(false);
-      
-    } else if (pType.getValue() == 2) {
-      // radial blur
-      pAngle.enable(true);
-      pZoom.enable(true);
-      pCenter.enable(true);
-      
-    } else {
-      // standard blur
-      pAngle.enable(false);
-      pZoom.enable(false);
-      pCenter.enable(false);
-    }
-    
-    return kOfxStatOK;
-  }
-  */
-  return kOfxStatReplyDefault;
-}
-
 OfxStatus BlurEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args) {
   // review that
   double wsamples = 0, hsamples = 0;
@@ -320,6 +288,26 @@ OfxStatus BlurEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args) {
     return kOfxStatReplyDefault;
   }
 }
+
+/*
+OfxStatus BlurEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args)
+{
+  ofx::Clip cSource = getClip("Source");
+  
+  args.RoD = cSource.getRegionOfDefinition(args.time);
+  
+  return kOfxStatOK;
+}
+
+OfxStatus BlurEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args)
+{
+  ofx::Clip cSource = getClip("Source");
+  
+  args.setInputRoI("Source", cSource.getRegionOfDefinition(args.time));
+  
+  return kOfxStatOK;
+}
+*/
 
 OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
   

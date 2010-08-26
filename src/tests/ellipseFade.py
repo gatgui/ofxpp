@@ -17,10 +17,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 # USA.
 
-from PyOpenGL import *
+#from PyOpenGL import *
 import ofx
 
-"""
 class Interact(ofx.Interact):
   
   # Host application
@@ -58,19 +57,22 @@ class Interact(ofx.Interact):
     self.slaveToParam(2, "height")
   
   def draw(self, args):
+    # TODO
     pass
   
   def penMotion(self, args):
+    # TODO
     pass
   
   def penDown(self, args):
+    # TODO
     pass
   
   def penUp(self, args):
+    # TODO
     pass
   
 
-"""
 
 class Descriptor(ofx.ImageEffectDescriptor):
   
@@ -254,7 +256,7 @@ class Effect(ofx.ImageEffect):
 
 class Plugin(ofx.ImageEffectPlugin):
   def __init__(self):
-    ofx.ImageEffectPlugin.__init__(Descriptor, Effect)
+    ofx.ImageEffectPlugin.__init__(self, Descriptor, Effect)
     self.majorVersion = 1
     self.minorVersion = 0
     self.identifier = "gatgui.filter.pyEllipseFade";

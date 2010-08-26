@@ -22,6 +22,7 @@ USA.
 */
 
 #include "common.h"
+#include "entrypoints.h"
 
 PyTypeObject PyOFXImageEffectDescriptorType;
 PyTypeObject PyOFXImageEffectType;
@@ -33,16 +34,19 @@ PyTypeObject PyOFXOutputClipPreferencesType;
 PyImageEffectDescriptor::PyImageEffectDescriptor()
   : ofx::ImageEffectDescriptor(), mSelf(0)
 {
+  ofx::Log("Create empty PyImageEffectDescriptor");
 }
 
 PyImageEffectDescriptor::PyImageEffectDescriptor(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception)
   : ofx::ImageEffectDescriptor(h, hdl), mSelf(0)
-{  
+{
+  ofx::Log("Create PyImageEffectDescriptor"); 
 }
 
 PyImageEffectDescriptor::PyImageEffectDescriptor(const PyImageEffectDescriptor &rhs)
   : ofx::ImageEffectDescriptor(rhs), mSelf(rhs.mSelf)
 {
+  ofx::Log("Create copy PyImageEffectDescriptor");
   if (mSelf != 0)
   {
     Py_INCREF(mSelf);
@@ -51,6 +55,7 @@ PyImageEffectDescriptor::PyImageEffectDescriptor(const PyImageEffectDescriptor &
 
 PyImageEffectDescriptor::~PyImageEffectDescriptor()
 {
+  ofx::Log("Delete PyImageEffectDescriptor");
   self(0);
 }
 
@@ -63,6 +68,7 @@ PyImageEffectDescriptor& PyImageEffectDescriptor::operator=(const PyImageEffectD
 
 OfxStatus PyImageEffectDescriptor::describe()
 {
+  ofx::Log("PyImageEffectDescriptor::describe");
   if (mSelf != 0)
   {
     PyObject *meth = PyObject_GetAttrString(mSelf, "describe");
@@ -112,6 +118,7 @@ OfxStatus PyImageEffectDescriptor::describe()
 
 OfxStatus PyImageEffectDescriptor::describeInContext(ofx::ImageEffectContext ctx)
 {
+  ofx::Log("PyImageEffectDescriptor::describeInContext");
   if (mSelf != 0)
   {
     PyObject *meth = PyObject_GetAttrString(mSelf, "describeInContext");
@@ -2513,12 +2520,42 @@ PyObject* PyOFXImageEffectDescriptor_GetOverlayInteract(PyObject *self, void*)
     return NULL;
   }
   
-  // TODO
+  ofx::EntryPoint func = 0;
   
-  Py_RETURN_NONE;
+  bool failed = false;
+  
+  CATCH({func = pdesc->desc->overlayInteract();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  PyObject *rv = PyTuple_New(2);
+  
+  int idx = PyOFX_GetInteractFuncIndex(func);
+  
+  if (idx < 0 || idx >= PYOFX_MAX_ENTRY)
+  {
+    Py_INCREF(Py_None);
+    PyTuple_SetItem(rv, 0, Py_None);
+    
+    Py_INCREF(Py_None);
+    PyTuple_SetItem(rv, 1, Py_None);
+  }
+  else
+  {
+    Py_INCREF(gInteractDescClasses[idx]);
+    PyTuple_SetItem(rv, 0, gInteractDescClasses[idx]);
+    
+    Py_INCREF(gInteractClasses[idx]);
+    PyTuple_SetItem(rv, 1, gInteractClasses[idx]);
+  }
+  
+  return rv;
 }
 
-int PyOFXImageEffectDescriptor_SetOverlayInteract(PyObject *self, PyObject *, void*)
+int PyOFXImageEffectDescriptor_SetOverlayInteract(PyObject *self, PyObject *val, void*)
 {
   PyOFXImageEffectDescriptor *pdesc = (PyOFXImageEffectDescriptor*)self;
   
@@ -2528,8 +2565,40 @@ int PyOFXImageEffectDescriptor_SetOverlayInteract(PyObject *self, PyObject *, vo
     return -1;
   }
   
-  // TODO
-  // NOTE: effectDesc->overlayInteract(InteractEntryPoint<MyPluginClass, MyInteractDescriptionClass, MyInteractClass>)
+  if (!PyTuple_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a tuple");
+    return -1;
+  }
+  
+  if (PyTuple_Size(val) != 2)
+  {
+    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 2 elements");
+    return -1;
+  }
+  
+  PyObject *descClass = PyTuple_GetItem(val, 0);
+  if (!PyObject_IsSubclass(descClass, (PyObject*)&PyOFXInteractDescriptorType))
+  {
+    PyErr_SetString(PyExc_TypeError, "Tuple first element must be a sub class of ofx.InteractDescriptor");
+    return -1;
+  }
+  
+  PyObject *instClass = PyTuple_GetItem(val, 1);
+  if (!PyObject_IsSubclass(instClass, (PyObject*)&PyOFXInteractType))
+  {
+    PyErr_SetString(PyExc_TypeError, "Tuple second element must be a sub class of ofx.Interact");
+    return -1;
+  }
+  
+  bool failed = false;
+  
+  CATCH({pdesc->desc->overlayInteract(PyOFX_GetInteractFunc(descClass, instClass));}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
   
   return 0;
 }
@@ -2546,14 +2615,14 @@ static PyGetSetDef PyOFXImageEffectDescriptor_GetSeters[] =
   {(char*)"group", PyOFXImageEffectDescriptor_GetGroup, PyOFXImageEffectDescriptor_SetGroup, NULL, NULL},
   {(char*)"pluginFilePath", PyOFXImageEffectDescriptor_GetPluginFilePath, NULL, NULL, NULL},
   {(char*)"singleInstance", PyOFXImageEffectDescriptor_GetSingleInstance, PyOFXImageEffectDescriptor_SetSingleInstance, NULL, NULL},
-  {(char*)"hostFrameThreading", PyOFXImageEffectDescriptor_GetHostFrameThreading, PyOFXImageEffectDescriptor_SetHostFrameThreading, NULL, NULL},
+//  {(char*)"hostFrameThreading", PyOFXImageEffectDescriptor_GetHostFrameThreading, PyOFXImageEffectDescriptor_SetHostFrameThreading, NULL, NULL},
   {(char*)"supportsMultiResolution", PyOFXImageEffectDescriptor_GetSupportsMultiResolution, PyOFXImageEffectDescriptor_SetSupportsMultiResolution, NULL, NULL},
   {(char*)"supportsTiles", PyOFXImageEffectDescriptor_GetSupportsTiles, PyOFXImageEffectDescriptor_SetSupportsTiles, NULL, NULL},
   {(char*)"supportsMultipleClipDepths", PyOFXImageEffectDescriptor_GetSupportsMultipleClipDepths, PyOFXImageEffectDescriptor_SetSupportsMultipleClipDepths, NULL, NULL},
   {(char*)"supportsMultipleClipPARs", PyOFXImageEffectDescriptor_GetSupportsMultipleClipPARs, PyOFXImageEffectDescriptor_SetSupportsMultipleClipPARs, NULL, NULL},
   {(char*)"temporalClipAccess", PyOFXImageEffectDescriptor_GetTemporalClipAccess, PyOFXImageEffectDescriptor_SetTemporalClipAccess, NULL, NULL},
   {(char*)"fieldRenderTwiceAlways", PyOFXImageEffectDescriptor_GetFieldRenderTwiceAlways, PyOFXImageEffectDescriptor_SetFieldRenderTwiceAlways, NULL, NULL},
-  {(char*)"renderThreadSafety", PyOFXImageEffectDescriptor_GetRenderThreadSafety, PyOFXImageEffectDescriptor_SetRenderThreadSafety, NULL, NULL},
+//  {(char*)"renderThreadSafety", PyOFXImageEffectDescriptor_GetRenderThreadSafety, PyOFXImageEffectDescriptor_SetRenderThreadSafety, NULL, NULL},
   {(char*)"sequentialRender", PyOFXImageEffectDescriptor_GetSequentialRender, PyOFXImageEffectDescriptor_SetSequentialRender, NULL, NULL},
   {(char*)"overlayInteract", PyOFXImageEffectDescriptor_GetOverlayInteract, PyOFXImageEffectDescriptor_SetOverlayInteract, NULL, NULL},
 #ifdef OFX_API_1_2

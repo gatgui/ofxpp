@@ -17,14 +17,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 # USA.
 
-import os, sys
-
-sys.path.append(os.path.abspath(os.path.join(".", "release", "x64", "lib", "python")))
-
 import ofx
 
-try:
-  ofx.tests.exception()
-except ofx.Exception, e:
-  print("Error code: %d" % e.status)
-  print("Error message: %s" % e.message)
+if __name__ == "__main__":
+  try:
+    ofx.tests.exception()
+  except ofx.Exception, e:
+    print("Error code: %d" % e.status)
+    print("Error message: %s" % e.message)

@@ -99,7 +99,7 @@ void LogPythonError()
   
   oss << std::endl;
   
-  ofx::Log("pyplugin.ofx: *Python Error* %s", oss.str().c_str());
+  ofx::Log("pyplugin.ofx:\n*** Python Error ***\n%s", oss.str().c_str());
 }
 
 class PathLister
@@ -145,18 +145,20 @@ class PathLister
           
           if (!getNumberOfPlugins)
           {
-            PyErr_Clear();
+            LogPythonError();
             Py_DECREF(mod);
+            //PyErr_Clear();
             return true;
           }
           
-          PyObject *getPlugin = PyObject_GetAttrString(mod, "getPlugin");
+          PyObject *getPlugin = PyObject_GetAttrString(mod, "OfxGetPlugin");
           
           if (!getPlugin)
           {
+            LogPythonError();
             Py_DECREF(getNumberOfPlugins);
             Py_DECREF(mod);
-            PyErr_Clear();
+            //PyErr_Clear();
             return true;
           }
           
@@ -176,7 +178,8 @@ class PathLister
           
           if (!rv || !PyInt_Check(rv))
           {
-            PyErr_Clear();
+            LogPythonError();
+            //PyErr_Clear();
           }
           else
           {
@@ -235,7 +238,8 @@ class PathLister
         
         if (!mPyOFX)
         {
-          PyErr_Clear();
+          //PyErr_Clear();
+          LogPythonError();
           return NULL;
         }
       }
@@ -261,16 +265,38 @@ class PathLister
           {
             PyObject *pluginClass = PyObject_GetAttrString(mPyOFX, "Plugin");
             
-            if (pluginClass && PyObject_TypeCheck(rv, (PyTypeObject*)pluginClass))
+            if (pluginClass)
             {
-              ofx::Plugin *op = ((PyOFXPlugin*)rv)->plugin;
-              plugin = op->description();
+              if (PyObject_TypeCheck(rv, (PyTypeObject*)pluginClass))
+              {
+                ofx::Plugin *op = ((PyOFXPlugin*)rv)->plugin;
+                ofx::Log("pyplugin.ofx: getPlugin: 0x%x", (void*)op);
+                if (op != 0)
+                {
+                  ofx::Log("pyplugin.ofx: getPlugin: \"%s\" v%d.%d", op->identifier(), op->majorVersion(), op->minorVersion());
+                  plugin = op->description();
+                  ofx::Log("pyplugin.ofx: SetHost: 0x%x", (void*)plugin->setHost);
+                  ofx::Log("pyplugin.ofx: Main: 0x%x", (void*)plugin->mainEntry);
+                }
+              }
+              else
+              {
+                ofx::Log("pyplugin.ofx: getPlugin: Invalid return type");
+              }
+            }
+            else
+            {
+              //PyErr_Clear();
+              LogPythonError();
             }
             
             Py_XDECREF(pluginClass);
           }
-          
-          PyErr_Clear();
+          else
+          {
+            //PyErr_Clear();
+            LogPythonError();
+          }
           
           Py_XDECREF(rv);
           Py_DECREF(args);
@@ -408,6 +434,8 @@ OfxExport int OfxGetNumberOfPlugins(void)
     Py_Initialize();
   }
   
+  PyGILState_STATE gstate = PyGILState_Ensure();
+  
   gcore::Env::EachInPathFunc func;
   
   gcore::Bind(&gPathLister, METHOD(PathLister, pathEntry), func);
@@ -418,21 +446,27 @@ OfxExport int OfxGetNumberOfPlugins(void)
   
   ofx::Log("pyplugin.ofx: Found %d python plugins", rv);
   
+  PyGILState_Release(gstate);
+  
   return rv;
 }
 
 OfxExport OfxPlugin* OfxGetPlugin(int i)
 {
+  PyGILState_STATE gstate = PyGILState_Ensure();
+  
   OfxPlugin *rv = gPathLister.getPlugin(i);
   
   if (rv != 0)
   {
-    ofx::Log("pyplugin.ofx: Load plugin %d: \"%s\"", i, rv->pluginIdentifier);
+    ofx::Log("pyplugin.ofx: Loaded plugin %d: \"%s\"", i, rv->pluginIdentifier);
   }
   else
   {
-    ofx::Log("pyplugin.ofx: Load plugin %d: NULL", i);
+    ofx::Log("pyplugin.ofx: Loaded plugin %d: NULL", i);
   }
+  
+  PyGILState_Release(gstate);
   
   return rv;
 }

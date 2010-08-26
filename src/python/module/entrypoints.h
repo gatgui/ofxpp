@@ -105,12 +105,15 @@ std::string PyOFX_InterpFunc(ofx::ParameterSet &params,
 template <int IDX>
 void PyOFX_SetHost(OfxHost *host)
 {
+  ofx::Log("PyOFX_SetHost (%d)", IDX);
+  
   PyGILState_STATE gstate = PyGILState_Ensure();
   
   PyImageEffectPlugin *plugin = gEffectPlugins[IDX];
   
   if (plugin != 0)
   {
+    ofx::Log("  on \"%s\"", plugin->identifier());
     plugin->setHost(host);
   }
   
@@ -123,6 +126,8 @@ OfxStatus PyOFX_Main(const char *action,
                      OfxPropertySetHandle hInArgs,
                      OfxPropertySetHandle hOutArgs)
 {
+  ofx::Log("PyOFX_Main (%d)", IDX);
+  
   PyGILState_STATE gstate = PyGILState_Ensure();
   
   PyImageEffectPlugin *plugin = gEffectPlugins[IDX];
@@ -132,6 +137,8 @@ OfxStatus PyOFX_Main(const char *action,
     PyGILState_Release(gstate);
     return kOfxStatErrBadHandle;
   }
+  
+  ofx::Log("  on \"%s\"", plugin->identifier());
   
   ofx::ImageEffectHost *host = plugin->host();
   

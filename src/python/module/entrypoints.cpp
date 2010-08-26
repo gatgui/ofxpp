@@ -44,7 +44,7 @@ OfxInterpFunc gInterpFuncs[PYOFX_MAX_ENTRY] = {0};
   {\
     gInteractDescClasses[N] = DESC;\
     gInteractClasses[N] = INST;\
-    rv = PyOFX_InteractMain<N>;\
+    rv = &PyOFX_InteractMain<N>;\
     gInteractFuncs[N] = rv;\
   }\
   else
@@ -66,7 +66,7 @@ ofx::EntryPoint PyOFX_GetInteractFunc(PyObject *descClass, PyObject *instClass)
   if (gEffectPlugins[N] == 0 || gEffectPlugins[N] == PLUGIN)\
   {\
     gEffectPlugins[N] = PLUGIN;\
-    rv = PyOFX_SetHost<N>;\
+    rv = &PyOFX_SetHost<N>;\
     gSetHostFuncs[N] = rv;\
   }\
   else
@@ -88,7 +88,7 @@ OfxSetHostFunc PyOFX_GetSetHostFunc(PyImageEffectPlugin *plugin)
   if (gEffectPlugins[N] == 0 || gEffectPlugins[N] == PLUGIN)\
   {\
     gEffectPlugins[N] = PLUGIN;\
-    rv = PyOFX_Main<N>;\
+    rv = &PyOFX_Main<N>;\
     gMainFuncs[N] = rv;\
   }\
   else
@@ -110,7 +110,7 @@ ofx::EntryPoint PyOFX_GetMainFunc(PyImageEffectPlugin *plugin)
   if (gInterpFuncObjs[N] == 0 || gInterpFuncObjs[N] == FUNCOBJ)\
   {\
     gInterpFuncObjs[N] = FUNCOBJ;\
-    rv = ofx::InterpFuncWrap<PyOFX_InterpFunc<N> >;\
+    rv = &ofx::InterpFuncWrap<PyOFX_InterpFunc<N> >;\
     gInterpFuncs[N] = rv;\
   }\
   else
@@ -138,7 +138,7 @@ struct Functions
     if (gEffectPlugins[IDX] == 0 || gEffectPlugins[IDX] == plugin)
     {
       gEffectPlugins[IDX] = plugin;
-      OfxSetHostFunc rv = PyOFX_SetHost<IDX>;
+      OfxSetHostFunc rv = &PyOFX_SetHost<IDX>;
       gSetHostFuncs[IDX] = rv;
       return rv;
     }
@@ -150,7 +150,7 @@ struct Functions
     if (gEffectPlugins[IDX] == 0 || gEffectPlugins[IDX] == plugin)
     {
       gEffectPlugins[IDX] = plugin;
-      ofx::EntryPoint rv = PyOFX_Main<IDX>;
+      ofx::EntryPoint rv = &PyOFX_Main<IDX>;
       gMainFuncs[IDX] = rv;
       return rv;
     }
@@ -164,7 +164,7 @@ struct Functions
     {
       gInteractDescClasses[IDX] = descClass;
       gInteractClasses[IDX] = instClass;
-      ofx::EntryPoint rv = PyOFX_InteractMain<IDX>;
+      ofx::EntryPoint rv = &PyOFX_InteractMain<IDX>;
       gInteractFuncs[IDX] = rv;
       return rv;
     }
@@ -176,7 +176,7 @@ struct Functions
     if (gInterpFuncObjs[IDX] == 0 || gInterpFuncObjs[IDX] == funcObj)
     {
       gInterpFuncObjs[IDX] = funcObj;
-      OfxInterpFunc rv = ofx::InterpFuncWrap<PyOFX_InterpFunc<IDX> >;
+      OfxInterpFunc rv = &ofx::InterpFuncWrap<PyOFX_InterpFunc<IDX> >;
       gInterpFuncs[IDX] = rv;
       return rv;
     }

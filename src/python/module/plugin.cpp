@@ -32,10 +32,12 @@ PyTypeObject PyOFXImageEffectPluginType;
 PyPlugin::PyPlugin()
   : ofx::Plugin(), mSelf(0)
 {
+  ofx::Log("Create PyPlugin");
 }
   
 PyPlugin::~PyPlugin()
 {
+  ofx::Log("Delete PyPlugin");
   self(0);
 }
 
@@ -44,6 +46,7 @@ PyPlugin::~PyPlugin()
 PyImageEffectPlugin::PyImageEffectPlugin(PyTypeObject *descClass, PyTypeObject *instClass)
   : PyPlugin(), mDescClass(descClass), mInstClass(instClass), mHost(0)
 {
+  ofx::Log("Create PyImageEffectPlugin");
   Py_INCREF(descClass);
   Py_INCREF(instClass);
   
@@ -56,6 +59,7 @@ PyImageEffectPlugin::PyImageEffectPlugin(PyTypeObject *descClass, PyTypeObject *
 
 PyImageEffectPlugin::~PyImageEffectPlugin()
 {
+  ofx::Log("Delete PyImageEffectPlugin");
   if (mHost)
   {
     delete mHost;
@@ -75,6 +79,7 @@ PyImageEffectPlugin::~PyImageEffectPlugin()
 
 void PyImageEffectPlugin::setHost(OfxHost *h)
 {
+  ofx::Log("PyImageEffectPlugin::setHost");
   if (!mHost)
   {
     mHost = new ofx::ImageEffectHost(h);
@@ -88,6 +93,8 @@ ofx::ImageEffectHost* PyImageEffectPlugin::host()
 
 PyImageEffectDescriptor PyImageEffectPlugin::descriptor(OfxImageEffectHandle hdl)
 {
+  ofx::Log("PyImageEffectPlugin::descriptor");
+  
   if (!mHost)
   {
     return PyImageEffectDescriptor();
@@ -116,6 +123,7 @@ PyImageEffectDescriptor PyImageEffectPlugin::descriptor(OfxImageEffectHandle hdl
 
 PyImageEffect* PyImageEffectPlugin::addEffect(OfxImageEffectHandle hdl)
 {
+  ofx::Log("PyImageEffectPlugin::addEffect");
   if (!mHost)
   {
     return NULL;
@@ -155,6 +163,7 @@ PyImageEffect* PyImageEffectPlugin::addEffect(OfxImageEffectHandle hdl)
 
 void PyImageEffectPlugin::removeEffect(OfxImageEffectHandle hdl)
 {
+  ofx::Log("PyImageEffectPlugin::removeEffect");
   EffectMap::iterator it = mEffects.find(hdl);
   if (it != mEffects.end())
   {
@@ -165,6 +174,7 @@ void PyImageEffectPlugin::removeEffect(OfxImageEffectHandle hdl)
 
 PyImageEffect* PyImageEffectPlugin::getEffect(OfxImageEffectHandle hdl)
 {
+  ofx::Log("PyImageEffectPlugin::getEffect");
   EffectMap::iterator it = mEffects.find(hdl);
   if (it != mEffects.end())
   {
@@ -175,6 +185,7 @@ PyImageEffect* PyImageEffectPlugin::getEffect(OfxImageEffectHandle hdl)
 
 OfxStatus PyImageEffectPlugin::load()
 {
+  ofx::Log("PyImageEffectPlugin::load");
   if (mSelf != 0)
   {
     PyObject *meth = PyObject_GetAttrString(mSelf, "load");
@@ -220,6 +231,7 @@ OfxStatus PyImageEffectPlugin::load()
   
 OfxStatus PyImageEffectPlugin::unload()
 {
+  ofx::Log("PyImageEffectPlugin::unload");
   if (mSelf != 0)
   {
     PyObject *meth = PyObject_GetAttrString(mSelf, "unload");
@@ -267,6 +279,7 @@ OfxStatus PyImageEffectPlugin::unload()
 
 PyObject* PyOFXPlugin_New(PyTypeObject *type, PyObject *, PyObject *)
 {
+  ofx::Log("Create ofx.Plugin python object");
   PyObject *self = type->tp_alloc(type, 1);
   PyOFXPlugin *pplugin = (PyOFXPlugin*) self;
   pplugin->plugin = 0;
@@ -275,11 +288,13 @@ PyObject* PyOFXPlugin_New(PyTypeObject *type, PyObject *, PyObject *)
 
 int PyOFXPlugin_Init(PyObject *, PyObject *, PyObject *)
 {
+  ofx::Log("ofx.Plugin.__init__");
   return 0;
 }
 
 void PyOFXPlugin_Delete(PyObject *self)
 {
+  ofx::Log("Delete ofx.Plugin python object");
   self->ob_type->tp_free(self);
 }
 
@@ -403,6 +418,8 @@ static PyGetSetDef PyOFXPlugin_GetSeters[] =
 
 int PyOFXImageEffectPlugin_Init(PyObject *self, PyObject *args, PyObject *)
 {
+  ofx::Log("ofx.ImageEffectPlugin.__init__");
+  
   PyOFXPlugin *pplugin = (PyOFXPlugin*)self;
   
   PyObject *desc = 0, *inst = 0;
@@ -429,6 +446,8 @@ int PyOFXImageEffectPlugin_Init(PyObject *self, PyObject *args, PyObject *)
   
   pplugin->plugin = plugin;
   
+  ofx::Log("OK");
+  
   return 0;
 }
 
@@ -444,6 +463,7 @@ bool PyOFX_InitPlugin(PyObject *mod)
   PyOFXPluginType.tp_getset = PyOFXPlugin_GetSeters;
   
   INIT_TYPE(PyOFXImageEffectPluginType, "ofx.ImageEffectPlugin", PyOFXImageEffectPlugin);
+  PyOFXImageEffectPluginType.tp_base = &PyOFXPluginType;
   PyOFXImageEffectPluginType.tp_flags = Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE;
   PyOFXImageEffectPluginType.tp_init = PyOFXImageEffectPlugin_Init;
   

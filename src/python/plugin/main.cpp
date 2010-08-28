@@ -121,7 +121,7 @@ class PathLister
   public:
     
     PathLister()
-      : mPyOFX(NULL)
+      : mPyOFX(NULL), mInitialized(false)
     {
     }
     
@@ -222,6 +222,8 @@ class PathLister
     
     bool pathEntry(const gcore::Path &p)
     {
+      mInitialized = true;
+      
       ofx::Log("pyplugin.ofx: Check directory \"%s\" for python plugins...", p.fullname().c_str());
       
       gcore::Path::EachFunc func;
@@ -247,6 +249,14 @@ class PathLister
     
     OfxPlugin* getPlugin(int i)
     {
+      if (!mInitialized)
+      {
+        gcore::Env::EachInPathFunc func;
+        
+        gcore::Bind(this, METHOD(PathLister, pathEntry), func);
+        gcore::Env::EachInPath("OFX_PLUGIN_PATH", func);
+      }
+      
       for (size_t j=0; j<mPluginEntries.size(); ++j)
       {
         if (i < (mPluginEntries[j].startIndex))
@@ -435,6 +445,7 @@ class PathLister
     
     gcore::List<Entry> mPluginEntries;
     PyObject *mPyOFX;
+    bool mInitialized;
 };
 
 // ---

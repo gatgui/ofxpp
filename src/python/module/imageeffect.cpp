@@ -89,7 +89,6 @@ OfxStatus PyImageEffectDescriptor::describe()
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -97,10 +96,13 @@ OfxStatus PyImageEffectDescriptor::describe()
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
-          ofx::Log("PyImageEffectDescriptor: returns %d", stat);
           // no threading in python
           hostFrameThreading(false);
           renderThreadSafety(ofx::RenderThreadUnsafe);
+        }
+        else
+        {
+          ofx::Log("PyImageEffectDescriptor::describe: Invalid return value type");
         }
       }
       
@@ -111,8 +113,7 @@ OfxStatus PyImageEffectDescriptor::describe()
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -122,6 +123,7 @@ OfxStatus PyImageEffectDescriptor::describe()
 OfxStatus PyImageEffectDescriptor::describeInContext(ofx::ImageEffectContext ctx)
 {
   ofx::Log("PyImageEffectDescriptor::describeInContext");
+  
   if (mSelf != 0)
   {
     PyObject *meth = PyObject_GetAttrString(mSelf, "describeInContext");
@@ -142,7 +144,6 @@ OfxStatus PyImageEffectDescriptor::describeInContext(ofx::ImageEffectContext ctx
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -150,6 +151,10 @@ OfxStatus PyImageEffectDescriptor::describeInContext(ofx::ImageEffectContext ctx
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyImageEffectDescriptor::describeInContext: Invalid return value type");
         }
       }
       
@@ -161,8 +166,7 @@ OfxStatus PyImageEffectDescriptor::describeInContext(ofx::ImageEffectContext ctx
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -208,7 +212,6 @@ OfxStatus PyImageEffect::beginInstanceChanged(ofx::ChangeReason reason)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -216,6 +219,10 @@ OfxStatus PyImageEffect::beginInstanceChanged(ofx::ChangeReason reason)
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyImageEffect::beginInstanceChanged: Invalid return value type");
         }
       }
       
@@ -227,8 +234,7 @@ OfxStatus PyImageEffect::beginInstanceChanged(ofx::ChangeReason reason)
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -257,7 +263,6 @@ OfxStatus PyImageEffect::endInstanceChanged(ofx::ChangeReason reason)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -265,6 +270,10 @@ OfxStatus PyImageEffect::endInstanceChanged(ofx::ChangeReason reason)
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyImageEffect::endInstanceChanged: Invalid return value type");
         }
       }
       
@@ -276,8 +285,7 @@ OfxStatus PyImageEffect::endInstanceChanged(ofx::ChangeReason reason)
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -334,7 +342,6 @@ OfxStatus PyImageEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -342,6 +349,10 @@ OfxStatus PyImageEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyImageEffect::instanceChanged: Invalid return value type");
         }
       }
       
@@ -354,8 +365,7 @@ OfxStatus PyImageEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -383,7 +393,6 @@ OfxStatus PyImageEffect::purgeCaches()
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -391,6 +400,10 @@ OfxStatus PyImageEffect::purgeCaches()
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyImageEffect::purgeCaches: Invalid return value type");
         }
       }
       
@@ -401,8 +414,7 @@ OfxStatus PyImageEffect::purgeCaches()
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -430,7 +442,6 @@ OfxStatus PyImageEffect::syncPrivateData()
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -438,6 +449,10 @@ OfxStatus PyImageEffect::syncPrivateData()
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyImageEffect::syncPrivateData: Invalid return value type");
         }
       }
       
@@ -448,8 +463,7 @@ OfxStatus PyImageEffect::syncPrivateData()
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -477,7 +491,6 @@ OfxStatus PyImageEffect::beginInstanceEdit()
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -485,6 +498,10 @@ OfxStatus PyImageEffect::beginInstanceEdit()
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyImageEffect::beginInstanceEdit: Invalid return value type");
         }
       }
       
@@ -495,8 +512,7 @@ OfxStatus PyImageEffect::beginInstanceEdit()
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -524,7 +540,6 @@ OfxStatus PyImageEffect::endInstanceEdit()
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -532,6 +547,10 @@ OfxStatus PyImageEffect::endInstanceEdit()
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyImageEffect::endInstanceEdit: Invalid return value type");
         }
       }
       
@@ -542,8 +561,7 @@ OfxStatus PyImageEffect::endInstanceEdit()
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -590,6 +608,7 @@ OfxStatus PyImageEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &arg
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
+        LogPythonError();
       }
       else
       {
@@ -616,6 +635,10 @@ OfxStatus PyImageEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &arg
             Py_XDECREF(rod);
           }
         }
+        else
+        {
+          ofx::Log("PyImageEffect::getRegionOfDefinition: Invalid return value type");
+        }
       }
       
       Py_XDECREF(rv);
@@ -623,15 +646,11 @@ OfxStatus PyImageEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &arg
       Py_DECREF(pyargs);
       Py_DECREF(meth);
       
-      //PyErr_Clear();
-      LogPythonError();
-      
       return stat;
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -682,6 +701,7 @@ OfxStatus PyImageEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
+        LogPythonError();
       }
       else
       {
@@ -739,6 +759,10 @@ OfxStatus PyImageEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args
             Py_XDECREF(inRoIs);
           }
         }
+        else
+        {
+          ofx::Log("PyImageEffect::getRegionsOfInterest: Invalid return value type");
+        }
       }
       
       Py_XDECREF(rv);
@@ -746,15 +770,11 @@ OfxStatus PyImageEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args
       Py_DECREF(pyargs);
       Py_DECREF(meth);
       
-      //PyErr_Clear();
-      LogPythonError();
-      
       return stat;
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -795,6 +815,7 @@ OfxStatus PyImageEffect::getFramesNeeded(ofx::ImageEffect::GetFramesNeededArgs &
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
+        LogPythonError();
       }
       else
       {
@@ -844,6 +865,10 @@ OfxStatus PyImageEffect::getFramesNeeded(ofx::ImageEffect::GetFramesNeededArgs &
             Py_XDECREF(inRanges);
           }
         }
+        else
+        {
+          ofx::Log("PyImageEffect::getFramesNeeded: Invalid return value type");
+        }
       }
       
       Py_XDECREF(rv);
@@ -851,15 +876,11 @@ OfxStatus PyImageEffect::getFramesNeeded(ofx::ImageEffect::GetFramesNeededArgs &
       Py_DECREF(pyargs);
       Py_DECREF(meth);
       
-      //PyErr_Clear();
-      LogPythonError();
-      
       return stat;
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -874,7 +895,6 @@ OfxStatus PyImageEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args)
     
     if (meth)
     {
-      ofx::Log("PyImageEffect::isIdentity: Create arguments");
       OfxStatus stat = kOfxStatFailed;
       
       PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
@@ -918,7 +938,6 @@ OfxStatus PyImageEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args)
       
       PyObject *pyargs = Py_BuildValue("(O)", oargs);
       
-      ofx::Log("PyImageEffect::isIdentity: Call python method override");
       PyObject *rv = PyObject_Call(meth, pyargs, NULL);
       
       PyObject *err = PyErr_Occurred();
@@ -930,7 +949,6 @@ OfxStatus PyImageEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -969,6 +987,10 @@ OfxStatus PyImageEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args)
             Py_XDECREF(it);
           }
         }
+        else
+        {
+          ofx::Log("PyImageEffect::isIdentity: Invalid return value type");
+        }
       }
       
       Py_XDECREF(rv);
@@ -980,8 +1002,7 @@ OfxStatus PyImageEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args)
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -1046,7 +1067,6 @@ OfxStatus PyImageEffect::render(ofx::ImageEffect::RenderArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -1054,6 +1074,10 @@ OfxStatus PyImageEffect::render(ofx::ImageEffect::RenderArgs &args)
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyImageEffect::render: Invalid return value type");
         }
       }
       
@@ -1066,8 +1090,7 @@ OfxStatus PyImageEffect::render(ofx::ImageEffect::RenderArgs &args)
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -1129,7 +1152,6 @@ OfxStatus PyImageEffect::beginSequenceRender(ofx::ImageEffect::BeginSequenceArgs
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -1137,6 +1159,10 @@ OfxStatus PyImageEffect::beginSequenceRender(ofx::ImageEffect::BeginSequenceArgs
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyImageEffect::beginSequenceRender: Invalid return value type");
         }
       }
       
@@ -1149,8 +1175,7 @@ OfxStatus PyImageEffect::beginSequenceRender(ofx::ImageEffect::BeginSequenceArgs
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -1202,7 +1227,6 @@ OfxStatus PyImageEffect::endSequenceRender(ofx::ImageEffect::EndSequenceArgs &ar
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -1210,6 +1234,10 @@ OfxStatus PyImageEffect::endSequenceRender(ofx::ImageEffect::EndSequenceArgs &ar
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyImageEffect::endSequenceRender: Invalid return value type");
         }
       }
       
@@ -1222,8 +1250,7 @@ OfxStatus PyImageEffect::endSequenceRender(ofx::ImageEffect::EndSequenceArgs &ar
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -1264,7 +1291,6 @@ OfxStatus PyImageEffect::getClipPreferences(ofx::ImageEffect::GetClipPrefArgs &a
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -1329,6 +1355,10 @@ OfxStatus PyImageEffect::getClipPreferences(ofx::ImageEffect::GetClipPrefArgs &a
             Py_XDECREF(iprefs);
           }
         }
+        else
+        {
+          ofx::Log("PyImageEffect::getClipPreferences: Invalid return value type");
+        }
       }
       
       Py_XDECREF(rv);
@@ -1338,8 +1368,7 @@ OfxStatus PyImageEffect::getClipPreferences(ofx::ImageEffect::GetClipPrefArgs &a
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -1380,7 +1409,6 @@ OfxStatus PyImageEffect::getTimeDomain(ofx::ImageEffect::GetTimeDomainArgs &args
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -1414,6 +1442,10 @@ OfxStatus PyImageEffect::getTimeDomain(ofx::ImageEffect::GetTimeDomainArgs &args
           Py_XDECREF(of);
           Py_XDECREF(ol);
         }
+        else
+        {
+          ofx::Log("PyImageEffect::getTimeDomain: Invalid return value type");
+        }
       }
       
       Py_XDECREF(rv);
@@ -1425,8 +1457,7 @@ OfxStatus PyImageEffect::getTimeDomain(ofx::ImageEffect::GetTimeDomainArgs &args
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -2854,8 +2885,6 @@ PyObject* PyOFXImageEffectDescriptor_SupportedContext(PyObject *self, PyObject *
 
 PyObject* PyOFXImageEffectDescriptor_SupportedPixelDepth(PyObject *self, PyObject *args)
 {
-  ofx::Log("ofx.ImageEffectDescriptor.supportedPixelDepth called");
-  
   PyOFXImageEffectDescriptor *pdesc = (PyOFXImageEffectDescriptor*)self;
   
   if (!pdesc->desc)
@@ -2891,8 +2920,6 @@ PyObject* PyOFXImageEffectDescriptor_SupportedPixelDepth(PyObject *self, PyObjec
   
   if (ppd != 0)
   {
-    ofx::Log("ofx.ImageEffectDescriptor.supportedPixelDepth with 2 arguments");
-    
     if (!PyInt_Check(ppd))
     {
       PyErr_SetString(PyExc_TypeError, "Expected an integer");
@@ -2900,8 +2927,6 @@ PyObject* PyOFXImageEffectDescriptor_SupportedPixelDepth(PyObject *self, PyObjec
     }
     
     int pd = PyInt_AsLong(ppd);
-    
-    ofx::Log("ofx.ImageEffectDescriptor.supportedPixelDepth(%d, %d)", idx, pd);
     
     CATCH({pdesc->desc->supportedPixelDepth(idx, ofx::BitDepth(pd));}, failed);
     

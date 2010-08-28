@@ -80,7 +80,6 @@ OfxStatus PyInteractDescriptor::describe()
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -88,6 +87,10 @@ OfxStatus PyInteractDescriptor::describe()
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyInteractDescriptor::describe: Invalid return value type");
         }
       }
       
@@ -98,8 +101,7 @@ OfxStatus PyInteractDescriptor::describe()
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -180,7 +182,6 @@ OfxStatus PyInteract::draw(ofx::Interact::DrawArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -188,6 +189,10 @@ OfxStatus PyInteract::draw(ofx::Interact::DrawArgs &args)
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyInteract::draw: Invalid return value type");
         }
       }
       
@@ -200,8 +205,7 @@ OfxStatus PyInteract::draw(ofx::Interact::DrawArgs &args)
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -288,7 +292,6 @@ OfxStatus PyInteract::penMotion(ofx::Interact::PenArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -296,6 +299,10 @@ OfxStatus PyInteract::penMotion(ofx::Interact::PenArgs &args)
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyInteract::penMotion: Invalid return value type");
         }
       }
       
@@ -308,8 +315,7 @@ OfxStatus PyInteract::penMotion(ofx::Interact::PenArgs &args)
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -396,7 +402,6 @@ OfxStatus PyInteract::penDown(ofx::Interact::PenArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -404,6 +409,10 @@ OfxStatus PyInteract::penDown(ofx::Interact::PenArgs &args)
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyInteract::penDown: Invalid return value type");
         }
       }
       
@@ -416,8 +425,7 @@ OfxStatus PyInteract::penDown(ofx::Interact::PenArgs &args)
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -504,7 +512,6 @@ OfxStatus PyInteract::penUp(ofx::Interact::PenArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -512,6 +519,10 @@ OfxStatus PyInteract::penUp(ofx::Interact::PenArgs &args)
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyInteract::penUp: Invalid return value type");
         }
       }
       
@@ -524,8 +535,7 @@ OfxStatus PyInteract::penUp(ofx::Interact::PenArgs &args)
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -585,7 +595,6 @@ OfxStatus PyInteract::keyDown(ofx::Interact::KeyArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -593,6 +602,10 @@ OfxStatus PyInteract::keyDown(ofx::Interact::KeyArgs &args)
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyInteract::keyDown: Invalid return value type");
         }
       }
       
@@ -605,8 +618,7 @@ OfxStatus PyInteract::keyDown(ofx::Interact::KeyArgs &args)
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -666,7 +678,6 @@ OfxStatus PyInteract::keyUp(ofx::Interact::KeyArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -674,6 +685,10 @@ OfxStatus PyInteract::keyUp(ofx::Interact::KeyArgs &args)
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyInteract::keyUp: Invalid return value type");
         }
       }
       
@@ -686,8 +701,7 @@ OfxStatus PyInteract::keyUp(ofx::Interact::KeyArgs &args)
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -747,7 +761,6 @@ OfxStatus PyInteract::keyRepeat(ofx::Interact::KeyArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -755,6 +768,10 @@ OfxStatus PyInteract::keyRepeat(ofx::Interact::KeyArgs &args)
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyInteract::keyRepeat: Invalid return value type");
         }
       }
       
@@ -767,8 +784,7 @@ OfxStatus PyInteract::keyRepeat(ofx::Interact::KeyArgs &args)
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -832,7 +848,6 @@ OfxStatus PyInteract::gainFocus(ofx::Interact::FocusArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -840,6 +855,10 @@ OfxStatus PyInteract::gainFocus(ofx::Interact::FocusArgs &args)
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyInteract::gainFocus: Invalid return value type");
         }
       }
       
@@ -852,8 +871,7 @@ OfxStatus PyInteract::gainFocus(ofx::Interact::FocusArgs &args)
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   
@@ -917,7 +935,6 @@ OfxStatus PyInteract::loseFocus(ofx::Interact::FocusArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -925,6 +942,10 @@ OfxStatus PyInteract::loseFocus(ofx::Interact::FocusArgs &args)
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyInteract::loseFocus: Invalid return value type");
         }
       }
       
@@ -937,8 +958,7 @@ OfxStatus PyInteract::loseFocus(ofx::Interact::FocusArgs &args)
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   

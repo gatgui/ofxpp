@@ -193,64 +193,64 @@ namespace ofx {
     try {
       switch (a) {
       case ActionDescribe: {
-        Log("OFX Overlay Interact: Describe");
+        DebugLog("OFX Overlay Interact: Describe");
         DescriptorClass desc(host, hInteract);
         return desc.describe();
       }
       case ActionCreateInstance: {
-        Log("OFX Overlay Interact: Create instance");
+        DebugLog("OFX Overlay Interact: Create instance");
         new InstanceClass(host, hInteract);
         return kOfxStatOK;
       }
       case ActionDestroyInstance: {
-        Log("OFX Overlay Interact: Destroy instance");
+        DebugLog("OFX Overlay Interact: Destroy instance");
         if (ic) {
           delete ic;
         }
         return kOfxStatOK;
       }
       case ActionInteractDraw: {
-        Log("OFX Overlay Interact: Draw");
+        DebugLog("OFX Overlay Interact: Draw");
         Interact::DrawArgs args(host, inArgs);
         return ic->draw(args);
       }
       case ActionInteractPenMotion: {
-        Log("OFX Overlay Interact: Pen motion");
+        DebugLog("OFX Overlay Interact: Pen motion");
         Interact::PenArgs args(host, inArgs);
         return ic->penMotion(args);
       }
       case ActionInteractPenUp: {
-        Log("OFX Overlay Interact: Pen up");
+        DebugLog("OFX Overlay Interact: Pen up");
         Interact::PenArgs args(host, inArgs);
         return ic->penUp(args);
       }
       case ActionInteractPenDown: {
-        Log("OFX Overlay Interact: Pen down");
+        DebugLog("OFX Overlay Interact: Pen down");
         Interact::PenArgs args(host, inArgs);
         return ic->penDown(args);
       }
       case ActionInteractKeyDown: {
-        Log("OFX Overlay Interact: Key down");
+        DebugLog("OFX Overlay Interact: Key down");
         Interact::KeyArgs args(host, inArgs);
         return ic->keyDown(args);
       }
       case ActionInteractKeyUp: {
-        Log("OFX Overlay Interact: Key up");
+        DebugLog("OFX Overlay Interact: Key up");
         Interact::KeyArgs args(host, inArgs);
         return ic->keyUp(args);
       }
       case ActionInteractKeyRepeat: {
-        Log("OFX Overlay Interact: Key repeat");
+        DebugLog("OFX Overlay Interact: Key repeat");
         Interact::KeyArgs args(host, inArgs);
         return ic->keyRepeat(args);
       }
       case ActionInteractGainFocus: {
-        Log("OFX Overlay Interact: Gain focus");
+        DebugLog("OFX Overlay Interact: Gain focus");
         Interact::FocusArgs args(host, inArgs);
         return ic->gainFocus(args);
       }
       case ActionInteractLoseFocus: {
-        Log("OFX Overlay Interact: Lose focus");
+        DebugLog("OFX Overlay Interact: Lose focus");
         Interact::FocusArgs args(host, inArgs);
         return ic->loseFocus(args);
       }

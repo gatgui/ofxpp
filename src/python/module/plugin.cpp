@@ -79,7 +79,6 @@ PyImageEffectPlugin::~PyImageEffectPlugin()
 
 void PyImageEffectPlugin::setHost(OfxHost *h)
 {
-  ofx::Log("PyImageEffectPlugin::setHost");
   if (!mHost)
   {
     mHost = new ofx::ImageEffectHost(h);
@@ -93,8 +92,6 @@ ofx::ImageEffectHost* PyImageEffectPlugin::host()
 
 PyImageEffectDescriptor PyImageEffectPlugin::descriptor(OfxImageEffectHandle hdl)
 {
-  ofx::Log("PyImageEffectPlugin::descriptor");
-  
   if (!mHost)
   {
     return PyImageEffectDescriptor();
@@ -123,7 +120,6 @@ PyImageEffectDescriptor PyImageEffectPlugin::descriptor(OfxImageEffectHandle hdl
 
 PyImageEffect* PyImageEffectPlugin::addEffect(OfxImageEffectHandle hdl)
 {
-  ofx::Log("PyImageEffectPlugin::addEffect");
   if (!mHost)
   {
     return NULL;
@@ -163,7 +159,6 @@ PyImageEffect* PyImageEffectPlugin::addEffect(OfxImageEffectHandle hdl)
 
 void PyImageEffectPlugin::removeEffect(OfxImageEffectHandle hdl)
 {
-  ofx::Log("PyImageEffectPlugin::removeEffect");
   EffectMap::iterator it = mEffects.find(hdl);
   if (it != mEffects.end())
   {
@@ -174,7 +169,6 @@ void PyImageEffectPlugin::removeEffect(OfxImageEffectHandle hdl)
 
 PyImageEffect* PyImageEffectPlugin::getEffect(OfxImageEffectHandle hdl)
 {
-  ofx::Log("PyImageEffectPlugin::getEffect");
   EffectMap::iterator it = mEffects.find(hdl);
   if (it != mEffects.end())
   {
@@ -185,7 +179,6 @@ PyImageEffect* PyImageEffectPlugin::getEffect(OfxImageEffectHandle hdl)
 
 OfxStatus PyImageEffectPlugin::load()
 {
-  ofx::Log("PyImageEffectPlugin::load");
   if (mSelf != 0)
   {
     PyObject *meth = PyObject_GetAttrString(mSelf, "load");
@@ -205,7 +198,6 @@ OfxStatus PyImageEffectPlugin::load()
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -213,6 +205,10 @@ OfxStatus PyImageEffectPlugin::load()
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyImageEffectPlugin::load: Invalid return value type");
         }
       }
       
@@ -223,8 +219,7 @@ OfxStatus PyImageEffectPlugin::load()
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
     
@@ -233,7 +228,6 @@ OfxStatus PyImageEffectPlugin::load()
   
 OfxStatus PyImageEffectPlugin::unload()
 {
-  ofx::Log("PyImageEffectPlugin::unload");
   if (mSelf != 0)
   {
     PyObject *meth = PyObject_GetAttrString(mSelf, "unload");
@@ -253,7 +247,6 @@ OfxStatus PyImageEffectPlugin::unload()
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        //PyErr_Clear();
         LogPythonError();
       }
       else
@@ -261,6 +254,10 @@ OfxStatus PyImageEffectPlugin::unload()
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyImageEffectPlugin::unload: Invalid return value type");
         }
       }
       
@@ -271,8 +268,7 @@ OfxStatus PyImageEffectPlugin::unload()
     }
     else
     {
-      //PyErr_Clear();
-      LogPythonError();
+      PyErr_Clear();
     }
   }
   

@@ -116,6 +116,8 @@ static void PyOFXActionArguments_Delete(PyObject *self)
   self->ob_type->tp_free(self);
 }
 
+
+
 // ---
 
 static PyObject* PyOFX_CanonicalToPixelCoords(PyObject *, PyObject *args)
@@ -204,6 +206,20 @@ PyObject* PyOFX_Log(PyObject *, PyObject *args)
   Py_RETURN_NONE;
 }
 
+PyObject* PyOFX_DebugLog(PyObject *, PyObject *args)
+{
+  char *msg = 0;
+  
+  if (!PyArg_ParseTuple(args, "s", &msg))
+  {
+    return NULL;
+  }
+  
+  ofx::DebugLog(msg);
+  
+  Py_RETURN_NONE;
+}
+
 static PyMethodDef PyOFX_Methods[] =
 {
   {"CanonicalToPixelCoords", PyOFX_CanonicalToPixelCoords, METH_VARARGS, 0},
@@ -211,6 +227,7 @@ static PyMethodDef PyOFX_Methods[] =
   {"NormalisedToCanonicalCoords", PyOFX_NormalisedToCanonicalCoords, METH_VARARGS, 0},
   {"CanonicalToNormalisedCoords", PyOFX_CanonicalToNormalisedCoords, METH_VARARGS, 0},
   {"Log", PyOFX_Log, METH_VARARGS, 0},
+  {"DebugLog", PyOFX_DebugLog, METH_VARARGS, 0},
   {NULL, NULL, NULL, NULL}
 };
 
@@ -401,6 +418,8 @@ PyMODINIT_FUNC initofx(void)
   PyOFXActionArgumentsType.tp_new = PyOFXActionArguments_New;
   PyOFXActionArgumentsType.tp_init = PyOFXActionArguments_Init;
   PyOFXActionArgumentsType.tp_dealloc = PyOFXActionArguments_Delete;
+  PyOFXActionArgumentsType.tp_setattro = PyObject_GenericSetAttr;
+  PyOFXActionArgumentsType.tp_getattro = PyObject_GenericGetAttr;
   if (PyType_Ready(&PyOFXActionArgumentsType) < 0)
   {
     Py_DECREF(mod);

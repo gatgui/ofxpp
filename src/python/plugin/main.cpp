@@ -153,9 +153,8 @@ class PathLister
           
           if (!getNumberOfPluginsFunc)
           {
-            LogPythonError();
             Py_DECREF(mod);
-            //PyErr_Clear();
+            PyErr_Clear();
             return true;
           }
           
@@ -163,10 +162,9 @@ class PathLister
           
           if (!getPluginFunc)
           {
-            LogPythonError();
             Py_DECREF(getNumberOfPluginsFunc);
             Py_DECREF(mod);
-            //PyErr_Clear();
+            PyErr_Clear();
             return true;
           }
           
@@ -213,7 +211,7 @@ class PathLister
         }
         else
         {
-          ofx::Log("pyplugin.ofx: -> Could not load module");
+          ofx::Log("pyplugin.ofx: Could not load module");
         }
       }
       
@@ -300,7 +298,6 @@ class PathLister
             
             if (dirname == p)
             {
-              ofx::Log("pyplugin.ofx: Directory \"%s\" already in sys.path", dirname.fullname().c_str());
               // already in path
               Py_DECREF(path);
               Py_DECREF(mod);
@@ -318,16 +315,16 @@ class PathLister
         }
         else
         {
-          LogPythonError();
-          //PyErr_Clear();
+          //LogPythonError();
+          PyErr_Clear();
         }
         
         Py_DECREF(mod);
       }
       else
       {
-        LogPythonError();
-        //PyErr_Clear();
+        //LogPythonError();
+        PyErr_Clear();
       }
       
       return false;
@@ -341,14 +338,14 @@ class PathLister
       
       modulename = modulename.substr(0, modulename.length()-3);
       
-      ofx::Log("pyplugin.ofx: Module name \"%s\"", modulename.c_str());
+      //ofx::Log("pyplugin.ofx: Module name \"%s\"", modulename.c_str());
       
       gcore::Path moduledir = path;
       moduledir.pop();
       moduledir.makeAbsolute();
       moduledir.normalize();
       
-      ofx::Log("pyplugin.ofx: Module directory \"%s\"", moduledir.fullname().c_str());
+      //ofx::Log("pyplugin.ofx: Module directory \"%s\"", moduledir.fullname().c_str());
       
       if (addToSysPath(moduledir))
       {
@@ -364,8 +361,8 @@ class PathLister
             Py_DECREF(mod);
             mod = 0;
           }
-          LogPythonError();
-          //PyErr_Clear();
+          //LogPythonError();
+          PyErr_Clear();
         }
       }
       

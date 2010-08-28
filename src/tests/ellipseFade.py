@@ -161,6 +161,7 @@ class Effect(ofx.ImageEffect):
     return (dx*dx + dy*dy);
     
   def isIdentity(self, args):
+    ofx.Log("ellipseFade.isIdentity")
     if self.width.getValue() <= 0.0 or self.height.getValue() <= 0.0:
       args.idClip = "Source"
       args.idTime = args.time
@@ -169,6 +170,7 @@ class Effect(ofx.ImageEffect):
       return ofx.StatReplyDefault
   
   def render(self, args):
+    ofx.Log("ellipseFade.render")
     cSrc = self.getClip("Source")
     cOut = self.getClip("Output")
     

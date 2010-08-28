@@ -105,15 +105,12 @@ std::string PyOFX_InterpFunc(ofx::ParameterSet &params,
 template <int IDX>
 void PyOFX_SetHost(OfxHost *host)
 {
-  ofx::Log("PyOFX_SetHost (%d)", IDX);
-  
   PyGILState_STATE gstate = PyGILState_Ensure();
   
   PyImageEffectPlugin *plugin = gEffectPlugins[IDX];
   
   if (plugin != 0)
   {
-    ofx::Log("  on \"%s\"", plugin->identifier());
     plugin->setHost(host);
   }
   
@@ -126,8 +123,6 @@ OfxStatus PyOFX_Main(const char *action,
                      OfxPropertySetHandle hInArgs,
                      OfxPropertySetHandle hOutArgs)
 {
-  ofx::Log("PyOFX_Main (%d)", IDX);
-  
   PyGILState_STATE gstate = PyGILState_Ensure();
   
   PyImageEffectPlugin *plugin = gEffectPlugins[IDX];
@@ -137,8 +132,6 @@ OfxStatus PyOFX_Main(const char *action,
     PyGILState_Release(gstate);
     return kOfxStatErrBadHandle;
   }
-  
-  ofx::Log("  on \"%s\"", plugin->identifier());
   
   ofx::ImageEffectHost *host = plugin->host();
   
@@ -164,7 +157,7 @@ OfxStatus PyOFX_Main(const char *action,
     {
     case ofx::ActionLoad:
     {
-      ofx::Log("OFX Image Effect Plugin: Load");
+      ofx::DebugLog("OFX Image Effect Plugin: Load");
       host->init();
       rv = plugin->load();
       // this means binary has been loaded... as we proxy python plugins,
@@ -173,7 +166,7 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionUnload:
     {
-      ofx::Log("OFX Image Effect Plugin: Unload");
+      ofx::DebugLog("OFX Image Effect Plugin: Unload");
       rv = plugin->unload();
       // this means binary has been unload... as we proxy python plugins,
       // is this aimed at the pyplugin or the proxied python one?
@@ -182,14 +175,14 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionDescribe:
     {
-      ofx::Log("OFX Image Effect Plugin: Describe");
+      ofx::DebugLog("OFX Image Effect Plugin: Describe");
       PyImageEffectDescriptor desc = plugin->descriptor(hEffect);
       rv = desc.describe();
       break;
     }
     case ofx::ActionImageEffectDescribeInContext:
     {
-      ofx::Log("OFX Image Effect Plugin: Describe in context");
+      ofx::DebugLog("OFX Image Effect Plugin: Describe in context");
       // might not be the same handle as in ActionDescribe
       PyImageEffectDescriptor desc = plugin->descriptor(hEffect);
       ofx::ImageEffectContext ctx = ofx::StringToImageEffectContext(inArgs.getString(kOfxImageEffectPropContext, 0));
@@ -198,21 +191,21 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionCreateInstance:
     {
-      ofx::Log("OFX Image Effect Plugin: Create instance");
+      ofx::DebugLog("OFX Image Effect Plugin: Create instance");
       plugin->addEffect(hEffect);
       rv = kOfxStatOK;
       break;
     }
     case ofx::ActionDestroyInstance:
     {
-      ofx::Log("OFX Image Effect Plugin: Destroy instance");
+      ofx::DebugLog("OFX Image Effect Plugin: Destroy instance");
       plugin->removeEffect(hEffect);
       rv = kOfxStatOK;
       break;
     }
     case ofx::ActionBeginInstanceChanged:
     {
-      ofx::Log("OFX Image Effect Plugin: Begin instance changed");
+      ofx::DebugLog("OFX Image Effect Plugin: Begin instance changed");
       PyImageEffect *effect = plugin->getEffect(hEffect);
       if (!effect)
       {
@@ -228,7 +221,7 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionEndInstanceChanged:
     {
-      ofx::Log("OFX Image Effect Plugin: End instance changed");
+      ofx::DebugLog("OFX Image Effect Plugin: End instance changed");
       PyImageEffect *effect = plugin->getEffect(hEffect);
       if (!effect)
       {
@@ -244,7 +237,7 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionInstanceChanged:
     {
-      ofx::Log("OFX Image Effect Plugin: Instance changed");
+      ofx::DebugLog("OFX Image Effect Plugin: Instance changed");
       PyImageEffect *effect = plugin->getEffect(hEffect);
       if (!effect)
       {
@@ -260,7 +253,7 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionPurgeCaches:
     {
-      ofx::Log("OFX Image Effect Plugin: Purge caches");
+      ofx::DebugLog("OFX Image Effect Plugin: Purge caches");
       PyImageEffect *effect = plugin->getEffect(hEffect);
       if (!effect)
       {
@@ -275,7 +268,7 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionSyncPrivateData:
     {
-      ofx::Log("OFX Image Effect Plugin: Sync private data");
+      ofx::DebugLog("OFX Image Effect Plugin: Sync private data");
       PyImageEffect *effect = plugin->getEffect(hEffect);
       if (!effect)
       {
@@ -290,7 +283,7 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionBeginInstanceEdit:
     {
-      ofx::Log("OFX Image Effect Plugin: Begin instance edit");
+      ofx::DebugLog("OFX Image Effect Plugin: Begin instance edit");
       PyImageEffect *effect = plugin->getEffect(hEffect);
       if (!effect)
       {
@@ -305,7 +298,7 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionEndInstanceEdit:
     {
-      ofx::Log("OFX Image Effect Plugin: End instance edit");
+      ofx::DebugLog("OFX Image Effect Plugin: End instance edit");
       PyImageEffect *effect = plugin->getEffect(hEffect);
       if (!effect)
       {
@@ -320,7 +313,7 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionImageEffectGetRoD:
     {
-      ofx::Log("OFX Image Effect Plugin: Get region of definition");
+      ofx::DebugLog("OFX Image Effect Plugin: Get region of definition");
       PyImageEffect *effect = plugin->getEffect(hEffect);
       if (!effect)
       {
@@ -340,7 +333,7 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionImageEffectGetRoI:
     {
-      ofx::Log("OFX Image Effect Plugin: Get regions of interest");
+      ofx::DebugLog("OFX Image Effect Plugin: Get regions of interest");
       PyImageEffect *effect = plugin->getEffect(hEffect);
       if (!effect)
       {
@@ -360,7 +353,7 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionImageEffectGetFramesNeeded:
     {
-      ofx::Log("OFX Image Effect Plugin: Get frames needed");
+      ofx::DebugLog("OFX Image Effect Plugin: Get frames needed");
       PyImageEffect *effect = plugin->getEffect(hEffect);
       if (!effect)
       {
@@ -380,7 +373,7 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionImageEffectIsIdentity:
     {
-      ofx::Log("OFX Image Effect Plugin: Is identity");
+      ofx::DebugLog("OFX Image Effect Plugin: Is identity");
       PyImageEffect *effect = plugin->getEffect(hEffect);
       if (!effect)
       {
@@ -400,7 +393,7 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionImageEffectRender:
     {
-      ofx::Log("OFX Image Effect Plugin: Render");
+      ofx::DebugLog("OFX Image Effect Plugin: Render");
       PyImageEffect *effect = plugin->getEffect(hEffect);
       if (!effect)
       {
@@ -416,7 +409,7 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionImageEffectBeginSequenceRender:
     {
-      ofx::Log("OFX Image Effect Plugin: Begin sequence render");
+      ofx::DebugLog("OFX Image Effect Plugin: Begin sequence render");
       PyImageEffect *effect = plugin->getEffect(hEffect);
       if (!effect)
       {
@@ -432,7 +425,7 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionImageEffectEndSequenceRender:
     {
-      ofx::Log("OFX Image Effect Plugin: End sequence render");
+      ofx::DebugLog("OFX Image Effect Plugin: End sequence render");
       PyImageEffect *effect = plugin->getEffect(hEffect);
       if (!effect)
       {
@@ -448,7 +441,7 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionImageEffectGetClipPreferences:
     {
-      ofx::Log("OFX Image Effect Plugin: Get clip preferences");
+      ofx::DebugLog("OFX Image Effect Plugin: Get clip preferences");
       PyImageEffect *effect = plugin->getEffect(hEffect);
       if (!effect)
       {
@@ -468,7 +461,7 @@ OfxStatus PyOFX_Main(const char *action,
     }
     case ofx::ActionImageEffectGetTimeDomain:
     {
-      ofx::Log("OFX Image Effect Plugin: Get time domain");
+      ofx::DebugLog("OFX Image Effect Plugin: Get time domain");
       PyImageEffect *effect = plugin->getEffect(hEffect);
       if (!effect)
       {
@@ -529,7 +522,7 @@ OfxStatus PyOFX_InteractMain(const char *action,
     {
     case ofx::ActionDescribe:
     {
-      ofx::Log("OFX Overlay Interact: Describe");
+      ofx::DebugLog("OFX Overlay Interact: Describe");
       
       PyObject *phost = PyObject_CallObject((PyObject*)&PyOFXImageEffectHostType, NULL);
       ((PyOFXHost*)phost)->host = host;
@@ -577,7 +570,7 @@ OfxStatus PyOFX_InteractMain(const char *action,
     }
     case ofx::ActionCreateInstance:
     {
-      ofx::Log("OFX Overlay Interact: Create instance");
+      ofx::DebugLog("OFX Overlay Interact: Create instance");
       
       PyObject *phost = PyObject_CallObject((PyObject*)&PyOFXImageEffectHostType, NULL);
       ((PyOFXHost*)phost)->host = host;
@@ -621,7 +614,7 @@ OfxStatus PyOFX_InteractMain(const char *action,
     }
     case ofx::ActionDestroyInstance:
     {
-      ofx::Log("OFX Overlay Interact: Destroy instance");
+      ofx::DebugLog("OFX Overlay Interact: Destroy instance");
       if (ic)
       {
         delete ic;
@@ -631,63 +624,63 @@ OfxStatus PyOFX_InteractMain(const char *action,
     }
     case ofx::ActionInteractDraw:
     {
-      ofx::Log("OFX Overlay Interact: Draw");
+      ofx::DebugLog("OFX Overlay Interact: Draw");
       ofx::Interact::DrawArgs args(host, inArgs);
       rv = ic->draw(args);
       break;
     }
     case ofx::ActionInteractPenMotion:
     {
-      ofx::Log("OFX Overlay Interact: Pen motion");
+      ofx::DebugLog("OFX Overlay Interact: Pen motion");
       ofx::Interact::PenArgs args(host, inArgs);
       rv = ic->penMotion(args);
       break;
     }
     case ofx::ActionInteractPenUp:
     {
-      ofx::Log("OFX Overlay Interact: Pen up");
+      ofx::DebugLog("OFX Overlay Interact: Pen up");
       ofx::Interact::PenArgs args(host, inArgs);
       rv = ic->penUp(args);
       break;
     }
     case ofx::ActionInteractPenDown:
     {
-      ofx::Log("OFX Overlay Interact: Pen down");
+      ofx::DebugLog("OFX Overlay Interact: Pen down");
       ofx::Interact::PenArgs args(host, inArgs);
       rv = ic->penDown(args);
       break;
     }
     case ofx::ActionInteractKeyDown:
     {
-      ofx::Log("OFX Overlay Interact: Key down");
+      ofx::DebugLog("OFX Overlay Interact: Key down");
       ofx::Interact::KeyArgs args(host, inArgs);
       rv = ic->keyDown(args);
       break;
     }
     case ofx::ActionInteractKeyUp:
     {
-      ofx::Log("OFX Overlay Interact: Key up");
+      ofx::DebugLog("OFX Overlay Interact: Key up");
       ofx::Interact::KeyArgs args(host, inArgs);
       rv = ic->keyUp(args);
       break;
     }
     case ofx::ActionInteractKeyRepeat:
     {
-      ofx::Log("OFX Overlay Interact: Key repeat");
+      ofx::DebugLog("OFX Overlay Interact: Key repeat");
       ofx::Interact::KeyArgs args(host, inArgs);
       rv = ic->keyRepeat(args);
       break;
     }
     case ofx::ActionInteractGainFocus:
     {
-      ofx::Log("OFX Overlay Interact: Gain focus");
+      ofx::DebugLog("OFX Overlay Interact: Gain focus");
       ofx::Interact::FocusArgs args(host, inArgs);
       rv = ic->gainFocus(args);
       break;
     }
     case ofx::ActionInteractLoseFocus:
     {
-      ofx::Log("OFX Overlay Interact: Lose focus");
+      ofx::DebugLog("OFX Overlay Interact: Lose focus");
       ofx::Interact::FocusArgs args(host, inArgs);
       rv = ic->loseFocus(args);
       break;

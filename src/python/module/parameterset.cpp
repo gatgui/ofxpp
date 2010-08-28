@@ -153,12 +153,29 @@ PyObject* PyOFXParameterSetDescriptor_PageOrder(PyObject *self, PyObject *args)
     return NULL;
   }
   
-  int idx;
+  Py_ssize_t nargs = PyTuple_Size(args);
+  if (nargs < 1 || nargs > 2)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "At least 1 argument, at most 2");
+    return NULL;
+  }
+  
+  if (!PyInt_Check(PyTuple_GetItem(args, 0)))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected an integer for first argument");
+    return NULL;
+  }
+  
+  int idx = PyInt_AsLong(PyTuple_GetItem(args, 0));
   char *name = 0;
   
-  if (!PyArg_ParseTuple(args, "i|s", &idx, &name))
+  if (nargs == 2)
   {
-    return NULL;
+    if (!PyString_Check(PyTuple_GetItem(args, 1)))
+    {
+      PyErr_SetString(PyExc_TypeError, "Expected a string for second argument");
+    }
+    name = PyString_AsString(PyTuple_GetItem(args, 1));
   }
   
   ofx::ParameterSetDescriptor *desc = (ofx::ParameterSetDescriptor*) pdesc->desc;

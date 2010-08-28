@@ -23,6 +23,79 @@ USA.
 
 #include "common.h"
 #include <ofx/ofx.h>
+#include <sstream>
+
+void LogPythonError()
+{
+  if (PyErr_Occurred() == 0)
+  {
+    return;
+  }
+  
+  std::ostringstream oss;
+    
+  PyObject *et=0, *ev=0, *etb=0, *s=0;
+  
+  PyErr_Fetch(&et, &ev, &etb);
+  
+  //s = PyObject_Str(et);
+  //oss << std::endl << "--- Python --- " << PyString_AsString(s);
+  //Py_DECREF(s);
+  
+  if (ev)
+  {
+    s = PyObject_Str(ev);
+    oss << PyString_AsString(s);
+    Py_DECREF(s);
+  }
+  
+  if (etb)
+  {
+    PyObject *tbmn = PyString_FromString("traceback");
+    PyObject *tbm = PyImport_Import(tbmn);
+    Py_DECREF(tbmn);
+    if (tbm)
+    {
+      PyObject *mdict = PyModule_GetDict(tbm);
+      PyObject *func = PyDict_GetItemString(mdict, "format_tb"); // borrowed reference
+      if (func && PyCallable_Check(func))
+      {
+        PyObject *tbargs = PyTuple_New(1);
+        PyTuple_SetItem(tbargs, 0, etb);
+        PyObject *tbl = PyObject_CallObject(func, tbargs);
+        if (tbl)
+        {
+          Py_ssize_t nf = PyList_Size(tbl);
+          for (Py_ssize_t f=0; f<nf; ++f)
+          {
+            PyObject *fs = PyList_GetItem(tbl, f);
+            std::string lines = PyString_AsString(fs);
+            size_t p0 = 0, p1 = lines.find('\n', p0);
+            while (p1 != std::string::npos)
+            {
+              std::string line = lines.substr(p0, p1-p0);
+              oss << std::endl << line;
+              p0 = p1 + 1;
+              p1 = lines.find('\n', p0);
+            }
+            oss << std::endl << lines.substr(p0);
+          }
+          Py_DECREF(tbl);
+        }
+        Py_DECREF(tbargs);
+      }
+      Py_DECREF(tbm);
+    }
+  }
+  
+  Py_XDECREF(et);
+  Py_XDECREF(ev);
+  Py_XDECREF(etb);
+  
+  oss << std::endl;
+  
+  ofx::Log("pyofx:\n*** Python Error ***\n%s", oss.str().c_str());
+}
 
 static PyObject* PyOFX_CanonicalToPixelCoords(PyObject *, PyObject *args)
 {

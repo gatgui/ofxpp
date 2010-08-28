@@ -69,6 +69,7 @@ PyImageEffectDescriptor& PyImageEffectDescriptor::operator=(const PyImageEffectD
 OfxStatus PyImageEffectDescriptor::describe()
 {
   ofx::Log("PyImageEffectDescriptor::describe");
+  
   if (mSelf != 0)
   {
     PyObject *meth = PyObject_GetAttrString(mSelf, "describe");
@@ -88,13 +89,18 @@ OfxStatus PyImageEffectDescriptor::describe()
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
         if (PyInt_Check(rv))
         {
           stat = (OfxStatus) PyInt_AsLong(rv);
+          ofx::Log("PyImageEffectDescriptor: returns %d", stat);
+          // no threading in python
+          hostFrameThreading(false);
+          renderThreadSafety(ofx::RenderThreadUnsafe);
         }
       }
       
@@ -105,13 +111,10 @@ OfxStatus PyImageEffectDescriptor::describe()
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
-  
-  // no threading in python
-  hostFrameThreading(false);
-  renderThreadSafety(ofx::RenderThreadUnsafe);
   
   return ofx::ImageEffectDescriptor::describe();
 }
@@ -139,7 +142,8 @@ OfxStatus PyImageEffectDescriptor::describeInContext(ofx::ImageEffectContext ctx
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -157,7 +161,8 @@ OfxStatus PyImageEffectDescriptor::describeInContext(ofx::ImageEffectContext ctx
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -203,7 +208,8 @@ OfxStatus PyImageEffect::beginInstanceChanged(ofx::ChangeReason reason)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -221,7 +227,8 @@ OfxStatus PyImageEffect::beginInstanceChanged(ofx::ChangeReason reason)
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -250,7 +257,8 @@ OfxStatus PyImageEffect::endInstanceChanged(ofx::ChangeReason reason)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -268,7 +276,8 @@ OfxStatus PyImageEffect::endInstanceChanged(ofx::ChangeReason reason)
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -325,7 +334,8 @@ OfxStatus PyImageEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -344,7 +354,8 @@ OfxStatus PyImageEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -372,7 +383,8 @@ OfxStatus PyImageEffect::purgeCaches()
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -389,7 +401,8 @@ OfxStatus PyImageEffect::purgeCaches()
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -417,7 +430,8 @@ OfxStatus PyImageEffect::syncPrivateData()
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -434,7 +448,8 @@ OfxStatus PyImageEffect::syncPrivateData()
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -462,7 +477,8 @@ OfxStatus PyImageEffect::beginInstanceEdit()
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -479,7 +495,8 @@ OfxStatus PyImageEffect::beginInstanceEdit()
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -507,7 +524,8 @@ OfxStatus PyImageEffect::endInstanceEdit()
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -524,7 +542,8 @@ OfxStatus PyImageEffect::endInstanceEdit()
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -604,13 +623,15 @@ OfxStatus PyImageEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &arg
       Py_DECREF(pyargs);
       Py_DECREF(meth);
       
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
       
       return stat;
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -725,13 +746,15 @@ OfxStatus PyImageEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args
       Py_DECREF(pyargs);
       Py_DECREF(meth);
       
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
       
       return stat;
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -828,13 +851,15 @@ OfxStatus PyImageEffect::getFramesNeeded(ofx::ImageEffect::GetFramesNeededArgs &
       Py_DECREF(pyargs);
       Py_DECREF(meth);
       
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
       
       return stat;
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -903,7 +928,8 @@ OfxStatus PyImageEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -950,7 +976,8 @@ OfxStatus PyImageEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args)
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -1015,7 +1042,8 @@ OfxStatus PyImageEffect::render(ofx::ImageEffect::RenderArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -1034,7 +1062,8 @@ OfxStatus PyImageEffect::render(ofx::ImageEffect::RenderArgs &args)
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -1096,7 +1125,8 @@ OfxStatus PyImageEffect::beginSequenceRender(ofx::ImageEffect::BeginSequenceArgs
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -1115,7 +1145,8 @@ OfxStatus PyImageEffect::beginSequenceRender(ofx::ImageEffect::BeginSequenceArgs
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -1167,7 +1198,8 @@ OfxStatus PyImageEffect::endSequenceRender(ofx::ImageEffect::EndSequenceArgs &ar
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -1186,7 +1218,8 @@ OfxStatus PyImageEffect::endSequenceRender(ofx::ImageEffect::EndSequenceArgs &ar
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -1227,7 +1260,8 @@ OfxStatus PyImageEffect::getClipPreferences(ofx::ImageEffect::GetClipPrefArgs &a
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -1300,7 +1334,8 @@ OfxStatus PyImageEffect::getClipPreferences(ofx::ImageEffect::GetClipPrefArgs &a
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -1341,7 +1376,8 @@ OfxStatus PyImageEffect::getTimeDomain(ofx::ImageEffect::GetTimeDomainArgs &args
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -1385,7 +1421,8 @@ OfxStatus PyImageEffect::getTimeDomain(ofx::ImageEffect::GetTimeDomainArgs &args
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -2752,12 +2789,27 @@ PyObject* PyOFXImageEffectDescriptor_SupportedContext(PyObject *self, PyObject *
     return NULL;
   }
   
-  int idx = 0;
+  Py_ssize_t nargs = PyTuple_Size(args);
+  
+  if (nargs < 1 || nargs > 2)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "At least 1 argument, at most 2");
+    return NULL;
+  }
+  
+  if (!PyInt_Check(PyTuple_GetItem(args, 0)))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected an integer for first argument");
+    return NULL;
+  }
+  
+  int idx = PyInt_AsLong(PyTuple_GetItem(args, 0));
+  
   PyObject *pctx = 0;
   
-  if (PyArg_ParseTuple(args, "i|O", &idx, &pctx))
+  if (nargs == 2)
   {
-    return NULL;
+    pctx = PyTuple_GetItem(args, 1);
   }
   
   bool failed = false;
@@ -2798,6 +2850,8 @@ PyObject* PyOFXImageEffectDescriptor_SupportedContext(PyObject *self, PyObject *
 
 PyObject* PyOFXImageEffectDescriptor_SupportedPixelDepth(PyObject *self, PyObject *args)
 {
+  ofx::Log("ofx.ImageEffectDescriptor.supportedPixelDepth called");
+  
   PyOFXImageEffectDescriptor *pdesc = (PyOFXImageEffectDescriptor*)self;
   
   if (!pdesc->desc)
@@ -2806,18 +2860,35 @@ PyObject* PyOFXImageEffectDescriptor_SupportedPixelDepth(PyObject *self, PyObjec
     return NULL;
   }
   
-  int idx = 0;
+  Py_ssize_t nargs = PyTuple_Size(args);
+  
+  if (nargs < 1 || nargs > 2)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "At least 1 argument, at most 2");
+    return NULL;
+  }
+  
+  if (!PyInt_Check(PyTuple_GetItem(args, 0)))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected an integer for first argument");
+    return NULL;
+  }
+  
+  int idx = PyInt_AsLong(PyTuple_GetItem(args, 0));
+  
   PyObject *ppd = 0;
   
-  if (PyArg_ParseTuple(args, "i|O", &idx, &ppd))
+  if (nargs == 2)
   {
-    return NULL;
+    ppd = PyTuple_GetItem(args, 1);
   }
   
   bool failed = false;
   
   if (ppd != 0)
   {
+    ofx::Log("ofx.ImageEffectDescriptor.supportedPixelDepth with 2 arguments");
+    
     if (!PyInt_Check(ppd))
     {
       PyErr_SetString(PyExc_TypeError, "Expected an integer");
@@ -2825,6 +2896,8 @@ PyObject* PyOFXImageEffectDescriptor_SupportedPixelDepth(PyObject *self, PyObjec
     }
     
     int pd = PyInt_AsLong(ppd);
+    
+    ofx::Log("ofx.ImageEffectDescriptor.supportedPixelDepth(%d, %d)", idx, pd);
     
     CATCH({pdesc->desc->supportedPixelDepth(idx, ofx::BitDepth(pd));}, failed);
     
@@ -2860,12 +2933,27 @@ PyObject* PyOFXImageEffectDescriptor_ClipPreferencesSlaveParam(PyObject *self, P
     return NULL;
   }
   
-  int idx = 0;
+  Py_ssize_t nargs = PyTuple_Size(args);
+  
+  if (nargs < 1 || nargs > 2)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "At least 1 argument, at most 2");
+    return NULL;
+  }
+  
+  if (!PyInt_Check(PyTuple_GetItem(args, 0)))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected an integer for first argument");
+    return NULL;
+  }
+  
+  int idx = PyInt_AsLong(PyTuple_GetItem(args, 0));
+  
   PyObject *pparam = 0;
   
-  if (PyArg_ParseTuple(args, "i|O", &idx, &pparam))
+  if (nargs == 2)
   {
-    return NULL;
+    pparam = PyTuple_GetItem(args, 1);
   }
   
   bool failed = false;
@@ -2916,12 +3004,27 @@ PyObject* PyOFXImageEffectDescriptor_Version(PyObject *self, PyObject *args)
     return NULL;
   }
   
-  int level = 0;
+  Py_ssize_t nargs = PyTuple_Size(args);
+  
+  if (nargs < 1 || nargs > 2)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "At least 1 argument, at most 2");
+    return NULL;
+  }
+  
+  if (!PyInt_Check(PyTuple_GetItem(args, 0)))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected an integer for first argument");
+    return NULL;
+  }
+  
+  int level = PyInt_AsLong(PyTuple_GetItem(args, 0));
+  
   PyObject *pver = 0;
   
-  if (PyArg_ParseTuple(args, "i|O", &level, &pver))
+  if (nargs == 2)
   {
-    return NULL;
+    pver = PyTuple_GetItem(args, 1);
   }
   
   bool failed = false;

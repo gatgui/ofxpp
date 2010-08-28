@@ -80,7 +80,8 @@ OfxStatus PyInteractDescriptor::describe()
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -97,7 +98,8 @@ OfxStatus PyInteractDescriptor::describe()
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -178,7 +180,8 @@ OfxStatus PyInteract::draw(ofx::Interact::DrawArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -197,7 +200,8 @@ OfxStatus PyInteract::draw(ofx::Interact::DrawArgs &args)
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -284,7 +288,8 @@ OfxStatus PyInteract::penMotion(ofx::Interact::PenArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -303,7 +308,8 @@ OfxStatus PyInteract::penMotion(ofx::Interact::PenArgs &args)
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -390,7 +396,8 @@ OfxStatus PyInteract::penDown(ofx::Interact::PenArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -409,7 +416,8 @@ OfxStatus PyInteract::penDown(ofx::Interact::PenArgs &args)
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -496,7 +504,8 @@ OfxStatus PyInteract::penUp(ofx::Interact::PenArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -515,7 +524,8 @@ OfxStatus PyInteract::penUp(ofx::Interact::PenArgs &args)
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -575,7 +585,8 @@ OfxStatus PyInteract::keyDown(ofx::Interact::KeyArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -594,7 +605,8 @@ OfxStatus PyInteract::keyDown(ofx::Interact::KeyArgs &args)
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -654,7 +666,8 @@ OfxStatus PyInteract::keyUp(ofx::Interact::KeyArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -673,7 +686,8 @@ OfxStatus PyInteract::keyUp(ofx::Interact::KeyArgs &args)
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -733,7 +747,8 @@ OfxStatus PyInteract::keyRepeat(ofx::Interact::KeyArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -752,7 +767,8 @@ OfxStatus PyInteract::keyRepeat(ofx::Interact::KeyArgs &args)
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -816,7 +832,8 @@ OfxStatus PyInteract::gainFocus(ofx::Interact::FocusArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -835,7 +852,8 @@ OfxStatus PyInteract::gainFocus(ofx::Interact::FocusArgs &args)
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -899,7 +917,8 @@ OfxStatus PyInteract::loseFocus(ofx::Interact::FocusArgs &args)
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -918,7 +937,8 @@ OfxStatus PyInteract::loseFocus(ofx::Interact::FocusArgs &args)
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
@@ -1413,12 +1433,25 @@ PyObject* PyOFXInteract_SlaveToParam(PyObject *self, PyObject *args)
     return NULL;
   }
   
-  int idx = 0;
+  Py_ssize_t nargs = PyTuple_Size(args);
+  if (nargs < 1 || nargs > 2)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "At least 1 argument, at most 2");
+    return NULL;
+  }
+  
+  if (!PyInt_Check(PyTuple_GetItem(args, 0)))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected an integer for first argument");
+    return NULL;
+  }
+  
+  int idx = PyInt_AsLong(PyTuple_GetItem(args, 0));
   PyObject *val = 0;
   
-  if (!PyArg_ParseTuple(args, "i|O", &idx, &val))
+  if (nargs == 2)
   {
-    return NULL;
+    val = PyTuple_GetItem(args, 1);
   }
   
   bool failed = false;

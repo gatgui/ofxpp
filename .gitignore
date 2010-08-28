@@ -2,6 +2,7 @@
 release
 debug
 .DS_Store
-ofx.log
+*.log
 *.pyc
+*.sh
 

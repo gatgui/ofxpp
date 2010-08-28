@@ -205,7 +205,8 @@ OfxStatus PyImageEffectPlugin::load()
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -222,11 +223,12 @@ OfxStatus PyImageEffectPlugin::load()
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
     
-  return kOfxStatFailed;
+  return kOfxStatReplyDefault;
 }
   
 OfxStatus PyImageEffectPlugin::unload()
@@ -251,7 +253,8 @@ OfxStatus PyImageEffectPlugin::unload()
           PyOFXException *pexc = (PyOFXException*) err;
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
-        PyErr_Clear();
+        //PyErr_Clear();
+        LogPythonError();
       }
       else
       {
@@ -268,11 +271,12 @@ OfxStatus PyImageEffectPlugin::unload()
     }
     else
     {
-      PyErr_Clear();
+      //PyErr_Clear();
+      LogPythonError();
     }
   }
   
-  return kOfxStatFailed;
+  return kOfxStatReplyDefault;
 }
 
 // ---

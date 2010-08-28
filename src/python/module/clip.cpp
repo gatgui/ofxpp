@@ -576,12 +576,25 @@ PyObject* PyOFXClipDescriptor_SupportedComponent(PyObject *self, PyObject *args)
     return NULL;
   }
   
-  int idx = 0;
+  Py_ssize_t nargs = PyTuple_Size(args);
+  if (nargs < 1 || nargs > 2)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "At least 1 argument, at most 2");
+    return NULL;
+  }
+  
+  if (!PyInt_Check(PyTuple_GetItem(args, 0)))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected an integer for first argument");
+    return NULL;
+  }
+  
+  int idx = PyInt_AsLong(PyTuple_GetItem(args, 0));
   PyObject *val = 0;
   
-  if (!PyArg_ParseTuple(args, "i|O", &idx, &val))
+  if (nargs == 2)
   {
-    return NULL;
+    val = PyTuple_GetItem(args, 1);
   }
   
   bool failed = false;
@@ -1155,12 +1168,25 @@ PyObject* PyOFXClip_GetImage(PyObject *self, PyObject *args)
     return NULL;
   }
   
-  double t;
+  Py_ssize_t nargs = PyTuple_Size(args);
+  if (nargs < 1 || nargs > 2)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "At least 1 argument, at most 2");
+    return NULL;
+  }
+  
+  if (!PyFloat_Check(PyTuple_GetItem(args, 0)))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a float for first argument");
+    return NULL;
+  }
+  
+  double t = PyFloat_AsDouble(PyTuple_GetItem(args, 0));
   PyObject *pregion = 0;
   
-  if (!PyArg_ParseTuple(args, "d|O", &t, &pregion))
+  if (nargs == 2)
   {
-    return NULL;
+    pregion = PyTuple_GetItem(args, 1);
   }
   
   bool failed = false;

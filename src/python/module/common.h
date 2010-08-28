@@ -752,6 +752,7 @@ extern bool PyOFX_InitImageEffect(PyObject *mod);
 extern bool PyOFX_InitInteract(PyObject *mod);
 extern bool PyOFX_InitPlugin(PyObject *mod);
 
+extern void LogPythonError();
 
 #define CATCH(code, failed)\
   failed = true;\
@@ -782,6 +783,8 @@ extern bool PyOFX_InitPlugin(PyObject *mod);
     PyErr_SetString((PyObject*)&PyOFXBadHandleErrorType, e.what());\
   } catch (std::exception &e) {\
     PyErr_SetString(PyExc_RuntimeError, e.what());\
+  } catch (...) {\
+    PyErr_SetString(PyExc_RuntimeError, "Unknown error");\
   }
 
 

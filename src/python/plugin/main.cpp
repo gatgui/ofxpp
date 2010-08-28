@@ -37,6 +37,11 @@ typedef struct
 // NOTE: calling this will clear the error (PyErr_Fetch)
 void LogPythonError()
 {
+  if (PyErr_Occurred() == 0)
+  {
+    return;
+  }
+  
   std::ostringstream oss;
     
   PyObject *et=0, *ev=0, *etb=0, *s=0;

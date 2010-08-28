@@ -2844,12 +2844,30 @@ PyObject* PyOFXValueParameter_GetKeyIndex(PyObject *self, PyObject *args)
   
   ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
-  double t;
+  Py_ssize_t nargs = PyTuple_Size(args);
+  if (nargs < 1 || nargs > 2)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "At least 1 argument, at most 2");
+    return NULL;
+  }
+  
+  if (!PyFloat_Check(PyTuple_GetItem(args, 0)))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a float for first argument");
+    return NULL;
+  }
+  
+  double t = PyFloat_AsDouble(PyTuple_GetItem(args, 0));
   int d = int(ofx::KeyDirectionExact);
   
-  if (!PyArg_ParseTuple(args, "d|i", &t, &d))
+  if (nargs == 2)
   {
-    return NULL;
+    if (!PyInt_Check(PyTuple_GetItem(args, 1)))
+    {
+      PyErr_SetString(PyExc_TypeError, "Expected an integer for second argument");
+      return NULL;
+    }
+    d = PyInt_AsLong(PyTuple_GetItem(args, 1));
   }
   
   bool failed = false;
@@ -2945,13 +2963,28 @@ PyObject* PyOFXValueParameter_Copy(PyObject *self, PyObject *args)
   
   ofx::ValueParameter *param = (ofx::ValueParameter*) pparam->param;
   
-  PyObject *pfrom = 0;
-  double offset = 0.0;
+  Py_ssize_t nargs = PyTuple_Size(args);
+  if (nargs < 2 || nargs > 3)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "At least 2 argument, at most 3");
+    return NULL;
+  }
+  
+  PyObject *pfrom = PyTuple_GetItem(args, 0);
+  
+  if (!PyFloat_Check(PyTuple_GetItem(args, 1)))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a float for second argument");
+    return NULL;
+  }
+  
+  double offset = PyFloat_AsDouble(PyTuple_GetItem(args, 1));
+  
   PyObject *prange = 0;
   
-  if (!PyArg_ParseTuple(args, "Od|O", &pfrom, &offset, &prange))
+  if (nargs == 3)
   {
-    
+    prange = PyTuple_GetItem(args, 2);
   }
   
   ofx::ValueParameter *from = 0;

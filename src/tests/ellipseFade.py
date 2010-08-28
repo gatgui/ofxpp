@@ -80,9 +80,10 @@ class Descriptor(ofx.ImageEffectDescriptor):
     ofx.ImageEffectDescriptor.__init__(self, host, handle)
   
   def describe(self):
-    self.label = "ellipseFade"
-    self.shortLabel = "ellipseFade"
-    self.longLabel = "ellipseFade"
+    ofx.Log("ellipseFade.Descriptor.describe")
+    self.label = "pyEllipseFade"
+    self.shortLabel = "pyEllipseFade"
+    self.longLabel = "pyEllipseFade"
     self.group = "gatgui"
     self.singleInstance = False
     self.supportedPixelDepth(0, ofx.BitDepthFloat)
@@ -98,7 +99,7 @@ class Descriptor(ofx.ImageEffectDescriptor):
     return ofx.StatOK;
   
   def describeInContext(self, ctx):
-    
+    ofx.Log("ellipseFade.Descriptor.describeInContext")
     clip = self.defineClip("Output");
     clip.supportedComponent(0, ofx.ImageComponentRGBA)
     

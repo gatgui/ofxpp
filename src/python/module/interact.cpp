@@ -133,7 +133,7 @@ OfxStatus PyInteract::draw(ofx::Interact::DrawArgs &args)
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       // base args
@@ -218,7 +218,7 @@ OfxStatus PyInteract::penMotion(ofx::Interact::PenArgs &args)
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       // base args
@@ -326,7 +326,7 @@ OfxStatus PyInteract::penDown(ofx::Interact::PenArgs &args)
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       // base args
@@ -434,7 +434,7 @@ OfxStatus PyInteract::penUp(ofx::Interact::PenArgs &args)
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       // base args
@@ -542,7 +542,7 @@ OfxStatus PyInteract::keyDown(ofx::Interact::KeyArgs &args)
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       // base args
@@ -623,7 +623,7 @@ OfxStatus PyInteract::keyUp(ofx::Interact::KeyArgs &args)
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       // base args
@@ -704,7 +704,7 @@ OfxStatus PyInteract::keyRepeat(ofx::Interact::KeyArgs &args)
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       // base args
@@ -785,7 +785,7 @@ OfxStatus PyInteract::gainFocus(ofx::Interact::FocusArgs &args)
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       // base args
@@ -870,7 +870,7 @@ OfxStatus PyInteract::loseFocus(ofx::Interact::FocusArgs &args)
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       // base args

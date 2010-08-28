@@ -97,6 +97,27 @@ void LogPythonError()
   ofx::Log("pyofx:\n*** Python Error ***\n%s", oss.str().c_str());
 }
 
+// ---
+
+PyTypeObject PyOFXActionArgumentsType;
+
+static PyObject* PyOFXActionArguments_New(PyTypeObject *t, PyObject *, PyObject *)
+{
+  return t->tp_alloc(t, 0);
+}
+
+static int PyOFXActionArguments_Init(PyObject *, PyObject *, PyObject *)
+{
+  return 0;
+}
+
+static void PyOFXActionArguments_Delete(PyObject *self)
+{
+  self->ob_type->tp_free(self);
+}
+
+// ---
+
 static PyObject* PyOFX_CanonicalToPixelCoords(PyObject *, PyObject *args)
 {
   double x = 0, y = 0;
@@ -374,7 +395,21 @@ PyMODINIT_FUNC initofx(void)
   
   PyModule_AddStringConstant(mod, "PageSkipRow", kOfxParamPageSkipRow);
   PyModule_AddStringConstant(mod, "PageSkipColumn", kOfxParamPageSkipColumn);
-
+  
+  INIT_TYPE(PyOFXActionArgumentsType, "ofx.ActionArguments", PyOFXActionArguments);
+  PyOFXActionArgumentsType.tp_flags = Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE;
+  PyOFXActionArgumentsType.tp_new = PyOFXActionArguments_New;
+  PyOFXActionArgumentsType.tp_init = PyOFXActionArguments_Init;
+  PyOFXActionArgumentsType.tp_dealloc = PyOFXActionArguments_Delete;
+  if (PyType_Ready(&PyOFXActionArgumentsType) < 0)
+  {
+    Py_DECREF(mod);
+    return;
+  }
+  
+  Py_INCREF(&PyOFXActionArgumentsType);
+  PyModule_AddObject(mod, "ActionArguments", (PyObject*)&PyOFXActionArgumentsType);
+  
   if (!PyOFX_InitException(mod))
   {
     Py_DECREF(mod);

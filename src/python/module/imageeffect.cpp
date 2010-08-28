@@ -294,7 +294,7 @@ OfxStatus PyImageEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
@@ -560,7 +560,7 @@ OfxStatus PyImageEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &arg
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
@@ -648,7 +648,7 @@ OfxStatus PyImageEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
@@ -771,7 +771,7 @@ OfxStatus PyImageEffect::getFramesNeeded(ofx::ImageEffect::GetFramesNeededArgs &
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       oarg = PyFloat_FromDouble(args.time);
@@ -874,9 +874,10 @@ OfxStatus PyImageEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args)
     
     if (meth)
     {
+      ofx::Log("PyImageEffect::isIdentity: Create arguments");
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
@@ -917,6 +918,7 @@ OfxStatus PyImageEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args)
       
       PyObject *pyargs = Py_BuildValue("(O)", oargs);
       
+      ofx::Log("PyImageEffect::isIdentity: Call python method override");
       PyObject *rv = PyObject_Call(meth, pyargs, NULL);
       
       PyObject *err = PyErr_Occurred();
@@ -939,6 +941,8 @@ OfxStatus PyImageEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args)
           
           if (stat == kOfxStatOK)
           {
+            ofx::Log("PyImageEffect::isIdentity: Set return arguments");
+            
             PyObject *ic = PyObject_GetAttrString(oargs, "idClip");
             
             if (ic && PyString_Check(ic))
@@ -994,7 +998,7 @@ OfxStatus PyImageEffect::render(ofx::ImageEffect::RenderArgs &args)
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
@@ -1080,7 +1084,7 @@ OfxStatus PyImageEffect::beginSequenceRender(ofx::ImageEffect::BeginSequenceArgs
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
@@ -1163,7 +1167,7 @@ OfxStatus PyImageEffect::endSequenceRender(ofx::ImageEffect::EndSequenceArgs &ar
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
@@ -1236,7 +1240,7 @@ OfxStatus PyImageEffect::getClipPreferences(ofx::ImageEffect::GetClipPrefArgs &a
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       oarg = PyObject_CallObject((PyObject*)&PyOFXOutputClipPreferencesType, NULL);
@@ -1352,7 +1356,7 @@ OfxStatus PyImageEffect::getTimeDomain(ofx::ImageEffect::GetTimeDomainArgs &args
     {
       OfxStatus stat = kOfxStatFailed;
       
-      PyObject *oargs = PyObject_CallObject((PyObject*)&PyObject_Type, NULL);
+      PyObject *oargs = PyObject_CallObject((PyObject*)&PyOFXActionArgumentsType, NULL);
       PyObject *oarg;
       
       oarg = PyFloat_FromDouble(0.0);

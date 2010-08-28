@@ -452,7 +452,7 @@ class PathLister
 
 PathLister gPathLister; // when will this be destroyed?
 
-OfxExport int OfxGetNumberOfPlugins(void)
+void EnsureInitializedPython()
 {
   // Initialize python if needed
   if (!Py_IsInitialized())
@@ -471,6 +471,11 @@ OfxExport int OfxGetNumberOfPlugins(void)
     Py_SetProgramName("pyOFX");
     Py_Initialize();
   }
+}
+
+OfxExport int OfxGetNumberOfPlugins(void)
+{
+  EnsureInitializedPython();
   
   //PyGILState_STATE gstate = PyGILState_Ensure();
   
@@ -491,6 +496,8 @@ OfxExport int OfxGetNumberOfPlugins(void)
 
 OfxExport OfxPlugin* OfxGetPlugin(int i)
 {
+  EnsureInitializedPython();
+  
   //PyGILState_STATE gstate = PyGILState_Ensure();
   
   OfxPlugin *rv = gPathLister.getPlugin(i);

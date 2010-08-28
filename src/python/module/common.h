@@ -388,6 +388,11 @@ typedef struct
   PyOFXPlugin base;
 } PyOFXImageEffectPlugin;
 
+typedef struct
+{
+  PyObject_HEAD
+} PyOFXActionArguments;
+
 extern PyTypeObject PyOFXExceptionType;
 extern PyTypeObject PyOFXFailedErrorType;
 extern PyTypeObject PyOFXFatalErrorType;
@@ -463,6 +468,7 @@ extern PyTypeObject PyOFXInteractDescriptorType;
 extern PyTypeObject PyOFXInteractType;
 extern PyTypeObject PyOFXPluginType;
 extern PyTypeObject PyOFXImageEffectPluginType;
+extern PyTypeObject PyOFXActionArgumentsType;
 
 
 class Receiver

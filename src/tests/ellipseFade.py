@@ -107,7 +107,7 @@ class Descriptor(ofx.ImageEffectDescriptor):
     clip.supportedComponent(0, ofx.ImageComponentRGBA)
     
     c = self.parameters.defineDouble2Param("center");
-    c.default = (0.5, 0.5)
+    c.defaultValue = (0.5, 0.5)
     c.min = (0, 0)
     c.max = (1, 1)
     c.digits = 3
@@ -118,7 +118,7 @@ class Descriptor(ofx.ImageEffectDescriptor):
     c.doubleType = ofx.DoubleParamNormalisedXY
     
     w = self.parameters.defineDoubleParam("width");
-    w.default = 0.5
+    w.defaultValue = 0.5
     w.min = 0.0
     w.max = 1.0
     w.increment = 0.001
@@ -128,7 +128,7 @@ class Descriptor(ofx.ImageEffectDescriptor):
     w.doubleType = ofx.DoubleParamNormalisedX
     
     h = self.parameters.defineDoubleParam("height");
-    h.default = 0.5
+    h.defaultValue = 0.5
     h.min = 0.0
     h.max = 1.0
     h.increment = 0.001
@@ -138,7 +138,7 @@ class Descriptor(ofx.ImageEffectDescriptor):
     h.doubleType = ofx.DoubleParamNormalisedY
     
     i = self.parameters.defineBooleanParam("invert");
-    i.default = False
+    i.defaultValue = False
     i.persistant = True
     i.animateable = False
     

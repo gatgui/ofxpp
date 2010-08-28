@@ -167,14 +167,17 @@ OfxStatus PyOFX_Main(const char *action,
       ofx::Log("OFX Image Effect Plugin: Load");
       host->init();
       rv = plugin->load();
+      // this means binary has been loaded... as we proxy python plugins,
+      // is this aimed at the pyplugin or the proxied python one?
       break;
     }
     case ofx::ActionUnload:
     {
       ofx::Log("OFX Image Effect Plugin: Unload");
       rv = plugin->unload();
-      delete plugin;
-      gEffectPlugins[IDX] = 0;
+      // this means binary has been unload... as we proxy python plugins,
+      // is this aimed at the pyplugin or the proxied python one?
+      // this could be problematic...
       break;
     }
     case ofx::ActionDescribe:

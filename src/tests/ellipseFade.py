@@ -114,7 +114,7 @@ class Descriptor(ofx.ImageEffectDescriptor):
     c.dimensionLabel(0, "X")
     c.dimensionLabel(1, "Y")
     c.persistant = True
-    c.animateable = True
+    c.animates = True
     c.doubleType = ofx.DoubleParamNormalisedXY
     
     w = self.parameters.defineDoubleParam("width");
@@ -124,7 +124,7 @@ class Descriptor(ofx.ImageEffectDescriptor):
     w.increment = 0.001
     w.digits = 3
     w.persistant = True
-    w.animateable = True
+    w.animates = True
     w.doubleType = ofx.DoubleParamNormalisedX
     
     h = self.parameters.defineDoubleParam("height");
@@ -134,13 +134,13 @@ class Descriptor(ofx.ImageEffectDescriptor):
     h.increment = 0.001
     h.digits = 3
     h.persistant = True
-    h.animateable = True
+    h.animates = True
     h.doubleType = ofx.DoubleParamNormalisedY
     
     i = self.parameters.defineBooleanParam("invert");
     i.defaultValue = False
     i.persistant = True
-    i.animateable = False
+    i.animates = False
     
     return ofx.StatOK
   

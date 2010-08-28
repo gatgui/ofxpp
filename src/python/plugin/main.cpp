@@ -261,6 +261,8 @@ class PathLister
         }
       }
       
+      ofx::Log("pyplugin: Invalid plugin index: %d", i);
+      
       return 0;
     }
     
@@ -459,7 +461,7 @@ OfxExport int OfxGetNumberOfPlugins(void)
     Py_Initialize();
   }
   
-  PyGILState_STATE gstate = PyGILState_Ensure();
+  //PyGILState_STATE gstate = PyGILState_Ensure();
   
   gcore::Env::EachInPathFunc func;
   
@@ -471,18 +473,18 @@ OfxExport int OfxGetNumberOfPlugins(void)
   
   ofx::Log("pyplugin.ofx: Found %d python plugins", rv);
   
-  PyGILState_Release(gstate);
+  //PyGILState_Release(gstate);
   
   return rv;
 }
 
 OfxExport OfxPlugin* OfxGetPlugin(int i)
 {
-  PyGILState_STATE gstate = PyGILState_Ensure();
+  //PyGILState_STATE gstate = PyGILState_Ensure();
   
   OfxPlugin *rv = gPathLister.getPlugin(i);
   
-  PyGILState_Release(gstate);
+  //PyGILState_Release(gstate);
   
   return rv;
 }

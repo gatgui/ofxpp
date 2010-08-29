@@ -143,44 +143,44 @@ OfxStatus PyInteract::draw(ofx::Interact::DrawArgs &args)
       oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
       ((PyOFXImageEffect*)oarg)->effect = args.effect;
       aname = PyString_FromString("effect");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
       aname = PyString_FromString("renderScaleX");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleY);
       aname = PyString_FromString("renderScaleY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.time);
       aname = PyString_FromString("time");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       // common args
       oarg = PyFloat_FromDouble(args.pixelScaleX);
       aname = PyString_FromString("pixelScaleX");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.pixelScaleY);
       aname = PyString_FromString("pixelScaleY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = Py_BuildValue("dddd", args.bgColour.r, args.bgColour.g, args.bgColour.b, args.bgColour.a);
       aname = PyString_FromString("bgColour");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
@@ -245,76 +245,76 @@ OfxStatus PyInteract::penMotion(ofx::Interact::PenArgs &args)
       oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
       ((PyOFXImageEffect*)oarg)->effect = args.effect;
       aname = PyString_FromString("effect");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
       aname = PyString_FromString("renderScaleX");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleY);
       aname = PyString_FromString("renderScaleY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.time);
       aname = PyString_FromString("time");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       // common args
       oarg = PyFloat_FromDouble(args.pixelScaleX);
       aname = PyString_FromString("pixelScaleX");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.pixelScaleY);
       aname = PyString_FromString("pixelScaleY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = Py_BuildValue("dddd", args.bgColour.r, args.bgColour.g, args.bgColour.b, args.bgColour.a);
       aname = PyString_FromString("bgColour");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       // pen args
       oarg = PyFloat_FromDouble(args.x);
       aname = PyString_FromString("x");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.y);
       aname = PyString_FromString("y");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.pressure);
       aname = PyString_FromString("pressure");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
 #ifdef OFX_API_1_2
       oarg = PyInt_FromLong(args.viewportX);
       aname = PyString_FromString("viewportX");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyInt_FromLong(args.viewportY);
       aname = PyString_FromString("viewportY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
 #endif
@@ -380,76 +380,76 @@ OfxStatus PyInteract::penDown(ofx::Interact::PenArgs &args)
       oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
       ((PyOFXImageEffect*)oarg)->effect = args.effect;
       aname = PyString_FromString("effect");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
       aname = PyString_FromString("renderScaleX");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleY);
       aname = PyString_FromString("renderScaleY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.time);
       aname = PyString_FromString("time");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       // common args
       oarg = PyFloat_FromDouble(args.pixelScaleX);
       aname = PyString_FromString("pixelScaleX");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.pixelScaleY);
       aname = PyString_FromString("pixelScaleY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = Py_BuildValue("dddd", args.bgColour.r, args.bgColour.g, args.bgColour.b, args.bgColour.a);
       aname = PyString_FromString("bgColour");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       // pen args
       oarg = PyFloat_FromDouble(args.x);
       aname = PyString_FromString("x");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.y);
       aname = PyString_FromString("y");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.pressure);
       aname = PyString_FromString("pressure");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
 #ifdef OFX_API_1_2
       oarg = PyInt_FromLong(args.viewportX);
       aname = PyString_FromString("viewportY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyInt_FromLong(args.viewportY);
       aname = PyString_FromString("viewportY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
 #endif
@@ -515,76 +515,76 @@ OfxStatus PyInteract::penUp(ofx::Interact::PenArgs &args)
       oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
       ((PyOFXImageEffect*)oarg)->effect = args.effect;
       aname = PyString_FromString("effect");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
       aname = PyString_FromString("renderScaleX");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleY);
       aname = PyString_FromString("renderScaleY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.time);
       aname = PyString_FromString("time");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       // common args
       oarg = PyFloat_FromDouble(args.pixelScaleX);
       aname = PyString_FromString("pixelScaleX");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.pixelScaleY);
       aname = PyString_FromString("pixelScaleY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = Py_BuildValue("dddd", args.bgColour.r, args.bgColour.g, args.bgColour.b, args.bgColour.a);
       aname = PyString_FromString("bgColour");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       // pen args
       oarg = PyFloat_FromDouble(args.x);
       aname = PyString_FromString("x");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.y);
       aname = PyString_FromString("y");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.pressure);
       aname = PyString_FromString("pressure");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
 #ifdef OFX_API_1_2
       oarg = PyInt_FromLong(args.viewportX);
       aname = PyString_FromString("viewportX");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyInt_FromLong(args.viewportY);
       aname = PyString_FromString("viewportY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
 #endif
@@ -650,38 +650,38 @@ OfxStatus PyInteract::keyDown(ofx::Interact::KeyArgs &args)
       oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
       ((PyOFXImageEffect*)oarg)->effect = args.effect;
       aname = PyString_FromString("effect");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
       aname = PyString_FromString("renderScaleX");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleY);
       aname = PyString_FromString("renderScaleY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.time);
       aname = PyString_FromString("time");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       // key args
       oarg = PyInt_FromLong(args.sym);
       aname = PyString_FromString("sym");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyString_FromString(args.string.c_str());
       aname = PyString_FromString("string");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
@@ -746,38 +746,38 @@ OfxStatus PyInteract::keyUp(ofx::Interact::KeyArgs &args)
       oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
       ((PyOFXImageEffect*)oarg)->effect = args.effect;
       aname = PyString_FromString("effect");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
       aname = PyString_FromString("renderScaleX");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleY);
       aname = PyString_FromString("renderScaleY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.time);
       aname = PyString_FromString("time");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       // key args
       oarg = PyInt_FromLong(args.sym);
       aname = PyString_FromString("sym");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyString_FromString(args.string.c_str());
       aname = PyString_FromString("string");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
@@ -842,38 +842,38 @@ OfxStatus PyInteract::keyRepeat(ofx::Interact::KeyArgs &args)
       oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
       ((PyOFXImageEffect*)oarg)->effect = args.effect;
       aname = PyString_FromString("effect");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
       aname = PyString_FromString("renderScaleX");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleY);
       aname = PyString_FromString("renderScaleY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.time);
       aname = PyString_FromString("time");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       // key args
       oarg = PyInt_FromLong(args.sym);
       aname = PyString_FromString("sym");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyString_FromString(args.string.c_str());
       aname = PyString_FromString("string");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
@@ -938,44 +938,44 @@ OfxStatus PyInteract::gainFocus(ofx::Interact::FocusArgs &args)
       oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
       ((PyOFXImageEffect*)oarg)->effect = args.effect;
       aname = PyString_FromString("effect");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
       aname = PyString_FromString("renderScaleX");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleY);
       aname = PyString_FromString("renderScaleY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.time);
       aname = PyString_FromString("time");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       // common args
       oarg = PyFloat_FromDouble(args.pixelScaleX);
       aname = PyString_FromString("pixelScaleX");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.pixelScaleY);
       aname = PyString_FromString("pixelScaleY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = Py_BuildValue("dddd", args.bgColour.r, args.bgColour.g, args.bgColour.b, args.bgColour.a);
       aname = PyString_FromString("bgColour");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
@@ -1040,44 +1040,44 @@ OfxStatus PyInteract::loseFocus(ofx::Interact::FocusArgs &args)
       oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
       ((PyOFXImageEffect*)oarg)->effect = args.effect;
       aname = PyString_FromString("effect");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
       aname = PyString_FromString("renderScaleX");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleY);
       aname = PyString_FromString("renderScaleY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.time);
       aname = PyString_FromString("time");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       // common args
       oarg = PyFloat_FromDouble(args.pixelScaleX);
       aname = PyString_FromString("pixelScaleX");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.pixelScaleY);
       aname = PyString_FromString("pixelScaleY");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = Py_BuildValue("dddd", args.bgColour.r, args.bgColour.g, args.bgColour.b, args.bgColour.a);
       aname = PyString_FromString("bgColour");
-      PyObject_GenericSetAttr(oargs, aname, oarg);
+      PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
       Py_DECREF(aname);
       

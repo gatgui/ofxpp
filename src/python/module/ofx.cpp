@@ -103,7 +103,10 @@ PyTypeObject PyOFXActionArgumentsType;
 
 static PyObject* PyOFXActionArguments_New(PyTypeObject *t, PyObject *, PyObject *)
 {
-  return t->tp_alloc(t, 0);
+  PyObject *self = t->tp_alloc(t, 0);
+  PyOFXActionArguments *pargs = (PyOFXActionArguments*)self;
+  new (&(pargs->args)) std::map<std::string, PyObject*>();
+  return self;
 }
 
 static int PyOFXActionArguments_Init(PyObject *, PyObject *, PyObject *)
@@ -113,10 +116,70 @@ static int PyOFXActionArguments_Init(PyObject *, PyObject *, PyObject *)
 
 static void PyOFXActionArguments_Delete(PyObject *self)
 {
+  PyOFXActionArguments *pargs = (PyOFXActionArguments*)self;
+  std::map<std::string, PyObject*>::iterator it = pargs->args.begin();
+  while (it != pargs->args.end())
+  {
+    Py_XDECREF(it->second);
+    ++it;
+  }
+  pargs->args.clear();
+  (&(pargs->args))->~map<std::string, PyObject*>();
   self->ob_type->tp_free(self);
 }
 
+PyObject* PyOFXActionArguments_GetAttr(PyObject *self, PyObject *aname)
+{
+  PyOFXActionArguments *pargs = (PyOFXActionArguments*)self;
+  
+  char *name = PyString_AsString(aname);
+  
+  std::map<std::string, PyObject*>::iterator it = pargs->args.find(name);
+  
+  if (it == pargs->args.end())
+  {
+    // don't have such attribute, maybe base class have
+    return PyObject_GenericGetAttr(self, aname);
+  }
+  else
+  {
+    Py_INCREF(it->second);
+    return it->second;
+  }
+}
 
+int PyOFXActionArguments_SetAttr(PyObject *self, PyObject *aname, PyObject *aval)
+{
+  PyOFXActionArguments *pargs = (PyOFXActionArguments*)self;
+  
+  char *name = PyString_AsString(aname);
+  
+  std::map<std::string, PyObject*>::iterator it = pargs->args.find(name);
+  
+  if (it == pargs->args.end())
+  {
+    // don't have such attribute, maybe base class have
+    if (PyObject_GenericSetAttr(self, aname, aval) == 0)
+    {
+      return 0;
+    }
+    else
+    {
+      // no, add it then
+      PyErr_Clear();
+      pargs->args[name] = aval;
+    }
+  }
+  else
+  {
+    Py_XDECREF(it->second);
+    it->second = aval;
+  }
+  
+  Py_INCREF(aval);
+  
+  return 0;
+}
 
 // ---
 
@@ -418,8 +481,8 @@ PyMODINIT_FUNC initofx(void)
   PyOFXActionArgumentsType.tp_new = PyOFXActionArguments_New;
   PyOFXActionArgumentsType.tp_init = PyOFXActionArguments_Init;
   PyOFXActionArgumentsType.tp_dealloc = PyOFXActionArguments_Delete;
-  PyOFXActionArgumentsType.tp_setattro = PyObject_GenericSetAttr;
-  PyOFXActionArgumentsType.tp_getattro = PyObject_GenericGetAttr;
+  PyOFXActionArgumentsType.tp_setattro = PyOFXActionArguments_SetAttr; //PyObject_GenericSetAttr;
+  PyOFXActionArgumentsType.tp_getattro = PyOFXActionArguments_GetAttr; //PyObject_GenericGetAttr;
   if (PyType_Ready(&PyOFXActionArgumentsType) < 0)
   {
     Py_DECREF(mod);

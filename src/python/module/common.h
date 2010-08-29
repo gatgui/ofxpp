@@ -391,6 +391,7 @@ typedef struct
 typedef struct
 {
   PyObject_HEAD
+  std::map<std::string, PyObject*> args;
 } PyOFXActionArguments;
 
 extern PyTypeObject PyOFXExceptionType;

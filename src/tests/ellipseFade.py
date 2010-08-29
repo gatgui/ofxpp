@@ -80,7 +80,6 @@ class Descriptor(ofx.ImageEffectDescriptor):
     ofx.ImageEffectDescriptor.__init__(self, host, handle)
   
   def describe(self):
-    ofx.Log("ellipseFade.Descriptor.describe")
     self.label = "pyEllipseFade"
     self.shortLabel = "pyEllipseFade"
     self.longLabel = "pyEllipseFade"
@@ -99,7 +98,6 @@ class Descriptor(ofx.ImageEffectDescriptor):
     return ofx.StatOK;
   
   def describeInContext(self, ctx):
-    ofx.Log("ellipseFade.Descriptor.describeInContext")
     clip = self.defineClip("Output");
     clip.supportedComponent(0, ofx.ImageComponentRGBA)
     
@@ -161,7 +159,6 @@ class Effect(ofx.ImageEffect):
     return (dx*dx + dy*dy);
     
   def isIdentity(self, args):
-    ofx.Log("ellipseFade.isIdentity")
     if self.width.getValueAtTime(args.time) <= 0.0 or \
        self.height.getValueAtTime(args.time) <= 0.0:
       args.idClip = "Source"
@@ -171,7 +168,6 @@ class Effect(ofx.ImageEffect):
       return ofx.StatReplyDefault
   
   def render(self, args):
-    ofx.Log("ellipseFade.render")
     cSrc = self.getClip("Source")
     cOut = self.getClip("Output")
     
@@ -192,14 +188,16 @@ class Effect(ofx.ImageEffect):
     cx, cy = ofx.NormalisedToCanonicalCoords(nx, ny, wext, hext, xoff, yoff, True)
     cw, ch = ofx.NormalisedToCanonicalCoords(w*0.5, h*0.5, wext, hext, 0, 0, False)
     
-    if self.invert.value:
-      for y in xrange(args.renderWindow.y1, args.renderWindow.y2):
+    x1, y1, x2, y2 = args.renderWindow
+    
+    if self.invert.getValue():
+      for y in xrange(y1, y2):
         if self.abort():
           break
-        dstPix = iOut.pixelAddress(args.renderWindow.x1, y)
+        dstPix = iOut.pixelAddress(x1, y)
         if not dstPix:
           continue
-        for x in xrange(args.renderWindow.x1, args.renderWindow.x2):
+        for x in xrange(x1, x2):
           pcx, pcy = ofx.PixelToCanonicalCoords(x, y, par, args.renderScaleX, args.renderScaleY, args.field)
           srcPix = iSrc.pixelAddress(x, y)
           if not srcPix:
@@ -222,13 +220,13 @@ class Effect(ofx.ImageEffect):
               dstPix.a = srcPix.a
           dstPix.next()
     else:
-      for y in xrange(args.renderWindow.y1, args.renderWindow.y2):
+      for y in xrange(y1, y2):
         if self.abort():
           break
-        dstPix = iOut.pixelAddress(args.renderWindow.x1, y)
+        dstPix = iOut.pixelAddress(x1, y)
         if not dstPix:
           continue
-        for x in xrange(args.renderWindow.x1, args.renderWindow.x2):
+        for x in xrange(x1, x2):
           pcx, pcy = ofx.PixelToCanonicalCoords(x, y, par, args.renderScaleX, args.renderScaleY, args.field)
           srcPix = iSrc.pixelAddress(x, y)
           if not srcPix:

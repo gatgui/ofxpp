@@ -143,7 +143,7 @@ class PathLister
     {
       if (p.checkExtension("py"))
       {
-        ofx::Log("pyplugin.ofx: Found possible python plugin: \"%s\"", p.fullname().c_str());
+        ofx::DebugLog("pyplugin.ofx: Found possible python plugin: \"%s\"", p.fullname().c_str());
         
         PyObject *mod = loadModule(p);
         
@@ -200,6 +200,7 @@ class PathLister
             
             if (entry.plugins.size() > 0)
             {
+              ofx::DebugLog("pyplugin.ofx: Add python plugin: \"%s\"", p.fullname().c_str());
               mPluginEntries.push_back(entry);
             }
           }
@@ -211,7 +212,7 @@ class PathLister
         }
         else
         {
-          ofx::Log("pyplugin.ofx: Could not load module");
+          ofx::DebugLog("pyplugin.ofx: Could not load module");
         }
       }
       
@@ -222,7 +223,7 @@ class PathLister
     {
       mInitialized = true;
       
-      ofx::Log("pyplugin.ofx: Check directory \"%s\" for python plugins...", p.fullname().c_str());
+      ofx::DebugLog("pyplugin.ofx: Check directory \"%s\" for python plugins...", p.fullname().c_str());
       
       gcore::Path::EachFunc func;
       
@@ -305,7 +306,7 @@ class PathLister
             }
           }
           
-          ofx::Log("pyplugin.ofx: Add directory \"%s\" to sys.path", dirname.fullname().c_str());
+          ofx::DebugLog("pyplugin.ofx: Add directory \"%s\" to sys.path", dirname.fullname().c_str());
           
           PyList_Append(path, PyString_FromString(dirname.fullname().c_str()));
           
@@ -454,7 +455,7 @@ void EnsureInitializedPython()
   // Initialize python if needed
   if (!Py_IsInitialized())
   {
-    ofx::Log("pyplugin.ofx: Init python interpreter");
+    ofx::DebugLog("pyplugin.ofx: Init python interpreter");
 #if !defined(_WIN32) && !defined(__APPLE__)
     // On Ubunty (9.04 at least), without this hack, python binary modules fail to load
     // After a little search on the web, it seems that Ubuntu's python is compiled a weird way
@@ -484,7 +485,7 @@ OfxExport int OfxGetNumberOfPlugins(void)
   
   int rv = gPathLister.numberOfPlugins();
   
-  ofx::Log("pyplugin.ofx: Found %d python plugins", rv);
+  ofx::DebugLog("pyplugin.ofx: Found %d python plugins", rv);
   
   //PyGILState_Release(gstate);
   

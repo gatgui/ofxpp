@@ -34,19 +34,16 @@ PyTypeObject PyOFXOutputClipPreferencesType;
 PyImageEffectDescriptor::PyImageEffectDescriptor()
   : ofx::ImageEffectDescriptor(), mSelf(0)
 {
-  ofx::Log("Create empty PyImageEffectDescriptor");
 }
 
 PyImageEffectDescriptor::PyImageEffectDescriptor(ofx::ImageEffectHost *h, OfxImageEffectHandle hdl) throw(ofx::Exception)
   : ofx::ImageEffectDescriptor(h, hdl), mSelf(0)
 {
-  ofx::Log("Create PyImageEffectDescriptor"); 
 }
 
 PyImageEffectDescriptor::PyImageEffectDescriptor(const PyImageEffectDescriptor &rhs)
   : ofx::ImageEffectDescriptor(rhs), mSelf(rhs.mSelf)
 {
-  ofx::Log("Create copy PyImageEffectDescriptor");
   if (mSelf != 0)
   {
     Py_INCREF(mSelf);
@@ -55,7 +52,6 @@ PyImageEffectDescriptor::PyImageEffectDescriptor(const PyImageEffectDescriptor &
 
 PyImageEffectDescriptor::~PyImageEffectDescriptor()
 {
-  ofx::Log("Delete PyImageEffectDescriptor");
   self(0);
 }
 
@@ -67,9 +63,7 @@ PyImageEffectDescriptor& PyImageEffectDescriptor::operator=(const PyImageEffectD
 }
 
 OfxStatus PyImageEffectDescriptor::describe()
-{
-  ofx::Log("PyImageEffectDescriptor::describe");
-  
+{  
   if (mSelf != 0)
   {
     PyObject *meth = PyObject_GetAttrString(mSelf, "describe");
@@ -121,9 +115,7 @@ OfxStatus PyImageEffectDescriptor::describe()
 }
 
 OfxStatus PyImageEffectDescriptor::describeInContext(ofx::ImageEffectContext ctx)
-{
-  ofx::Log("PyImageEffectDescriptor::describeInContext");
-  
+{  
   if (mSelf != 0)
   {
     PyObject *meth = PyObject_GetAttrString(mSelf, "describeInContext");
@@ -711,14 +703,20 @@ OfxStatus PyImageEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
+      oarg = PyTuple_New(4);
+      PyTuple_SetItem(oarg, 0, PyFloat_FromDouble(args.outRoI.x1));
+      PyTuple_SetItem(oarg, 1, PyFloat_FromDouble(args.outRoI.y1));
+      PyTuple_SetItem(oarg, 2, PyFloat_FromDouble(args.outRoI.x2));
+      PyTuple_SetItem(oarg, 3, PyFloat_FromDouble(args.outRoI.y2));
       aname = PyString_FromString("outRoI");
       PyObject_SetAttr(oargs, aname, Py_None);
+      Py_DECREF(oarg);
       Py_DECREF(aname);
       
-      PyObject *inRoIs = PyDict_New();
+      oarg = PyDict_New();
       aname = PyString_FromString("inRoIs");
-      PyObject_SetAttr(oargs, aname, inRoIs);
-      Py_DECREF(inRoIs);
+      PyObject_SetAttr(oargs, aname, oarg);
+      Py_DECREF(oarg);
       Py_DECREF(aname);
       
       PyObject *pyargs = Py_BuildValue("(O)", oargs);
@@ -744,22 +742,9 @@ OfxStatus PyImageEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args
           
           if (stat == kOfxStatOK)
           {
-            PyObject *outRoI = PyObject_GetAttrString(oargs, "outRoI");
-            inRoIs = PyObject_GetAttrString(oargs, "inRoIs");
+            PyObject *inRoIs = PyObject_GetAttrString(oargs, "inRoIs");
             
-            if (outRoI && PyTuple_Check(outRoI) && PyTuple_Size(outRoI) == 4)
-            {
-              args.outRoI.x1 = PyFloat_AsDouble(PyTuple_GetItem(outRoI, 0));
-              args.outRoI.y1 = PyFloat_AsDouble(PyTuple_GetItem(outRoI, 1));
-              args.outRoI.x2 = PyFloat_AsDouble(PyTuple_GetItem(outRoI, 2));
-              args.outRoI.y2 = PyFloat_AsDouble(PyTuple_GetItem(outRoI, 3));
-            }
-            else
-            {
-              stat = kOfxStatFailed;
-            }
-            
-            if (stat == kOfxStatOK && inRoIs && PyDict_Check(inRoIs))
+            if (inRoIs && PyDict_Check(inRoIs))
             {
               Py_ssize_t idx = 0;
               PyObject *key = 0, *val = 0;
@@ -788,7 +773,6 @@ OfxStatus PyImageEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args
               stat = kOfxStatFailed;
             }
             
-            Py_XDECREF(outRoI);
             Py_XDECREF(inRoIs);
           }
         }
@@ -1016,8 +1000,6 @@ OfxStatus PyImageEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args)
           
           if (stat == kOfxStatOK)
           {
-            ofx::Log("PyImageEffect::isIdentity: Set return arguments");
-            
             PyObject *ic = PyObject_GetAttrString(oargs, "idClip");
             
             if (ic && PyString_Check(ic))

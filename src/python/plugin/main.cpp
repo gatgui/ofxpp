@@ -451,11 +451,12 @@ PathLister gPathLister; // when will this be destroyed?
 // returns true if python has newly initialized
 bool EnsureInitializedPython()
 {
+  static bool firstCall = true;
+  
   bool rv = false;
   
   if (!Py_IsInitialized())
   {
-    ofx::DebugLog("pyplugin.ofx: Init python interpreter");
 #if !defined(_WIN32) && !defined(__APPLE__)
     // On Ubunty (9.04 at least), without this hack, python binary modules fail to load
     // After a little search on the web, it seems that Ubuntu's python is compiled a weird way
@@ -470,47 +471,55 @@ bool EnsureInitializedPython()
     Py_Initialize();
     rv = true;
   }
-  else
-  {
-    PyImport_ImportModule("ofx");
-    rv = false;
-  }
   
+  if (firstCall)
+  {
+    if (rv)
+    {
+      ofx::Log("pyplugin.ofx: Initialize python interpreter");
+    }
+    else
+    {
+      ofx::Log("pyplugin.ofx: Python interpreter already initialized");
+    }
+    PyImport_ImportModule("ofx");
 #ifdef _WIN32
-  HMODULE pyofxModule = LoadLibrary("ofx.pyd");
-  if (!pyofxModule)
-  {
-    ofx::DebugLog("Could not load ofx.pyd module");
-  }
-  else
-  {
-    void (*setUseGIL)(bool) = (void (*)(bool)) GetProcAddress(pyofxModule, "PyOFX_SetUseGIL");
-    if (setUseGIL != NULL)
+    HMODULE pyofxModule = LoadLibrary("ofx.pyd");
+    if (!pyofxModule)
     {
-      setUseGIL(!rv);
+      ofx::Log("Could not load ofx.pyd module");
     }
-    // on windows, this decrease the reference count of the library
-    FreeLibrary(pyofxModule);
-  }
+    else
+    {
+      void (*setUseGIL)(bool) = (void (*)(bool)) GetProcAddress(pyofxModule, "PyOFX_SetUseGIL");
+      if (setUseGIL != NULL)
+      {
+        ofx::Log("setUseGIL %d", !rv);
+        setUseGIL(!rv);
+      }
+      // on windows, this decrease the reference count of the library
+      FreeLibrary(pyofxModule);
+    }
 #else
-  // could use 0 for the filename to access current process global symbols
-  // this doesn't seem to work on OSX though...
-  void *pyofxModule = dlopen("ofx.so", RTLD_LAZY|RTLD_GLOBAL);
-  if (!pyofxModule)
-  {
-    ofx::DebugLog("Could not load ofx.so module");
-  }
-  else
-  {
-    void (*setUseGIL)(bool) = (void (*)(bool)) dlsym(pyofxModule, "PyOFX_SetUseGIL");
-    if (setUseGIL != NULL)
+    void *pyofxModule = dlopen(0, RTLD_LAZY|RTLD_GLOBAL);
+    if (!pyofxModule)
     {
-      setUseGIL(!rv);
+      ofx::Log("Could not load ofx.so module");
     }
-    // shall we?
-    dlclose(pyofxModule);
-  }
+    else
+    {
+      void (*setUseGIL)(bool) = (void (*)(bool)) dlsym(pyofxModule, "PyOFX_SetUseGIL");
+      if (setUseGIL != NULL)
+      {
+        ofx::Log("setUseGIL %d", !rv);
+        setUseGIL(!rv);
+      }
+      // shall we?
+      dlclose(pyofxModule);
+    }
 #endif
+    firstCall = false;
+  }
   
   return rv;
 }

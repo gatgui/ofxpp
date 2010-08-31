@@ -476,45 +476,43 @@ bool EnsureInitializedPython()
   {
     if (rv)
     {
-      ofx::Log("pyplugin.ofx: Initialize python interpreter");
+      ofx::DebugLog("pyplugin.ofx: Initialize python interpreter");
     }
     else
     {
-      ofx::Log("pyplugin.ofx: Python interpreter already initialized");
+      ofx::DebugLog("pyplugin.ofx: Python interpreter already initialized");
     }
     PyImport_ImportModule("ofx");
 #ifdef _WIN32
     HMODULE pyofxModule = LoadLibrary("ofx.pyd");
     if (!pyofxModule)
     {
-      ofx::Log("Could not load ofx.pyd module");
+      ofx::DebugLog("Could not load ofx.pyd module");
     }
     else
     {
       void (*setUseGIL)(bool) = (void (*)(bool)) GetProcAddress(pyofxModule, "PyOFX_SetUseGIL");
       if (setUseGIL != NULL)
       {
-        ofx::Log("setUseGIL %d", !rv);
+        ofx::DebugLog("setUseGIL %d", !rv);
         setUseGIL(!rv);
       }
-      // on windows, this decrease the reference count of the library
       FreeLibrary(pyofxModule);
     }
 #else
     void *pyofxModule = dlopen(0, RTLD_LAZY|RTLD_GLOBAL);
     if (!pyofxModule)
     {
-      ofx::Log("Could not load ofx.so module");
+      ofx::DebugLog("Could not load ofx.so module");
     }
     else
     {
       void (*setUseGIL)(bool) = (void (*)(bool)) dlsym(pyofxModule, "PyOFX_SetUseGIL");
       if (setUseGIL != NULL)
       {
-        ofx::Log("setUseGIL %d", !rv);
+        ofx::DebugLog("setUseGIL %d", !rv);
         setUseGIL(!rv);
       }
-      // shall we?
       dlclose(pyofxModule);
     }
 #endif

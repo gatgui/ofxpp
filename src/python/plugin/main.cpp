@@ -374,9 +374,7 @@ class PathLister
     {
       if (!mPyOFX)
       {
-        PyObject *modName = PyString_FromString("ofx");
-        mPyOFX = PyImport_Import(modName);
-        Py_DECREF(modName);
+        mPyOFX = PyImport_ImportModule("ofx");
         
         if (!mPyOFX)
         {
@@ -450,9 +448,11 @@ class PathLister
 
 PathLister gPathLister; // when will this be destroyed?
 
-void EnsureInitializedPython()
+// returns true if python has newly initialized
+bool EnsureInitializedPython()
 {
-  // Initialize python if needed
+  bool rv = false;
+  
   if (!Py_IsInitialized())
   {
     ofx::DebugLog("pyplugin.ofx: Init python interpreter");
@@ -468,14 +468,63 @@ void EnsureInitializedPython()
 #endif
     Py_SetProgramName("pyOFX");
     Py_Initialize();
+    rv = true;
   }
+  else
+  {
+    PyImport_ImportModule("ofx");
+    rv = false;
+  }
+  
+#ifdef _WIN32
+  HMODULE pyofxModule = LoadLibrary("ofx.pyd");
+  if (!pyofxModule)
+  {
+    ofx::DebugLog("Could not load ofx.pyd module");
+  }
+  else
+  {
+    void (*setUseGIL)(bool) = (void (*)(bool)) GetProcAddress(pyofxModule, "PyOFX_SetUseGIL");
+    if (setUseGIL != NULL)
+    {
+      setUseGIL(!rv);
+    }
+    // on windows, this decrease the reference count of the library
+    FreeLibrary(pyofxModule);
+  }
+#else
+  // could use 0 for the filename to access current process global symbols
+  // this doesn't seem to work on OSX though...
+  void *pyofxModule = dlopen("ofx.so", RTLD_LAZY|RTLD_GLOBAL);
+  if (!pyofxModule)
+  {
+    ofx::DebugLog("Could not load ofx.so module");
+  }
+  else
+  {
+    void (*setUseGIL)(bool) = (void (*)(bool)) dlsym(pyofxModule, "PyOFX_SetUseGIL");
+    if (setUseGIL != NULL)
+    {
+      setUseGIL(!rv);
+    }
+    // shall we?
+    dlclose(pyofxModule);
+  }
+#endif
+  
+  return rv;
 }
 
 OfxExport int OfxGetNumberOfPlugins(void)
 {
-  EnsureInitializedPython();
+  bool useGIL = !EnsureInitializedPython();
   
-  //PyGILState_STATE gstate = PyGILState_Ensure();
+  PyGILState_STATE gstate = PyGILState_UNLOCKED;
+  
+  if (useGIL)
+  {
+    gstate = PyGILState_Ensure();
+  }
   
   gcore::Env::EachInPathFunc func;
   
@@ -487,20 +536,31 @@ OfxExport int OfxGetNumberOfPlugins(void)
   
   ofx::DebugLog("pyplugin.ofx: Found %d python plugins", rv);
   
-  //PyGILState_Release(gstate);
+  if (useGIL)
+  {
+    PyGILState_Release(gstate);
+  }
   
   return rv;
 }
 
 OfxExport OfxPlugin* OfxGetPlugin(int i)
 {
-  EnsureInitializedPython();
+  bool useGIL = !EnsureInitializedPython();
   
-  //PyGILState_STATE gstate = PyGILState_Ensure();
+  PyGILState_STATE gstate = PyGILState_UNLOCKED;
+  
+  if (useGIL)
+  {
+    gstate = PyGILState_Ensure();
+  }
   
   OfxPlugin *rv = gPathLister.getPlugin(i);
   
-  //PyGILState_Release(gstate);
+  if (useGIL)
+  {
+    PyGILState_Release(gstate);
+  }
   
   return rv;
 }

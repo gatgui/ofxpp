@@ -57,6 +57,18 @@ extern int PyOFX_GetSetHostFuncIndex(OfxSetHostFunc func);
 extern int PyOFX_GetMainFuncIndex(ofx::EntryPoint func);
 extern int PyOFX_GetInterpFuncIndex(OfxInterpFunc func);
 
+
+# define PyOFX_AcquireGIL \
+PyGILState_STATE gstate = PyGILState_UNLOCKED;\
+if (PyOFX_UseGIL()) {\
+  gstate = PyGILState_Ensure();\
+}
+
+# define PyOFX_ReleaseGIL \
+if (PyOFX_UseGIL()) {\
+  PyGILState_Release(gstate);\
+}
+
 template <int IDX>
 std::string PyOFX_InterpFunc(ofx::ParameterSet &params,
                              const std::string &paramName,
@@ -65,11 +77,11 @@ std::string PyOFX_InterpFunc(ofx::ParameterSet &params,
                              ofx::Time t1, const std::string &v1,
                              double amount)
 {
-  //PyGILState_STATE gstate = PyGILState_Ensure();
+  PyOFX_AcquireGIL
   
   if (gInterpFuncObjs[IDX] == 0)
   {
-    //PyGILState_Release(gstate);
+    PyOFX_ReleaseGIL
     
     throw ofx::FailedError("No associated python interpolation function");
   }
@@ -89,7 +101,7 @@ std::string PyOFX_InterpFunc(ofx::ParameterSet &params,
   {
     Py_DECREF(iv);
     
-    //PyGILState_Release(gstate);
+    PyOFX_ReleaseGIL
     
     throw ofx::ValueError("Python interpolation function should return a string");
   }
@@ -97,7 +109,7 @@ std::string PyOFX_InterpFunc(ofx::ParameterSet &params,
   std::string rv = PyString_AsString(iv);
   Py_DECREF(iv);
   
-  //PyGILState_Release(gstate);
+  PyOFX_ReleaseGIL
   
   return rv;
 }
@@ -105,7 +117,7 @@ std::string PyOFX_InterpFunc(ofx::ParameterSet &params,
 template <int IDX>
 void PyOFX_SetHost(OfxHost *host)
 {
-  //PyGILState_STATE gstate = PyGILState_Ensure();
+  PyOFX_AcquireGIL
   
   PyImageEffectPlugin *plugin = gEffectPlugins[IDX];
   
@@ -114,7 +126,7 @@ void PyOFX_SetHost(OfxHost *host)
     plugin->setHost(host);
   }
   
-  //PyGILState_Release(gstate);
+  PyOFX_ReleaseGIL
 }
 
 template <int IDX>
@@ -123,7 +135,8 @@ OfxStatus PyOFX_Main(const char *action,
                      OfxPropertySetHandle hInArgs,
                      OfxPropertySetHandle hOutArgs)
 {
-  //PyGILState_STATE gstate = PyGILState_Ensure();
+  // not in Unload...
+  PyOFX_AcquireGIL
   
   PyImageEffectPlugin *plugin = gEffectPlugins[IDX];
   
@@ -491,7 +504,7 @@ OfxStatus PyOFX_Main(const char *action,
     rv = e.status();
   }
   
-  //PyGILState_Release(gstate);
+  PyOFX_ReleaseGIL
   
   return rv;
 }
@@ -502,7 +515,7 @@ OfxStatus PyOFX_InteractMain(const char *action,
                              OfxPropertySetHandle hInArgs,
                              OfxPropertySetHandle)
 {
-  //PyGILState_STATE gstate = PyGILState_Ensure();
+  PyOFX_AcquireGIL
   
   OfxStatus rv = kOfxStatReplyDefault;
   
@@ -697,7 +710,7 @@ OfxStatus PyOFX_InteractMain(const char *action,
     rv = e.status();
   }
   
-  //PyGILState_Release(gstate);
+  PyOFX_ReleaseGIL
   
   return rv;
 }

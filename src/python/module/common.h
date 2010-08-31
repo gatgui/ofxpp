@@ -761,6 +761,21 @@ extern bool PyOFX_InitPlugin(PyObject *mod);
 
 extern void LogPythonError();
 
+extern "C"
+{
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+bool PyOFX_UseGIL();
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+void PyOFX_SetUseGIL(bool yes);
+
+}
+
 #define CATCH(code, failed)\
   failed = true;\
   try {\

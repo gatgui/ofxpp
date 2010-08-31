@@ -25,6 +25,21 @@ USA.
 #include <ofx/ofx.h>
 #include <sstream>
 
+extern "C"
+{
+  static bool gPyOFXUseGIL = false;
+  
+  bool PyOFX_UseGIL()
+  {
+    return (gPyOFXUseGIL && Py_IsInitialized());
+  }
+  
+  void PyOFX_SetUseGIL(bool yes)
+  {
+    gPyOFXUseGIL = yes;
+  }
+}
+
 void LogPythonError()
 {
   if (PyErr_Occurred() == 0)
@@ -293,7 +308,6 @@ static PyMethodDef PyOFX_Methods[] =
   {"DebugLog", PyOFX_DebugLog, METH_VARARGS, 0},
   {NULL, NULL, NULL, NULL}
 };
-
 
 PyMODINIT_FUNC initofx(void)
 {

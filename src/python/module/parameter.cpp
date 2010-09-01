@@ -2998,23 +2998,16 @@ PyObject* PyOFXValueParameter_Copy(PyObject *self, PyObject *args)
   from = (ofx::ValueParameter*) (((PyOFXValueParameter*) pfrom)->base.param);
   
   ofx::FrameRange *range = 0;
-  ofx::FrameRange _range;
   
   if (prange)
   {
-    if (!PyTuple_Check(prange))
+    if (!PyObject_TypeCheck(prange, &PyOFXRangeDType))
     {
-      PyErr_SetString(PyExc_TypeError, "Expected a tuple");
+      PyErr_SetString(PyExc_TypeError, "Expected a ofx.FrameRange or a ofx.RangeD object");
       return NULL;
     }
-    if (PyTuple_Size(prange) != 2)
-    {
-      PyErr_SetString(PyExc_ValueError, "Expected a tuple of two values");
-      return NULL;
-    }
-    range = &_range;
-    range->min = PyFloat_AsDouble(PyTuple_GetItem(prange, 0));
-    range->max = PyFloat_AsDouble(PyTuple_GetItem(prange, 1));
+    PyOFXRangeD *tmp = (PyOFXRangeD*) prange;
+    range = &(tmp->range);
   }
   
   bool failed = false;

@@ -115,6 +115,12 @@ void LogPythonError()
 // ---
 
 PyTypeObject PyOFXActionArgumentsType;
+PyTypeObject PyOFXRangeIType;
+PyTypeObject PyOFXRangeDType;
+PyTypeObject PyOFXRectIType;
+PyTypeObject PyOFXRectDType;
+
+// ---
 
 static PyObject* PyOFXActionArguments_New(PyTypeObject *t, PyObject *, PyObject *)
 {
@@ -195,6 +201,410 @@ int PyOFXActionArguments_SetAttr(PyObject *self, PyObject *aname, PyObject *aval
   
   return 0;
 }
+
+// ---
+
+PyObject* PyOFXRectI_New(PyTypeObject *t, PyObject *, PyObject *)
+{
+  return t->tp_alloc(t, 0);
+}
+
+int PyOFXRectI_Init(PyObject *self, PyObject *args, PyObject *)
+{
+  PyOFXRectI *prect = (PyOFXRectI*) self;
+  
+  Py_ssize_t n = PyTuple_Size(args);
+  if (n == 4)
+  {
+    if (!PyArg_ParseTuple(args, "iiii", &(prect->rect.x1), &(prect->rect.y1), &(prect->rect.x2), &(prect->rect.y2)))
+    {
+      return -1;
+    }
+  }
+  else if (n != 0)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Invalid argument(s) count. Accepts 0 or 4 arguments.");
+    return -1;
+  }
+  else
+  {
+    prect->rect.x1 = 0;
+    prect->rect.y1 = 0;
+    prect->rect.x2 = 0;
+    prect->rect.y2 = 0;
+  }
+  
+  return 0;
+}
+
+void PyOFXRectI_Delete(PyObject *self)
+{
+  self->ob_type->tp_free(self);
+}
+
+PyObject* PyOFXRectI_GetX1(PyObject *self, void*)
+{
+  PyOFXRectI *prect = (PyOFXRectI*) self;
+  return PyInt_FromLong(prect->rect.x1);
+}
+
+PyObject* PyOFXRectI_GetY1(PyObject *self, void*)
+{
+  PyOFXRectI *prect = (PyOFXRectI*) self;
+  return PyInt_FromLong(prect->rect.y1);
+}
+
+PyObject* PyOFXRectI_GetX2(PyObject *self, void*)
+{
+  PyOFXRectI *prect = (PyOFXRectI*) self;
+  return PyInt_FromLong(prect->rect.x2);
+}
+
+PyObject* PyOFXRectI_GetY2(PyObject *self, void*)
+{
+  PyOFXRectI *prect = (PyOFXRectI*) self;
+  return PyInt_FromLong(prect->rect.y2);
+}
+
+int PyOFXRectI_SetX1(PyObject *self, PyObject *val, void*)
+{
+  if (!PyInt_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected an integer");
+    return -1;
+  }
+  PyOFXRectI *prect = (PyOFXRectI*) self;
+  prect->rect.x1 = PyInt_AsLong(val);
+  return 0;
+}
+
+int PyOFXRectI_SetY1(PyObject *self, PyObject *val, void*)
+{
+  if (!PyInt_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected an integer");
+    return -1;
+  }
+  PyOFXRectI *prect = (PyOFXRectI*) self;
+  prect->rect.y1 = PyInt_AsLong(val);
+  return 0;
+}
+
+int PyOFXRectI_SetX2(PyObject *self, PyObject *val, void*)
+{
+  if (!PyInt_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected an integer");
+    return -1;
+  }
+  PyOFXRectI *prect = (PyOFXRectI*) self;
+  prect->rect.x2 = PyInt_AsLong(val);
+  return 0;
+}
+
+int PyOFXRectI_SetY2(PyObject *self, PyObject *val, void*)
+{
+  if (!PyInt_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected an integer");
+    return -1;
+  }
+  PyOFXRectI *prect = (PyOFXRectI*) self;
+  prect->rect.y2 = PyInt_AsLong(val);
+  return 0;
+}
+
+static PyGetSetDef PyOFXRectI_GetSeters[] =
+{
+  {(char*)"x1", PyOFXRectI_GetX1, PyOFXRectI_SetX1, NULL, NULL},
+  {(char*)"y1", PyOFXRectI_GetY1, PyOFXRectI_SetY1, NULL, NULL},
+  {(char*)"x2", PyOFXRectI_GetX2, PyOFXRectI_SetX2, NULL, NULL},
+  {(char*)"y2", PyOFXRectI_GetY2, PyOFXRectI_SetY2, NULL, NULL},
+  {NULL, NULL, NULL, NULL, NULL}
+};
+
+// ---
+
+PyObject* PyOFXRectD_New(PyTypeObject *t, PyObject *, PyObject *)
+{
+  return t->tp_alloc(t, 0);
+}
+
+int PyOFXRectD_Init(PyObject *self, PyObject *args, PyObject *)
+{
+  PyOFXRectD *prect = (PyOFXRectD*) self;
+  
+  Py_ssize_t n = PyTuple_Size(args);
+  if (n == 4)
+  {
+    if (!PyArg_ParseTuple(args, "dddd", &(prect->rect.x1), &(prect->rect.y1), &(prect->rect.x2), &(prect->rect.y2)))
+    {
+      return -1;
+    }
+  }
+  else if (n != 0)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Invalid argument(s) count. Accepts 0 or 4 arguments.");
+    return -1;
+  }
+  else
+  {
+    prect->rect.x1 = 0.0;
+    prect->rect.y1 = 0.0;
+    prect->rect.x2 = 0.0;
+    prect->rect.y2 = 0.0;
+  }
+  
+  return 0;
+}
+
+void PyOFXRectD_Delete(PyObject *self)
+{
+  self->ob_type->tp_free(self);
+}
+
+PyObject* PyOFXRectD_GetX1(PyObject *self, void*)
+{
+  PyOFXRectD *prect = (PyOFXRectD*) self;
+  return PyFloat_FromDouble(prect->rect.x1);
+}
+
+PyObject* PyOFXRectD_GetY1(PyObject *self, void*)
+{
+  PyOFXRectD *prect = (PyOFXRectD*) self;
+  return PyFloat_FromDouble(prect->rect.y1);
+}
+
+PyObject* PyOFXRectD_GetX2(PyObject *self, void*)
+{
+  PyOFXRectD *prect = (PyOFXRectD*) self;
+  return PyFloat_FromDouble(prect->rect.x2);
+}
+
+PyObject* PyOFXRectD_GetY2(PyObject *self, void*)
+{
+  PyOFXRectD *prect = (PyOFXRectD*) self;
+  return PyFloat_FromDouble(prect->rect.y2);
+}
+
+int PyOFXRectD_SetX1(PyObject *self, PyObject *val, void*)
+{
+  if (!PyFloat_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a float");
+    return -1;
+  }
+  PyOFXRectD *prect = (PyOFXRectD*) self;
+  prect->rect.x1 = PyFloat_AsDouble(val);
+  return 0;
+}
+
+int PyOFXRectD_SetY1(PyObject *self, PyObject *val, void*)
+{
+  if (!PyFloat_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a float");
+    return -1;
+  }
+  PyOFXRectD *prect = (PyOFXRectD*) self;
+  prect->rect.y1 = PyFloat_AsDouble(val);
+  return 0;
+}
+
+int PyOFXRectD_SetX2(PyObject *self, PyObject *val, void*)
+{
+  if (!PyFloat_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a float");
+    return -1;
+  }
+  PyOFXRectD *prect = (PyOFXRectD*) self;
+  prect->rect.x2 = PyFloat_AsDouble(val);
+  return 0;
+}
+
+int PyOFXRectD_SetY2(PyObject *self, PyObject *val, void*)
+{
+  if (!PyFloat_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a float");
+    return -1;
+  }
+  PyOFXRectD *prect = (PyOFXRectD*) self;
+  prect->rect.y2 = PyFloat_AsDouble(val);
+  return 0;
+}
+
+static PyGetSetDef PyOFXRectD_GetSeters[] =
+{
+  {(char*)"x1", PyOFXRectD_GetX1, PyOFXRectD_SetX1, NULL, NULL},
+  {(char*)"y1", PyOFXRectD_GetY1, PyOFXRectD_SetY1, NULL, NULL},
+  {(char*)"x2", PyOFXRectD_GetX2, PyOFXRectD_SetX2, NULL, NULL},
+  {(char*)"y2", PyOFXRectD_GetY2, PyOFXRectD_SetY2, NULL, NULL},
+  {NULL, NULL, NULL, NULL, NULL}
+};
+
+// ---
+
+PyObject* PyOFXRangeI_New(PyTypeObject *t, PyObject *, PyObject *)
+{
+  return t->tp_alloc(t, 0);
+}
+
+int PyOFXRangeI_Init(PyObject *self, PyObject *args, PyObject *)
+{
+  PyOFXRangeI *prange = (PyOFXRangeI*) self;
+  
+  Py_ssize_t n = PyTuple_Size(args);
+  if (n == 2)
+  {
+    if (!PyArg_ParseTuple(args, "ii", &(prange->range.min), &(prange->range.max)))
+    {
+      return -1;
+    }
+  }
+  else if (n != 0)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Invalid argument(s) count. Accepts 0 or 2 arguments.");
+    return -1;
+  }
+  else
+  {
+    prange->range.min = 0;
+    prange->range.max = 0;
+  }
+  
+  return 0;
+}
+
+void PyOFXRangeI_Delete(PyObject *self)
+{
+  self->ob_type->tp_free(self);
+}
+
+PyObject* PyOFXRangeI_GetMin(PyObject *self, void*)
+{
+  PyOFXRangeI *prange = (PyOFXRangeI*) self;
+  return PyInt_FromLong(prange->range.min);
+}
+
+PyObject* PyOFXRangeI_GetMax(PyObject *self, void*)
+{
+  PyOFXRangeI *prange = (PyOFXRangeI*) self;
+  return PyInt_FromLong(prange->range.max);
+}
+
+int PyOFXRangeI_SetMin(PyObject *self, PyObject *val, void*)
+{
+  if (!PyFloat_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected an integer");
+    return -1;
+  }
+  PyOFXRangeI *prange = (PyOFXRangeI*) self;
+  prange->range.min = PyInt_AsLong(val);
+  return 0;
+}
+
+int PyOFXRangeI_SetMax(PyObject *self, PyObject *val, void*)
+{
+  if (!PyFloat_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected an integer");
+    return -1;
+  }
+  PyOFXRangeI *prange = (PyOFXRangeI*) self;
+  prange->range.max = PyInt_AsLong(val);
+  return 0;
+}
+
+static PyGetSetDef PyOFXRangeI_GetSeters[] =
+{
+  {(char*)"min", PyOFXRangeI_GetMin, PyOFXRangeI_SetMin, NULL, NULL},
+  {(char*)"max", PyOFXRangeI_GetMax, PyOFXRangeI_SetMax, NULL, NULL},
+  {NULL, NULL, NULL, NULL, NULL}
+};
+
+// ---
+
+PyObject* PyOFXRangeD_New(PyTypeObject *t, PyObject *, PyObject *)
+{
+  return t->tp_alloc(t, 0);
+}
+
+int PyOFXRangeD_Init(PyObject *self, PyObject *args, PyObject *)
+{
+  PyOFXRangeD *prange = (PyOFXRangeD*) self;
+  
+  Py_ssize_t n = PyTuple_Size(args);
+  if (n == 2)
+  {
+    if (!PyArg_ParseTuple(args, "dd", &(prange->range.min), &(prange->range.max)))
+    {
+      return -1;
+    }
+  }
+  else if (n != 0)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Invalid argument(s) count. Accepts 0 or 2 arguments.");
+    return -1;
+  }
+  else
+  {
+    prange->range.min = 0.0;
+    prange->range.max = 0.0;
+  }
+  
+  return 0;
+}
+
+void PyOFXRangeD_Delete(PyObject *self)
+{
+  self->ob_type->tp_free(self);
+}
+
+PyObject* PyOFXRangeD_GetMin(PyObject *self, void*)
+{
+  PyOFXRangeD *prange = (PyOFXRangeD*) self;
+  return PyFloat_FromDouble(prange->range.min);
+}
+
+PyObject* PyOFXRangeD_GetMax(PyObject *self, void*)
+{
+  PyOFXRangeD *prange = (PyOFXRangeD*) self;
+  return PyFloat_FromDouble(prange->range.max);
+}
+
+int PyOFXRangeD_SetMin(PyObject *self, PyObject *val, void*)
+{
+  if (!PyFloat_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a float");
+    return -1;
+  }
+  PyOFXRangeD *prange = (PyOFXRangeD*) self;
+  prange->range.min = PyFloat_AsDouble(val);
+  return 0;
+}
+
+int PyOFXRangeD_SetMax(PyObject *self, PyObject *val, void*)
+{
+  if (!PyFloat_Check(val))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a float");
+    return -1;
+  }
+  PyOFXRangeD *prange = (PyOFXRangeD*) self;
+  prange->range.max = PyFloat_AsDouble(val);
+  return 0;
+}
+
+static PyGetSetDef PyOFXRangeD_GetSeters[] =
+{
+  {(char*)"min", PyOFXRangeD_GetMin, PyOFXRangeD_SetMin, NULL, NULL},
+  {(char*)"max", PyOFXRangeD_GetMax, PyOFXRangeD_SetMax, NULL, NULL},
+  {NULL, NULL, NULL, NULL, NULL}
+};
 
 // ---
 
@@ -503,8 +913,71 @@ PyMODINIT_FUNC initofx(void)
     return;
   }
   
+  INIT_TYPE(PyOFXRectIType, "ofx.RectI", PyOFXRectI);
+  PyOFXRectIType.tp_flags = Py_TPFLAGS_DEFAULT;
+  PyOFXRectIType.tp_new = PyOFXRectI_New;
+  PyOFXRectIType.tp_init = PyOFXRectI_Init;
+  PyOFXRectIType.tp_dealloc = PyOFXRectI_Delete;
+  PyOFXRectIType.tp_getset = PyOFXRectI_GetSeters;
+  if (PyType_Ready(&PyOFXRectIType) < 0)
+  {
+    Py_DECREF(mod);
+    return;
+  }
+  
+  INIT_TYPE(PyOFXRectDType, "ofx.RectD", PyOFXRectD);
+  PyOFXRectDType.tp_flags = Py_TPFLAGS_DEFAULT;
+  PyOFXRectDType.tp_new = PyOFXRectD_New;
+  PyOFXRectDType.tp_init = PyOFXRectD_Init;
+  PyOFXRectDType.tp_dealloc = PyOFXRectD_Delete;
+  PyOFXRectDType.tp_getset = PyOFXRectD_GetSeters;
+  if (PyType_Ready(&PyOFXRectDType) < 0)
+  {
+    Py_DECREF(mod);
+    return;
+  }
+  
+  INIT_TYPE(PyOFXRangeIType, "ofx.RangeI", PyOFXRangeI);
+  PyOFXRangeIType.tp_flags = Py_TPFLAGS_DEFAULT;
+  PyOFXRangeIType.tp_new = PyOFXRangeI_New;
+  PyOFXRangeIType.tp_init = PyOFXRangeI_Init;
+  PyOFXRangeIType.tp_dealloc = PyOFXRangeI_Delete;
+  PyOFXRangeIType.tp_getset = PyOFXRangeI_GetSeters;
+  if (PyType_Ready(&PyOFXRangeIType) < 0)
+  {
+    Py_DECREF(mod);
+    return;
+  }
+  
+  INIT_TYPE(PyOFXRangeDType, "ofx.RangeD", PyOFXRangeD);
+  PyOFXRangeDType.tp_flags = Py_TPFLAGS_DEFAULT;
+  PyOFXRangeDType.tp_new = PyOFXRangeD_New;
+  PyOFXRangeDType.tp_init = PyOFXRangeD_Init;
+  PyOFXRangeDType.tp_dealloc = PyOFXRangeD_Delete;
+  PyOFXRangeDType.tp_getset = PyOFXRangeD_GetSeters;
+  if (PyType_Ready(&PyOFXRangeDType) < 0)
+  {
+    Py_DECREF(mod);
+    return;
+  }
+  
   Py_INCREF(&PyOFXActionArgumentsType);
   PyModule_AddObject(mod, "ActionArguments", (PyObject*)&PyOFXActionArgumentsType);
+  
+  Py_INCREF(&PyOFXRectIType);
+  PyModule_AddObject(mod, "RectI", (PyObject*)&PyOFXRectIType);
+  
+  Py_INCREF(&PyOFXRectDType);
+  PyModule_AddObject(mod, "RectD", (PyObject*)&PyOFXRectDType);
+  
+  Py_INCREF(&PyOFXRangeIType);
+  PyModule_AddObject(mod, "RangeI", (PyObject*)&PyOFXRangeIType);
+  
+  Py_INCREF(&PyOFXRangeDType);
+  PyModule_AddObject(mod, "RangeD", (PyObject*)&PyOFXRangeDType);
+  
+  Py_INCREF(&PyOFXRangeDType);
+  PyModule_AddObject(mod, "FrameRange", (PyObject*)&PyOFXRangeDType);
   
   if (!PyOFX_InitException(mod))
   {
@@ -513,6 +986,12 @@ PyMODINIT_FUNC initofx(void)
   }
   
   if (!PyOFX_InitHandle(mod))
+  {
+    Py_DECREF(mod);
+    return;
+  }
+  
+  if (!PyOFX_InitPixel(mod))
   {
     Py_DECREF(mod);
     return;

@@ -314,18 +314,6 @@ typedef struct
 typedef struct
 {
   PyObject_HEAD
-  void *ptr;
-  void *base;
-  ofx::Rect<int> bounds;
-  int pixelBytes;
-  int rowBytes;
-  ofx::ImageComponent components;
-  ofx::BitDepth pixelDepth;
-} PyOFXPixelAddress;
-
-typedef struct
-{
-  PyObject_HEAD
   ofx::ClipDescriptor *desc;
 } PyOFXClipDescriptor;
 
@@ -394,6 +382,182 @@ typedef struct
   std::map<std::string, PyObject*> args;
 } PyOFXActionArguments;
 
+typedef struct
+{
+  PyObject_HEAD
+  ofx::RectI rect;
+} PyOFXRectI;
+
+typedef struct
+{
+  PyObject_HEAD
+  ofx::RectD rect;
+} PyOFXRectD;
+
+typedef struct
+{
+  PyObject_HEAD
+  ofx::RangeI range;
+} PyOFXRangeI;
+
+typedef struct
+{
+  PyObject_HEAD
+  ofx::RangeD range;
+} PyOFXRangeD;
+
+typedef struct
+{
+  PyObject_HEAD
+  ofx::RGBAColourB colour;
+} PyOFXRGBAColourB;
+
+typedef struct
+{
+  PyObject_HEAD
+  ofx::RGBAColourS colour;
+} PyOFXRGBAColourS;
+
+typedef struct
+{
+  PyObject_HEAD
+  ofx::RGBAColourF colour;
+} PyOFXRGBAColourF;
+
+typedef struct
+{
+  PyObject_HEAD
+  ofx::RGBAColourD colour;
+} PyOFXRGBAColourD;
+
+#ifdef OFX_API_1_2
+
+typedef struct
+{
+  PyObject_HEAD
+  ofx::RGBColourB colour;
+} PyOFXRGBColourB;
+
+typedef struct
+{
+  PyObject_HEAD
+  ofx::RGBColourS colour;
+} PyOFXRGBColourS;
+
+typedef struct
+{
+  PyObject_HEAD
+  ofx::RGBColourF colour;
+} PyOFXRGBColourF;
+
+typedef struct
+{
+  PyObject_HEAD
+  ofx::RGBColourD colour;
+} PyOFXRGBColourD;
+
+#endif
+
+typedef struct
+{
+  PyObject_HEAD
+  ofx::YUVAColourB colour;
+} PyOFXYUVAColourB;
+
+typedef struct
+{
+  PyObject_HEAD
+  ofx::YUVAColourS colour;
+} PyOFXYUVAColourS;
+
+typedef struct
+{
+  PyObject_HEAD
+  ofx::YUVAColourF colour;
+} PyOFXYUVAColourF;
+
+typedef struct
+{
+  PyObject_HEAD
+  ofx::YUVAColourD colour;
+} PyOFXYUVAColourD;
+
+typedef struct
+{
+  PyObject_HEAD
+  void *ptr;
+  void *base;
+  ofx::Rect<int> bounds;
+  int pixelBytes;
+  int rowBytes;
+} PyOFXColourAddress;
+
+typedef struct
+{
+  PyOFXColourAddress addr;
+} PyOFXRGBAColourBAddress;
+
+typedef struct
+{
+  PyOFXColourAddress addr;
+} PyOFXRGBAColourSAddress;
+
+typedef struct
+{
+  PyOFXColourAddress addr;
+} PyOFXRGBAColourFAddress;
+
+typedef struct
+{
+  PyOFXColourAddress addr;
+} PyOFXAColourBAddress;
+
+typedef struct
+{
+  PyOFXColourAddress addr;
+} PyOFXAColourSAddress;
+
+typedef struct
+{
+  PyOFXColourAddress addr;
+} PyOFXAColourFAddress;
+
+typedef struct
+{
+  PyOFXColourAddress addr;
+} PyOFXYUVAColourBAddress;
+
+typedef struct
+{
+  PyOFXColourAddress addr;
+} PyOFXYUVAColourSAddress;
+
+typedef struct
+{
+  PyOFXColourAddress addr;
+} PyOFXYUVAColourFAddress;
+
+#ifdef OFX_API_1_2
+
+typedef struct
+{
+  PyOFXColourAddress addr;
+} PyOFXRGBColourBAddress;
+
+typedef struct
+{
+  PyOFXColourAddress addr;
+} PyOFXRGBColourSAddress;
+
+typedef struct
+{
+  PyOFXColourAddress addr;
+} PyOFXRGBColourFAddress;
+
+#endif
+// all the pixels type
+
+
 extern PyTypeObject PyOFXExceptionType;
 extern PyTypeObject PyOFXFailedErrorType;
 extern PyTypeObject PyOFXFatalErrorType;
@@ -458,7 +622,6 @@ extern PyTypeObject PyOFXPushButtonParameterType;
 extern PyTypeObject PyOFXParameterSetType;
 extern PyTypeObject PyOFXParameterSetDescriptorType;
 extern PyTypeObject PyOFXImageType;
-extern PyTypeObject PyOFXPixelAddressType;
 extern PyTypeObject PyOFXClipDescriptorType;
 extern PyTypeObject PyOFXClipType;
 extern PyTypeObject PyOFXImageEffectDescriptorType;
@@ -470,7 +633,37 @@ extern PyTypeObject PyOFXInteractType;
 extern PyTypeObject PyOFXPluginType;
 extern PyTypeObject PyOFXImageEffectPluginType;
 extern PyTypeObject PyOFXActionArgumentsType;
-
+extern PyTypeObject PyOFXRangeIType;
+extern PyTypeObject PyOFXRangeDType;
+extern PyTypeObject PyOFXRectIType;
+extern PyTypeObject PyOFXRectDType;
+extern PyTypeObject PyOFXRGBAColourBType;
+extern PyTypeObject PyOFXRGBAColourSType;
+extern PyTypeObject PyOFXRGBAColourFType;
+extern PyTypeObject PyOFXRGBAColourDType;
+extern PyTypeObject PyOFXYUVAColourBType;
+extern PyTypeObject PyOFXYUVAColourSType;
+extern PyTypeObject PyOFXYUVAColourFType;
+extern PyTypeObject PyOFXYUVAColourDType;
+extern PyTypeObject PyOFXColourAddressType;
+extern PyTypeObject PyOFXAColourBAddressType;
+extern PyTypeObject PyOFXAColourSAddressType;
+extern PyTypeObject PyOFXAColourFAddressType;
+extern PyTypeObject PyOFXRGBAColourBAddressType;
+extern PyTypeObject PyOFXRGBAColourSAddressType;
+extern PyTypeObject PyOFXRGBAColourFAddressType;
+extern PyTypeObject PyOFXYUVAColourBAddressType;
+extern PyTypeObject PyOFXYUVAColourSAddressType;
+extern PyTypeObject PyOFXYUVAColourFAddressType;
+#ifdef OFX_API_1_2
+extern PyTypeObject PyOFXRGBColourBType;
+extern PyTypeObject PyOFXRGBColourSType;
+extern PyTypeObject PyOFXRGBColourFType;
+extern PyTypeObject PyOFXRGBColourDType;
+extern PyTypeObject PyOFXRGBColourBAddressType;
+extern PyTypeObject PyOFXRGBColourSAddressType;
+extern PyTypeObject PyOFXRGBColourFAddressType;
+#endif
 
 class Receiver
 {
@@ -758,6 +951,7 @@ extern bool PyOFX_InitClip(PyObject *mod);
 extern bool PyOFX_InitImageEffect(PyObject *mod);
 extern bool PyOFX_InitInteract(PyObject *mod);
 extern bool PyOFX_InitPlugin(PyObject *mod);
+extern bool PyOFX_InitPixel(PyObject *mod);
 
 extern void LogPythonError();
 

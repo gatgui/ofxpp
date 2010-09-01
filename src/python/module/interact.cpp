@@ -178,7 +178,8 @@ OfxStatus PyInteract::draw(ofx::Interact::DrawArgs &args)
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
-      oarg = Py_BuildValue("dddd", args.bgColour.r, args.bgColour.g, args.bgColour.b, args.bgColour.a);
+      oarg = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
+      ((PyOFXRGBAColourD*)oarg)->colour = args.bgColour;
       aname = PyString_FromString("bgColour");
       PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
@@ -280,7 +281,8 @@ OfxStatus PyInteract::penMotion(ofx::Interact::PenArgs &args)
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
-      oarg = Py_BuildValue("dddd", args.bgColour.r, args.bgColour.g, args.bgColour.b, args.bgColour.a);
+      oarg = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
+      ((PyOFXRGBAColourD*)oarg)->colour = args.bgColour;
       aname = PyString_FromString("bgColour");
       PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
@@ -415,7 +417,8 @@ OfxStatus PyInteract::penDown(ofx::Interact::PenArgs &args)
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
-      oarg = Py_BuildValue("dddd", args.bgColour.r, args.bgColour.g, args.bgColour.b, args.bgColour.a);
+      oarg = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
+      ((PyOFXRGBAColourD*)oarg)->colour = args.bgColour;
       aname = PyString_FromString("bgColour");
       PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
@@ -550,7 +553,8 @@ OfxStatus PyInteract::penUp(ofx::Interact::PenArgs &args)
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
-      oarg = Py_BuildValue("dddd", args.bgColour.r, args.bgColour.g, args.bgColour.b, args.bgColour.a);
+      oarg = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
+      ((PyOFXRGBAColourD*)oarg)->colour = args.bgColour;
       aname = PyString_FromString("bgColour");
       PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
@@ -973,7 +977,8 @@ OfxStatus PyInteract::gainFocus(ofx::Interact::FocusArgs &args)
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
-      oarg = Py_BuildValue("dddd", args.bgColour.r, args.bgColour.g, args.bgColour.b, args.bgColour.a);
+      oarg = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
+      ((PyOFXRGBAColourD*)oarg)->colour = args.bgColour;
       aname = PyString_FromString("bgColour");
       PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
@@ -1075,7 +1080,8 @@ OfxStatus PyInteract::loseFocus(ofx::Interact::FocusArgs &args)
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
-      oarg = Py_BuildValue("dddd", args.bgColour.r, args.bgColour.g, args.bgColour.b, args.bgColour.a);
+      oarg = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
+      ((PyOFXRGBAColourD*)oarg)->colour = args.bgColour;
       aname = PyString_FromString("bgColour");
       PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
@@ -1488,7 +1494,9 @@ PyObject* PyOFXInteract_GetBackgroundColour(PyObject *self, void*)
     return NULL;
   }
   
-  return Py_BuildValue("dddd", colour.r, colour.g, colour.b, colour.a);
+  PyObject *rv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
+  ((PyOFXRGBAColourD*)rv)->colour = colour;
+  return rv;
 }
 
 #ifdef OFX_API_1_2
@@ -1514,7 +1522,9 @@ PyObject* PyOFXInteract_GetSuggestedColour(PyObject *self, void*)
     return NULL;
   }
   
-  return Py_BuildValue("dddd", colour.r, colour.g, colour.b, colour.a);
+  PyObject *rv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
+  ((PyOFXRGBAColourD*)rv)->colour = colour;
+  return rv;
 }
 
 #endif

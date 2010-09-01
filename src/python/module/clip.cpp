@@ -940,16 +940,19 @@ PyObject* PyOFXClip_GetFrameRange(PyObject *self, void*)
   
   bool failed = false;
   
-  double from, to;
+  ofx::FrameRange range = {0, 0};
   
-  CATCH({pclip->clip->frameRange(&from, &to);}, failed);
+  CATCH({range = pclip->clip->frameRange();}, failed);
   
   if (failed)
   {
     return NULL;
   }
   
-  return Py_BuildValue("dd", from, to);
+  PyObject *rv = PyObject_CallObject((PyObject*)&PyOFXRangeDType, NULL);
+  PyOFXRangeD *prange = (PyOFXRangeD*) rv;
+  prange->range = range;
+  return rv;
 }
 
 PyObject* PyOFXClip_GetFieldOrder(PyObject *self, void*)
@@ -1060,16 +1063,19 @@ PyObject* PyOFXClip_GetUnmappedFrameRange(PyObject *self, void*)
   
   bool failed = false;
   
-  double from, to;
+  ofx::FrameRange range = {0, 0};
   
-  CATCH({pclip->clip->unmappedFrameRange(&from, &to);}, failed);
+  CATCH({range = pclip->clip->unmappedFrameRange();}, failed);
   
   if (failed)
   {
     return NULL;
   }
   
-  return Py_BuildValue("dd", from, to);
+  PyObject *rv = PyObject_CallObject((PyObject*)&PyOFXRangeDType, NULL);
+  PyOFXRangeD *prange = (PyOFXRangeD*) rv;
+  prange->range = range;
+  return rv;
 }
 
 PyObject* PyOFXClip_GetConnected(PyObject *self, void*)
@@ -1195,26 +1201,13 @@ PyObject* PyOFXClip_GetImage(PyObject *self, PyObject *args)
   
   if (pregion)
   {
-    if (!PyTuple_Check(pregion))
+    if (!PyObject_TypeCheck(pregion, &PyOFXRectDType))
     {
-      PyErr_SetString(PyExc_TypeError, "Expected a tuple");
+      PyErr_SetString(PyExc_TypeError, "Expected a ofx.RectD object");
       return NULL;
     }
     
-    if (PyTuple_Size(pregion) != 4)
-    {
-      PyErr_SetString(PyExc_ValueError, "Expected a tuple of 4 values");
-      return NULL;
-    }
-    
-    ofx::Rect<double> region;
-    
-    region.x1 = PyFloat_AsDouble(PyTuple_GetItem(pregion, 0));
-    region.y1 = PyFloat_AsDouble(PyTuple_GetItem(pregion, 1));
-    region.x2 = PyFloat_AsDouble(PyTuple_GetItem(pregion, 2));
-    region.y2 = PyFloat_AsDouble(PyTuple_GetItem(pregion, 3));
-    
-    CATCH({img = pclip->clip->getImage(t, region);}, failed);
+    CATCH({img = pclip->clip->getImage(t, ((PyOFXRectD*)pregion)->rect);}, failed);
   }
   else
   {
@@ -1259,7 +1252,10 @@ PyObject* PyOFXClip_GetRegionOfDefinition(PyObject *self, PyObject *args)
     return false;
   }
   
-  return Py_BuildValue("dddd", rv.x1, rv.y1, rv.x2, rv.y2);
+  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRectDType, NULL);
+  PyOFXRectD *prect = (PyOFXRectD*) prv;
+  prect->rect = rv;
+  return prv;
 }
 
 static PyMethodDef PyOFXClip_Methods[] =

@@ -144,7 +144,7 @@ namespace ofx {
       
       double frameRate();
       
-      void frameRange(double *from, double *to);
+      ofx::FrameRange frameRange();
       
       ImageFieldOrder fieldOrder();
       
@@ -156,7 +156,7 @@ namespace ofx {
       
       ImageComponent unmappedComponents();
       
-      void unmappedFrameRange(double *from, double *to);
+      ofx::FrameRange unmappedFrameRange();
       
       double unmappedFrameRate();
       

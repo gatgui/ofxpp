@@ -297,26 +297,13 @@ PyObject* PyOFXParametricParameterDescriptor_UIColour(PyObject *self, PyObject *
   
   if (val)
   {
-    if (!PyTuple_Check(val))
+    if (!PyObject_TypeCheck(val, &PyOFXRGBAColourDType))
     {
-      PyErr_SetString(PyExc_TypeError, "Expected a tuple");
+      PyErr_SetString(PyExc_TypeError, "Expected a ofx.RGBAColourD object");
       return NULL;
     }
     
-    if (PyTuple_Size(val) != 3)
-    {
-      PyErr_SetString(PyExc_ValueError, "Expected a tuple of 3 values");
-      return NULL;
-    }
-    
-    ofx::RGBAColour<double> v;
-    
-    v.r = PyFloat_AsDouble(PyTuple_GetItem(val, 0));
-    v.g = PyFloat_AsDouble(PyTuple_GetItem(val, 1));
-    v.b = PyFloat_AsDouble(PyTuple_GetItem(val, 2));
-    v.a = 1.0;
-    
-    CATCH({desc->UIColour(idx, v);}, failed);
+    CATCH({desc->UIColour(idx, ((PyOFXRGBAColourD*)val)->colour);}, failed);
     
     if (failed)
     {
@@ -336,7 +323,9 @@ PyObject* PyOFXParametricParameterDescriptor_UIColour(PyObject *self, PyObject *
       return NULL;
     }
     
-    return Py_BuildValue("ddd", rv.r, rv.g, rv.b);
+    PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
+    ((PyOFXRGBAColourD*)prv)->colour = rv;
+    return prv;
   }
 }
 
@@ -563,7 +552,9 @@ PyObject* PyOFXParametricParameter_UIColour(PyObject *self, PyObject *args)
     return NULL;
   }
   
-  return Py_BuildValue("ddd", rv.r, rv.g, rv.b);
+  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
+  ((PyOFXRGBAColourD*)prv)->colour = rv;
+  return prv;
 }
 
 PyObject* PyOFXParametricParameter_DimensionLabel(PyObject *self, PyObject *args)

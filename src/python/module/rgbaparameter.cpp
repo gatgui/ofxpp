@@ -58,7 +58,9 @@ PyObject* PyOFXRGBAParameterDescriptor_GetDefault(PyObject *self, void*)
     return NULL;
   }
   
-  return Py_BuildValue("dddd", rv.r, rv.g, rv.b, rv.a);
+  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
+  ((PyOFXRGBAColourD*)prv)->colour = rv;
+  return prv;
 }
 
 int PyOFXRGBAParameterDescriptor_SetDefault(PyObject *self, PyObject *val, void*)
@@ -71,30 +73,17 @@ int PyOFXRGBAParameterDescriptor_SetDefault(PyObject *self, PyObject *val, void*
     return -1;
   }
   
-  if (!PyTuple_Check(val))
+  if (!PyObject_TypeCheck(val, &PyOFXRGBAColourDType))
   {
-    PyErr_SetString(PyExc_TypeError, "Expected a tuple");
-    return -1;
+    PyErr_SetString(PyExc_TypeError, "Expected a ofx.RGBAColourD object");
+    return NULL;
   }
-  
-  if (PyTuple_Size(val) != 4)
-  {
-    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 4 values");
-    return -1;
-  }
-  
-  ofx::RGBAColour<double> v;
-  
-  v.r = PyFloat_AsDouble(PyTuple_GetItem(val, 0));
-  v.g = PyFloat_AsDouble(PyTuple_GetItem(val, 1));
-  v.b = PyFloat_AsDouble(PyTuple_GetItem(val, 2));
-  v.a = PyFloat_AsDouble(PyTuple_GetItem(val, 3));
   
   ofx::RGBAParameterDescriptor *desc = (ofx::RGBAParameterDescriptor*) pdesc->desc;
   
   bool failed = false;
   
-  CATCH({desc->defaultValue(v);}, failed);
+  CATCH({desc->defaultValue(((PyOFXRGBAColourD*)val)->colour);}, failed);
   
   if (failed)
   {
@@ -142,7 +131,9 @@ PyObject* PyOFXRGBAParameter_GetDefault(PyObject *self, void*)
     return NULL;
   }
   
-  return Py_BuildValue("dddd", rv.r, rv.g, rv.b, rv.a);
+  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
+  ((PyOFXRGBAColourD*)prv)->colour = rv;
+  return prv;
 }
 
 static PyGetSetDef PyOFXRGBAParameter_GetSeters[] =
@@ -174,7 +165,9 @@ PyObject* PyOFXRGBAParameter_GetValue(PyObject *self, PyObject *)
     return false;
   }
   
-  return Py_BuildValue("dddd", rv.r, rv.g, rv.b, rv.a);
+  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
+  ((PyOFXRGBAColourD*)prv)->colour = rv;
+  return prv;
 }
 
 PyObject* PyOFXRGBAParameter_GetValueAtTime(PyObject *self, PyObject *args)
@@ -207,7 +200,9 @@ PyObject* PyOFXRGBAParameter_GetValueAtTime(PyObject *self, PyObject *args)
     return false;
   }
   
-  return Py_BuildValue("dddd", rv.r, rv.g, rv.b, rv.a);
+  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
+  ((PyOFXRGBAColourD*)prv)->colour = rv;
+  return prv;
 }
 
 PyObject* PyOFXRGBAParameter_SetValue(PyObject *self, PyObject *args)
@@ -227,30 +222,17 @@ PyObject* PyOFXRGBAParameter_SetValue(PyObject *self, PyObject *args)
     return NULL;
   }
   
-  if (!PyTuple_Check(val))
+  if (!PyObject_TypeCheck(val, &PyOFXRGBAColourDType))
   {
-    PyErr_SetString(PyExc_TypeError, "Expected a tuple");
+    PyErr_SetString(PyExc_TypeError, "Expected a ofx.RGBAColourD object");
     return NULL;
   }
-  
-  if (PyTuple_Size(val) != 4)
-  {
-    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 4 values");
-    return NULL;
-  }
-  
-  ofx::RGBAColour<double> v;
-  
-  v.r = PyFloat_AsDouble(PyTuple_GetItem(val, 0));
-  v.g = PyFloat_AsDouble(PyTuple_GetItem(val, 1));
-  v.b = PyFloat_AsDouble(PyTuple_GetItem(val, 2));
-  v.a = PyFloat_AsDouble(PyTuple_GetItem(val, 3));
   
   ofx::RGBAParameter *param = (ofx::RGBAParameter*) pparam->param;
   
   bool failed = false;
   
-  CATCH({param->setValue(v);}, failed);
+  CATCH({param->setValue(((PyOFXRGBAColourD*)val)->colour);}, failed);
   
   if (failed)
   {
@@ -278,30 +260,17 @@ PyObject* PyOFXRGBAParameter_SetValueAtTime(PyObject *self, PyObject *args)
     return NULL;
   }
   
-  if (!PyTuple_Check(val))
+  if (!PyObject_TypeCheck(val, &PyOFXRGBAColourDType))
   {
-    PyErr_SetString(PyExc_TypeError, "Expected a tuple");
+    PyErr_SetString(PyExc_TypeError, "Expected a ofx.RGBAColourD object");
     return NULL;
   }
-  
-  if (PyTuple_Size(val) != 4)
-  {
-    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 4 values");
-    return NULL;
-  }
-  
-  ofx::RGBAColour<double> v;
-  
-  v.r = PyFloat_AsDouble(PyTuple_GetItem(val, 0));
-  v.g = PyFloat_AsDouble(PyTuple_GetItem(val, 1));
-  v.b = PyFloat_AsDouble(PyTuple_GetItem(val, 2));
-  v.a = PyFloat_AsDouble(PyTuple_GetItem(val, 3));
   
   ofx::RGBAParameter *param = (ofx::RGBAParameter*) pparam->param;
   
   bool failed = false;
   
-  CATCH({param->setValueAtTime(t, v);}, failed);
+  CATCH({param->setValueAtTime(t, ((PyOFXRGBAColourD*)val)->colour);}, failed);
   
   if (failed)
   {
@@ -341,7 +310,9 @@ PyObject* PyOFXRGBAParameter_GetIntegral(PyObject *self, PyObject *args)
     return false;
   }
   
-  return Py_BuildValue("dddd", rv.r, rv.g, rv.b, rv.a);
+  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
+  ((PyOFXRGBAColourD*)prv)->colour = rv;
+  return prv;
 }
 
 PyObject* PyOFXRGBAParameter_GetDerivative(PyObject *self, PyObject *args)
@@ -374,7 +345,9 @@ PyObject* PyOFXRGBAParameter_GetDerivative(PyObject *self, PyObject *args)
     return false;
   }
   
-  return Py_BuildValue("dddd", rv.r, rv.g, rv.b, rv.a);
+  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
+  ((PyOFXRGBAColourD*)prv)->colour = rv;
+  return prv;
 }
 
 static PyMethodDef PyOFXRGBAParameter_Methods[] =

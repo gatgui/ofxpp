@@ -605,8 +605,10 @@ OfxStatus PyImageEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &arg
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
+      oarg = PyObject_CallObject((PyObject*)&PyOFXRectDType, NULL);
       aname = PyString_FromString("RoD");
-      PyObject_SetAttr(oargs, aname, Py_None);
+      PyObject_SetAttr(oargs, aname, oarg);
+      Py_DECREF(oarg);
       Py_DECREF(aname);
       
       PyObject *pyargs = Py_BuildValue("(O)", oargs);
@@ -634,12 +636,9 @@ OfxStatus PyImageEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &arg
           {
             PyObject *rod = PyObject_GetAttrString(oargs, "RoD");
             
-            if (rod && PyTuple_Check(rod) && PyTuple_Size(rod) == 4)
+            if (rod && PyObject_TypeCheck(rod, &PyOFXRectDType))
             {
-              args.RoD.x1 = PyFloat_AsDouble(PyTuple_GetItem(rod, 0));
-              args.RoD.y1 = PyFloat_AsDouble(PyTuple_GetItem(rod, 1));
-              args.RoD.x2 = PyFloat_AsDouble(PyTuple_GetItem(rod, 2));
-              args.RoD.y2 = PyFloat_AsDouble(PyTuple_GetItem(rod, 3));
+              args.RoD = ((PyOFXRectD*)rod)->rect;
             }
             else
             {
@@ -703,11 +702,8 @@ OfxStatus PyImageEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
-      oarg = PyTuple_New(4);
-      PyTuple_SetItem(oarg, 0, PyFloat_FromDouble(args.outRoI.x1));
-      PyTuple_SetItem(oarg, 1, PyFloat_FromDouble(args.outRoI.y1));
-      PyTuple_SetItem(oarg, 2, PyFloat_FromDouble(args.outRoI.x2));
-      PyTuple_SetItem(oarg, 3, PyFloat_FromDouble(args.outRoI.y2));
+      oarg = PyObject_CallObject((PyObject*)&PyOFXRectDType, NULL);
+      ((PyOFXRectD*)oarg)->rect = args.outRoI;
       aname = PyString_FromString("outRoI");
       PyObject_SetAttr(oargs, aname, Py_None);
       Py_DECREF(oarg);
@@ -748,24 +744,16 @@ OfxStatus PyImageEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args
             {
               Py_ssize_t idx = 0;
               PyObject *key = 0, *val = 0;
-              ofx::Rect<double> RoI;
               char *name = 0;
               
               while (PyDict_Next(inRoIs, &idx, &key, &val))
               {
-                if (!PyString_Check(key) || !PyTuple_Check(val) || PyTuple_Size(val) != 4)
+                if (!PyString_Check(key) || !PyObject_TypeCheck(val, &PyOFXRectDType))
                 {
                   continue;
                 }
                 
-                name = PyString_AsString(key);
-                
-                RoI.x1 = PyFloat_AsDouble(PyTuple_GetItem(val, 0));
-                RoI.y1 = PyFloat_AsDouble(PyTuple_GetItem(val, 1));
-                RoI.x2 = PyFloat_AsDouble(PyTuple_GetItem(val, 2));
-                RoI.y2 = PyFloat_AsDouble(PyTuple_GetItem(val, 3));
-                
-                args.inRoIs[name] = RoI;
+                args.setInputRoI(name, ((PyOFXRectD*)val)->rect);
               }
             }
             else
@@ -854,12 +842,13 @@ OfxStatus PyImageEffect::getFramesNeeded(ofx::ImageEffect::GetFramesNeededArgs &
               Py_ssize_t idx = 0;
               PyObject *key = 0, *val = 0, *range = 0;
               char *name = 0;
-              ofx::FrameRange frange;
+              //ofx::FrameRange frange;
               
               while (PyDict_Next(inRanges, &idx, &key, &val))
               {
                 if (!PyString_Check(key) || !PyList_Check(val))
                 {
+                  // ignore silently or raise an error?
                   continue;
                 }
                 
@@ -869,13 +858,12 @@ OfxStatus PyImageEffect::getFramesNeeded(ofx::ImageEffect::GetFramesNeededArgs &
                 for (Py_ssize_t i=0; i<n; ++i)
                 {
                   range = PyList_GetItem(val, i);
-                  if (!PyTuple_Check(range) || PyTuple_Size(range) != 2)
+                  if (!PyObject_TypeCheck(range, &PyOFXRangeDType))
                   {
+                    // ignore silently or raise an error?
                     continue;
                   }
-                  frange.min = PyFloat_AsDouble(PyTuple_GetItem(range, 0));
-                  frange.max = PyFloat_AsDouble(PyTuple_GetItem(range, 1));
-                  args.inRanges[name].push_back(frange);
+                  args.addInputRange(name, ((PyOFXRangeD*)range)->range);
                 }
               }
             }
@@ -947,11 +935,8 @@ OfxStatus PyImageEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args)
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
-      oarg = PyTuple_New(4);
-      PyTuple_SetItem(oarg, 0, PyInt_FromLong(args.renderWindow.x1));
-      PyTuple_SetItem(oarg, 1, PyInt_FromLong(args.renderWindow.y1));
-      PyTuple_SetItem(oarg, 2, PyInt_FromLong(args.renderWindow.x2));
-      PyTuple_SetItem(oarg, 3, PyInt_FromLong(args.renderWindow.y2));
+      oarg = PyObject_CallObject((PyObject*)&PyOFXRectIType, NULL);
+      ((PyOFXRectI*)oarg)->rect = args.renderWindow;
       aname = PyString_FromString("renderWindow");
       PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
@@ -1086,11 +1071,8 @@ OfxStatus PyImageEffect::render(ofx::ImageEffect::RenderArgs &args)
       Py_DECREF(oarg);
       Py_DECREF(aname);
       
-      oarg = PyTuple_New(4);
-      PyTuple_SetItem(oarg, 0, PyInt_FromLong(args.renderWindow.x1));
-      PyTuple_SetItem(oarg, 1, PyInt_FromLong(args.renderWindow.y1));
-      PyTuple_SetItem(oarg, 2, PyInt_FromLong(args.renderWindow.x2));
-      PyTuple_SetItem(oarg, 3, PyInt_FromLong(args.renderWindow.y2));
+      oarg = PyObject_CallObject((PyObject*)&PyOFXRectIType, NULL);
+      ((PyOFXRectI*)oarg)->rect = args.renderWindow;
       aname = PyString_FromString("renderWindow");
       PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(oarg);
@@ -3897,26 +3879,103 @@ PyObject* PyOFXImageEffect_Lock(PyObject *self, PyObject *args)
     return NULL;
   }
   
-  PyObject *rv = PyObject_CallObject((PyObject*)&PyOFXPixelAddressType, NULL);
-  
-  static int compSize[] = {1, 2, 4};
+  PyObject *rv = Py_None;
+    
+  switch (hdl->components)
+  {
+  case ofx::ImageComponentAlpha:
+    switch (hdl->pixelDepth)
+    {
+    case ofx::BitDepthByte:
+      rv = PyObject_CallObject((PyObject*)&PyOFXAColourBAddressType, NULL);
+      break;
+    case ofx::BitDepthShort:
+      rv = PyObject_CallObject((PyObject*)&PyOFXAColourSAddressType, NULL);
+      break;
+    case ofx::BitDepthFloat:
+      rv = PyObject_CallObject((PyObject*)&PyOFXAColourFAddressType, NULL);
+      break;
+    default:
+      break;
+    }
+    break;
+  case ofx::ImageComponentRGBA:
+    switch (hdl->pixelDepth)
+    {
+    case ofx::BitDepthByte:
+      rv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourBAddressType, NULL);
+      break;
+    case ofx::BitDepthShort:
+      rv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourSAddressType, NULL);
+      break;
+    case ofx::BitDepthFloat:
+      rv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourFAddressType, NULL);
+      break;
+    default:
+      break;
+    }
+    break;
+  case ofx::ImageComponentYUVA:
+    switch (hdl->pixelDepth)
+    {
+    case ofx::BitDepthByte:
+      rv = PyObject_CallObject((PyObject*)&PyOFXYUVAColourBAddressType, NULL);
+      break;
+    case ofx::BitDepthShort:
+      rv = PyObject_CallObject((PyObject*)&PyOFXYUVAColourSAddressType, NULL);
+      break;
+    case ofx::BitDepthFloat:
+      rv = PyObject_CallObject((PyObject*)&PyOFXYUVAColourFAddressType, NULL);
+      break;
+    default:
+      break;
+    }
+    break;
 #ifdef OFX_API_1_2
-  static int compCount[] = {3, 4, 1, 4};
-#else
-  static int compCount[] = {4, 1, 4};
+  case ofx::ImageComponentRGB:
+    switch (hdl->pixelDepth)
+    {
+    case ofx::BitDepthByte:
+      rv = PyObject_CallObject((PyObject*)&PyOFXRGBColourBAddressType, NULL);
+      break;
+    case ofx::BitDepthShort:
+      rv = PyObject_CallObject((PyObject*)&PyOFXRGBColourSAddressType, NULL);
+      break;
+    case ofx::BitDepthFloat:
+      rv = PyObject_CallObject((PyObject*)&PyOFXRGBColourFAddressType, NULL);
+      break;
+    default:
+      break;
+    }
+    break;
 #endif
+  default:
+    break;
+  }
   
-  PyOFXPixelAddress *padd = (PyOFXPixelAddress*)rv;
-  padd->ptr = ptr;
-  padd->base = ptr;
-  padd->bounds.x1 = 0;
-  padd->bounds.y1 = 0;
-  padd->bounds.x2 = hdl->w;
-  padd->bounds.y2 = hdl->h;
-  padd->components = hdl->components;
-  padd->pixelDepth = hdl->pixelDepth;
-  padd->pixelBytes = compSize[padd->pixelDepth] * compCount[padd->components];
-  padd->rowBytes = hdl->w * padd->pixelBytes;
+  if (rv != Py_None)
+  {
+    static int compSize[] = {0, 1, 2, 4};
+#ifdef OFX_API_1_2
+    static int compCount[] = {0, 3, 4, 1, 4};
+#else
+    static int compCount[] = {0, 4, 1, 4};
+#endif
+    
+    PyOFXColourAddress *caddr = (PyOFXColourAddress*) rv;
+    caddr->ptr = ptr;
+    caddr->base = ptr;
+    caddr->bounds.x1 = 0;
+    caddr->bounds.y1 = 0;
+    caddr->bounds.x2 = hdl->w;
+    caddr->bounds.y2 = hdl->h;
+    caddr->pixelBytes = compSize[hdl->pixelDepth] * compCount[hdl->components];
+    caddr->rowBytes = hdl->w * caddr->pixelBytes;
+  }
+  else
+  {
+    Py_INCREF(rv);
+  }
   
   return rv;
 }

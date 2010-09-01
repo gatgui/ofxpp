@@ -230,9 +230,11 @@ double Clip::frameRate() {
   return mProps.getDouble(kOfxImageEffectPropFrameRate, 0);
 }
 
-void Clip::frameRange(double *from, double *to) {
-  *from = mProps.getDouble(kOfxImageEffectPropFrameRange, 0);
-  *to = mProps.getDouble(kOfxImageEffectPropFrameRange, 1);
+ofx::FrameRange Clip::frameRange() {
+  ofx::FrameRange range;
+  range.min = mProps.getDouble(kOfxImageEffectPropFrameRange, 0);
+  range.max = mProps.getDouble(kOfxImageEffectPropFrameRange, 1);
+  return range;
 }
 
 ImageFieldOrder Clip::fieldOrder() {
@@ -243,9 +245,11 @@ bool Clip::connected() {
   return (mProps.getInt(kOfxImageClipPropConnected, 0) == 1);
 }
 
-void Clip::unmappedFrameRange(double *from, double *to) {
-  *from = mProps.getDouble(kOfxImageEffectPropUnmappedFrameRange, 0);
-  *to = mProps.getDouble(kOfxImageEffectPropUnmappedFrameRange, 1);
+ofx::FrameRange Clip::unmappedFrameRange() {
+  ofx::FrameRange range;
+  range.min  = mProps.getDouble(kOfxImageEffectPropUnmappedFrameRange, 0);
+  range.max = mProps.getDouble(kOfxImageEffectPropUnmappedFrameRange, 1);
+  return range;
 }
 
 double Clip::unmappedFrameRate() {

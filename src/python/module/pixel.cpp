@@ -2870,6 +2870,7 @@ bool PyOFX_InitPixel(PyObject *mod)
   PyOFXAColourBAddressType.tp_base = &PyOFXColourAddressType;
   PyOFXAColourBAddressType.tp_flags = Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE;
   PyOFXAColourBAddressType.tp_init = PyOFXAColourBAddress_Init;
+  PyOFXAColourBAddressType.tp_getset = PyOFXAColourBAddress_GetSeters;
   if (PyType_Ready(&PyOFXAColourBAddressType) < 0)
   {
     return false;
@@ -2879,6 +2880,7 @@ bool PyOFX_InitPixel(PyObject *mod)
   PyOFXAColourSAddressType.tp_base = &PyOFXColourAddressType;
   PyOFXAColourSAddressType.tp_flags = Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE;
   PyOFXAColourSAddressType.tp_init = PyOFXAColourSAddress_Init;
+  PyOFXAColourSAddressType.tp_getset = PyOFXAColourSAddress_GetSeters;
   if (PyType_Ready(&PyOFXAColourSAddressType) < 0)
   {
     return false;
@@ -2888,6 +2890,7 @@ bool PyOFX_InitPixel(PyObject *mod)
   PyOFXAColourFAddressType.tp_base = &PyOFXColourAddressType;
   PyOFXAColourFAddressType.tp_flags = Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE;
   PyOFXAColourFAddressType.tp_init = PyOFXAColourFAddress_Init;
+  PyOFXAColourFAddressType.tp_getset = PyOFXAColourFAddress_GetSeters;
   if (PyType_Ready(&PyOFXAColourFAddressType) < 0)
   {
     return false;

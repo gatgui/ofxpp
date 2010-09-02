@@ -1,3 +1,6 @@
 
-ofxpp: A C++ wrapper for the OpenFX API and its python binding.
+ofxpp:
+  A C++ wrapper for the OpenFX API.
+  A python binding for the OpenFX API.
+  An OpenFX plugin that can load plugins written in python.
 

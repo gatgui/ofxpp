@@ -135,7 +135,6 @@ OfxStatus PyOFX_Main(const char *action,
                      OfxPropertySetHandle hInArgs,
                      OfxPropertySetHandle hOutArgs)
 {
-  // not in Unload...
   PyOFX_AcquireGIL
   
   PyImageEffectPlugin *plugin = gEffectPlugins[IDX];
@@ -559,12 +558,13 @@ OfxStatus PyOFX_InteractMain(const char *action,
         {
           PyOFXException *pexc = (PyOFXException*) err;
           rv = (OfxStatus) PyInt_AsLong(pexc->status);
+          PyErr_Clear();
         }
         else
         {
           rv = kOfxStatErrFatal;
+          LogPythonError();
         }
-        PyErr_Clear();
       }
       else
       {
@@ -607,12 +607,13 @@ OfxStatus PyOFX_InteractMain(const char *action,
         {
           PyOFXException *pexc = (PyOFXException*) err;
           rv = (OfxStatus) PyInt_AsLong(pexc->status);
+          PyErr_Clear();
         }
         else
         {
           rv = kOfxStatErrFatal;
+          LogPythonError();
         }
-        PyErr_Clear();
       }
       else
       {

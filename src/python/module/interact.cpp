@@ -140,11 +140,9 @@ OfxStatus PyInteract::draw(ofx::Interact::DrawArgs &args)
       PyObject *aname;
       
       // base args
-      oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
-      ((PyOFXImageEffect*)oarg)->effect = args.effect;
+      oarg = ((PyImageEffect*)args.effect)->self();
       aname = PyString_FromString("effect");
       PyObject_SetAttr(oargs, aname, oarg);
-      Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
@@ -243,11 +241,9 @@ OfxStatus PyInteract::penMotion(ofx::Interact::PenArgs &args)
       PyObject *aname;
       
       // base args
-      oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
-      ((PyOFXImageEffect*)oarg)->effect = args.effect;
+      oarg = ((PyImageEffect*)args.effect)->self();
       aname = PyString_FromString("effect");
       PyObject_SetAttr(oargs, aname, oarg);
-      Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
@@ -379,11 +375,9 @@ OfxStatus PyInteract::penDown(ofx::Interact::PenArgs &args)
       PyObject *aname;
       
       // base args
-      oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
-      ((PyOFXImageEffect*)oarg)->effect = args.effect;
+      oarg = ((PyImageEffect*)args.effect)->self();
       aname = PyString_FromString("effect");
       PyObject_SetAttr(oargs, aname, oarg);
-      Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
@@ -515,11 +509,9 @@ OfxStatus PyInteract::penUp(ofx::Interact::PenArgs &args)
       PyObject *aname;
       
       // base args
-      oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
-      ((PyOFXImageEffect*)oarg)->effect = args.effect;
+      oarg = ((PyImageEffect*)args.effect)->self();
       aname = PyString_FromString("effect");
       PyObject_SetAttr(oargs, aname, oarg);
-      Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
@@ -651,11 +643,9 @@ OfxStatus PyInteract::keyDown(ofx::Interact::KeyArgs &args)
       PyObject *aname;
       
       // base args
-      oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
-      ((PyOFXImageEffect*)oarg)->effect = args.effect;
+      oarg = ((PyImageEffect*)args.effect)->self();
       aname = PyString_FromString("effect");
       PyObject_SetAttr(oargs, aname, oarg);
-      Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
@@ -747,11 +737,9 @@ OfxStatus PyInteract::keyUp(ofx::Interact::KeyArgs &args)
       PyObject *aname;
       
       // base args
-      oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
-      ((PyOFXImageEffect*)oarg)->effect = args.effect;
+      oarg = ((PyImageEffect*)args.effect)->self();
       aname = PyString_FromString("effect");
       PyObject_SetAttr(oargs, aname, oarg);
-      Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
@@ -843,11 +831,9 @@ OfxStatus PyInteract::keyRepeat(ofx::Interact::KeyArgs &args)
       PyObject *aname;
       
       // base args
-      oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
-      ((PyOFXImageEffect*)oarg)->effect = args.effect;
+      oarg = ((PyImageEffect*)args.effect)->self();
       aname = PyString_FromString("effect");
       PyObject_SetAttr(oargs, aname, oarg);
-      Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
@@ -939,11 +925,9 @@ OfxStatus PyInteract::gainFocus(ofx::Interact::FocusArgs &args)
       PyObject *aname;
       
       // base args
-      oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
-      ((PyOFXImageEffect*)oarg)->effect = args.effect;
+      oarg = ((PyImageEffect*)args.effect)->self();
       aname = PyString_FromString("effect");
       PyObject_SetAttr(oargs, aname, oarg);
-      Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);
@@ -1042,11 +1026,9 @@ OfxStatus PyInteract::loseFocus(ofx::Interact::FocusArgs &args)
       PyObject *aname;
       
       // base args
-      oarg = PyObject_CallObject((PyObject*)&PyOFXImageEffectType, NULL);
-      ((PyOFXImageEffect*)oarg)->effect = args.effect;
+      oarg = ((PyImageEffect*)args.effect)->self();
       aname = PyString_FromString("effect");
       PyObject_SetAttr(oargs, aname, oarg);
-      Py_DECREF(oarg);
       Py_DECREF(aname);
       
       oarg = PyFloat_FromDouble(args.renderScaleX);

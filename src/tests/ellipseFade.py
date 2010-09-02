@@ -39,21 +39,21 @@ try:
     
     def __init__(self, host, handle):
       ofx.Interact.__init__(self, host, handle)
-      self.dragOp = DO_NONE
+      self.dragOp = Interact.DO_NONE
       self.widthSelected = False
       self.heightSelected = False
       self.centerSelected = False
       self.lastX = -1
       self.lastY = -1
-      self.hostApp = HA_GENERIC
-      if self.host.name == "uk.co.thefoundry.nuke":
-        self.hostApp = HA_NUKE
-      elif self.host.name == "Ramen":
-        self.hostApp = HA_RAMEN
-      elif self.host.name == "Autodesk Toxik":
-        self.hostApp = HA_TOXIK
-      elif self.host.name == "com.eyeonline.Fusion":
-        self.hostApp = HA_FUSION
+      self.hostApp = Interact.HA_GENERIC
+      if host.name == "uk.co.thefoundry.nuke":
+        self.hostApp = Interact.HA_NUKE
+      elif host.name == "Ramen":
+        self.hostApp = Interact.HA_RAMEN
+      elif host.name == "Autodesk Toxik":
+        self.hostApp = Interact.HA_TOXIK
+      elif host.name == "com.eyeonline.Fusion":
+        self.hostApp = Interact.HA_FUSION
       self.slaveToParam(0, "center")
       self.slaveToParam(1, "width")
       self.slaveToParam(2, "height")
@@ -146,9 +146,9 @@ try:
         cecy += dy
         ecx, ecy = ofx.CanonicalToNormalisedCoords(cecx, cecy, wext, hext, xoff, yoff, True)
         if args.effect.center.autoKeying:
-          args.effect.center.setValueAtTime(args.time, ecx, ecy)
+          args.effect.center.setValueAtTime(args.time, (ecx, ecy))
         else:
-          args.effect.center.setValue(ecy, ecy)
+          args.effect.center.setValue((ecx, ecy))
       
       elif self.dragOp == Interact.DO_WIDTH:
         dx = args.x - self.lastX
@@ -200,7 +200,7 @@ try:
           self.dragOp = Interact.DO_CENTER
         elif args.y >= cecy+ceh-bh and args.y <= cecy+ceh+bh:
           self.dragOp = Interact.DO_HEIGHT
-      elif args.x >= cecx+cew-bw and args.x <= cecy+cew+bw and args.y >= cecy-bh and args.y <= cecy+bh:
+      elif args.x >= cecx+cew-bw and args.x <= cecx+cew+bw and args.y >= cecy-bh and args.y <= cecy+bh:
         self.dragOp = Interact.DO_WIDTH
       
       self.lastX = args.x

@@ -44,14 +44,10 @@ namespace ofx {
       
       // properties
       
-      /** Get default value.
-       *  \return Default value.
-       */
+      //! Get default value.
       bool defaultValue();
       
-      /** Set default value.
-       *  \param[in] v Default value.
-       */
+      //! Set default value.
       void defaultValue(bool v);
   };
   
@@ -67,33 +63,21 @@ namespace ofx {
       
       // properties
       
-      /** Get default value.
-       *  \return Default value.
-       */
+      //! Get default value.
       bool defaultValue();
       
       // suite
       
-      /** Get current value.
-       *  \return Current value.
-       */
+      //! Get current value.
       bool getValue() throw(Exception);
       
-      /** Get value at given time.
-       *  \param[in] t Time to get value at.
-       *  \return Value at given time.
-       */
+      //! Get value at given time.
       bool getValueAtTime(Time t) throw(Exception);
       
-      /** Set current value.
-       *  \param v Value.
-       */
+      //! Set current value.
       void setValue(bool v) throw(Exception);
       
-      /** Set value at given time.
-       *  \param t Time to set value at.
-       *  \param v Value.
-       */
+      //! Set value at given time.
       void setValueAtTime(Time t, bool v) throw(Exception);
   };
   

@@ -139,7 +139,7 @@ namespace ofx {
   
   //! Field temporal order enumeration.
   enum ImageFieldOrder {
-    ImageFieldOrderNone = 0, //!< Undefined.
+    ImageFieldOrderNone = 0, //!< Unfielded.
     ImageFieldOrderLower, //!< Lower field occuring first in a frame.
     ImageFieldOrderUpper, //!< Upper field occuring first in a frame.
     MaxImageFieldOrder

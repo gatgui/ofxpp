@@ -44,19 +44,13 @@ namespace ofx {
       
       // properties
       
-      /** Get default value.
-       *  \return Default value.
-       */
+      //! Get default value.
       int defaultValue();
       
-      /** Set default value.
-       *  \param[in] v Default value.
-       */
+      //! Set default value.
       void defaultValue(int v);
       
-      /** Get number of available choice options.
-       *  \return Number of options.
-       */
+      //! Get number of available choice options.
       int choiceOptionCount();
       
       /** Add/Set choice option string.
@@ -84,14 +78,10 @@ namespace ofx {
       
       // properties
       
-      /** Get default value.
-       *  \return Default value.
-       */
+      //! Get default value.
       int defaultValue();
       
-      /** Get number of available choice options.
-       *  \return Number of options.
-       */
+      //! Get number of available choice options.
       int choiceOptionCount();
       
       /** Add/Set choice option string.
@@ -108,26 +98,16 @@ namespace ofx {
       
       // suite
       
-      /** Get current value.
-       *  \return Current value.
-       */
+      //! Get current value.
       int getValue() throw(Exception);
       
-      /** Get value at time.
-       *  \param[in] t Time to get value at.
-       *  \return Value at time.
-       */
+      //! Get value at given time.
       int getValueAtTime(Time t) throw(Exception);
       
-      /** Set current value.
-       *  \param[in] v Value.
-       */
+      //! Set current value.
       void setValue(int v) throw(Exception);
       
-      /** Set value at time.
-       *  \param[in] t Time to set value at.
-       *  \param[in] v Value.
-       */
+      //! Set value at given time.
       void setValueAtTime(Time t, int v) throw(Exception);
   };
   

@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file message.h
+ *  Message suite wrapper.
+ */
+
 #ifndef __ofx_message_h__
 #define __ofx_message_h__
 
@@ -34,14 +38,23 @@ namespace ofx {
   
   class Host;
   
+  //! Message suite wrapper class.
   class MessageSuite {
     public:
       
       MessageSuite(Host *h) throw(Exception);
       ~MessageSuite();
       
+      /** Send a transient message to the host.
+       *  \param recv Object to associate with the message.\n
+       *              Must be a class having a "handle" method.
+       *  \param type The message type.
+       *  \param id ID to associate with the message or NULL.
+       *  \param format Format string.
+       *  \return true or false for MessageTypeQuestion, true for any other type.
+       */
       template <class Receiver>
-      void message(Receiver *recv,
+      bool message(Receiver *recv,
                    MessageType type,
                    const char *id,
                    const char *format, ...) throw(Exception) {
@@ -54,12 +67,25 @@ namespace ofx {
         
         OfxStatus stat = mSuite->message(recv->handle(), MessageTypeToString(type), id, buffer);  
         
-        if (stat != kOfxStatOK) {
+        if (stat == kOfxStatReplyYes) {
+          return true;
+        } else if (stat == kOfxStatReplyNo) {
+          return false;
+        } else if (stat != kOfxStatOK) {
           throw Exception(stat, "ofx::Message::message");
         }
+        return true;
       }
       
 #ifdef OFX_API_1_2
+      /** Set a persistent message.
+       *  \param recv Object to associate with the message.\n
+       *              Must be a class having a "handle" method.
+       *  \param type The message type.
+       *  \param id ID to associate with the message or NULL.
+       *  \param format Format string.
+       *  \note OpenFX API version must be at least 1.2
+       */
       template <class Receiver>
       void setPersistentMessage(Receiver *recv,
                                 MessageType type,
@@ -86,6 +112,11 @@ namespace ofx {
         }
       }
       
+      /** Clear persistent message.
+       *  \param recv Object to remove the persistent message for.\n
+       *              Must be a class having a "handle" method.
+       *  \note OpenFX API version must be at least 1.2
+       */
       template <class Receiver>
       void clearPersistentMessage(Receiver *recv) {
         if (!mSuite2) {

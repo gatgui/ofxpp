@@ -297,6 +297,9 @@ namespace ofx {
     MessageTypeMessage, //!< Standard message.
     MessageTypeLog, //!< Log message.
     MessageTypeQuestion, //!< Question message.
+#ifdef OFX_API_1_2
+    MessageTypeWarning, //!< Warning message. (OFX >= 1.2)
+#endif
     MaxMessageType
   };
   

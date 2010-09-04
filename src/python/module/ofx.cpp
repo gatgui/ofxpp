@@ -835,6 +835,9 @@ PyMODINIT_FUNC initofx(void)
   PyModule_AddIntConstant(mod, "MessageTypeMessage", ofx::MessageTypeMessage);
   PyModule_AddIntConstant(mod, "MessageTypeLog", ofx::MessageTypeLog);
   PyModule_AddIntConstant(mod, "MessageTypeQuestion", ofx::MessageTypeQuestion);
+#ifdef OFX_API_1_2
+  PyModule_AddIntConstant(mod, "MessageTypeWarning", ofx::MessageTypeWarning);
+#endif
   
   PyModule_AddIntConstant(mod, "ChangeUserEdited", ofx::ChangeUserEdited);
   PyModule_AddIntConstant(mod, "ChangePluginEdited", ofx::ChangePluginEdited);

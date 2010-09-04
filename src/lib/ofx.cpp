@@ -220,6 +220,9 @@ BEGIN_ENUM_MAP(MessageType)
   ADD_ENUM_MAPPING_CUSTOM(MessageType, MessageTypeMessage, kOfxMessageMessage)
   ADD_ENUM_MAPPING_CUSTOM(MessageType, MessageTypeLog, kOfxMessageLog)
   ADD_ENUM_MAPPING_CUSTOM(MessageType, MessageTypeQuestion, kOfxMessageQuestion)
+#ifdef OFX_API_1_2
+  ADD_ENUM_MAPPING_CUSTOM(MessageType, MessageTypeWarning, kOfxMessageWarning)
+#endif
 END_ENUM_MAP(MessageType)
 
 

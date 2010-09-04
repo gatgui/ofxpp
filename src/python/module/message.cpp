@@ -66,15 +66,23 @@ static PyObject* PyOFXMessageSuite_Message(PyObject *self, PyObject *args)
   
   bool failed = false;
   
-  CATCH({psuite->suite->message(&rcv, ofx::MessageType(mtype), id, msg);}, failed);
+  bool rv = false;
+  
+  CATCH({rv = psuite->suite->message(&rcv, ofx::MessageType(mtype), id, msg);}, failed);
   
   if (failed)
   {
     return NULL;
   }
   
-  Py_INCREF(Py_None);
-  return Py_None;
+  if (rv)
+  {
+    Py_RETURN_TRUE;
+  }
+  else
+  {
+    Py_RETURN_FALSE;
+  }
 }
 
 #ifdef OFX_API_1_2

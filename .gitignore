@@ -1,6 +1,7 @@
 .sconsign.dblite
 release
 debug
+html
 .DS_Store
 *.log
 *.pyc

@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file booleanparameter.h
+ *  Boolean parameter descriptor and instance classes.
+ */
+
 #ifndef __ofx_parameter_boolean_h__
 #define __ofx_parameter_boolean_h__
 
@@ -28,6 +32,7 @@ USA.
 
 namespace ofx {
   
+  //! Boolean parameter descriptor class.
   class BooleanParameterDescriptor : public ValueParameterDescriptor {
     public:
       BooleanParameterDescriptor();
@@ -39,10 +44,18 @@ namespace ofx {
       
       // properties
       
+      /** Get default value.
+       *  \return Default value.
+       */
       bool defaultValue();
+      
+      /** Set default value.
+       *  \param[in] v Default value.
+       */
       void defaultValue(bool v);
   };
   
+  //! Boolean parameter instance class.
   class BooleanParameter : public ValueParameter {
     public:
       BooleanParameter();
@@ -54,14 +67,33 @@ namespace ofx {
       
       // properties
       
+      /** Get default value.
+       *  \return Default value.
+       */
       bool defaultValue();
       
       // suite
       
+      /** Get current value.
+       *  \return Current value.
+       */
       bool getValue() throw(Exception);
+      
+      /** Get value at given time.
+       *  \param[in] t Time to get value at.
+       *  \return Value at given time.
+       */
       bool getValueAtTime(Time t) throw(Exception);
       
+      /** Set current value.
+       *  \param v Value.
+       */
       void setValue(bool v) throw(Exception);
+      
+      /** Set value at given time.
+       *  \param t Time to set value at.
+       *  \param v Value.
+       */
       void setValueAtTime(Time t, bool v) throw(Exception);
   };
   

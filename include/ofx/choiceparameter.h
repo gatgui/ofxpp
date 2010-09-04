@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file choiceparameter.h
+ *  Choice parameter descriptor and instance classes.
+ */
+
 #ifndef __ofx_parameter_choice_h__
 #define __ofx_parameter_choice_h__
 
@@ -28,6 +32,7 @@ USA.
 
 namespace ofx {
   
+  //! Choice parameter descriptor class.
   class ChoiceParameterDescriptor : public ValueParameterDescriptor {
     public:
       ChoiceParameterDescriptor();
@@ -39,14 +44,35 @@ namespace ofx {
       
       // properties
       
+      /** Get default value.
+       *  \return Default value.
+       */
       int defaultValue();
-      void defaultValue(int);
       
+      /** Set default value.
+       *  \param[in] v Default value.
+       */
+      void defaultValue(int v);
+      
+      /** Get number of available choice options.
+       *  \return Number of options.
+       */
       int choiceOptionCount();
+      
+      /** Add/Set choice option string.
+       *  \param[in] i Choice index.
+       *  \param[in] str String to associate.
+       */
       void choiceOption(int i, const std::string &str);
+      
+      /** Get choice option string.
+       *  \param[in] i Choice index.
+       *  \return Associated string.
+       */
       std::string choiceOption(int i);
   };
   
+  //! Choice parameter instance class.
   class ChoiceParameter : public ValueParameter {
     public:
       ChoiceParameter();
@@ -58,18 +84,50 @@ namespace ofx {
       
       // properties
       
+      /** Get default value.
+       *  \return Default value.
+       */
       int defaultValue();
       
+      /** Get number of available choice options.
+       *  \return Number of options.
+       */
       int choiceOptionCount();
+      
+      /** Add/Set choice option string.
+       *  \param[in] i Choice index.
+       *  \param[in] str String to associate.
+       */
       void choiceOption(int i, const std::string &str);
+      
+      /** Get choice option string.
+       *  \param[in] i Choice index.
+       *  \return Associated string.
+       */
       std::string choiceOption(int i);
       
       // suite
       
+      /** Get current value.
+       *  \return Current value.
+       */
       int getValue() throw(Exception);
+      
+      /** Get value at time.
+       *  \param[in] t Time to get value at.
+       *  \return Value at time.
+       */
       int getValueAtTime(Time t) throw(Exception);
       
+      /** Set current value.
+       *  \param[in] v Value.
+       */
       void setValue(int v) throw(Exception);
+      
+      /** Set value at time.
+       *  \param[in] t Time to set value at.
+       *  \param[in] v Value.
+       */
       void setValueAtTime(Time t, int v) throw(Exception);
   };
   

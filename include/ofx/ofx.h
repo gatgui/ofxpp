@@ -131,9 +131,9 @@ namespace ofx {
   
   //! %Image field extraction enumeration.
   enum ImageFieldExtract {
-    ImageFieldExtractBoth = 0, //<! Extract both field.
-    ImageFieldExtractSingle, //<! Extract a single field. (half height image)
-    ImageFieldExtractDoubled, //<! Extract a single field but double each line. (full height image)
+    ImageFieldExtractBoth = 0, //!< Extract both field.
+    ImageFieldExtractSingle, //!< Extract a single field. (half height image)
+    ImageFieldExtractDoubled, //!< Extract a single field but double each line. (full height image)
     MaxImageFieldExtract
   };
   

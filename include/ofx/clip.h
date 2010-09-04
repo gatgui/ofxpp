@@ -34,7 +34,7 @@ USA.
 
 namespace ofx {
   
-  //! Clip descriptor class.
+  //! %Clip descriptor class.
   class ClipDescriptor {
     public:
       
@@ -87,7 +87,9 @@ namespace ofx {
       //! Set if clip is optional.
       void optional(bool);
       
+      //! Get image field extraction method.
       ImageFieldExtract fieldExtraction();
+      //! Set image field extraction method.
       void fieldExtraction(ImageFieldExtract f);
       
       //! Check if clip is used as a mask.
@@ -105,7 +107,7 @@ namespace ofx {
       PropertySet mProps;
   };
   
-  
+  //! %Clip instance class.
   class Clip {
     public:
       

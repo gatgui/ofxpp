@@ -84,13 +84,6 @@ CustomParameter& CustomParameter::operator=(const CustomParameter &rhs) {
   return *this;
 }
 
-std::string CustomParameter::interpolate(Time , const std::string &v0,
-                                         Time , const std::string &,
-                                         Time , double )
-{
-  return v0;
-}
-
 std::string CustomParameter::defaultValue() {
   return mProps.getString(kOfxParamPropDefault, 0);
 }

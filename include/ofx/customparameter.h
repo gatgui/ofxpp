@@ -21,17 +21,33 @@ USA.
 
 */
 
+/** \file customparameter.h
+ *  Custom parameter descriptor and instance classes.
+ */
+
 #ifndef __ofx_parameter_custom_h__
 #define __ofx_parameter_custom_h__
 
 #include <ofx/parameter.h>
 
+//! Native custom parameter interpolation callback prototype.
 typedef OfxStatus (*OfxInterpFunc)(OfxParamSetHandle instance,
                                    OfxPropertySetHandle inArgs,
                                    OfxPropertySetHandle outArgs);
 
 namespace ofx {
   
+  /** Custom parameter interpolation callback prototype.
+   *  \param[in] params %Parameter set the interpolated custom parameter originates from.
+   *  \param[in] paramName Name of the custom parameter being interpolated.
+   *  \param[in] t %Time to compute the interpolated value at.
+   *  \param[in] t0 %Time of the previous key frame.
+   *  \param[in] v0 Value of the previous key frame.
+   *  \param[in] t1 %Time of the next key frame.
+   *  \param[in] v1 Value of the next key frame.
+   *  \param[in] amount Interpolation amount in the range [0, 1].
+   *  \return Interpolated value.
+   */
   typedef std::string (*InterpFunc)(ParameterSet &params,
                                     const std::string &paramName,
                                     Time t,
@@ -41,6 +57,10 @@ namespace ofx {
                                     const std::string &v1,
                                     double amount);
   
+  /** Custom parameter interpolation callback wrapper.
+   *  Wherever an OfxInterpFunc is expected, you can use ofx::InterpFuncWrap<MyCustomInterpolator> instead.\n
+   *  MyCustomInterpolator must match the ofx::InterpFunc prototype.
+   */
   template <InterpFunc F>
   OfxStatus InterpFuncWrap(OfxParamSetHandle instance, OfxPropertySetHandle inArgs, OfxPropertySetHandle outArgs) {
     
@@ -74,6 +94,7 @@ namespace ofx {
     }
   }
   
+  //! Custom parameter descriptor class.
   class CustomParameterDescriptor : public ValueParameterDescriptor {
     public:
       CustomParameterDescriptor();
@@ -85,13 +106,18 @@ namespace ofx {
       
       // properties
       
+      //! Get default value.
       std::string defaultValue();
+      //! Set default value.
       void defaultValue(const std::string &v);
       
+      //! Set interpolation callback.
       void interpCallback(OfxInterpFunc func);
+      //! Get interpolation callback.
       OfxInterpFunc interpCallback();
   };
   
+  //! Custom parameter instance class.
   class CustomParameter : public ValueParameter {
     public:
       CustomParameter();
@@ -101,21 +127,23 @@ namespace ofx {
       
       CustomParameter& operator=(const CustomParameter &rhs);
       
-      virtual std::string interpolate(Time t0, const std::string &v0,
-                                      Time t1, const std::string &v1,
-                                      Time t, double amount);
-      
       // properties
       
+      //! Get default value.
       std::string defaultValue();
+      //! Set default value.
       OfxInterpFunc interpCallback();
       
       // suite
       
+      //! Get current value.
       std::string getValue() throw(Exception);
+      //! Get value at given time.
       std::string getValueAtTime(Time t) throw(Exception);
       
+      //! Set current value.
       void setValue(const std::string &v) throw(Exception);
+      //! Set value at given time.
       void setValueAtTime(Time t, const std::string &v) throw(Exception);
   };
   

@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file doubleparameter.h
+ *  Double parameter descriptor and instance classes.
+ */
+
 #ifndef __ofx_parameter_double_h__
 #define __ofx_parameter_double_h__
 
@@ -28,6 +32,7 @@ USA.
 
 namespace ofx {
   
+  //! Double parameter descriptor class.
   class DoubleParameterDescriptor : public ValueParameterDescriptor {
     public:
       DoubleParameterDescriptor();
@@ -39,39 +44,60 @@ namespace ofx {
       
       // properties
       
+      //! Get default value.
       double defaultValue();
+      //! Set default value.
       void defaultValue(double v);
       
+      //! Get minimum value.
       double min();
+      //! Set minimum value.
       void min(double min0);
       
+      //! Get maximum value.
       double max();
+      //! Set maximum value.
       void max(double max0);
       
+      //! Get displayed minimum value.
       double displayMin();
+      //! Set displayed minimum value.
       void displayMin(double min0);
       
+      //! Get displayed maximum value.
       double displayMax();
+      //! Set displayed maximum value.
       void displayMax(double max0);
       
+      //! Get value increment step.
       double increment();
+      //! Set value increment step.
       void increment(double i);
       
+      //! Get number of displayed digits.
       int digits();
+      //! Set number of displayed digits.
       void digits(int d);
       
+      //! Check if time marker should be shown for time types.
       bool showTimeMarker();
+      //! Set if time marker should be shown for time types.
       void showTimeMarker(bool);
       
+      //! Get value type.
       DoubleParamType doubleType();
+      //! Set value type.
       void doubleType(DoubleParamType t);
       
 #ifdef OFX_API_1_2
+      //! Get default coordinate system for spacial types.
       Coordinates defaultCoordinateSystem();
+      //! Set default coordinate system for spacial types.
       void defaultCoordinateSystem(Coordinates cs);
 #endif
   };
   
+  //! Double parameter instance class. 
   class DoubleParameter : public ValueParameter {
     public:
       DoubleParameter();
@@ -83,42 +109,65 @@ namespace ofx {
       
       // properties
       
+      //! Get default value.
       double defaultValue();
       
+      //! Get minimum value.
       double min();
+      //! Set minimum value.
       void min(double min0);
       
+      //! Get maximum value.
       double max();
+      //! Set maximum value.
       void max(double max0);
       
+      //! Get displayed minimum value.
       double displayMin();
+      //! Set displayed minimum value.
       void displayMin(double min0);
       
+      //! Get displayed maximum value.
       double displayMax();
+      //! Set displayed maximum value.
       void displayMax(double max0);
       
+      //! Get value increment step.
       double increment();
+      //! Set value increment step.
       void increment(double i);
       
+      //! Get number of displayed digits.
       int digits();
+      //! Set number of displayed digits.
       void digits(int d);
       
+      //! Check if time marker should be shown for time types.
       bool showTimeMarker();
+      //! Set if time marker should be shown for time types.
       void showTimeMarker(bool);
       
+      //! Get value type.
       DoubleParamType doubleType();
       
 #ifdef OFX_API_1_2
+      //! Get default coordinate system for spacial types.
       Coordinates defaultCoordinateSystem();
 #endif
       // suite
       
+      //! Get current value.
       double getValue() throw(Exception);
+      //! Get value at given time.
       double getValueAtTime(Time t) throw(Exception);
+      //! Get value derivative at given time.
       double getDerivative(Time t) throw(Exception);
+      //! Get value integral for a given range.
       double getIntegral(Time t0, Time t1) throw(Exception);
       
+      //! Set current value.
       void setValue(double v0) throw(Exception);
+      //! Set value at given time.
       void setValueAtTime(Time t, double v0) throw(Exception);
   };
 }

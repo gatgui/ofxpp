@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file double2parameter.h
+ *  2 dimentional double parameter descriptor and instance classes.
+ */
+
 #ifndef __ofx_parameter_double2_h__
 #define __ofx_parameter_double2_h__
 
@@ -28,6 +32,7 @@ USA.
 
 namespace ofx {
   
+  //! 2 dimentional double parameter descriptor class.
   class Double2ParameterDescriptor : public ValueParameterDescriptor {
     public:
       Double2ParameterDescriptor();
@@ -39,39 +44,60 @@ namespace ofx {
       
       // properties
       
+      //! Get default value.
       void defaultValue(double *v0, double *v1);
+      //! Set default value.
       void defaultValue(double v0, double v1);
       
+      //! Get minimum value.
       void min(double *min0, double *min1);
+      //! Set minimum value.
       void min(double min0, double min1);
       
+      //! Get maximum value.
       void max(double *max0, double *max1);
+      //! Set maximum value.
       void max(double max0, double max1);
       
+      //! Get displayed minimum value.
       void displayMin(double *min0, double *min1);
+      //! Set displayed minimum value.
       void displayMin(double min0, double min1);
       
+      //! Get displayed maximum value.
       void displayMax(double *max0, double *max1);
+      //! Set displayed maximum value.
       void displayMax(double max0, double max1);
       
+      //! Get value increment step.
       double increment();
+      //! Set value increment step.
       void increment(double i);
       
+      //! Get number of displayed digits.
       int digits();
+      //! Set number of displayed digits.
       void digits(int d);
       
+      //! Get value type.
       DoubleParamType doubleType();
+      //! Set value type.
       void doubleType(DoubleParamType t);
       
+      //! Set ith dimension label.
       void dimensionLabel(int i, const std::string &name);
+      //! Get ith dimension label.
       std::string dimensionLabel(int i);
       
 #ifdef OFX_API_1_2
+      //! Get default coordinate system for spacial types.
       Coordinates defaultCoordinateSystem();
+      //! Set default coordinate system for spacial types.
       void defaultCoordinateSystem(Coordinates cs);
 #endif
   };
   
+  //! 2 dimentional double parameter instance class.
   class Double2Parameter : public ValueParameter {
     public:
       Double2Parameter();
@@ -83,42 +109,64 @@ namespace ofx {
       
       // properties
       
+      //! Get default value.
       void defaultValue(double *v0, double *v1);
       
+      //! Get minimum value.
       void min(double *min0, double *min1);
+      //! Set minimum value.
       void min(double min0, double min1);
       
+      //! Get maximum value.
       void max(double *max0, double *max1);
+      //! Set maximum value.
       void max(double max0, double max1);
       
+      //! Get displayed minimum value.
       void displayMin(double *min0, double *min1);
+      //! Set displayed minimum value.
       void displayMin(double min0, double min1);
       
+      //! Get displayed maximum value.
       void displayMax(double *max0, double *max1);
+      //! Set displayed maximum value.
       void displayMax(double max0, double max1);
       
+      //! Get value increment step.
       double increment();
+      //! Set value increment step.
       void increment(double i);
       
+      //! Get number of displayed digits.
       int digits();
+      //! Set number of displayed digits.
       void digits(int d);
       
+      //! Get value tyoe.
       DoubleParamType doubleType();
       
+      //! Get ith dimension label.
       std::string dimensionLabel(int i);
       
 #ifdef OFX_API_1_2
+      //! Get default coordinate system for spacial types.
       Coordinates defaultCoordinateSystem();
 #endif
       
       // suite
       
+      //! Get current value.
       void getValue(double *v0, double *v1) throw(Exception);
+      //! Get value at given time.
       void getValueAtTime(Time t, double *v0, double *v1) throw(Exception);
+      //! Get value derivative at given time.
       void getDerivative(Time t, double *v0, double *v1) throw(Exception);
+      //! Get value integral for a given range.
       void getIntegral(Time t0, Time t1, double *v0, double *v1) throw(Exception);
       
+      //! Set current value.
       void setValue(double v0, double v1) throw(Exception);
+      //! Set value at given time.
       void setValueAtTime(Time t, double v0, double v1) throw(Exception);
   };
   

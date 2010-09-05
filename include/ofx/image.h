@@ -21,6 +21,9 @@ USA.
 
 */
 
+/** \file image.h
+ *  %Image class.
+ */
 #ifndef __ofx_image_h__
 #define __ofx_image_h__
 
@@ -33,6 +36,7 @@ namespace ofx {
   
   class ImageEffectHost;
   
+  //! %Image class.
   class Image {
     public:
       
@@ -43,67 +47,83 @@ namespace ofx {
       
       Image& operator=(const Image &rhs);
       
+      //! Get property handle.
       inline OfxPropertySetHandle handle() {
         return mProps.handle();
       }
       
+      //! Get image data raw pointer.
       inline void* data() {
         return mData;
       }
       
+      //! Get pixel depth.
       inline BitDepth pixelDepth() const {
         return mBitDepth;
       }
       
+      //! Get pixel components.
       inline ImageComponent components() const {
         return mComponents;
       }
       
+      //! Get pre multiplication state.
       inline ImagePreMult preMultiplication() const {
         return mPreMult;
       }
       
+      //! Get render scale.
       inline void renderScale(double *sx, double *sy) const {
         *sx = mRenderScaleX;
         *sy = mRenderScaleY;
       }
       
+      //! Get pixel aspect ratio.
       inline double pixelAspectRatio() const {
         return mPixelAspectRatio;
       }
       
+      //! Get region of definition.
       const Rect<int>& regionOfDefinition() const {
         return mRoD;
       }
       
+      //! Get field.
       inline ImageField field() const {
         return mField;
       }
       
+      //! Get unique identifier.
       inline const std::string& uniqueIdentifier() const {
         return mUID;
       }
       
+      //! Get number of bytes per component.
       inline int componentBytes() const {
         return mCompBytes;
       }
       
+      //! Get number of components per pixel.
       inline int componentsCount() const {
         return mNumComps;
       }
       
+      //! Get number of bytes per pixel.
       inline int pixelBytes() const {
         return mPixelBytes;
       }
       
+      //! Get number of bytes per row.
       inline int rowBytes() {
         return mRowBytes;
       }
       
+      //! Get bounds.
       inline const Rect<int>& bounds() {
         return mBounds;
       }
       
+      //! Get pixel raw address.
       inline void* pixelAddress(int x, int y) {
         if (x < mBounds.x1 || x >= mBounds.x2 || y < mBounds.y1 || y >= mBounds.y2) {
           return 0;
@@ -111,14 +131,16 @@ namespace ofx {
         return (void*)((char*)mData + ((y - mBounds.y1) * mRowBytes) + ((x - mBounds.x1) * mPixelBytes));
       }
       
-      template <typename ComponentType>
-      inline bool pixelAddress(int x, int y, RGBAColour<ComponentType> *&adr) {
-        adr = (RGBAColour<ComponentType>*) pixelAddress(x, y);
+      //! Get pixel typed address.
+      template <typename T>
+      inline bool pixelAddress(int x, int y, T *&adr) {
+        adr = (T*) pixelAddress(x, y);
         return (adr != 0);
       }
       
       // suite
       
+      //! Release image resources.
       void release() throw(Exception);
       
     protected:

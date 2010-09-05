@@ -90,9 +90,13 @@ namespace ofx {
       std::string dimensionLabel(int i);
       
 #ifdef OFX_API_1_2
-      //! Get default coordinate system for spacial types.
+      /** Get default coordinate system for spacial types.
+       * \note OpenFX version >= 1.2.
+       */
       Coordinates defaultCoordinateSystem();
-      //! Set default coordinate system for spacial types.
+      /** Set default coordinate system for spacial types.
+       * \note OpenFX version >= 1.2.
+       */
       void defaultCoordinateSystem(Coordinates cs);
 #endif
   };
@@ -149,7 +153,9 @@ namespace ofx {
       std::string dimensionLabel(int i);
       
 #ifdef OFX_API_1_2
-      //! Get default coordinate system for spacial types.
+      /** Get default coordinate system for spacial types.
+       * \note OpenFX version >= 1.2.
+       */
       Coordinates defaultCoordinateSystem();
 #endif
       

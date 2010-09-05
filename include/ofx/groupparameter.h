@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file groupparameter.h
+ *  Group parameter descriptor and instance classes.
+ */
+
 #ifndef __ofx_parameter_group_h__
 #define __ofx_parameter_group_h__
 
@@ -30,6 +34,7 @@ namespace ofx {
   
 #ifdef OFX_API_1_2
   
+  //! Group parameter descriptor class.
   class GroupParameterDescriptor : public ParameterDescriptor {
     public:
       
@@ -42,10 +47,17 @@ namespace ofx {
       
       // properties
       
+      /** Check if group is opened.
+       *  \note OpenFX version >= 1.2
+       */
       bool open();
+      /** Set group opened or not.
+       *  \note OpenFX version >= 1.2
+       */
       void open(bool o);
   };
   
+  //! Group parameter instance classe.
   class GroupParameter : public Parameter {
     public:
       
@@ -58,13 +70,18 @@ namespace ofx {
       
       // properties
       
+      /** Check if group is opened.
+       *  \note OpenFX version >= 1.2
+       */
       bool open();
   };
   
 #else
   
+  //! Group parameter descriptor classe.
   typedef ParameterDescriptor GroupParameterDescriptor;
   
+  //! Group parameter instance classe.
   typedef Parameter GroupParameter;
   
 #endif

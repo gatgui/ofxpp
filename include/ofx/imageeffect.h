@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file imageeffect.h
+ *  %Image effect descriptor and instance classes.
+ */
+
 #ifndef __ofx_imageeffect_h__
 #define __ofx_imageeffect_h__
 
@@ -37,23 +41,24 @@ namespace ofx {
   class Host;
   class ImageEffectHost;
   
-  
+  //! %Image effect input clip preferences.
   struct InputClipPreferences {
-    ImageComponent components;
-    BitDepth bitDepth;
-    double pixelAspectRatio;
+    ImageComponent components; //!< Image pixel components.
+    BitDepth bitDepth; //!< Pixel component depth.
+    double pixelAspectRatio; //!< Pixel aspect ratio.
   };
   
-  
+  //! %Image effect output clip preferences.
   struct OutputClipPreferences {
-    double frameRate;
-    ImageFieldOrder fieldOrder;
-    ImagePreMult preMult;
-    bool continuousSamples;
-    bool frameVarying;
+    double frameRate; //!< Frame rate.
+    ImageFieldOrder fieldOrder; //!< Field ordering.
+    ImagePreMult preMult; //!< Pre multiplication state.
+    bool continuousSamples; //!< true if effect can sample its output continuously.
+    bool frameVarying; //!< true if, for the same parameter set, output may vary depending on time.
   };
   
   
+  //! %Image effect descriptor class.
   class ImageEffectDescriptor {
     protected:
       
@@ -72,35 +77,46 @@ namespace ofx {
       
       ImageEffectDescriptor& operator=(const ImageEffectDescriptor &rhs);
       
+      //! Get image effect host pointer.
       inline ImageEffectHost* host() {
         return mHost;
       }
       
+      //! Get image effect handle.
       inline OfxImageEffectHandle handle() {
         return mHandle;
       }
       
+      //! Get associated properties.
       inline PropertySet& properties() {
         return mProps;
       }
       
+      //! Get associated parameter set descriptor.
       inline ParameterSetDescriptor& parameters() {
         return mParams;
       }
       
       // suite
       
+      //! Add a new clip to effect description.
       ClipDescriptor defineClip(const std::string &name) throw(Exception);
       
       // properties
       
+      //! Get effect label.
       std::string label();
+      //! Set effect label.
       void label(const std::string &s);
       
+      //! Get effect short label.
       std::string shortLabel();
+      //! Set effect short label.
       void shortLabel(const std::string &s);
       
+      //! Get effect long label.
       std::string longLabel();
+      //! Set effect long label.
       void longLabel(const std::string &s);
       
       int supportedContextsCount();
@@ -175,7 +191,7 @@ namespace ofx {
       virtual OfxStatus describeInContext(ImageEffectContext ctx);
   };
   
-  
+  //! %Image effect instance class.
   class ImageEffect {
     public:
       

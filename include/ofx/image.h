@@ -24,6 +24,7 @@ USA.
 /** \file image.h
  *  %Image class.
  */
+
 #ifndef __ofx_image_h__
 #define __ofx_image_h__
 

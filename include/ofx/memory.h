@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file memory.h
+ *  Memory suite functions wrapper class.
+ */
+
 #ifndef __ofx_memory_h__
 #define __ofx_memory_h__
 
@@ -36,6 +40,7 @@ namespace ofx {
   
   class Host;
   
+  //! Memory suite wrapper class
   class MemorySuite {
     
     protected:
@@ -47,6 +52,12 @@ namespace ofx {
       MemorySuite(Host *h) throw(Exception);
       ~MemorySuite();
       
+      /** Allocate memory
+       *  \param[in] recv Object to allocate memory for.\n
+       *                  Must be an object having a "handle" method.
+       *  \param[in] nbytes Number of bytes to allocate.
+       *  \return Pointer to allocated memory.
+       */
       template <class Receiver>
       void* alloc(Receiver *recv, size_t nbytes) throw(Exception) {
         void *rv = 0;
@@ -57,6 +68,9 @@ namespace ofx {
         return rv;
       }
       
+      /** Free memory
+       *  \param[in] mem Pointer to previously allocated memory.
+       */
       void free(void *mem) throw(Exception);
   };
   

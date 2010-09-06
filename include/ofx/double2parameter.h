@@ -22,7 +22,7 @@ USA.
 */
 
 /** \file double2parameter.h
- *  2 dimentional double parameter descriptor and instance classes.
+ *  2 dimensional double parameter descriptor and instance classes.
  */
 
 #ifndef __ofx_parameter_double2_h__
@@ -32,7 +32,7 @@ USA.
 
 namespace ofx {
   
-  //! 2 dimentional double parameter descriptor class.
+  //! 2 dimensional double parameter descriptor class.
   class Double2ParameterDescriptor : public ValueParameterDescriptor {
     public:
       Double2ParameterDescriptor();
@@ -101,7 +101,7 @@ namespace ofx {
 #endif
   };
   
-  //! 2 dimentional double parameter instance class.
+  //! 2 dimensional double parameter instance class.
   class Double2Parameter : public ValueParameter {
     public:
       Double2Parameter();

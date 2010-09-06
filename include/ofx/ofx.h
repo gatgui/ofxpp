@@ -25,6 +25,42 @@ USA.
  *  Common ofxpp definitions.
  */
 
+/** \mainpage OFXpp library documentation.
+ *  \section intro Introduction
+ *  \section build Build
+ *  In order to build OFXpp library, you will need git command line tools and SCons above 1.3.
+ *  \code
+ *  git clone git://github.com/gatgui/ofxpp.git
+ *  \endcode
+ *  targets:\n
+ *  - ofxpp
+ *  - pyofx
+ *  - pyplugin
+ *  - ellipseFade
+ *  - multiBlur
+ *  - gaussianBlur
+ *
+ *  flags:\n
+ *  - ofxVersion=<ver> (1.1 by default)
+ *  - PythonFrameworkPath=<path_to_framework_directory> (OSX only)
+ *  - PythonFramework=<python_framework_name> (OSX only, defaults to "Python")
+ *  - x64=0|1
+ *  - x86=0|1
+ *  - debug=0|1
+ *  - debugInfo=0|1 (windows only)
+ *  - ofxNewMacPackaging=0|1 (OSX only, defaults to "0")
+ *  - forceOverlayRedraw=0|1 (for ellipseFade, multiBlur targets only, defaults to "1")
+ *
+ *  \note x64 and x86 are mutually exclusive
+ *  \section usage Basic usage
+ *  \subsection env Environment setup
+ *  To use the python binding, you'll need to add the directory it lies in to your PYTHONPATH environment variable.\n
+ *  You also have to set you OFX_PLUGIN_PATH environment variable as you would do for any other OpenFX plugin.\n
+ *  The python loader looks for ".py" files in the standard OFX_PLUGIN_PATH.
+ *  \section python Python bindings and python OFX plugin loader
+ *
+ */
+
 #ifndef __ofx_ofx_h__
 #define __ofx_ofx_h__
 
@@ -38,6 +74,7 @@ USA.
 # pragma warning(disable:4290)
 #endif
 
+//! \internal
 #define DECLARE_ENUM_MAP(Enum)\
   extern const char* Enum##ToString(Enum e);\
   extern Enum StringTo##Enum(const char *s);\
@@ -45,19 +82,23 @@ USA.
     return StringTo##Enum(s.c_str());\
   }
 
+//! \internal
 #define BEGIN_ENUM_MAP(Enum)\
   static std::map<std::string, Enum> gsStringTo##Enum;\
   static const char *gs##Enum##ToString[Max##Enum];\
   static void Init##Enum##Mapping() {
 
+//! \internal
 #define ADD_ENUM_MAPPING(Enum, ID)\
   gsStringTo##Enum[kOfx##Enum##ID] = Enum##ID;\
     gs##Enum##ToString[int(Enum##ID)] = kOfx##Enum##ID;
 
+//! \internal
 #define ADD_ENUM_MAPPING_CUSTOM(Enum, EnumVal, StringVal)\
   gsStringTo##Enum[StringVal] = EnumVal;\
     gs##Enum##ToString[int(EnumVal)] = StringVal;
 
+//! \internal
 #define END_ENUM_MAP(Enum)\
   }\
   const char* Enum##ToString(Enum i) {\
@@ -512,32 +553,256 @@ namespace ofx {
   #define DebugLog Log
 #else
   /** Write a message to the log file but only if library was compiled in debug mode.
-   *  \param[in] msg Format stirng.
+   *  Same parameter as for the Log function.
    *  \note The log file is the one pointed by the OFX_LOG environment variable.\n
    *        If it is not set, it will default to $HOME/ofx.log
    */
   inline void DebugLog(const char *, ...) {}
 #endif
   
+  /** \fn const char* BitDepthToString(BitDepth e)
+   *  \brief Convert BitDepth enum value to string.
+   */
+  
+  /** \fn BitDepth StringToBitDepth(const char *s)
+   *  \brief Convert string to BitDepth enum value.
+   */
+  
+  /** \fn BitDepth StringToBitDepth(const std::string &s)
+   *  \brief Convert string to BitDepth enum value.
+   */
   
   DECLARE_ENUM_MAP(BitDepth);
+  
+  /** \fn const char* TypeToString(Type e)
+   *  \brief Convert Type enum value to string.
+   */
+  
+  /** \fn Type StringToType(const char *s)
+   *  \brief Convert string to Type enum value.
+   */
+  
+  /** \fn Type StringToType(const std::string &s)
+   *  \brief Convert string to Type enum value.
+   */
+    
   DECLARE_ENUM_MAP(Type);
+  
+  /** \fn const char* ImageComponentToString(ImageComponent e)
+   *  \brief Convert ImageComponent enum value to string.
+   */
+  
+  /** \fn ImageComponent StringToImageComponent(const char *s)
+   *  \brief Convert string to ImageComponent enum value.
+   */
+  
+  /** \fn ImageComponent StringToImageComponent(const std::string &s)
+   *  \brief Convert string to ImageComponent enum value.
+   */
+  
   DECLARE_ENUM_MAP(ImageComponent);
+  
+  /** \fn const char* ImageFieldToString(ImageField e)
+   *  \brief Convert ImageField enum value to string.
+   */
+  
+  /** \fn ImageField StringToImageField(const char *s)
+   *  \brief Convert string to ImageField enum value.
+   */
+  
+  /** \fn ImageField StringToImageField(const std::string &s)
+   *  \brief Convert string to ImageField enum value.
+   */
+  
   DECLARE_ENUM_MAP(ImageField);
+  
+  /** \fn const char* ImageFieldExtractToString(ImageFieldExtract e)
+   *  \brief Convert ImageFieldExtract enum value to string.
+   */
+  
+  /** \fn ImageFieldExtract StringToImageFieldExtract(const char *s)
+   *  \brief Convert string to ImageFieldExtract enum value.
+   */
+  
+  /** \fn ImageFieldExtract StringToImageFieldExtract(const std::string &s)
+   *  \brief Convert string to ImageFieldExtract enum value.
+   */
+  
   DECLARE_ENUM_MAP(ImageFieldExtract);
+  
+  /** \fn const char* ImageFieldOrderToString(ImageFieldOrder e)
+   *  \brief Convert ImageFieldOrder enum value to string.
+   */
+  
+  /** \fn ImageFieldOrder StringToImageFieldOrder(const char *s)
+   *  \brief Convert string to ImageFieldOrder enum value.
+   */
+  
+  /** \fn ImageFieldOrder StringToImageFieldOrder(const std::string &s)
+   *  \brief Convert string to ImageFieldOrder enum value.
+   */
+  
   DECLARE_ENUM_MAP(ImageFieldOrder);
+  
+  /** \fn const char* ImagePreMultToString(ImagePreMult e)
+   *  \brief Convert ImagePreMult enum value to string.
+   */
+  
+  /** \fn ImagePreMult StringToImagePreMult(const char *s)
+   *  \brief Convert string to ImagePreMult enum value.
+   */
+  
+  /** \fn ImagePreMult StringToImagePreMult(const std::string &s)
+   *  \brief Convert string to ImagePreMult enum value.
+   */
+  
   DECLARE_ENUM_MAP(ImagePreMult);
+  
+  /** \fn const char* ImageEffectContextToString(ImageEffectContext e)
+   *  \brief Convert ImageEffectContext enum value to string.
+   */
+  
+  /** \fn ImageEffectContext StringToImageEffectContext(const char *s)
+   *  \brief Convert string to ImageEffectContext enum value.
+   */
+  
+  /** \fn ImageEffectContext StringToImageEffectContext(const std::string &s)
+   *  \brief Convert string to ImageEffectContext enum value.
+   */
+  
   DECLARE_ENUM_MAP(ImageEffectContext);
+  
+  /** \fn const char* RenderThreadSafetyToString(RenderThreadSafety e)
+   *  \brief Convert RenderThreadSafety enum value to string.
+   */
+  
+  /** \fn RenderThreadSafety StringToRenderThreadSafety(const char *s)
+   *  \brief Convert string to RenderThreadSafety enum value.
+   */
+  
+  /** \fn RenderThreadSafety StringToRenderThreadSafety(const std::string &s)
+   *  \brief Convert string to RenderThreadSafety enum value.
+   */
+  
   DECLARE_ENUM_MAP(RenderThreadSafety);
+  
+  /** \fn const char* ParamTypeToString(ParamType e)
+   *  \brief Convert ParamType enum value to string.
+   */
+  
+  /** \fn ParamType StringToParamType(const char *s)
+   *  \brief Convert string to ParamType enum value.
+   */
+  
+  /** \fn ParamType StringToParamType(const std::string &s)
+   *  \brief Convert string to ParamType enum value.
+   */
+  
   DECLARE_ENUM_MAP(ParamType);
+  
+  /** \fn const char* ParamInvalidateToString(ParamInvalidate e)
+   *  \brief Convert ParamInvalidate enum value to string.
+   */
+  
+  /** \fn ParamInvalidate StringToParamInvalidate(const char *s)
+   *  \brief Convert string to ParamInvalidate enum value.
+   */
+  
+  /** \fn ParamInvalidate StringToParamInvalidate(const std::string &s)
+   *  \brief Convert string to ParamInvalidate enum value.
+   */
+  
   DECLARE_ENUM_MAP(ParamInvalidate);
+  
+  /** \fn const char* StringParamModeToString(StringParamMode e)
+   *  \brief Convert StringParamMode enum value to string.
+   */
+  
+  /** \fn StringParamMode StringToStringParamMode(const char *s)
+   *  \brief Convert string to StringParamMode enum value.
+   */
+  
+  /** \fn StringParamMode StringToStringParamMode(const std::string &s)
+   *  \brief Convert string to StringParamMode enum value.
+   */
+  
   DECLARE_ENUM_MAP(StringParamMode);
+  
+  /** \fn const char* DoubleParamTypeToString(DoubleParamType e)
+   *  \brief Convert DoubleParamType enum value to string.
+   */
+  
+  /** \fn DoubleParamType StringToDoubleParamType(const char *s)
+   *  \brief Convert string to DoubleParamType enum value.
+   */
+  
+  /** \fn DoubleParamType StringToDoubleParamType(const std::string &s)
+   *  \brief Convert string to DoubleParamType enum value.
+   */
+  
   DECLARE_ENUM_MAP(DoubleParamType);
+  
+  /** \fn const char* ActionToString(Action e)
+   *  \brief Convert Action enum value to string.
+   */
+  
+  /** \fn Action StringToAction(const char *s)
+   *  \brief Convert string to Action enum value.
+   */
+  
+  /** \fn Action StringToAction(const std::string &s)
+   *  \brief Convert string to Action enum value.
+   */
+  
   DECLARE_ENUM_MAP(Action);
+  
+  /** \fn const char* ChangeReasonToString(ChangeReason e)
+   *  \brief Convert ChangeReason enum value to string.
+   */
+  
+  /** \fn ChangeReason StringToChangeReason(const char *s)
+   *  \brief Convert string to ChangeReason enum value.
+   */
+  
+  /** \fn ChangeReason StringToChangeReason(const std::string &s)
+   *  \brief Convert string to ChangeReason enum value.
+   */
+  
   DECLARE_ENUM_MAP(ChangeReason);
+  
+  /** \fn const char* MessageTypeToString(MessageType e)
+   *  \brief Convert MessageType enum value to string.
+   */
+  
+  /** \fn MessageType StringToMessageType(const char *s)
+   *  \brief Convert string to MessageType enum value.
+   */
+  
+  /** \fn MessageType StringToMessageType(const std::string &s)
+   *  \brief Convert string to MessageType enum value.
+   */
+  
   DECLARE_ENUM_MAP(MessageType);
+  
 #ifdef OFX_API_1_2
+  
+  /** \fn const char* CoordinatesToString(Coordinates e)
+   *  \brief Convert Coordinates enum value to string.
+   *  \note OpenFX version >= 1.2.
+   */
+  
+  /** \fn Coordinates StringToCoordinates(const char *s)
+   *  \brief Convert string to Coordinates enum value.
+   *  \note OpenFX version >= 1.2.
+   */
+  
+  /** \fn Coordinates StringToCoordinates(const std::string &s)
+   *  \brief Convert string to Coordinates enum value.
+   *  \note OpenFX version >= 1.2.
+   */
+  
   DECLARE_ENUM_MAP(Coordinates);
+  
 #endif
 }
 

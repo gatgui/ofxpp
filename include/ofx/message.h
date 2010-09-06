@@ -22,7 +22,7 @@ USA.
 */
 
 /** \file message.h
- *  Message suite wrapper.
+ *  Message suite functions wrapper.
  */
 
 #ifndef __ofx_message_h__
@@ -47,7 +47,7 @@ namespace ofx {
       
       /** Send a transient message to the host.
        *  \param recv Object to associate with the message.\n
-       *              Must be a class having a "handle" method.
+       *              Must be an object having a "handle" method.
        *  \param type The message type.
        *  \param id ID to associate with the message or NULL.
        *  \param format Format string.
@@ -80,7 +80,7 @@ namespace ofx {
 #ifdef OFX_API_1_2
       /** Set a persistent message.
        *  \param recv Object to associate with the message.\n
-       *              Must be a class having a "handle" method.
+       *              Must be an object having a "handle" method.
        *  \param type The message type.
        *  \param id ID to associate with the message or NULL.
        *  \param format Format string.
@@ -114,7 +114,7 @@ namespace ofx {
       
       /** Clear persistent message.
        *  \param recv Object to remove the persistent message for.\n
-       *              Must be a class having a "handle" method.
+       *              Must be an object having a "handle" method.
        *  \note OpenFX API version must be at least 1.2
        */
       template <class Receiver>

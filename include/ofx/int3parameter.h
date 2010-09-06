@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file int3parameter.h
+ *  3 dimensional integer parameter descriptor and instance classes.
+ */
+
 #ifndef __ofx_parameter_int3_h__
 #define __ofx_parameter_int3_h__
 
@@ -28,6 +32,7 @@ USA.
 
 namespace ofx {
   
+  //! 3 dimensional integer parameter descriptor class.
   class Int3ParameterDescriptor : public ValueParameterDescriptor {
     public:
       Int3ParameterDescriptor();
@@ -39,25 +44,38 @@ namespace ofx {
       
       // properties
       
+      //! Get default value.
       void defaultValue(int *v0, int *v1, int *v2);
+      //! Set default value.
       void defaultValue(int v0, int v1, int v2);
       
+      //! Get minimum value.
       void min(int *min0, int *min1, int *min2);
+      //! Set minimum value.
       void min(int min0, int min1, int min2);
       
+      //! Get maximum value.
       void max(int *max0, int *max1, int *max2);
+      //! Set maximum value.
       void max(int max0, int max1, int max2);
       
+      //! Get displayed minimum value.
       void displayMin(int *min0, int *min1, int *max2);
+      //! Set displayed minimum value.
       void displayMin(int min0, int min1, int max2);
       
+      //! Get displayed maximum value.
       void displayMax(int *max0, int *max1, int *max2);
+      //! Set displayed maximum value.
       void displayMax(int max0, int max1, int max2);
       
+      //! Set ith dimension label.
       void dimensionLabel(int i, const std::string &name);
+      //! Get ith dimension label.
       std::string dimensionLabel(int i);
   };
   
+  //! 3 dimensional integer parameter instance class.
   class Int3Parameter : public ValueParameter {
     public:
       Int3Parameter();
@@ -69,30 +87,46 @@ namespace ofx {
       
       // properties
       
+      //! Get default value.
       void defaultValue(int *v0, int *v1, int *v2);
       
+      //! Get minimum value.
       void min(int *min0, int *min1, int *min2);
+      //! Set minimum value.
       void min(int min0, int min1, int min2);
       
+      //! Get maximum value.
       void max(int *max0, int *max1, int *max2);
+      //! Set maximum value.
       void max(int max0, int max1, int max2);
       
+      //! Get displayed minimum value.
       void displayMin(int *min0, int *min1, int *max2);
+      //! Set displayed minimum value.
       void displayMin(int min0, int min1, int max2);
       
+      //! Get displayed maximum value.
       void displayMax(int *max0, int *max1, int *max2);
+      //! Set displayed maximum value.
       void displayMax(int max0, int max1, int max2);
       
+      //! Get ith dimension label.
       std::string dimensionLabel(int i);
       
       // suite
       
+      //! Get current value.
       void getValue(int *v0, int *v1, int *v2) throw(Exception);
+      //! Get value at given time.
       void getValueAtTime(Time t, int *v0, int *v1, int *v2) throw(Exception);
+      //! Get value derivative at given time.
       void getDerivative(Time t, int *v0, int *v1, int *v2) throw(Exception);
+      //! Get value integral for given range.
       void getIntegral(Time t0, Time t1, int *v0, int *v1, int *v2) throw(Exception);
       
+      //! Set current value.
       void setValue(int v0, int v1, int v2) throw(Exception);
+      //! Set value at given time.
       void setValueAtTime(Time t, int v0, int v1, int v2) throw(Exception);
   };
 }

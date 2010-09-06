@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file parametricparameter.h
+ *  Parametric parameter descriptor and instance classes.
+ */
+
 #ifndef __ofx_parameter_parametric_h__
 #define __ofx_parameter_parametric_h__
 
@@ -32,6 +36,9 @@ USA.
 
 namespace ofx {
   
+  /** Parametric parameter descriptor class.
+   *  \note OpenFX version >= 1.2.
+   */
   class ParametricParameterDescriptor : public ValueParameterDescriptor {
     public:
       
@@ -44,19 +51,29 @@ namespace ofx {
       
       // properties
       
+      //! Get dimension count.
       int dimension();
+      //! Set dimension count.
       void dimension(int n);
       
+      //! Get dimension colour.
       RGBAColour<double> UIColour(int d);
+      //! Set dimension colour.
       void UIColour(int d, const RGBAColour<double> &c);
       
+      //! Get background interact entry point function.
       EntryPoint interactBackground();
+      //! Set background interact entry point function.
       void interactBackground(EntryPoint ep);
       
+      //! Get input value range.
       void range(double *pmin, double *pmax);
+      //! Set input value range.
       void range(double pmin, double pmax);
       
+      //! Get dimension label.
       std::string dimensionLabel(int d);
+      //! Set dimension label.
       void dimensionLabel(int d, const std::string &l);
       
       /*
@@ -78,6 +95,9 @@ namespace ofx {
       */
   };
   
+  /** Parametric parameter instance class.
+   *  \note OpenFX version >= 1.2.
+   */
   class ParametricParameter : public ValueParameter {
     protected:
       
@@ -94,30 +114,42 @@ namespace ofx {
       
       // properties
       
+      //! Get dimensions count.
       int dimension();
       
+      //! Get dimension colour.
       RGBAColour<double> UIColour(int d);
       
+      //! Get background interact entry point function.
       EntryPoint interactBackground();
       
+      //! Get input value range.
       void range(double *pmin, double *pmax);
       
+      //! Get dimension label.
       std::string dimensionLabel(int d);
       
       // suite
       
+      //! Get number of control points of a dimension.
       int getControlPointsCount(int curveIndex, Time t);
       
+      //! Get control point value of a dimension..
       void getControlPoint(int curveIndex, Time t, int ctrlIdx, double *pos, double *val);
       
+      //! Set control point value of a dimension.
       void setControlPoint(int curveIndex, Time t, int ctrlIdx, double pos, double val, bool addKey);
       
+      //! Add a new control point value to a dimension.
       void addControlPoint(int curveIndex, Time t, double pos, double val, bool addKey);
       
+      //! Delete control point of a dimension.
       void deleteControlPoint(int curveIndex, int ctrlIdx);
       
+      //! Delete all control points of a dimension.
       void deleteAllControlPoints(int curveIndex);
       
+      //! Eval a dimension.
       double eval(int curveIndex, Time t, double pos);
   };
   

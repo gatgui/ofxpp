@@ -22,7 +22,7 @@ USA.
 */
 
 /** \file double3parameter.h
- *  3 dimentional double parameter descriptor and instance classes.
+ *  3 dimensional double parameter descriptor and instance classes.
  */
 
 #ifndef __ofx_parameter_double3_h__
@@ -32,7 +32,7 @@ USA.
 
 namespace ofx {
   
-  //! 3 dimentional double parameter descriptor class.
+  //! 3 dimensional double parameter descriptor class.
   class Double3ParameterDescriptor : public ValueParameterDescriptor {
     public:
       Double3ParameterDescriptor();
@@ -97,7 +97,7 @@ namespace ofx {
       */
   };
   
-  //! 3 dimentional double parameter instance class.
+  //! 3 dimensional double parameter instance class.
   class Double3Parameter : public ValueParameter {
     public:
       Double3Parameter();

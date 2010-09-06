@@ -21,12 +21,17 @@ USA.
 
 */
 
+/** \file timeline.h
+ *  Time line suite functions wrapper.
+ */
+
 #ifndef __ofx_timeline_h__
 #define __ofx_timeline_h__
 
 #include <ofxCore.h>
 #include <ofxTimeLine.h>
 #include <ofx/exception.h>
+#include <ofx/ofx.h>
 
 #ifdef _MSC_VER
 # pragma warning(disable:4290)
@@ -37,6 +42,7 @@ namespace ofx {
   class Host;
   class ImageEffect;
   
+  //! Time line suite functions wrapper class.
   class TimeLineSuite {
     protected:
       
@@ -47,6 +53,10 @@ namespace ofx {
       TimeLineSuite(Host *h) throw(Exception);
       ~TimeLineSuite();
       
+      /** Get current time
+       *  \param[in] recv Object to retrive time for.\n
+       *                  Must be an object having a "handle" method.
+       */
       template <class Receiver>
       double getTime(Receiver *recv) throw(Exception) {
         double val;
@@ -57,6 +67,11 @@ namespace ofx {
         return val;
       }
       
+      /** Set current time
+       *  \param[in] recv Object to set time for.\n
+       *              Must be an object having a "handle" method.
+       *  \param[in] t The time.
+       */
       template <class Receiver>
       void gotoTime(Receiver *recv, double t) throw(Exception) {
         OfxStatus stat = mSuite->gotoTime(recv->handle(), t);
@@ -65,12 +80,19 @@ namespace ofx {
         }
       }
       
+      /** Get time line range.
+       *  \param[in] recv Object to get range for.\n
+       *                  Must be an object having a "handle" method.
+       *  \return Time line range
+       */
       template <class Receiver>
-      void getTimeBounds(Receiver *recv, double &first, double &last) throw(Exception) {
-        OfxStatus stat = mSuite->getTimeBounds(recv->handle(), &first, &last);
+      FrameRange getTimeBounds(Receiver *recv) throw(Exception) {
+        FrameRange r = {0, 0};
+        OfxStatus stat = mSuite->getTimeBounds(recv->handle(), &(r.min), &(r.max));
         if (stat != kOfxStatOK) {
           throw Exception(stat, "ofx::TimeLine::getTimeBounds");
         }
+        return r;
       }
       
   };

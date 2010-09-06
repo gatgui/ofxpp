@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file multithread.h
+ *  Multithread suite functions wrapper.
+ */
+
 #ifndef __ofx_multithread_h__
 #define __ofx_multithread_h__
 
@@ -37,13 +41,17 @@ namespace ofx {
   
   class Host;
   
+  //! Mutex type.
   typedef const OfxMutexHandle Mutex;
   
+  //! %Thread function prototype.
   typedef OfxThreadFunctionV1 ThreadFunction;
   
+  //! Helper thread class.
   class Thread {
     public:
       
+      //! %Thread entry point function.
       static void Main(unsigned int i, unsigned int n, void *data) {
         Thread **threads = (Thread**) data;
         if (i < n) {
@@ -54,9 +62,11 @@ namespace ofx {
       Thread();
       virtual ~Thread();
       
+      //! %Thread run function to override.
       virtual void run() = 0;
   };
   
+  //! Multithread suite wrapper class.
   class MultiThreadSuite {
     protected:
       
@@ -67,17 +77,38 @@ namespace ofx {
       MultiThreadSuite(Host *h) throw(Exception);
       ~MultiThreadSuite();
       
+      //! Get the number of physical CPUs.
       unsigned int numCPUs() throw(Exception);
+      //! Get the index of current thread.
       unsigned int index() throw(Exception);
+      //! Check if current thread has been spawned by the multithead suite "run" function.
       bool isSpawned();
       
+      /** Create a new mutex
+       *  \param[in] lockCount Initial lock count.
+       */
       Mutex createMutex(int lockCount=0) throw(Exception);
+      //! Destroy mutex.
       void destroyMutex(Mutex mutex);
+      //! Lock given mutex.
       void lock(Mutex mutex) throw(Exception);
+      //! Unlock given mutex.
       void unlock(Mutex mutex) throw(Exception);
+      /** Try lock given mutex.
+       *  \return true if mutex could be locked, false otherwise.
+       */
       bool tryLock(Mutex mutex) throw(Exception);
       
+      /** Spawn a new set of threads 
+       *  \param[in] func Function to run in threads.
+       *  \param[in] nThreads Number of threads to spawn.
+       *  \param[in] userData Opaque user data to be passed down to the thread function.
+       */
       void run(ThreadFunction func, unsigned int nThreads, void *userData) throw(Exception);
+      /** Spawn a new set of threads 
+       *  \param[in] threads Array of Thread objects.
+       *  \param[in] nThreads Number of threads to spawn.
+       */
       void run(Thread **threads, unsigned int nThreads) throw(Exception);
       
   };

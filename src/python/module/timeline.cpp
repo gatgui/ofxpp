@@ -127,19 +127,17 @@ static PyObject* PyOFXTimeLineSuite_GetTimeBounds(PyObject *self, PyObject *args
   }
   
   bool failed = false;
-  double first = 0.0;
-  double last = 0.0;
+  ofx::FrameRange r = {0.0, 0.0};
   
-  CATCH({psuite->suite->getTimeBounds(&rcv, first, last);}, failed);
+  CATCH({r = psuite->suite->getTimeBounds(&rcv);}, failed);
   
   if (failed)
   {
     return NULL;
   }
   
-  PyObject *rv = PyTuple_New(2);
-  PyTuple_SetItem(rv, 0, PyFloat_FromDouble(first));
-  PyTuple_SetItem(rv, 1, PyFloat_FromDouble(last));
+  PyObject *rv = PyObject_CallObject((PyObject*)&PyOFXRangeDType, NULL);
+  ((PyOFXRangeD*)rv)->range = r;
   return rv;
 }
 

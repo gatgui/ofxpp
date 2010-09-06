@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file property.h
+ *  Property suite functions wrapper.
+ */
+
 #ifndef __ofx_property_h__
 #define __ofx_property_h__
 
@@ -37,6 +41,7 @@ namespace ofx {
   
   class Host;
   
+  //! Property set class.
   class PropertySet {
     public:
       
@@ -47,35 +52,54 @@ namespace ofx {
       
       PropertySet& operator=(const PropertySet &rhs);
       
+      //! Set indexed pointer property.
       void setPointer(const char * prop, int index, void *val);
+      //! Set multiple pointer property.
       void setPointers(const char * prop, int n, void **val);
+      //! Set indexed string property.
       void setString(const char * prop, int index, const std::string &val);
+      //! Set multiple string property.
       void setStrings(const char * prop, int n, const std::string *val);
+      //! Set indexed double property.
       void setDouble(const char * prop, int index, double val);
+      //! Set multiple double property.
       void setDoubles(const char * prop, int n, double *val);
+      //! Set indexed integer property.
       void setInt(const char * prop, int index, int val);
+      //! Set multiple integer property.
       void setInts(const char * prop, int n, int *val);
       
+      //! Get indexed pointer property.
       void* getPointer(const char * prop, int index);
+      //! Get multiple pointer property.
       void getPointers(const char * prop, int n, void **rv);
+      //! Get indexed string property.
       std::string getString(const char * prop, int index);
+      //! Get multiple string property.
       void getStrings(const char * prop, int n, std::string *rv) throw(Exception);
+      //! Get indexed double property.
       double getDouble(const char * prop, int index);
+      //! Get multiple double property.
       void getDoubles(const char * prop, int n, double *rv);
+      //! Get indexed integer property.
       int getInt(const char * prop, int index);
+      //! Get multiple integer property.
       void getInts(const char * prop, int n, int *rv);
       
+      //! Reset property value.
       void reset(const char * prop);
       
+      //! Get property value size.
       int size(const char * prop);
       
+      //! Get native handle.
       inline OfxPropertySetHandle handle() {
         return mHandle;
       }
     
     protected:
       
-      //void checkStatus(OfxStatus s, const std::string &msg="") throw(Exception);
+      //! \internal
       void checkStatus(OfxStatus s, const char *prop, const char *msg=0) throw(Exception);
       
     protected:

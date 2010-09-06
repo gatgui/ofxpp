@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file pageparameter.h
+ *  Page parameter descriptor and instance classes.
+ */
+
 #ifndef __ofx_parameter_page_h__
 #define __ofx_parameter_page_h__
 
@@ -28,6 +32,7 @@ USA.
 
 namespace ofx {
   
+  //! Page parameter descriptor class.
   class PageParameterDescriptor : public ParameterDescriptor {
     public:
       PageParameterDescriptor();
@@ -39,14 +44,17 @@ namespace ofx {
       
       // properties
       
-      // special string values:
-      //   kOfxParamPageSkipRow
-      //   kOfxParamPageSkipColumn
+      //! Get number of contained parameters.
       int childCount();
+      /** Set ith contained parameter name.
+       *  \note Two special names are allowed: kOfxParamPageSkipRow and kOfxParamPageSkipColumn
+       */
       void child(int i, const std::string &name);
+      //! Get ith contained parameter name.
       std::string child(int i);
   };
   
+  //! Page parameter instance class.
   class PageParameter : public Parameter {
     public:
       PageParameter();
@@ -58,7 +66,9 @@ namespace ofx {
       
       // properties
       
+      //! Get number of contained parameters.
       int childCount();
+      //! Get ith contained parameter name.
       std::string child(int i);
   };
   

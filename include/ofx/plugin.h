@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file plugin.h
+ *  %Plugin classes.
+ */
+
 #ifndef __ofx_plugin_h__
 #define __ofx_plugin_h__
 
@@ -31,7 +35,7 @@ USA.
 
 namespace ofx {
   
-  
+  //! Base plugin class.
   class Plugin {
     
     public:
@@ -39,31 +43,38 @@ namespace ofx {
       Plugin();
       virtual ~Plugin();
       
+      //! Get native ofx plugin description.
       inline OfxPlugin* description() {
         return &mPlugin;
       }
       
+      //! Set major version.
       inline void majorVersion(int v) {
         mPlugin.pluginVersionMajor = v;
       }
       
+      //! Set minor version.
       inline void minorVersion(int v) {
         mPlugin.pluginVersionMinor = v;
       }
       
+      //! Set unique identifier.
       inline void identifier(const char *ID) {
         mIdentifier = ID;
         mPlugin.pluginIdentifier = mIdentifier.c_str();
       }
       
+      //! Get major version.
       inline int majorVersion() const {
         return mPlugin.pluginVersionMajor;
       }
       
+      //! Get minor version.
       inline int minorVersion() const {
         return mPlugin.pluginVersionMinor;
       }
       
+      //! Get unique identifier.
       inline const char* identifier() const {
         return mPlugin.pluginIdentifier;
       }
@@ -74,6 +85,9 @@ namespace ofx {
       std::string mIdentifier;
   };
   
+  /** %Image effect plugin class.
+   *  A template class which given a Descriptor and Effect class will generate unique entry points and wrap handle provided by the host to appropriate classes.
+   */
   template <class Descriptor, class Effect, class BaseClass=Plugin>
   class ImageEffectPlugin : public BaseClass {
     public:
@@ -83,12 +97,14 @@ namespace ofx {
       typedef Effect EffectInstance;
       typedef std::map<OfxImageEffectHandle, Effect*> EffectMap;
       
+      //! %Image effect plugin set host entry point.
       static void SetHost(OfxHost *h) {
         Instance()->setHost(h);
         // If have anything to check on host...
         //ImageEffectHost *host = Instance()->host();
       }
       
+      //! %Image effect plugin main entry point.
       static OfxStatus Main(const char *action, const void *handle,
                             OfxPropertySetHandle hInArgs,
                             OfxPropertySetHandle hOutArgs)
@@ -338,6 +354,7 @@ namespace ofx {
         }
       }
       
+      //! Get instance object.
       static SelfType* Instance() {
         return msInstance;
       }
@@ -356,24 +373,29 @@ namespace ofx {
         msInstance = 0;
       }
       
+      //! Load action.
       virtual OfxStatus load() {
         return kOfxStatReplyDefault;
       }
       
+      //! Unload action.
       virtual OfxStatus unload() {
         return kOfxStatReplyDefault;
       }
       
+      //! Get image effect host object.
       inline ImageEffectHost* host() {
         return mHost;
       }
       
+      //! Add new effect instance for a native handle.
       inline Effect* addEffect(OfxImageEffectHandle handle) {
         Effect *effect = new Effect(mHost, handle);
         mEffects[handle] = effect;
         return effect;
       }
       
+      //! Get effect instance object from its native handle.
       inline Effect* getEffect(OfxImageEffectHandle handle) {
         typename EffectMap::iterator it = mEffects.find(handle);
         if (it != mEffects.end()) {
@@ -383,6 +405,7 @@ namespace ofx {
         }
       }
       
+      //! Remove effect instance associated with given native handle.
       inline void removeEffect(OfxImageEffectHandle handle) {
         typename EffectMap::iterator it = mEffects.find(handle);
         if (it != mEffects.end()) {
@@ -403,6 +426,7 @@ namespace ofx {
         msInstance = this;
       }
       
+      //! \internal
       void setHost(OfxHost *h) {
         if (!mHost) {
           mHost = new ImageEffectHost(h);

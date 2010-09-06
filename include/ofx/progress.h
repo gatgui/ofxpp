@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file progress.h
+ *  Progress suite funcions wrapper.
+ */
+
 #ifndef __ofx_progress_h__
 #define __ofx_progress_h__
 
@@ -36,6 +40,7 @@ namespace ofx {
   
   class Host;
   
+  //! Progress suite functions wrapper class.
   class ProgressSuite {
     protected:
       
@@ -46,6 +51,11 @@ namespace ofx {
       ProgressSuite(Host *h) throw(Exception);
       ~ProgressSuite();
       
+      /** Start a new progress.
+       *  \param recv Object to associate with the progress.\n
+       *              Must be an object having a "handle" method.
+       *  \param label The progress title.
+       */
       template <class Receiver>
       void start(Receiver *recv, const std::string &label) throw(Exception) {
         OfxStatus stat = mSuite->progressStart(recv->handle(), label.c_str());
@@ -54,6 +64,11 @@ namespace ofx {
         }
       }
       
+      /** Update progress status.
+       *  \param recv Object to get the associated progress for.\n
+       *              Must be an object having a "handle" method.
+       *  \param progress The new progress value.
+       */
       template <class Receiver>
       void update(Receiver *recv, double progress) throw(Exception) {
         OfxStatus stat = mSuite->progressUpdate(recv->handle(), progress);
@@ -62,6 +77,10 @@ namespace ofx {
         }
       }
       
+      /** End progress.
+       *  \param recv Object to get the associated progress for.\n
+       *              Must be an object having a "handle" method.
+       */
       template <class Receiver>
       void end(Receiver *recv) throw(Exception) {
         OfxStatus stat = mSuite->progressEnd(recv->handle());

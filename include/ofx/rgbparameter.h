@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file rgbparameter.h
+ *  RGB colour parameter descriptor and instance classes.
+ */
+
 #ifndef __ofx_parameter_rgb_h__
 #define __ofx_parameter_rgb_h__
 
@@ -28,6 +32,7 @@ USA.
 
 namespace ofx {
   
+  //! RGB colour parameter descriptor class.
   class RGBParameterDescriptor : public ValueParameterDescriptor {
     public:
       RGBParameterDescriptor();
@@ -39,10 +44,13 @@ namespace ofx {
       
       // properties
       
+      //! Get default value.
       RGBAColour<double> defaultValue();
+      //! Set default value.
       void defaultValue(const RGBAColour<double> &v);
   };
   
+  //! RGB colour parameter instance class.
   class RGBParameter : public ValueParameter {
     public:
       RGBParameter();
@@ -54,16 +62,23 @@ namespace ofx {
       
       // properties
       
+      //! Get default value.
       RGBAColour<double> defaultValue();
       
       // suite
       
+      //! Get current value.
       RGBAColour<double> getValue() throw(Exception);
+      //! Get value at given time.
       RGBAColour<double> getValueAtTime(Time t) throw(Exception);
+      //! Get value derivative at given time.
       RGBAColour<double> getDerivative(Time t) throw(Exception);
+      //! Get value integral for given range.
       RGBAColour<double> getIntegral(Time t0, Time t1) throw(Exception);
       
+      //! Set current value.
       void setValue(const RGBAColour<double> &v) throw(Exception);
+      //! Set value at given time.
       void setValueAtTime(Time t, const RGBAColour<double> &v) throw(Exception);
   };
   

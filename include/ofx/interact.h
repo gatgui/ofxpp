@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file interact.h
+ *  Interact descriptor and instance classes.
+ */
+
 #ifndef __ofx_interact_h__
 #define __ofx_interact_h__
 
@@ -35,10 +39,9 @@ namespace ofx {
   
   class Host;
   
+  //! %Interact descriptor classe.
   class InteractDescriptor {
     public:
-      
-      //friend class Interact;
       
       InteractDescriptor();
       InteractDescriptor(ImageEffectHost *h, OfxInteractHandle hdl) throw(Exception);
@@ -49,12 +52,15 @@ namespace ofx {
       
       // properties
       
+      //! Check if interact's frame buffer has an alpha component.
       bool hasAlpha();
       
+      //! Get component bit depth if the interact's frame buffer.
       int bitDepth();
       
       // Interact actions
       
+      //! Describe action.
       virtual OfxStatus describe();
     
     protected:
@@ -64,6 +70,7 @@ namespace ofx {
   };
   
   
+  //! %Interact instance classe.
   class Interact {
     public:
       
@@ -71,44 +78,50 @@ namespace ofx {
       
     public:
       
+      //! Arguments shared for all actions.
       struct BaseArgs {
-        ImageEffect *effect;
-        Time time;
-        double renderScaleX;
-        double renderScaleY;
+        ImageEffect *effect; //!< Effect object.
+        Time time; //!< Time the action is called at.
+        double renderScaleX; //!< Render scale along X axis.
+        double renderScaleY; //!< Render scale along Y axis.
         
         BaseArgs(ImageEffectHost *h, PropertySet &args);
       };
       
+      //! Arguments common to all by key actions.
       struct CommonArgs : public BaseArgs {
         //int viewportWidth;
         //int viewportHeight;
-        double pixelScaleX;
-        double pixelScaleY;
-        RGBAColour<double> bgColour;
+        double pixelScaleX; //!< Scale factor to convert from canonical to screen coordinates along X axis.
+        double pixelScaleY; //!< Scale factor to convert from canonical to screen coordinates along Y axis.
+        RGBAColour<double> bgColour; //!< Background colour.
         
         CommonArgs(ImageEffectHost *h, PropertySet &args);
       };
       
+      //! Draw action arguments.
       typedef CommonArgs DrawArgs;
       
+      //! Focus actions arguments.
       typedef CommonArgs FocusArgs;
       
+      //! Pen actions arguments.
       struct PenArgs : public CommonArgs {
-        double x;
-        double y;
-        double pressure;
+        double x; //!< Pen X position in canonical coordinates.
+        double y; //!< Pen Y position in canonical coordinates.
+        double pressure; //!< pressure of the pen.
 #ifdef OFX_API_1_2
-        int viewportX;
-        int viewportY;
+        int viewportX; //!< Pen X position in viewport coordinates.
+        int viewportY; //!< Pen Y position in viewport coordinates.
 #endif
         
         PenArgs(ImageEffectHost *h, PropertySet &args);
       };
       
+      //! Key actions arguments.
       struct KeyArgs : public BaseArgs {
-        int sym;
-        std::string string;
+        int sym; //!< Key sym
+        std::string string; //!< Key as a string.
         
         KeyArgs(ImageEffectHost *h, PropertySet &args);
       };
@@ -121,44 +134,104 @@ namespace ofx {
       
       // suite
       
+      //! Swap framebuffer.
       void swapBuffers() throw(Exception);
+      //! Redraw interact.
       void redraw() throw(Exception);
       
       // properties
       
+      //! Get associated image effect instance object.
       ImageEffect* effectInstance();
       
+      //! Get user data pointer.
       void* instanceData();
+      //! Set user data pointer.
       void instanceData(void *d);
       
+      //! Get size of a real screen pixel.
       void pixelScale(double *sx, double *sy);
       
+      //! Get background colour.
       RGBAColour<double> backgroundColour();
       
+      //! Get viewport size.
       void viewportSize(int *w, int *h);
       
+      //! Check if interact's frame buffer has an alpha component.
       bool hasAlpha();
       
+      //! Get component bit depth if the interact's frame buffer.
       int bitDepth();
       
+      //! Get number of parameters the interact depends on.
       int slaveToParamCount();
+      //! Get ith parameter name the interact depends on.
       std::string slaveToParam(int i);
+      //! Add/Set ith parameter name the interact depends on.
       void slaveToParam(int i, const std::string &pn);
       
 #ifdef OFX_API_1_2
+      /** Get suggested colour.
+       *  \note OpenFX version >= 1.2.
+       */
       RGBAColour<double> suggestedColour();
 #endif
       
       // Interact actions
       
+      /** Draw action
+       *  \param[in] args The action arguments.
+       *  \return kOfxStatOK if action was overriden, kOfxStatReplyDefault otherwise.
+       */
       virtual OfxStatus draw(DrawArgs &args);
+      
+      /** Pen motion action
+       *  \param[in] args The action arguments.
+       *  \return kOfxStatOK if action was overriden, kOfxStatReplyDefault otherwise.
+       */
       virtual OfxStatus penMotion(PenArgs &args);
+      
+      /** Pen down action
+       *  \param[in] args The action arguments.
+       *  \return kOfxStatOK if action was overriden, kOfxStatReplyDefault otherwise.
+       */
       virtual OfxStatus penDown(PenArgs &args);
+      
+      /** Pen up action
+       *  \param[in] args The action arguments.
+       *  \return kOfxStatOK if action was overriden, kOfxStatReplyDefault otherwise.
+       */
       virtual OfxStatus penUp(PenArgs &args);
+      
+      /** Key down action
+       *  \param[in] args The action arguments.
+       *  \return kOfxStatOK if action was overriden, kOfxStatReplyDefault otherwise.
+       */
       virtual OfxStatus keyDown(KeyArgs &args);
+      
+      /** Key up action
+       *  \param[in] args The action arguments.
+       *  \return kOfxStatOK if action was overriden, kOfxStatReplyDefault otherwise.
+       */
       virtual OfxStatus keyUp(KeyArgs &args);
+      
+      /** Key repeat action
+       *  \param[in] args The action arguments.
+       *  \return kOfxStatOK if action was overriden, kOfxStatReplyDefault otherwise.
+       */
       virtual OfxStatus keyRepeat(KeyArgs &args);
+      
+      /** Gain focus action
+       *  \param[in] args The action arguments.
+       *  \return kOfxStatOK if action was overriden, kOfxStatReplyDefault otherwise.
+       */
       virtual OfxStatus gainFocus(FocusArgs &args);
+      
+      /** Lose focus action
+       *  \param[in] args The action arguments.
+       *  \return kOfxStatOK if action was overriden, kOfxStatReplyDefault otherwise.
+       */
       virtual OfxStatus loseFocus(FocusArgs &args);
       
     protected:
@@ -171,9 +244,7 @@ namespace ofx {
   };
   
   
-  // when you want to set an interact somewhere
-  // obj->setOverlayInteract(InteractEntryPoint<MyPlugin, MyInteractDesc, MyInteract>)
-  
+  //! %Interact entry point function wrapper.
   template <class PluginClass, class DescriptorClass, class InstanceClass>
   OfxStatus InteractEntryPoint(const char *action,
                                const void *handle,

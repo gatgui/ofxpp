@@ -21,6 +21,10 @@ USA.
 
 */
 
+/** \file stringparameter.h
+ *  String parameter descriptor and instance classes.
+ */
+
 #ifndef __ofx_parameter_string_h__
 #define __ofx_parameter_string_h__
 
@@ -28,6 +32,7 @@ USA.
 
 namespace ofx {
   
+  //! String parameter descriptor class.
   class StringParameterDescriptor : public ValueParameterDescriptor {
     public:
       StringParameterDescriptor();
@@ -39,16 +44,23 @@ namespace ofx {
       
       // properties
       
+      //! Get default value.
       std::string defaultValue();
+      //! Set default value.
       void defaultValue(const std::string &v);
       
+      //! Get value interpretation.
       StringParamMode mode();
+      //! Set value interpretation.
       void mode(StringParamMode m);
       
+      //! Check if value used as a file path must points to an existing file.
       bool filePathExists();
+      //! Set if value used as a file path must points to an existing file.
       void filePathExists(bool);
   };
   
+  //! String parameter instance class.
   class StringParameter : public ValueParameter {
     public:
       StringParameter();
@@ -60,18 +72,25 @@ namespace ofx {
       
       // properties
       
+      //! Get default value.
       std::string defaultValue();
       
+      //! Get value interpretation.
       StringParamMode mode();
       
+      //! Check if value used as a file path must points to an existing file.
       bool filePathExists();
       
       // suite
       
+      //! Get current value.
       std::string getValue() throw(Exception);
+      //! Get value at given time.
       std::string getValueAtTime(Time t) throw(Exception);
       
+      //! Set current value.
       void setValue(const std::string &v) throw(Exception);
+      //! Set value at given time.
       void setValueAtTime(Time t, const std::string &v) throw(Exception);
   };
   

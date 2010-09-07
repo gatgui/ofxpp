@@ -40,10 +40,16 @@ namespace ofx {
    *  \note OpenFX version >= 1.2.
    */
   class ParametricParameterDescriptor : public ValueParameterDescriptor {
+    protected:
+      
+      // Those 2 are required to set the default control points
+      OfxParametricParameterSuiteV1 *mParametricSuite;
+      OfxParamHandle mDescHandle;
+    
     public:
       
       ParametricParameterDescriptor();
-      ParametricParameterDescriptor(Host *h, OfxPropertySetHandle hdl);
+      ParametricParameterDescriptor(Host *h, OfxPropertySetHandle hdl, OfxParamHandle desc=NULL);
       ParametricParameterDescriptor(const ParametricParameterDescriptor &rhs);
       virtual ~ParametricParameterDescriptor();
       
@@ -66,9 +72,9 @@ namespace ofx {
       //! Set background interact entry point function.
       void interactBackground(EntryPoint ep);
       
-      //! Get input value range.
+      //! Get position value range.
       void range(double *pmin, double *pmax);
-      //! Set input value range.
+      //! Set position value range.
       void range(double pmin, double pmax);
       
       //! Get dimension label.
@@ -76,23 +82,25 @@ namespace ofx {
       //! Set dimension label.
       void dimensionLabel(int d, const std::string &l);
       
-      /*
-      // Parametric parameters are numeric
-      kOfxParamPropMin
-      kOfxParamPropMax
-      kOfxParamPropDisplayMin
-      kOfxParamPropDisplayMax
+      // suite
       
-      // Parametric parameters are double
-      kOfxParamPropIncrement
-      kOfxParamPropDigits
-      kOfxParamPropDoubleType
-      kOfxParamPropDefaultCoordinateSystem (doubleType == non-normalised coordinate)
+      //! Get number of default control points for a given dimension and time.
+      int getControlPointsCount(int dim, Time t);
       
-      // Parametric parameters can have 1 or more dimensions
-      kOfxParamPropShowTimeMarker (if dim == 1 and doubleType == absoluteTime)
-      x kOfxParamPropDimensionLabel (if dim >= 2)
-      */
+      //! Get default control point for a given dimension and time.
+      void getControlPoint(int dim, Time t, int ctrlIdx, double *pos, double *val);
+      
+      //! Set default control point for a given dimension and time.
+      void setControlPoint(int dim, Time t, int ctrlIdx, double pos, double val, bool addKey);
+      
+      //! Add a new default control point for a given dimension and time.
+      void addControlPoint(int dim, Time t, double pos, double val, bool addKey);
+      
+      //! Delete default control point for a given dimension.
+      void deleteControlPoint(int dim, int ctrlIdx);
+      
+      //! Delete all default control points for a given dimension.
+      void deleteAllControlPoints(int dim);
   };
   
   /** Parametric parameter instance class.
@@ -123,7 +131,7 @@ namespace ofx {
       //! Get background interact entry point function.
       EntryPoint interactBackground();
       
-      //! Get input value range.
+      //! Get position value range.
       void range(double *pmin, double *pmax);
       
       //! Get dimension label.
@@ -131,26 +139,26 @@ namespace ofx {
       
       // suite
       
-      //! Get number of control points of a dimension.
-      int getControlPointsCount(int curveIndex, Time t);
+      //! Get number of control points for a given dimension and time.
+      int getControlPointsCount(int dim, Time t);
       
-      //! Get control point value of a dimension..
-      void getControlPoint(int curveIndex, Time t, int ctrlIdx, double *pos, double *val);
+      //! Get control point for a given dimension and time.
+      void getControlPoint(int dim, Time t, int ctrlIdx, double *pos, double *val);
       
-      //! Set control point value of a dimension.
-      void setControlPoint(int curveIndex, Time t, int ctrlIdx, double pos, double val, bool addKey);
+      //! Set control point for a given dimension and time.
+      void setControlPoint(int dim, Time t, int ctrlIdx, double pos, double val, bool addKey);
       
-      //! Add a new control point value to a dimension.
-      void addControlPoint(int curveIndex, Time t, double pos, double val, bool addKey);
+      //! Add a new control point for a given dimension and time.
+      void addControlPoint(int dim, Time t, double pos, double val, bool addKey);
       
-      //! Delete control point of a dimension.
-      void deleteControlPoint(int curveIndex, int ctrlIdx);
+      //! Delete control point for a given dimension.
+      void deleteControlPoint(int dim, int ctrlIdx);
       
-      //! Delete all control points of a dimension.
-      void deleteAllControlPoints(int curveIndex);
+      //! Delete all control points for a given dimension.
+      void deleteAllControlPoints(int dim);
       
-      //! Eval a dimension.
-      double eval(int curveIndex, Time t, double pos);
+      //! Eval parameter value for a given dimension, time and position.
+      double eval(int dim, Time t, double pos);
   };
   
 }

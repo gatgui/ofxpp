@@ -398,10 +398,219 @@ PyObject* PyOFXParametricParameterDescriptor_DimensionLabel(PyObject *self, PyOb
   }
 }
 
+PyObject* PyOFXParametricParameterDescriptor_GetControlPointsCount(PyObject *self, PyObject *args)
+{
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
+  
+  if (!pdesc->desc)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  int idx;
+  double t;
+  
+  if (!PyArg_ParseTuple(args, "id", &idx, &t))
+  {
+    return NULL;
+  }
+  
+  ofx::ParametricParameterDescriptor *desc = (ofx::ParametricParameterDescriptor*) pdesc->desc;
+  
+  bool failed = false;
+  
+  int rv = 0;
+  
+  CATCH({rv = desc->getControlPointsCount(idx, t);}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  return PyInt_FromLong(rv);
+}
+
+PyObject* PyOFXParametricParameterDescriptor_GetControlPoint(PyObject *self, PyObject *args)
+{
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
+  
+  if (!pdesc->desc)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  int cidx;
+  double t;
+  int pidx;
+  
+  if (!PyArg_ParseTuple(args, "idi", &cidx, &t, &pidx))
+  {
+    return NULL;
+  }
+  
+  ofx::ParametricParameterDescriptor *desc = (ofx::ParametricParameterDescriptor*) pdesc->desc;
+  
+  bool failed = false;
+  
+  double pos, val;
+  
+  CATCH({desc->getControlPoint(cidx, t, pidx, &pos, &val);}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  return Py_BuildValue("dd", pos, val);
+}
+
+PyObject* PyOFXParametricParameterDescriptor_SetControlPoint(PyObject *self, PyObject *args)
+{
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
+  
+  if (!pdesc->desc)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  int cidx;
+  double t;
+  int pidx;
+  double pos;
+  double val;
+  PyObject *addKey;
+  
+  if (!PyArg_ParseTuple(args, "ididdO", &cidx, &t, &pidx, &pos, &val, &addKey))
+  {
+    return NULL;
+  }
+  
+  ofx::ParametricParameterDescriptor *desc = (ofx::ParametricParameterDescriptor*) pdesc->desc;
+  
+  bool failed = false;
+  
+  CATCH({desc->setControlPoint(cidx, t, pidx, pos, val, (addKey == Py_True));}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  Py_RETURN_NONE;
+}
+
+PyObject* PyOFXParametricParameterDescriptor_AddControlPoint(PyObject *self, PyObject *args)
+{
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
+  
+  if (!pdesc->desc)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  int cidx;
+  double t;
+  double pos;
+  double val;
+  PyObject *addKey;
+  
+  if (!PyArg_ParseTuple(args, "idddO", &cidx, &t, &pos, &val, &addKey))
+  {
+    return NULL;
+  }
+  
+  ofx::ParametricParameterDescriptor *desc = (ofx::ParametricParameterDescriptor*) pdesc->desc;
+  
+  bool failed = false;
+  
+  CATCH({desc->addControlPoint(cidx, t, pos, val, (addKey == Py_True));}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  Py_RETURN_NONE;
+}
+
+PyObject* PyOFXParametricParameterDescriptor_DeleteControlPoint(PyObject *self, PyObject *args)
+{
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
+  
+  if (!pdesc->desc)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  int cidx;
+  int pidx;
+  
+  if (!PyArg_ParseTuple(args, "ii", &cidx, &pidx))
+  {
+    return NULL;
+  }
+  
+  ofx::ParametricParameterDescriptor *desc = (ofx::ParametricParameterDescriptor*) pdesc->desc;
+  
+  bool failed = false;
+  
+  CATCH({desc->deleteControlPoint(cidx, pidx);}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  Py_RETURN_NONE;
+}
+
+PyObject* PyOFXParametricParameterDescriptor_DeleteAllControlPoints(PyObject *self, PyObject *args)
+{
+  PyOFXParameterDescriptor *pdesc = (PyOFXParameterDescriptor*) self;
+  
+  if (!pdesc->desc)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  int idx;
+  
+  if (!PyArg_ParseTuple(args, "i", &idx))
+  {
+    return NULL;
+  }
+  
+  ofx::ParametricParameterDescriptor *desc = (ofx::ParametricParameterDescriptor*) pdesc->desc;
+  
+  bool failed = false;
+  
+  CATCH({desc->deleteAllControlPoints(idx);}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  Py_RETURN_NONE;
+}
+
 static PyMethodDef PyOFXParametricParameterDescriptor_Methods[] =
 {
   {"UIColour", PyOFXParametricParameterDescriptor_UIColour, METH_VARARGS, NULL},
   {"dimensionLabel", PyOFXParametricParameterDescriptor_DimensionLabel, METH_VARARGS, NULL},
+  {"getControlPointsCount", PyOFXParametricParameterDescriptor_GetControlPointsCount, METH_VARARGS, NULL},
+  {"getControlPoint", PyOFXParametricParameterDescriptor_GetControlPoint, METH_VARARGS, NULL},
+  {"setControlPoint", PyOFXParametricParameterDescriptor_SetControlPoint, METH_VARARGS, NULL},
+  {"addControlPoint", PyOFXParametricParameterDescriptor_AddControlPoint, METH_VARARGS, NULL},
+  {"deleteControlPoint", PyOFXParametricParameterDescriptor_DeleteControlPoint, METH_VARARGS, NULL},
+  {"deleteAllControlPoints", PyOFXParametricParameterDescriptor_DeleteAllControlPoints, METH_VARARGS, NULL},
   {NULL, NULL, NULL, NULL}
 };
 

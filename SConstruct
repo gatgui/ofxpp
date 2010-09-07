@@ -96,6 +96,6 @@ prjs = [
 ]
 
 env = excons.MakeBaseEnv()
-if float(ofxVersion) >= 1.2 and ofxNewMacPackaging:
-  env["OFX_VERSION"] = float(ofxVersion)
+if float(ofxVersion) >= 1.2:
+  env["OFX_NEW_PACKAGE"] = ofxNewMacPackaging
 excons.DeclareTargets(env, prjs)

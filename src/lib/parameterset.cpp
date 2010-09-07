@@ -211,7 +211,13 @@ ParametricParameterDescriptor ParameterSetDescriptor::defineParametricParam(cons
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParameterSetDescriptor::defineParametricParam");
   }
-  return ParametricParameterDescriptor(mHost, hParam);
+  // Parametric parameter descriptor also need the parameter handle to define the default control points.
+  OfxParamHandle hParamDesc;
+  stat = mHost->parameterSuite()->paramGetHandle(mHandle, name.c_str(), &hParamDesc, NULL);
+  if (stat != kOfxStatOK) {
+    throw Exception(stat, "ofx::ParameterSetDescriptor::defineParametricParam");
+  }
+  return ParametricParameterDescriptor(mHost, hParam, hParamDesc);
 }
 
 #endif

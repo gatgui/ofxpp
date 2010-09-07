@@ -29,15 +29,19 @@ namespace ofx {
 #ifdef OFX_API_1_2
 
 ParametricParameterDescriptor::ParametricParameterDescriptor()
-  : ValueParameterDescriptor() {
+  : ValueParameterDescriptor(), mParametricSuite(0), mDescHandle(0) {
 }
 
-ParametricParameterDescriptor::ParametricParameterDescriptor(Host *h, OfxPropertySetHandle hdl)
-  : ValueParameterDescriptor(h, hdl) {
+ParametricParameterDescriptor::ParametricParameterDescriptor(Host *h, OfxPropertySetHandle hdl, OfxParamHandle desc)
+  : ValueParameterDescriptor(h, hdl), mParametricSuite(0), mDescHandle(desc) {
+  mParametricSuite = h->parametricParameterSuite();
+  if (!mParametricSuite) {
+    throw MissingHostFeatureError("Parametric parameter suite");
+  }
 }
 
 ParametricParameterDescriptor::ParametricParameterDescriptor(const ParametricParameterDescriptor &rhs)
-  : ValueParameterDescriptor(rhs) {
+  : ValueParameterDescriptor(rhs), mParametricSuite(rhs.mParametricSuite), mDescHandle(rhs.mDescHandle) {
 }
 
 ParametricParameterDescriptor::~ParametricParameterDescriptor() {
@@ -45,6 +49,8 @@ ParametricParameterDescriptor::~ParametricParameterDescriptor() {
 
 ParametricParameterDescriptor& ParametricParameterDescriptor::operator=(const ParametricParameterDescriptor &rhs) {
   ValueParameterDescriptor::operator=(rhs);
+  mParametricSuite = rhs.mParametricSuite;
+  mDescHandle = rhs.mDescHandle;
   return *this;
 }
 
@@ -97,6 +103,50 @@ std::string ParametricParameterDescriptor::dimensionLabel(int d) {
 
 void ParametricParameterDescriptor::dimensionLabel(int d, const std::string &l) {
   setString(kOfxParamPropDimensionLabel, d, l);
+}
+
+int ParametricParameterDescriptor::getControlPointsCount(int dim, Time t) {
+  int rv = 0;
+  OfxStatus stat = mParametricSuite->parametricParamGetNControlPoints(mDescHandle, dim, t, &rv);
+  if (stat != kOfxStatOK) {
+    throw Exception(stat, "ofx::ParametricParameter::controlPointsCount");
+  }
+  return rv;
+}
+
+void ParametricParameterDescriptor::getControlPoint(int dim, Time t, int ctrlIdx, double *pos, double *val) {
+  OfxStatus stat = mParametricSuite->parametricParamGetNthControlPoint(mDescHandle, dim, t, ctrlIdx, pos, val);
+  if (stat != kOfxStatOK) {
+    throw Exception(stat, "ofx::ParametricParameter::getControlPoint");
+  }
+}
+
+void ParametricParameterDescriptor::setControlPoint(int dim, Time t, int ctrlIdx, double pos, double val, bool addKey) {
+  OfxStatus stat = mParametricSuite->parametricParamSetNthControlPoint(mDescHandle, dim, t, ctrlIdx, pos, val, addKey);
+  if (stat != kOfxStatOK) {
+    throw Exception(stat, "ofx::ParametricParameter::setControlPoint");
+  }
+}
+
+void ParametricParameterDescriptor::addControlPoint(int dim, Time t, double pos, double val, bool addKey) {
+  OfxStatus stat = mParametricSuite->parametricParamAddControlPoint(mDescHandle, dim, t, pos, val, addKey);
+  if (stat != kOfxStatOK) {
+    throw Exception(stat, "ofx::ParametricParameter::addControlPoint");
+  }
+}
+
+void ParametricParameterDescriptor::deleteControlPoint(int dim, int ctrlIdx) {
+  OfxStatus stat = mParametricSuite->parametricParamDeleteControlPoint(mDescHandle, dim, ctrlIdx);
+  if (stat != kOfxStatOK) {
+    throw Exception(stat, "ofx::ParametricParameter::deleteControlPoint");
+  }
+}
+
+void ParametricParameterDescriptor::deleteAllControlPoints(int dim) {
+  OfxStatus stat = mParametricSuite->parametricParamDeleteAllControlPoints(mDescHandle, dim);
+  if (stat != kOfxStatOK) {
+    throw Exception(stat, "ofx::ParametricParameter::deleteAllControlPoints");
+  }
 }
 
 // ---
@@ -153,53 +203,53 @@ std::string ParametricParameter::dimensionLabel(int d) {
   return mProps.getString(kOfxParamPropDimensionLabel, d);
 }
 
-int ParametricParameter::getControlPointsCount(int curveIndex, Time t) {
+int ParametricParameter::getControlPointsCount(int dim, Time t) {
   int rv = 0;
-  OfxStatus stat = mParametricSuite->parametricParamGetNControlPoints(mHandle, curveIndex, t, &rv);
+  OfxStatus stat = mParametricSuite->parametricParamGetNControlPoints(mHandle, dim, t, &rv);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParametricParameter::controlPointsCount");
   }
   return rv;
 }
 
-void ParametricParameter::getControlPoint(int curveIndex, Time t, int ctrlIdx, double *pos, double *val) {
-  OfxStatus stat = mParametricSuite->parametricParamGetNthControlPoint(mHandle, curveIndex, t, ctrlIdx, pos, val);
+void ParametricParameter::getControlPoint(int dim, Time t, int ctrlIdx, double *pos, double *val) {
+  OfxStatus stat = mParametricSuite->parametricParamGetNthControlPoint(mHandle, dim, t, ctrlIdx, pos, val);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParametricParameter::getControlPoint");
   }
 }
 
-void ParametricParameter::setControlPoint(int curveIndex, Time t, int ctrlIdx, double pos, double val, bool addKey) {
-  OfxStatus stat = mParametricSuite->parametricParamSetNthControlPoint(mHandle, curveIndex, t, ctrlIdx, pos, val, addKey);
+void ParametricParameter::setControlPoint(int dim, Time t, int ctrlIdx, double pos, double val, bool addKey) {
+  OfxStatus stat = mParametricSuite->parametricParamSetNthControlPoint(mHandle, dim, t, ctrlIdx, pos, val, addKey);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParametricParameter::setControlPoint");
   }
 }
 
-void ParametricParameter::addControlPoint(int curveIndex, Time t, double pos, double val, bool addKey) {
-  OfxStatus stat = mParametricSuite->parametricParamAddControlPoint(mHandle, curveIndex, t, pos, val, addKey);
+void ParametricParameter::addControlPoint(int dim, Time t, double pos, double val, bool addKey) {
+  OfxStatus stat = mParametricSuite->parametricParamAddControlPoint(mHandle, dim, t, pos, val, addKey);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParametricParameter::addControlPoint");
   }
 }
 
-void ParametricParameter::deleteControlPoint(int curveIndex, int ctrlIdx) {
-  OfxStatus stat = mParametricSuite->parametricParamDeleteControlPoint(mHandle, curveIndex, ctrlIdx);
+void ParametricParameter::deleteControlPoint(int dim, int ctrlIdx) {
+  OfxStatus stat = mParametricSuite->parametricParamDeleteControlPoint(mHandle, dim, ctrlIdx);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParametricParameter::deleteControlPoint");
   }
 }
 
-void ParametricParameter::deleteAllControlPoints(int curveIndex) {
-  OfxStatus stat = mParametricSuite->parametricParamDeleteAllControlPoints(mHandle, curveIndex);
+void ParametricParameter::deleteAllControlPoints(int dim) {
+  OfxStatus stat = mParametricSuite->parametricParamDeleteAllControlPoints(mHandle, dim);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParametricParameter::deleteAllControlPoints");
   }
 }
 
-double ParametricParameter::eval(int curveIndex, Time t, double pos) {
+double ParametricParameter::eval(int dim, Time t, double pos) {
   double rv = 0.0;
-  OfxStatus stat = mParametricSuite->parametricParamGetValue(mHandle, curveIndex, t, pos, &rv);
+  OfxStatus stat = mParametricSuite->parametricParamGetValue(mHandle, dim, t, pos, &rv);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::ParametricParameter::eval");
   }

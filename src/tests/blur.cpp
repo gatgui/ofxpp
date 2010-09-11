@@ -67,12 +67,6 @@ class BlurInteract : public ofx::Interact {
     virtual OfxStatus penDown(ofx::Interact::PenArgs &args);
     virtual OfxStatus penUp(ofx::Interact::PenArgs &args);
     
-    //virtual OfxStatus keyDown(ofx::Interact::KeyArgs &args);
-    //virtual OfxStatus keyUp(ofx::Interact::KeyArgs &args);
-    //virtual OfxStatus keyRepeat(ofx::Interact::KeyArgs &args);
-    //virtual OfxStatus gainFocus(ofx::Interact::FocusArgs &args);
-    //virtual OfxStatus loseFocus(ofx::Interact::FocusArgs &args);
-    
   protected:
     
     DragOp mOp;
@@ -103,8 +97,6 @@ class BlurEffect : public ofx::ImageEffect {
     
     virtual OfxStatus isIdentity(ofx::ImageEffect::IsIdentityArgs &args);
     virtual OfxStatus render(ofx::ImageEffect::RenderArgs &args);
-    //virtual OfxStatus getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args);
-    //virtual OfxStatus getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args);
     
   protected:
     
@@ -288,26 +280,6 @@ OfxStatus BlurEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args) {
     return kOfxStatReplyDefault;
   }
 }
-
-/*
-OfxStatus BlurEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args)
-{
-  ofx::Clip cSource = getClip("Source");
-  
-  args.RoD = cSource.getRegionOfDefinition(args.time);
-  
-  return kOfxStatOK;
-}
-
-OfxStatus BlurEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args)
-{
-  ofx::Clip cSource = getClip("Source");
-  
-  args.setInputRoI("Source", cSource.getRegionOfDefinition(args.time));
-  
-  return kOfxStatOK;
-}
-*/
 
 OfxStatus BlurEffect::render(ofx::ImageEffect::RenderArgs &args) {
   

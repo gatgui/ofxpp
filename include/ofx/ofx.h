@@ -28,19 +28,27 @@ USA.
 /** \mainpage OFXpp library documentation.
  *  \section intro Introduction
  *  \section build Build
- *  In order to build OFXpp library, you will need git command line tools and SCons above 1.3.
+ *  In order to build OFXpp library, you will need git command line tools and SCons above 1.3.\n
+ *  First, get the source code:
  *  \code
  *  git clone git://github.com/gatgui/ofxpp.git
+ *  cd ofxpp
+ *  git submodule init
+ *  git submodule update
  *  \endcode
- *  targets:\n
- *  - ofxpp
- *  - pyofx
- *  - pyplugin
- *  - ellipseFade
- *  - multiBlur
- *  - gaussianBlur
- *
- *  flags:\n
+ *  Build it using:
+ *  \code
+ *  scons [flags] [target]
+ *  \endcode
+ *  Here is the list of available targets:\n
+ *  - ofxpp: C++ object oriented library that wraps the OpenFX API.
+ *  - pyofx: Python bindings of the ofxpp library.
+ *  - pyplugin: OpenFX plugin in charge of loading python written plugins.
+ *  - ellipseFade: Sample plugin.
+ *  - multiBlur: Sample plugin.
+ *  - gaussianBlur: Sample plugin.
+ *  
+ *  and flags:\n
  *  - ofxVersion=<ver> (1.1 by default)
  *  - PythonFrameworkPath=<path_to_framework_directory> (OSX only)
  *  - PythonFramework=<python_framework_name> (OSX only, defaults to "Python")
@@ -48,17 +56,45 @@ USA.
  *  - x86=0|1
  *  - debug=0|1
  *  - debugInfo=0|1 (windows only)
- *  - ofxNewMacPackaging=0|1 (OSX only, defaults to "0")
+ *  - ofxNewMacPackaging=0|1 (OSX only, tells to use the newly defined architecture in OpenFX 1.2 for 64bit plugins, defaults to "0")
  *  - forceOverlayRedraw=0|1 (for ellipseFade, multiBlur targets only, defaults to "1")
  *
- *  \note x64 and x86 are mutually exclusive
- *  \section usage Basic usage
+ *  So to build pyplugin for 32bit architectures using 2 processes:
+ *  \code
+ *  scons -j 2 x86=1 pyplugin
+ *  \endcode
+ *  This should create new directories in the current one containing the binaries.\n
+ *  With the example above:
+ *  \code
+ *  release/
+ *   |_ x86/
+ *       |_ include/
+ *       |_ lib/
+ *       |   |_ libofxpp.a : C++ library.
+ *       |   |_ python/
+ *       |       |_ ofx.so : Python bindings.
+ *       |_ openfx/
+ *           |_ pyplugin.ofx.bundle : OpenFX plugin.
+ *  \endcode
+ *  \note x64 and x86 are mutually exclusive.\n
+ *        You can of course use other SCons builtin flags (-c: clean, -j <n>: compile using n processes, ...).\n
+ *        SCons handles dependencies, so building pyplugin will automatically build ofxpp and pyofx.
+ *  
+ *  \section plugin How to write a plugin
+ *  \subsection plugcpp In C++
+ *  \subsection plugpy In Python
+ *  \section python Python bindings and python plugins loader plugin
  *  \subsection env Environment setup
  *  To use the python binding, you'll need to add the directory it lies in to your PYTHONPATH environment variable.\n
  *  You also have to set you OFX_PLUGIN_PATH environment variable as you would do for any other OpenFX plugin.\n
- *  The python loader looks for ".py" files in the standard OFX_PLUGIN_PATH.
- *  \section python Python bindings and python OFX plugin loader
+ *  The python loader looks for ".py" files in all the directories specified by the standard OFX_PLUGIN_PATH environment variable.
+ *  \subsection write Writing your own plugins in python
+ *  The python API tries to stricly follow the C++ one whenever possible.\n
  *
+ *  \example ellipseFade.py
+ *  Mask the input image with an ellipse, gardually fading its content to black towards the edges. Python version.
+ *  \example ellipseFade.cpp
+ *  Mask the input image with an ellipse, gardually fading its content to black towards the edges. C++ version.
  */
 
 #ifndef __ofx_ofx_h__

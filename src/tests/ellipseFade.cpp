@@ -93,8 +93,6 @@ class EllipseFadeEffect : public ofx::ImageEffect {
     double normalisedDistanceToEllipseCenter(double x, double y, double w, double h, double px, double py);
     
     virtual OfxStatus isIdentity(ofx::ImageEffect::IsIdentityArgs &args);
-    //virtual OfxStatus getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args);
-    //virtual OfxStatus getRegionsOfInterest(ofx::ImageEffect::GetRoIsArgs &args);
     virtual OfxStatus render(ofx::ImageEffect::RenderArgs &args);
     
   public:
@@ -299,8 +297,6 @@ OfxStatus EllipseFadeInteract::draw(ofx::Interact::DrawArgs &args) {
   double xoff, yoff;
   args.effect->projectOffset(&xoff, &yoff);
   
-  //double par = effect->projectPixelAspectRatio();
-  
   double cecx, cecy, cew, ceh;
   ofx::NormalisedToCanonicalCoords(ecx, ecy, wext, hext, xoff, yoff, true, &cecx, &cecy);
   ofx::NormalisedToCanonicalCoords(ew, eh, wext, hext, 0, 0, false, &cew, &ceh);
@@ -477,25 +473,7 @@ OfxStatus EllipseFadeEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args) 
   }
 }
 
-/*
-OfxStatus EllipseFadeEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &args) {
-  ofx::Rect<double> RoD;
-  // -> check center, width, and height
-  // -> also apply renderScaleX and renderScaleY
-  // -> return in Canonical Coords
-  
-  //void projectSize(double &w, double &h) throw(Exception);
-  //void projectOffset(double &x, double &y) throw(Exception);
-  //void projectExtent(double &w, double &h) throw(Exception);
-  //double projectPixelAspectRatio() throw(Exception);
-}
-
-OfxStatus EllipseFadeEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args) {
-}
-*/
-
 OfxStatus EllipseFadeEffect::render(ofx::ImageEffect::RenderArgs &args) { 
-  // renderWindow is in pixels, not canonical coords
   
   ofx::Clip cSrc = getClip("Source");
   ofx::Clip cOut = getClip("Output");
@@ -525,9 +503,6 @@ OfxStatus EllipseFadeEffect::render(ofx::ImageEffect::RenderArgs &args) {
   
   double cw, ch;
   ofx::NormalisedToCanonicalCoords(w*0.5, h*0.5, wext, hext, 0, 0, false, &cw, &ch);
-  
-  //host()->message()->sendTo(this, ofx::MessageTypeMessage, NULL, "ellipse center: %f, %f", cx, cy);
-  //host()->message()->sendTo(this, ofx::MessageTypeMessage, NULL, "ellipse dimension: %f, %f", cw, ch);
   
   double pcx, pcy;
   
@@ -642,7 +617,6 @@ OfxExport int OfxGetNumberOfPlugins(void) {
 OfxExport OfxPlugin* OfxGetPlugin(int i) {
   if (i == 0) {
     EllipseFadePlugin *p = new EllipseFadePlugin();
-    // when is p deleted?
     return p->description();
   }
   return NULL;

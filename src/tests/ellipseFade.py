@@ -425,7 +425,7 @@ class Plugin(ofx.ImageEffectPlugin):
     self.identifier = "gatgui.filter.pyEllipseFade";
 
 
-# The entry points PythonOfxLoader will look for
+# The entry points pyplugin will look for
 
 def OfxGetNumberOfPlugins():
   return 1

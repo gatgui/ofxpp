@@ -65,6 +65,7 @@ prjs = [
     "incdirs" : ["gcore/include"],
     "srcs"    : glob.glob("src/python/plugin/*.cpp"),
     "libs"    : ["ofxpp", "gcore"],
+    "deps"    : ["pyofx"],
     "custom"  : [python.Require],
     "post"    : openfx.MakeBundle
   },

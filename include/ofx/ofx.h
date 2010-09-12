@@ -83,19 +83,37 @@ USA.
  *  \section plugin How to write a plugin
  *  \subsection plugcpp In C++
  *  For each effect you need to create at least 3 new classes.\n
- *  - A subclass ofx::ImageEffectDescriptor class.\n
+ *  <ul>
+ *  <li>A subclass of the ofx::ImageEffectDescriptor class.\n
  *  Override the ofx::ImageEffectDescriptor::describe and ofx::ImageEffectDescriptor::describeInContext methods.\n
  *  Provide a constructor that takes a ofx::ImageEffectHost pointer and a OfxImageEffectHandle as parameters.\n
- *  - A subclass ofx::ImageEffect class.\n
+ *  \n
+ *  </li>
+ *  <li>A subclass of the ofx::ImageEffect class.\n
  *  Override at least the ofx::ImageEffect::render method.\n
  *  Provide a constructor that takes a ofx::ImageEffectHost pointer and a OfxImageEffectHandle as parameters.\n
- *  - A subclass ofx::ImageEffectPlugin template class.\n
+ *  \n
+ *  </li>
+ *  <li>A subclass of the ofx::ImageEffectPlugin template class.\n
  *  You should provide your newly defined descriptor and effect classes for the template parmeters.\n
  *  Fill in your plugin version and unique identifier in the plugin constructor.
  *  \n
- *  If you also want to have an overlay interact for your effect, derive a new subclass of ofx::Interact.\n
+ *  </li>
+ *  </ul>
+ *  \n
+ *  If you also want to have an overlay interact for your effect, you might need:
+ *  <ul>
+ *  <li>A subclass of the ofx::InteractDescriptor class.\n
+ *  This one is optional, and you probably don't need it most of the time.\n
+ *  \n
+ *  </li>
+ *  <li>A subclass of the ofx::Interact class.\n
  *  Override at least the ofx::Interact::draw method.\n
  *  Provide a constructor that takes a ofx::ImageEffectHost pointer and a OfxInteractHandle as parameters.\n
+ *  \n
+ *  </li>
+ *  </ul>
+ *  \n
  *  Finally, define the OpenFX entry points.\n
  *  \code
  *  OfxExport int OfxGetNumberOfPlugins(void) {

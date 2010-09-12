@@ -82,14 +82,45 @@ USA.
  *  
  *  \section plugin How to write a plugin
  *  \subsection plugcpp In C++
+ *  For each effect you need to create at least 3 new classes.\n
+ *  - A subclass ofx::ImageEffectDescriptor class.\n
+ *  Override the ofx::ImageEffectDescriptor::describe and ofx::ImageEffectDescriptor::describeInContext methods.\n
+ *  Provide a constructor that takes a ofx::ImageEffectHost pointer and a OfxImageEffectHandle as parameters.\n
+ *  - A subclass ofx::ImageEffect class.\n
+ *  Override at least the ofx::ImageEffect::render method.\n
+ *  Provide a constructor that takes a ofx::ImageEffectHost pointer and a OfxImageEffectHandle as parameters.\n
+ *  - A subclass ofx::ImageEffectPlugin template class.\n
+ *  You should provide your newly defined descriptor and effect classes for the template parmeters.\n
+ *  Fill in your plugin version and unique identifier in the plugin constructor.
+ *  \n
+ *  If you also want to have an overlay interact for your effect, derive a new subclass of ofx::Interact.\n
+ *  Override at least the ofx::Interact::draw method.\n
+ *  Provide a constructor that takes a ofx::ImageEffectHost pointer and a OfxInteractHandle as parameters.\n
+ *  Finally, define the OpenFX entry points.\n
+ *  \code
+ *  OfxExport int OfxGetNumberOfPlugins(void) {
+ *    return <number of plugins in your binary>;
+ *  }
+ *
+ *  OfxExport OfxPlugin* OfxGetPlugin(int i) {
+ *    if (i == 0) {
+ *      <YourFirstPluginClass> *p = new <YourFirstPluginClass>();
+ *      return p->description();
+ *    } else if (i == 1) {
+ *      ...
+ *    }
+ *    return NULL;
+ *  }
+ *  \endcode
+ *
  *  \subsection plugpy In Python
+ *  The python API tries to stricly follow the C++ one whenever possible.\n
+ *
  *  \section python Python bindings and python plugins loader plugin
  *  \subsection env Environment setup
  *  To use the python binding, you'll need to add the directory it lies in to your PYTHONPATH environment variable.\n
  *  You also have to set you OFX_PLUGIN_PATH environment variable as you would do for any other OpenFX plugin.\n
  *  The python loader looks for ".py" files in all the directories specified by the standard OFX_PLUGIN_PATH environment variable.
- *  \subsection write Writing your own plugins in python
- *  The python API tries to stricly follow the C++ one whenever possible.\n
  *
  *  \example ellipseFade.py
  *  Mask the input image with an ellipse, gardually fading its content to black towards the edges. Python version.

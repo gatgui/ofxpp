@@ -265,6 +265,9 @@ namespace ofx {
       
       //! Get image effect object for a given native handle.
       static ImageEffect* GetEffect(OfxImageEffectHandle hdl);
+      
+      //! Get image effect object from its parameter set handle.
+      static ImageEffect* GetEffectForParams(OfxParamSetHandle handle);
     
     public:
       
@@ -586,6 +589,7 @@ namespace ofx {
       ImageEffectHost *mHost;
       
       static std::map<OfxImageEffectHandle, ImageEffect*> msEffects;
+      static std::map<OfxParamSetHandle, ImageEffect*> msParamSetEffects;
       
       ImageEffect();
   };

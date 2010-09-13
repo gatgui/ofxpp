@@ -454,10 +454,20 @@ void ImageEffect::GetTimeDomainArgs::setOutputs(PropertySet &outArgs) {
 // ---
 
 std::map<OfxImageEffectHandle, ImageEffect*> ImageEffect::msEffects;
+std::map<OfxParamSetHandle, ImageEffect*> ImageEffect::msParamSetEffects;
 
 ImageEffect* ImageEffect::GetEffect(OfxImageEffectHandle handle) {
   std::map<OfxImageEffectHandle, ImageEffect*>::iterator it = msEffects.find(handle);
   if (it != msEffects.end()) {
+    return it->second;
+  } else {
+    return 0;
+  }
+}
+
+ImageEffect* ImageEffect::GetEffectForParams(OfxParamSetHandle handle) {
+  std::map<OfxParamSetHandle, ImageEffect*>::iterator it = msParamSetEffects.find(handle);
+  if (it != msParamSetEffects.end()) {
     return it->second;
   } else {
     return 0;

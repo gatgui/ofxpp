@@ -49,9 +49,9 @@ USA.
  *  - gaussianBlur: Sample plugin.
  *  
  *  and flags:\n
- *  - ofxVersion=<ver> (1.1 by default)
- *  - PythonFrameworkPath=<path_to_framework_directory> (OSX only)
- *  - PythonFramework=<python_framework_name> (OSX only, defaults to "Python")
+ *  - ofxVersion={ver} (1.1 by default)
+ *  - PythonFrameworkPath={path_to_framework_directory} (OSX only)
+ *  - PythonFramework={python_framework_name} (OSX only, defaults to "Python")
  *  - x64=0|1
  *  - x86=0|1
  *  - debug=0|1
@@ -77,68 +77,305 @@ USA.
  *           |_ pyplugin.ofx.bundle : OpenFX plugin.
  *  \endcode
  *  \note x64 and x86 are mutually exclusive.\n
- *        You can of course use other SCons builtin flags (-c: clean, -j <n>: compile using n processes, ...).\n
+ *        You can of course use other SCons builtin flags (-c: clean, -j {n}: compile using n processes, ...).\n
  *        SCons handles dependencies, so building pyplugin will automatically build ofxpp and pyofx.
  *  
  *  \section plugin How to write a plugin
  *  \subsection plugcpp In C++
  *  For each effect you need to create at least 3 new classes.\n
  *  <ul>
- *  <li>A subclass of the ofx::ImageEffectDescriptor class.\n
+ *  <li>A subclass of the ofx::ImageEffectDescriptor class.\n\n
  *  Override the ofx::ImageEffectDescriptor::describe and ofx::ImageEffectDescriptor::describeInContext methods.\n
  *  Provide a constructor that takes a ofx::ImageEffectHost pointer and a OfxImageEffectHandle as parameters.\n
  *  \n
+ *  \code
+ *  class MyEffectDesc : public ofx::ImageEffectDescriptor {
+ *    
+ *    public:
+ *      MyEffectDesc(ofx::ImageEffectHost *host, OfxImageEffectHandle handle)
+ *        : ofx::ImageEffectDescriptor(host, handle) {
+ *        ...
+ *      }
+ *      
+ *      virtual ~MyEffectDesc() {
+ *      }
+ *      
+ *      ...
+ *      
+ *      virtual OfxStatus describe() {
+ *        ...
+ *        return kOfxStatOK;
+ *      }
+ *      
+ *      virtual OfxStatus describeInContext(ofx::ImageEffectContext context) {
+ *        ...
+ *        return kOfxStatOK;
+ *      }
+ *  };
+ *  \endcode
+ *  \n
  *  </li>
- *  <li>A subclass of the ofx::ImageEffect class.\n
+ *  <li>A subclass of the ofx::ImageEffect class.\n\n
  *  Override at least the ofx::ImageEffect::render method.\n
  *  Provide a constructor that takes a ofx::ImageEffectHost pointer and a OfxImageEffectHandle as parameters.\n
  *  \n
+ *  \code
+ *  class MyEffect : public ofx::ImageEffect {
+ *    public:
+ *      
+ *      MyEffect(ofx::ImageEffectHost *host, OfxImageEffectHandle handle)
+ *        : ofx::ImageEffect(host, handle) {
+ *        ...
+ *      }
+ *      
+ *      virtual ~MyEffect() {
+ *      }
+ *      
+ *      ...
+ *      
+ *      virtual OfxStatus render(ofx::ImageEffect::RenderArgs &args) {
+ *        ...
+ *        return kOfxStatOK;
+ *      }
+ *  };
+ *  \endcode
+ *  \n
  *  </li>
- *  <li>A subclass of the ofx::ImageEffectPlugin template class.\n
+ *  <li>A subclass of the ofx::ImageEffectPlugin template class.\n\n
  *  You should provide your newly defined descriptor and effect classes for the template parmeters.\n
  *  Fill in your plugin version and unique identifier in the plugin constructor.
  *  \n
+*   \code
+ *  class MyPlugin : public ofx::ImageEffectPlugin<MyEffectDesc, MyEffect> {
+ *    public:
+ *      
+ *      MyPlugin()
+ *        : ofx::ImageEffectPlugin<MyEffectDesc, MyEffect>(host, handle) {
+ *        majorVersion(1);
+ *        minorVersion(0);
+ *        identifier("gatgui.filter.myeffect"):
+ *      }
+ *      
+ *      virtual ~MyPlugin() {
+ *      }
+ *  };
+ *  \endcode
+ *  \n
  *  </li>
  *  </ul>
  *  \n
- *  If you also want to have an overlay interact for your effect, you might need:
+ *  If you also want to have an overlay interact for your effect, you will need:
  *  <ul>
- *  <li>A subclass of the ofx::InteractDescriptor class.\n
- *  This one is optional, and you probably don't need it most of the time.\n
+ *  <li>A subclass of the ofx::InteractDescriptor class.\n\n
+ *  Override the ofx::InteractDescriptor::describe method.\n
+ *  Provide a constructor that taks a ofx::ImageEffectHost pointer and a OfxInteractHandle as parameters.\n
+ *  \n
+ *  \code
+ *  class MyInteractDesc : public ofx::InteractDescriptor {
+ *    public:
+ *      
+ *      MyInteractDesc(ofx::ImageEffectHost *host, OfxInteractHandle handle)
+ *        : ofx::InteractDescriptor(host, handle) {
+ *        ...
+ *      }
+ *  
+ *      virtual ~MyInteractDesc() {
+ *      }
+ *      
+ *      ...
+ *      
+ *      virtual OfxStatus describe() {
+ *        ...
+ *        return kOfxStatOK;
+ *      }
+ *  }
+ *  \endcode
+ *  \n
+ *  \note This one is optional, and you probably don't need it most of the time.\n
+ *        You can use the defaulf ofx::InteractDescriptor instead.\n
  *  \n
  *  </li>
- *  <li>A subclass of the ofx::Interact class.\n
+ *  <li>A subclass of the ofx::Interact class.\n\n
  *  Override at least the ofx::Interact::draw method.\n
  *  Provide a constructor that takes a ofx::ImageEffectHost pointer and a OfxInteractHandle as parameters.\n
  *  \n
+ *  \code
+ *  class MyInteract : public ofx::Interact {
+ *    public:
+ *      
+ *      MyInteract(ofx::ImageEffectHost *host, OfxInteractHandle handle)
+ *        : ofx::Interact(host, handle) {
+ *        ...
+ *      }
+ *  
+ *      virtual ~MyInteract() {
+ *      }
+ *      
+ *      ...
+ *      
+ *      virtual OfxStatus draw(ofx::Interact::DrawArgs &args) {
+ *        ...
+ *        return kOfxStatOK;
+ *      }
+ *  }
+ *  \endcode
+ *  \n
+ *  Don't forget to tell the host to use your interact in the "describeInContext" method:
+ *  \n
+ *  \code
+ *  // Check if host supports overlay interacts.
+ *  if (host()->supportsOverlays()) {
+ *    // If you have decided to use the default interact descriptor, pass ofx::InteractDescriptor instead of MyInteractDesc.
+ *    overlayInteract(ofx::InteractEntryPoint<MyPlugin, MyInteractDesc, MyInteract>);
+ *  }
+ *  \endcode
+ *  \n
  *  </li>
  *  </ul>
  *  \n
- *  Finally, define the OpenFX entry points.\n
+ *  Last thing to do (beside implementing all those methods), is to define the OpenFX entry points the host will look for:
+ *  \n
  *  \code
  *  OfxExport int OfxGetNumberOfPlugins(void) {
- *    return <number of plugins in your binary>;
+ *    return 1;
  *  }
  *
  *  OfxExport OfxPlugin* OfxGetPlugin(int i) {
  *    if (i == 0) {
- *      <YourFirstPluginClass> *p = new <YourFirstPluginClass>();
+ *      MyPlugin *p = new MyPlugin();
  *      return p->description();
- *    } else if (i == 1) {
- *      ...
  *    }
  *    return NULL;
  *  }
  *  \endcode
- *
+ *  \n
+ *  In the "Examples" section, you will find the complete source code of a simple plugin called ellipseFade.\n
+ *  \n
  *  \subsection plugpy In Python
  *  The python API tries to stricly follow the C++ one whenever possible.\n
+ *  Still, there are some language related concept that cannot be translated straight into python.\n
+ *  Amongst them, class templates and pointers needed a bit of work-around.\n
+ *  Class templates issues are handle case by case, and the best way to understand of those bits of API are translated into python is yet to see real code.\n
+ *  As for pointers, most of them are wrapped in a Handle class, whose main purpose is just to pass the pointers around.\n
+ *  The only exception is for pointers that are supposed to be used to access image data. As in\n
+ *  <ul><li>ofx::Image::pixelAddress</li>
+ *  <li>ofx::ImageEffect::alloc (only the variant which take pixel data informations is available in python)</li>
+ *  <li>ofx::ImageEffect::lock</li></ul>
+ *  As there's no pointers in python, thus no pointer arithmetic, those are wrapped in special classes that also holds pixel type informations.\n
+ *  The returned objects have then r, g, b, a, y, u, v attributes (depending on the actual pixel type, some might not be defined) and 3 extra methods,\n
+ *  <ul><li>goto(x, y)</li>
+ *  <li>next()</li>
+ *  <li>prev()</li></ul>
+ *  to respectively move to pixel at position (x,y), next pixel and previous pixel.\n
+ *  \n
+ *  For the remaining of the API, using the following rules should be enough to apply the C++ documenation to python code:\n
+ *  <ul>
+ *  <li>The ofx namespace is mapped to the ofx module</li>
+ *  <li>Simple property get/set pairs are directly mapped to python object attributes</li>
+ *  <li>Multi-dimensional parameters values are represented as tuples</li>
+ *  <li>All suites related methods are also methods</li>
+ *  </ul>
+ *  \n
+ *  I will re-use the code samples from the C++ section\n
+ *  \n
+ *  Effect descriptor class:\n
+ *  \code
+ *  class MyEffectDesc(ofx.ImageEffectDescriptor):
+ *    def __init__(self, host, handle):
+ *      ofx.ImageEffectDescriptor.__init__(self, host, handle)
+ *    
+ *    def describe(self):
+ *      ...
+ *      return ofx.StatOK
+ *    
+ *    def describeInContext(self, context):
+ *      ...
+ *      return ofx.StatOK
  *
- *  \section python Python bindings and python plugins loader plugin
+ *  \endcode
+ *  \n
+ *  Effect class:\n
+ *  \code
+ *  class MyEffect(ofx.ImageEffect):
+ *    def __init__(self, host, handle):
+ *      ofx.ImageEffect.__init__(self, host, handle)
+ *    
+ *    def render(self, args):
+ *      ...
+ *      return ofx.StatOK
+ *
+ *  \endcode
+ *  \n
+ *  Interact descriptor class:\n
+ *  \code
+ *  class MyInteractDesc(ofx.InteractDescriptor):
+ *    def __init__(self, host, handle):
+ *      ofx.InteractDescriptor.__init__(self, host, handle)
+ *    
+ *    def describe(self):
+ *      ...
+ *      return ofx.StatOK
+ *
+ *  \endcode
+ *  \n
+ *  Interact class:\n
+ *  \code
+ *  class MyInteract(ofx.Interact):
+ *    def __init__(self, host, handle):
+ *      ofx.Interact.__init__(self, host, handle)
+ *    
+ *    def draw(self, args):
+ *      ...
+ *      return ofx.StatOK
+ *
+ *  \endcode
+ *  \n
+ *  Bind the interact to your effect:\n
+ *  \code
+ *  if self.host.supportsOverlays:
+ *    # There are no templates in python, instead, pass a tuple containing the descriptor and interact classes.
+ *    self.overlayInteract = (MyInteractDesc, MyInteract)
+ *  \endcode
+ *  \n
+ *  Plugin class:\n
+ *  \code
+ *  class MyPlugin(ofx.ImageEffectPlugin):
+ *    def __init__(self):
+ *      # There are no templates in python, instead, just pass you new classes as arguments.
+ *      ofx.ImageEffectPlugin.__init__(self, MyEffectDesc, MyEffect)
+ *      self.majorVersion = 1
+ *      self.minorVersion = 0
+ *      self.identifier = "gatgui.filter.mypyeffect"
+ *  
+ *  \endcode
+ *  \n
+ *  OpenFX entry points:\n
+ *  \code
+ *  def OfxNumberOfPlugins():
+ *    return 1
+ *  
+ *  def OfxGetPlugin(i):
+ *    if i == 0:
+ *      # Note here that we return the plugin object itself.
+ *      return MyPlugin()
+ *    return None
+ *  
+ *  \endcode
+ *  \n
+ *  You will also find the python version of "ellipseFade" plugin in the "Examples" section.\n
+ *  \n
+ *  \section usage Usage
  *  \subsection env Environment setup
- *  To use the python binding, you'll need to add the directory it lies in to your PYTHONPATH environment variable.\n
- *  You also have to set you OFX_PLUGIN_PATH environment variable as you would do for any other OpenFX plugin.\n
- *  The python loader looks for ".py" files in all the directories specified by the standard OFX_PLUGIN_PATH environment variable.
+ *  Add the OpenFX plugin "pyplugin" to your OFX_PLUGIN_PATH.\n
+ *  You will also need to add the directory the ofx python module lies in to your PYTHONPATH.\n
+ *  \note For nuke users, the .nuke folder in your home directory is automatically added to both the OFX_PLUGIN_PATH and PYTHONPATH.\n
+ *        Just copying the plugin and the python module in your .nuke folder doesn't seem to work though. Any ideas?\n
+ *  \subsection install Install python plugins
+ *  The python loader looks for ".py" files in all the directories specified by the standard OFX_PLUGIN_PATH environment variable.\n
+ *  \subsection limitation Limitations
+ *  Python being an interpreted language, plugin written in it tends to be dog slow. There's nothing I can do about that sorry.\n
+ *  Python is not really threads friendly. All python plugins are automatically set to be thread unsafe, but there are still some issues with interacts.\n
+ *  If you try to use the overlay interact of a python effect that is still rendering, nasty things will happen. To say, from my tests on windows, Nuke would just freeze.\n
  *
  *  \example ellipseFade.py
  *  Mask the input image with an ellipse, gardually fading its content to black towards the edges. Python version.

@@ -535,6 +535,16 @@ OfxExport int OfxGetNumberOfPlugins(void)
   
   gcore::Env::EachInPathFunc func;
   
+#ifdef _WIN32
+  gPathList.pathEntry(gcore::Path("C:/Program Files/Common Files/OFX/Plugins"));
+#else
+#ifdef __APPLE__
+  gPathList.pathEntry(gcore::Path("/Library/OFX/Plugins"));
+#else
+  gPathList.pathEntry(gcore::Path("/usr/OFX/Plugins"));
+#endif
+#endif
+
   gcore::Bind(&gPathLister, METHOD(PathLister, pathEntry), func);
   
   gcore::Env::EachInPath("OFX_PLUGIN_PATH", func);

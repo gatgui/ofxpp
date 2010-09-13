@@ -453,26 +453,46 @@ void ImageEffect::GetTimeDomainArgs::setOutputs(PropertySet &outArgs) {
 
 // ---
 
-std::map<OfxImageEffectHandle, ImageEffect*> ImageEffect::msEffects;
-std::map<OfxParamSetHandle, ImageEffect*> ImageEffect::msParamSetEffects;
+static std::map<OfxImageEffectHandle, ImageEffect*> gEffects;
+static std::map<OfxParamSetHandle, ImageEffect*> gParamSetEffects;
 
-ImageEffect* ImageEffect::GetEffect(OfxImageEffectHandle handle) {
-  std::map<OfxImageEffectHandle, ImageEffect*>::iterator it = msEffects.find(handle);
-  if (it != msEffects.end()) {
+ImageEffect* GetEffect(OfxImageEffectHandle handle) {
+  std::map<OfxImageEffectHandle, ImageEffect*>::iterator it = gEffects.find(handle);
+  if (it != gEffects.end()) {
     return it->second;
   } else {
     return 0;
   }
 }
 
-ImageEffect* ImageEffect::GetEffectForParams(OfxParamSetHandle handle) {
-  std::map<OfxParamSetHandle, ImageEffect*>::iterator it = msParamSetEffects.find(handle);
-  if (it != msParamSetEffects.end()) {
+ImageEffect* GetEffectForParams(OfxParamSetHandle handle) {
+  std::map<OfxParamSetHandle, ImageEffect*>::iterator it = gParamSetEffects.find(handle);
+  if (it != gParamSetEffects.end()) {
     return it->second;
   } else {
     return 0;
   }
 }
+
+Host* GetHost(OfxImageEffectHandle hdl) {
+  ImageEffect *e = GetEffect(hdl);
+  if (e) {
+    return e->host();
+  } else {
+    return NULL;
+  }
+}
+
+Host* GetHostForParams(OfxParamSetHandle hdl) {
+  ImageEffect *e = GetEffectForParams(hdl);
+  if (e) {
+    return e->host();
+  } else {
+    return NULL;
+  }
+}
+
+// ---
 
 ImageEffect::ImageEffect()
   : mHandle(0), mHost(0) {
@@ -489,7 +509,8 @@ ImageEffect::~ImageEffect() {
 
 void ImageEffect::handle(OfxImageEffectHandle handle) throw(Exception) {
   if (mHandle != 0) {
-    msEffects.erase(msEffects.find(mHandle));
+    gEffects.erase(gEffects.find(mHandle));
+    gParamSetEffects.erase(gParamSetEffects.find(mParams.handle()));
   }
   if (!mHost) {
     throw BadHandleError("ofx::ImageEffet::setHandle: invalid host");
@@ -504,7 +525,8 @@ void ImageEffect::handle(OfxImageEffectHandle handle) throw(Exception) {
     mHost->imageEffectSuite()->getParamSet(mHandle, &hParams);
     mParams = ParameterSet(mHost, hParams);
     
-    msEffects[mHandle] = this;
+    gParamSetEffects[hParams] = this;
+    gEffects[mHandle] = this;
   }
 }
 

@@ -138,11 +138,6 @@ namespace ofx {
       
 #endif
       
-    public:
-      
-      //! Get host instance pointer.
-      static Host* Get();
-      
     protected:
       
       OfxHost *mHost;
@@ -266,11 +261,6 @@ namespace ofx {
       
       //! Get the number of rows and columns for parameter pages.
       void pageRowColumnCount(int *rowCount, int *columnCount);
-    
-    public:
-      
-      //! Get image effect host instance pointer.
-      static ImageEffectHost* Get();
       
     protected:
       

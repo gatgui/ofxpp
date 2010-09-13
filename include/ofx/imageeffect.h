@@ -263,14 +263,6 @@ namespace ofx {
   class ImageEffect {
     public:
       
-      //! Get image effect object for a given native handle.
-      static ImageEffect* GetEffect(OfxImageEffectHandle hdl);
-      
-      //! Get image effect object from its parameter set handle.
-      static ImageEffect* GetEffectForParams(OfxParamSetHandle handle);
-    
-    public:
-      
       //! Actions' render scale arguments.
       struct RenderScaleArgs {
         double renderScaleX; //!< Scale along X axis.
@@ -587,9 +579,6 @@ namespace ofx {
       PropertySet mProps;
       ParameterSet mParams;
       ImageEffectHost *mHost;
-      
-      static std::map<OfxImageEffectHandle, ImageEffect*> msEffects;
-      static std::map<OfxParamSetHandle, ImageEffect*> msParamSetEffects;
       
       ImageEffect();
   };

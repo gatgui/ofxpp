@@ -33,14 +33,6 @@ USA.
 
 namespace ofx {
 
-// this disqualifies ofxpp to be used as a shared library
-static Host *gsHost = 0;
-
-Host* Host::Get()
-{
-  return gsHost;
-}
-
 Host::Host(OfxHost *host) throw(Exception)
   : PropertySet(), mHost(host), mTimeLine(0), mProgress(0), mMessage(0),
     mMemory(0), mMultiThread(0), mPropSuite(0), mParamSuite(0) {
@@ -99,8 +91,6 @@ void Host::init() throw(Exception) {
     throw MissingHostFeatureError("Parametric parameter suite");
   }
 #endif
-  
-  gsHost = this;
 }
 
 int Host::APIVersion(int level) {
@@ -171,14 +161,6 @@ void* Host::OSHandle() {
 
 // ---
 
-// this disqualifies ofxpp to be used as a shared library
-static ImageEffectHost *gsImageEffectHost = 0;
-
-ImageEffectHost* ImageEffectHost::Get()
-{
-  return gsImageEffectHost;
-}
-
 ImageEffectHost::ImageEffectHost(OfxHost *h)
   : Host(h), mInteractSuite(0), mImageEffectSuite(0) {
 }
@@ -196,7 +178,6 @@ void ImageEffectHost::init() throw(Exception) {
   if (!mImageEffectSuite) {
     throw MissingHostFeatureError("Image effect suite");
   }
-  gsImageEffectHost = this;
 }
 
 std::string ImageEffectHost::name() {

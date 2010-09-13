@@ -387,6 +387,8 @@ USA.
 #define __ofx_ofx_h__
 
 #include <ofxCore.h>
+#include <ofxImageEffect.h>
+#include <ofxParam.h>
 #include <map>
 #include <vector>
 #include <string>
@@ -863,6 +865,18 @@ namespace ofx {
     *nx = (cx - (absolute ? xoff : 0.0)) / wsize;
     *ny = (cy - (absolute ? yoff : 0.0)) / hsize;
   }
+  
+  //! Get host object from an effect instance handle
+  class Host* GetHost(OfxImageEffectHandle hdl);
+  
+  //! Get host object from an parameter set instance handle
+  class Host* GetHostForParams(OfxParamSetHandle hdl);
+  
+  //! Get image effect object from its instance handle.
+  class ImageEffect* GetEffect(OfxImageEffectHandle hdl);
+  
+  //! Get image effect object from its parameter set instance handle.
+  class ImageEffect* GetEffectForParams(OfxParamSetHandle handle);
   
   /** Write a message to the log file.
    *  \param[in] msg Format stirng.

@@ -64,13 +64,7 @@ namespace ofx {
   template <InterpFunc F>
   OfxStatus InterpFuncWrap(OfxParamSetHandle instance, OfxPropertySetHandle inArgs, OfxPropertySetHandle outArgs) {
     
-    ImageEffect *effect = ImageEffect::GetEffectForParams(instance);
-    
-    if (!effect) {
-      return kOfxStatFailed;
-    }
-    
-    Host *host = effect->host();
+    Host *host = GetHostForParams(instance);
     
     if (!host) {
       return kOfxStatFailed;

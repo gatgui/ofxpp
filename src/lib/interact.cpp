@@ -73,7 +73,7 @@ OfxStatus InteractDescriptor::describe() {
 
 Interact::BaseArgs::BaseArgs(ImageEffectHost *, PropertySet &args) {
   OfxImageEffectHandle hEffect = (OfxImageEffectHandle) args.getPointer(kOfxPropEffectInstance, 0);
-  effect = ImageEffect::GetEffect(hEffect);
+  effect = GetEffect(hEffect);
   time = args.getDouble(kOfxPropTime, 0);
   renderScaleX = args.getDouble(kOfxImageEffectPropRenderScale, 0);
   renderScaleY = args.getDouble(kOfxImageEffectPropRenderScale, 1);
@@ -173,7 +173,7 @@ void Interact::redraw() throw(Exception) {
 
 ImageEffect* Interact::effectInstance() {
   OfxImageEffectHandle hdl = (OfxImageEffectHandle) mProps.getPointer(kOfxPropEffectInstance, 0);
-  return ImageEffect::GetEffect(hdl);
+  return GetEffect(hdl);
 }
 
 void* Interact::instanceData() {

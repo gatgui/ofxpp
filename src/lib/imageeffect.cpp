@@ -474,7 +474,7 @@ ImageEffect* GetEffectForParams(OfxParamSetHandle handle) {
   }
 }
 
-Host* GetHost(OfxImageEffectHandle hdl) {
+ImageEffectHost* GetHost(OfxImageEffectHandle hdl) {
   ImageEffect *e = GetEffect(hdl);
   if (e) {
     return e->host();

@@ -24,6 +24,7 @@ USA.
 #include "entrypoints.h"
 
 PyImageEffectPlugin *gEffectPlugins[PYOFX_MAX_ENTRY] = {0};
+PyObject* gInteractPluginClasses[PYOFX_MAX_ENTRY] = {0};
 PyObject* gInteractDescClasses[PYOFX_MAX_ENTRY] = {0};
 PyObject* gInteractClasses[PYOFX_MAX_ENTRY] = {0};
 PyObject* gInterpFuncObjs[PYOFX_MAX_ENTRY] = {0};
@@ -38,31 +39,32 @@ OfxInterpFunc gInterpFuncs[PYOFX_MAX_ENTRY] = {0};
 
 #include "macros.h"
 
-#define FIND_INTERACT(N, RV, DESC, INST)\
-  if ((gInteractDescClasses[N] == 0 && gInteractClasses[N] == 0) ||\
-      (gInteractDescClasses[N] == DESC && gInteractClasses[N] == INST))\
+#define FIND_INTERACT(N, RV, PLUGIN, DESC, INST)\
+  if ((gInteractPluginClasses[N] == 0 && gInteractDescClasses[N] == 0 && gInteractClasses[N] == 0) ||\
+      (gInteractPluginClasses[N] == PLUGIN && gInteractDescClasses[N] == DESC && gInteractClasses[N] == INST))\
   {\
     gInteractDescClasses[N] = DESC;\
     gInteractClasses[N] = INST;\
+    gInteractPluginClasses[N] = PLUGIN;\
     rv = &PyOFX_InteractMain<N>;\
     gInteractFuncs[N] = rv;\
   }\
   else
 
-#define FIND_INTERACT_LAST(N, RV, DESC, INST)\
+#define FIND_INTERACT_LAST(N, RV, PLUGIN, DESC, INST)\
   {\
     rv = 0;\
   }
 
-ofx::EntryPoint PyOFX_GetInteractFunc(PyObject *descClass, PyObject *instClass)
+ofx::EntryPoint PyOFX_GetInteractFunc(PyObject *pluginClass, PyObject *descClass, PyObject *instClass)
 {
   ofx::EntryPoint rv = 0;
   
-  MCR_REP(PYOFX_MAX_ENTRY, FIND_INTERACT, FIND_INTERACT_LAST, rv, descClass, instClass);
+  MCR_REP(PYOFX_MAX_ENTRY, FIND_INTERACT, FIND_INTERACT_LAST, rv, pluginClass, descClass, instClass);
   return rv;
 }
 
-#define FIND_HOST(N, RV, PLUGIN, DUMMY)\
+#define FIND_HOST(N, RV, PLUGIN, DUMMY0, DUMMY1)\
   if (gEffectPlugins[N] == 0 || gEffectPlugins[N] == PLUGIN)\
   {\
     gEffectPlugins[N] = PLUGIN;\
@@ -71,7 +73,7 @@ ofx::EntryPoint PyOFX_GetInteractFunc(PyObject *descClass, PyObject *instClass)
   }\
   else
 
-#define FIND_HOST_LAST(N, RV, PLUGIN, DUMMY)\
+#define FIND_HOST_LAST(N, RV, PLUGIN, DUMMY0, DUMMY1)\
   {\
     rv = 0;\
   }
@@ -80,11 +82,11 @@ OfxSetHostFunc PyOFX_GetSetHostFunc(PyImageEffectPlugin *plugin)
 {
   OfxSetHostFunc rv = 0;
   
-  MCR_REP(PYOFX_MAX_ENTRY, FIND_HOST, FIND_HOST_LAST, rv, plugin, 0);
+  MCR_REP(PYOFX_MAX_ENTRY, FIND_HOST, FIND_HOST_LAST, rv, plugin, 0, 0);
   return rv;
 }
 
-#define FIND_EFFECT(N, RV, PLUGIN, DUMMY)\
+#define FIND_EFFECT(N, RV, PLUGIN, DUMMY0, DUMMY1)\
   if (gEffectPlugins[N] == 0 || gEffectPlugins[N] == PLUGIN)\
   {\
     gEffectPlugins[N] = PLUGIN;\
@@ -93,7 +95,7 @@ OfxSetHostFunc PyOFX_GetSetHostFunc(PyImageEffectPlugin *plugin)
   }\
   else
 
-#define FIND_EFFECT_LAST(N, RV, PLUGIN, DUMMY)\
+#define FIND_EFFECT_LAST(N, RV, PLUGIN, DUMMY0, DUMMY1)\
   {\
     rv = 0;\
   }
@@ -102,11 +104,11 @@ ofx::EntryPoint PyOFX_GetMainFunc(PyImageEffectPlugin *plugin)
 {
   ofx::EntryPoint rv = 0;
   
-  MCR_REP(PYOFX_MAX_ENTRY, FIND_EFFECT, FIND_EFFECT_LAST, rv, plugin, 0);
+  MCR_REP(PYOFX_MAX_ENTRY, FIND_EFFECT, FIND_EFFECT_LAST, rv, plugin, 0, 0);
   return rv;
 }
 
-#define FIND_INTERPFUNC(N, RV, FUNCOBJ, DUMMY)\
+#define FIND_INTERPFUNC(N, RV, FUNCOBJ, DUMMY0, DUMMY1)\
   if (gInterpFuncObjs[N] == 0 || gInterpFuncObjs[N] == FUNCOBJ)\
   {\
     gInterpFuncObjs[N] = FUNCOBJ;\
@@ -115,7 +117,7 @@ ofx::EntryPoint PyOFX_GetMainFunc(PyImageEffectPlugin *plugin)
   }\
   else
 
-#define FIND_INTERPFUNC_LAST(N, RV, FUNCOBJ, DUMMY)\
+#define FIND_INTERPFUNC_LAST(N, RV, FUNCOBJ, DUMMY0, DUMMY1)\
   {\
     rv = 0;\
   }
@@ -124,7 +126,7 @@ OfxInterpFunc PyOFX_GetInterpFunc(PyObject *funcObj)
 {
   OfxInterpFunc rv = 0;
   
-  MCR_REP(PYOFX_MAX_ENTRY, FIND_INTERPFUNC, FIND_INTERPFUNC_LAST, rv, funcObj, 0);
+  MCR_REP(PYOFX_MAX_ENTRY, FIND_INTERPFUNC, FIND_INTERPFUNC_LAST, rv, funcObj, 0, 0);
   return rv;
 }
 
@@ -157,13 +159,14 @@ struct Functions
     return Functions<IDX+1, MAXIDX>::GetMainFunc(plugin);
   }
   
-  static ofx::EntryPoint GetInteractFunc(PyObject *descClass, PyObject *instClass)
+  static ofx::EntryPoint GetInteractFunc(PyObject *pluginClass, PyObject *descClass, PyObject *instClass)
   {
-    if ((gInteractDescClasses[IDX] == 0 && gInteractClasses[IDX] == 0) ||
-        (gInteractDescClasses[IDX] == descClass && gInteractClasses[IDX] == instClass))
+    if ((gInteractPluginClasses[IDX] == 0 && gInteractDescClasses[IDX] == 0 && gInteractClasses[IDX] == 0) ||
+        (gInteractPluginClasses[IDX] == pluginClass && gInteractDescClasses[IDX] == descClass && gInteractClasses[IDX] == instClass))
     {
       gInteractDescClasses[IDX] = descClass;
       gInteractClasses[IDX] = instClass;
+      gInteractPluginClasses[IDX] = pluginClass;
       ofx::EntryPoint rv = &PyOFX_InteractMain<IDX>;
       gInteractFuncs[IDX] = rv;
       return rv;
@@ -197,7 +200,7 @@ struct Functions<IDX, IDX>
     return 0;
   }
   
-  static ofx::EntryPoint GetInteractFunc(PyObject *, PyObject *)
+  static ofx::EntryPoint GetInteractFunc(PyObject *, PyObject *, PyObject *)
   {
     return 0;
   }
@@ -208,9 +211,9 @@ struct Functions<IDX, IDX>
   }
 };
 
-ofx::EntryPoint PyOFX_GetInteractFunc(PyObject *descClass, PyObject *instClass)
+ofx::EntryPoint PyOFX_GetInteractFunc(PyObject *pluginClass, PyObject *descClass, PyObject *instClass)
 {
-  return Functions<0, PYOFX_MAX_ENTRY>::GetInteractFunc(descClass, instClass);
+  return Functions<0, PYOFX_MAX_ENTRY>::GetInteractFunc(pluginClass, descClass, instClass);
 }
 
 OfxSetHostFunc PyOFX_GetSetHostFunc(PyImageEffectPlugin *plugin)

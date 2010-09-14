@@ -42,12 +42,13 @@ USA.
 typedef void (*OfxSetHostFunc)(OfxHost*);
 
 extern PyImageEffectPlugin* gEffectPlugins[PYOFX_MAX_ENTRY];
+extern PyObject*            gInteractPluginClasses[PYOFX_MAX_ENTRY];
 extern PyObject*            gInteractDescClasses[PYOFX_MAX_ENTRY];
 extern PyObject*            gInteractClasses[PYOFX_MAX_ENTRY];
 extern PyObject*            gInterpFuncObjs[PYOFX_MAX_ENTRY];
 
 
-extern ofx::EntryPoint PyOFX_GetInteractFunc(PyObject *descClass, PyObject *instClass);
+extern ofx::EntryPoint PyOFX_GetInteractFunc(PyObject *pluginClass, PyObject *descClass, PyObject *instClass);
 extern OfxSetHostFunc  PyOFX_GetSetHostFunc(PyImageEffectPlugin *plugin);
 extern ofx::EntryPoint PyOFX_GetMainFunc(PyImageEffectPlugin *plugin);
 extern OfxInterpFunc   PyOFX_GetInterpFunc(PyObject *funcObj);
@@ -141,7 +142,7 @@ OfxStatus PyOFX_Main(const char *action,
   
   if (!plugin)
   {
-    //PyGILState_Release(gstate);
+    PyOFX_ReleaseGIL
     return kOfxStatErrBadHandle;
   }
   
@@ -149,7 +150,7 @@ OfxStatus PyOFX_Main(const char *action,
   
   if (!host)
   {
-    //PyGILState_Release(gstate);
+    PyOFX_ReleaseGIL
     ofx::Log("*** Invalid host");
     return kOfxStatErrFatal;
   }
@@ -518,9 +519,39 @@ OfxStatus PyOFX_InteractMain(const char *action,
   
   OfxStatus rv = kOfxStatReplyDefault;
   
-  ofx::ImageEffectHost *host = ofx::ImageEffectHost::Get();
-    
   OfxInteractHandle hInteract = (OfxInteractHandle) handle;
+  
+  PyObject *pluginClass = gInteractPluginClasses[IDX];
+  if (pluginClass == 0)
+  {
+    PyOFX_ReleaseGIL
+    
+    return kOfxStatErrBadHandle;
+  }
+  
+  PyObject *pplugin = PyObject_GetAttrString(pluginClass, "Instance");
+  if (pplugin == 0)
+  {
+    PyOFX_ReleaseGIL
+    
+    return kOfxStatErrBadHandle;
+  }
+  
+  PyImageEffectPlugin *plugin = (PyImageEffectPlugin*) ((PyOFXPlugin*)pplugin)->plugin;
+  if (plugin == 0)
+  {
+    PyOFX_ReleaseGIL
+    
+    return kOfxStatErrBadHandle;
+  }
+  
+  ofx::ImageEffectHost *host = plugin->host();
+  if (!host)
+  {
+    PyOFX_ReleaseGIL
+    
+    return kOfxStatErrBadHandle;
+  }
   
   ofx::PropertySet inArgs(host, hInArgs);
   

@@ -441,6 +441,38 @@ int PyOFXImageEffectPlugin_Init(PyObject *self, PyObject *args, PyObject *)
   return 0;
 }
 
+PyObject* PyOFXImageEffectPlugin_GetHost(PyObject *self, void *)
+{
+  PyOFXPlugin *pplugin = (PyOFXPlugin*) self;
+  
+  if (!pplugin->plugin)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  PyImageEffectPlugin *plugin = (PyImageEffectPlugin*) pplugin->plugin;
+  
+  ofx::ImageEffectHost *host = plugin->host();
+  
+  if (!host)
+  {
+    Py_RETURN_NONE;
+  }
+  else
+  {
+    PyObject *rv = PyObject_CallObject((PyObject*)&PyOFXImageEffectHostType, NULL);
+    ((PyOFXHost*)rv)->host = host;
+    return rv;
+  }
+}
+
+static PyGetSetDef PyOFXImageEffectPlugin_GetSeters[] = 
+{
+  {(char*)"host", PyOFXImageEffectPlugin_GetHost, NULL, NULL, NULL},
+  {NULL, NULL, NULL, NULL, NULL}
+};
+
 // ---
 
 bool PyOFX_InitPlugin(PyObject *mod)
@@ -456,6 +488,7 @@ bool PyOFX_InitPlugin(PyObject *mod)
   PyOFXImageEffectPluginType.tp_base = &PyOFXPluginType;
   PyOFXImageEffectPluginType.tp_flags = Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE;
   PyOFXImageEffectPluginType.tp_init = PyOFXImageEffectPlugin_Init;
+  PyOFXImageEffectPluginType.tp_getset = PyOFXImageEffectPlugin_GetSeters;
   
   if (PyType_Ready(&PyOFXPluginType) < 0)
   {

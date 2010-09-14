@@ -143,7 +143,7 @@ class PathLister
     {
       if (p.checkExtension("py"))
       {
-        ofx::DebugLog("pyplugin.ofx: Found possible python plugin: \"%s\"", p.fullname().c_str());
+        ofx::Log("pyplugin.ofx: Found possible python plugin: \"%s\"", p.fullname().c_str());
         
         PyObject *mod = loadModule(p);
         
@@ -153,6 +153,7 @@ class PathLister
           
           if (!getNumberOfPluginsFunc)
           {
+            ofx::Log("pyplugin.ofx: SKIP - No \"OfxGetNumberOfPlugins\" function found.");
             Py_DECREF(mod);
             PyErr_Clear();
             return true;
@@ -162,6 +163,7 @@ class PathLister
           
           if (!getPluginFunc)
           {
+            ofx::Log("pyplugin.ofx: SKIP - No \"OfxGetPlugin\" function found.");
             Py_DECREF(getNumberOfPluginsFunc);
             Py_DECREF(mod);
             PyErr_Clear();
@@ -200,7 +202,7 @@ class PathLister
             
             if (entry.plugins.size() > 0)
             {
-              ofx::DebugLog("pyplugin.ofx: Add python plugin: \"%s\"", p.fullname().c_str());
+              ofx::Log("pyplugin.ofx: SUCCESS.", p.fullname().c_str());
               mPluginEntries.push_back(entry);
             }
           }
@@ -212,7 +214,7 @@ class PathLister
         }
         else
         {
-          ofx::DebugLog("pyplugin.ofx: Could not load module");
+          ofx::Log("pyplugin.ofx: SKIP - Could not load module.");
         }
       }
       
@@ -223,7 +225,7 @@ class PathLister
     {
       mInitialized = true;
       
-      ofx::DebugLog("pyplugin.ofx: Check directory \"%s\" for python plugins...", p.fullname().c_str());
+      ofx::Log("pyplugin.ofx: Check directory \"%s\" for python plugins...", p.fullname().c_str());
       
       gcore::Path::EachFunc func;
       
@@ -250,6 +252,15 @@ class PathLister
     {
       if (!mInitialized)
       {
+#ifdef _WIN32
+        pathEntry(gcore::Path("C:/Program Files/Common Files/OFX/Plugins"));
+#else
+#ifdef __APPLE__
+        pathEntry(gcore::Path("/Library/OFX/Plugins"));
+#else
+        pathEntry(gcore::Path("/usr/OFX/Plugins"));
+#endif
+#endif
         gcore::Env::EachInPathFunc func;
         
         gcore::Bind(this, METHOD(PathLister, pathEntry), func);
@@ -536,12 +547,12 @@ OfxExport int OfxGetNumberOfPlugins(void)
   gcore::Env::EachInPathFunc func;
   
 #ifdef _WIN32
-  gPathList.pathEntry(gcore::Path("C:/Program Files/Common Files/OFX/Plugins"));
+  gPathLister.pathEntry(gcore::Path("C:/Program Files/Common Files/OFX/Plugins"));
 #else
 #ifdef __APPLE__
-  gPathList.pathEntry(gcore::Path("/Library/OFX/Plugins"));
+  gPathLister.pathEntry(gcore::Path("/Library/OFX/Plugins"));
 #else
-  gPathList.pathEntry(gcore::Path("/usr/OFX/Plugins"));
+  gPathLister.pathEntry(gcore::Path("/usr/OFX/Plugins"));
 #endif
 #endif
 

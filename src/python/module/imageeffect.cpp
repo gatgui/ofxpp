@@ -2675,7 +2675,7 @@ PyObject* PyOFXImageEffectDescriptor_GetOverlayInteract(PyObject *self, void*)
     return NULL;
   }
   
-  PyObject *rv = PyTuple_New(2);
+  PyObject *rv = PyTuple_New(3);
   
   int idx = PyOFX_GetInteractFuncIndex(func);
   
@@ -2686,14 +2686,20 @@ PyObject* PyOFXImageEffectDescriptor_GetOverlayInteract(PyObject *self, void*)
     
     Py_INCREF(Py_None);
     PyTuple_SetItem(rv, 1, Py_None);
+    
+    Py_INCREF(Py_None);
+    PyTuple_SetItem(rv, 2, Py_None);
   }
   else
   {
+    Py_INCREF(gInteractPluginClasses[idx]);
+    PyTuple_SetItem(rv, 0, gInteractPluginClasses[idx]);
+    
     Py_INCREF(gInteractDescClasses[idx]);
-    PyTuple_SetItem(rv, 0, gInteractDescClasses[idx]);
+    PyTuple_SetItem(rv, 1, gInteractDescClasses[idx]);
     
     Py_INCREF(gInteractClasses[idx]);
-    PyTuple_SetItem(rv, 1, gInteractClasses[idx]);
+    PyTuple_SetItem(rv, 2, gInteractClasses[idx]);
   }
   
   return rv;
@@ -2715,29 +2721,36 @@ int PyOFXImageEffectDescriptor_SetOverlayInteract(PyObject *self, PyObject *val,
     return -1;
   }
   
-  if (PyTuple_Size(val) != 2)
+  if (PyTuple_Size(val) != 3)
   {
-    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 2 elements");
+    PyErr_SetString(PyExc_ValueError, "Expected a tuple of 3 elements");
     return -1;
   }
   
-  PyObject *descClass = PyTuple_GetItem(val, 0);
+  PyObject *pluginClass = PyTuple_GetItem(val, 0);
+  if (!PyObject_IsSubclass(pluginClass, (PyObject*)&PyOFXImageEffectPluginType))
+  {
+    PyErr_SetString(PyExc_TypeError, "Tuple first element must be a sub class of ofx.ImageEffectPlugin");
+    return -1;
+  }
+  
+  PyObject *descClass = PyTuple_GetItem(val, 1);
   if (!PyObject_IsSubclass(descClass, (PyObject*)&PyOFXInteractDescriptorType))
   {
-    PyErr_SetString(PyExc_TypeError, "Tuple first element must be a sub class of ofx.InteractDescriptor");
+    PyErr_SetString(PyExc_TypeError, "Tuple second element must be a sub class of ofx.InteractDescriptor");
     return -1;
   }
   
-  PyObject *instClass = PyTuple_GetItem(val, 1);
+  PyObject *instClass = PyTuple_GetItem(val, 2);
   if (!PyObject_IsSubclass(instClass, (PyObject*)&PyOFXInteractType))
   {
-    PyErr_SetString(PyExc_TypeError, "Tuple second element must be a sub class of ofx.Interact");
+    PyErr_SetString(PyExc_TypeError, "Tuple third element must be a sub class of ofx.Interact");
     return -1;
   }
   
   bool failed = false;
   
-  CATCH({pdesc->desc->overlayInteract(PyOFX_GetInteractFunc(descClass, instClass));}, failed);
+  CATCH({pdesc->desc->overlayInteract(PyOFX_GetInteractFunc(pluginClass, descClass, instClass));}, failed);
   
   if (failed)
   {

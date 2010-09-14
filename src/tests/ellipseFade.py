@@ -257,7 +257,7 @@ class Descriptor(ofx.ImageEffectDescriptor):
     self.supportsMultipleClipPARs = False
     self.supportsMultiResolution = False
     if Interact != None and self.host.supportsOverlays:
-      self.overlayInteract = (ofx.InteractDescriptor, Interact)
+      self.overlayInteract = (Plugin, ofx.InteractDescriptor, Interact)
     return ofx.StatOK;
   
   def describeInContext(self, ctx):
@@ -418,8 +418,12 @@ class Effect(ofx.ImageEffect):
 
 
 class Plugin(ofx.ImageEffectPlugin):
+  
+  Instance = None
+  
   def __init__(self):
     ofx.ImageEffectPlugin.__init__(self, Descriptor, Effect)
+    Plugin.Instance = self
     self.majorVersion = 1
     self.minorVersion = 0
     self.identifier = "gatgui.filter.pyEllipseFade";

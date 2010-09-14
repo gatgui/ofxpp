@@ -255,7 +255,7 @@ USA.
  *  The python API tries to stricly follow the C++ one whenever possible.\n
  *  Still, there are some language related concept that cannot be translated straight into python.\n
  *  Amongst them, class templates and pointers needed a bit of work-around.\n
- *  Class templates issues are handle case by case, and the best way to understand of those bits of API are translated into python is yet to see real code.\n
+ *  Class templates issues are handled case by case, and the best way to understand how those bits of API are translated into python is yet to see real code.\n
  *  As for pointers, most of them are wrapped in a Handle class, whose main purpose is just to pass the pointers around.\n
  *  The only exception is for pointers that are supposed to be used to access image data. As in\n
  *  <ul><li>ofx::Image::pixelAddress</li>
@@ -330,23 +330,27 @@ USA.
  *
  *  \endcode
  *  \n
- *  Bind the interact to your effect:\n
- *  \code
- *  if self.host.supportsOverlays:
- *    # There are no templates in python, instead, pass a tuple containing the descriptor and interact classes.
- *    self.overlayInteract = (MyInteractDesc, MyInteract)
- *  \endcode
- *  \n
  *  Plugin class:\n
  *  \code
  *  class MyPlugin(ofx.ImageEffectPlugin):
+ *    # This class attribute needs to be defined as it will be looked up internaly in the interact entry point function.
+ *    Instance = None
  *    def __init__(self):
  *      # There are no templates in python, instead, just pass you new classes as arguments.
  *      ofx.ImageEffectPlugin.__init__(self, MyEffectDesc, MyEffect)
+ *      # Set the plugin instance object (don't forget it, or there will be no visible interact)
+ *      MyPlugin.Instance = self
  *      self.majorVersion = 1
  *      self.minorVersion = 0
  *      self.identifier = "gatgui.filter.mypyeffect"
  *  
+ *  \endcode
+ *  \n
+ *  Bind the interact to your effect:\n
+ *  \code
+ *  if self.host.supportsOverlays:
+ *    # There are no templates in python, instead, pass a tuple containing the plugin, interact descriptor and instance classes.
+ *    self.overlayInteract = (MyPlugin, MyInteractDesc, MyInteract)
  *  \endcode
  *  \n
  *  OpenFX entry points:\n
@@ -867,7 +871,7 @@ namespace ofx {
   }
   
   //! Get host object from an effect instance handle
-  class Host* GetHost(OfxImageEffectHandle hdl);
+  class ImageEffectHost* GetHost(OfxImageEffectHandle hdl);
   
   //! Get host object from an parameter set instance handle
   class Host* GetHostForParams(OfxParamSetHandle hdl);

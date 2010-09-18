@@ -21,6 +21,8 @@ import ofx
 
 
 try:
+  import OpenGL
+  import OpenGL.GL
   from OpenGL.GL import *
   
   class Interact(ofx.Interact):

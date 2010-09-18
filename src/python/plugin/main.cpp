@@ -480,7 +480,16 @@ bool EnsureInitializedPython()
 #endif
     Py_SetProgramName("pyOFX");
     Py_Initialize();
+    // It only safe to call this from the main thread...
+    //PyEval_InitThreads();
     rv = true;
+  }
+  else
+  {
+    if (!PyEval_ThreadsInitialized())
+    {
+      PyEval_InitThreads();
+    }
   }
   
   if (firstCall)

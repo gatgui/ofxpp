@@ -456,6 +456,19 @@ USA.
 //! ofx namespace.
 namespace ofx {
   
+  //! ofxpp library version as a string {major}.{minor}.{patch}
+  extern const char *Version;
+  
+  //! ofxpp library major version. (same as wrapped OpenFX API)
+  extern int MajorVersion;
+  
+  //! ofxpp library minor version. (same as wrapped OpenFX API)
+  extern int MinorVersion;
+  
+  //! ofxpp patch level.
+  extern int PatchVersion;
+  
+  
   //! Handle type enumeration.
   enum Type {
     TypeImageEffectHost = 0, //!< %Image effect host handle.

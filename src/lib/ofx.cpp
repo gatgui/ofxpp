@@ -42,6 +42,10 @@ USA.
 
 namespace ofx {
 
+int MajorVersion = OFX_VERSION_MAJOR;
+int MinorVersion = OFX_VERSION_MINOR;
+int PatchVersion = 1;
+const char *Version = OFX_VERSION_STR ".1";
 
 BEGIN_ENUM_MAP(BitDepth)
   ADD_ENUM_MAPPING(BitDepth, None)

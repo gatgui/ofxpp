@@ -31,7 +31,7 @@ extern "C"
   
   bool PyOFX_UseGIL()
   {
-    return (gPyOFXUseGIL && Py_IsInitialized());
+    return gPyOFXUseGIL;
   }
   
   void PyOFX_SetUseGIL(bool yes)
@@ -52,10 +52,6 @@ void LogPythonError()
   PyObject *et=0, *ev=0, *etb=0, *s=0;
   
   PyErr_Fetch(&et, &ev, &etb);
-  
-  //s = PyObject_Str(et);
-  //oss << std::endl << "--- Python --- " << PyString_AsString(s);
-  //Py_DECREF(s);
   
   if (ev)
   {
@@ -902,6 +898,11 @@ PyMODINIT_FUNC initofx(void)
   
   PyModule_AddStringConstant(mod, "PageSkipRow", kOfxParamPageSkipRow);
   PyModule_AddStringConstant(mod, "PageSkipColumn", kOfxParamPageSkipColumn);
+  
+  PyModule_AddIntConstant(mod, "MajorVersion", ofx::MajorVersion);
+  PyModule_AddIntConstant(mod, "MinorVersion", ofx::MinorVersion);
+  PyModule_AddIntConstant(mod, "PatchVersion", ofx::PatchVersion);
+  PyModule_AddStringConstant(mod, "Version", ofx::Version);
   
   INIT_TYPE(PyOFXActionArgumentsType, "ofx.ActionArguments", PyOFXActionArguments);
   PyOFXActionArgumentsType.tp_flags = Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE;

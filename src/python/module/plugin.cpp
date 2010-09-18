@@ -225,7 +225,7 @@ OfxStatus PyImageEffectPlugin::load()
 OfxStatus PyImageEffectPlugin::unload()
 {
   // it seems that sometimes, unload is called after python interpreter has been killed...
-  if (Py_IsInitialized() && mSelf != 0)
+  if (mSelf != 0)
   {
     PyObject *meth = PyObject_GetAttrString(mSelf, "unload");
     

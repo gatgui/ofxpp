@@ -59,13 +59,13 @@ extern int PyOFX_GetMainFuncIndex(ofx::EntryPoint func);
 extern int PyOFX_GetInterpFuncIndex(OfxInterpFunc func);
 
 
-# define PyOFX_AcquireGIL \
+#define PyOFX_AcquireGIL \
 PyGILState_STATE gstate = PyGILState_UNLOCKED;\
 if (PyOFX_UseGIL()) {\
   gstate = PyGILState_Ensure();\
 }
 
-# define PyOFX_ReleaseGIL \
+#define PyOFX_ReleaseGIL \
 if (PyOFX_UseGIL()) {\
   PyGILState_Release(gstate);\
 }
@@ -78,6 +78,11 @@ std::string PyOFX_InterpFunc(ofx::ParameterSet &params,
                              ofx::Time t1, const std::string &v1,
                              double amount)
 {
+  if (!Py_IsInitialized())
+  {
+    return "";
+  }
+  
   PyOFX_AcquireGIL
   
   if (gInterpFuncObjs[IDX] == 0)
@@ -118,6 +123,11 @@ std::string PyOFX_InterpFunc(ofx::ParameterSet &params,
 template <int IDX>
 void PyOFX_SetHost(OfxHost *host)
 {
+  if (!Py_IsInitialized())
+  {
+    return;
+  }
+  
   PyOFX_AcquireGIL
   
   PyImageEffectPlugin *plugin = gEffectPlugins[IDX];
@@ -136,6 +146,11 @@ OfxStatus PyOFX_Main(const char *action,
                      OfxPropertySetHandle hInArgs,
                      OfxPropertySetHandle hOutArgs)
 {
+  if (!Py_IsInitialized())
+  {
+    return kOfxStatErrFatal;
+  }
+  
   PyOFX_AcquireGIL
   
   PyImageEffectPlugin *plugin = gEffectPlugins[IDX];
@@ -515,6 +530,11 @@ OfxStatus PyOFX_InteractMain(const char *action,
                              OfxPropertySetHandle hInArgs,
                              OfxPropertySetHandle)
 {
+  if (!Py_IsInitialized())
+  {
+    return kOfxStatErrFatal;
+  }
+  
   PyOFX_AcquireGIL
   
   OfxStatus rv = kOfxStatReplyDefault;

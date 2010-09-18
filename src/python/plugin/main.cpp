@@ -480,42 +480,41 @@ bool EnsureInitializedPython()
 #endif
     Py_SetProgramName("pyOFX");
     Py_Initialize();
-    // It only safe to call this from the main thread...
-    //PyEval_InitThreads();
     rv = true;
-  }
-  else
-  {
-    if (!PyEval_ThreadsInitialized())
-    {
-      PyEval_InitThreads();
-    }
   }
   
   if (firstCall)
   {
     if (rv)
     {
-      ofx::DebugLog("pyplugin.ofx: Initialize python interpreter");
+      ofx::Log("pyplugin.ofx: Initialize python interpreter.");
     }
     else
     {
-      ofx::DebugLog("pyplugin.ofx: Python interpreter already initialized");
+      ofx::Log("pyplugin.ofx: Python interpreter already initialized.");
     }
-    PyImport_ImportModule("ofx");
+    PyObject *mod = PyImport_ImportModule("ofx");
+    if (!mod)
+    {
+      ofx::Log("pyplugin.ofx: Could not import python ofx module.");
+      PyErr_Clear();
+    }
 #ifdef _WIN32
     HMODULE pyofxModule = LoadLibrary("ofx.pyd");
     if (!pyofxModule)
     {
-      ofx::DebugLog("Could not load ofx.pyd module");
+      ofx::Log("pyplugin.ofx: Could not load ofx.pyd symbols");
     }
     else
     {
       void (*setUseGIL)(bool) = (void (*)(bool)) GetProcAddress(pyofxModule, "PyOFX_SetUseGIL");
       if (setUseGIL != NULL)
       {
-        ofx::DebugLog("setUseGIL %d", !rv);
         setUseGIL(!rv);
+      }
+      else
+      {
+        ofx::Log("pyplugin.ofx: Could not find PyOFX_SetUseGIL symbol");
       }
       FreeLibrary(pyofxModule);
     }
@@ -523,15 +522,18 @@ bool EnsureInitializedPython()
     void *pyofxModule = dlopen(0, RTLD_LAZY|RTLD_GLOBAL);
     if (!pyofxModule)
     {
-      ofx::DebugLog("Could not load ofx.so module");
+      ofx::Log("pyplugin.ofx: Could not load ofx.so symbols");
     }
     else
     {
       void (*setUseGIL)(bool) = (void (*)(bool)) dlsym(pyofxModule, "PyOFX_SetUseGIL");
       if (setUseGIL != NULL)
       {
-        ofx::DebugLog("setUseGIL %d", !rv);
         setUseGIL(!rv);
+      }
+      else
+      {
+        ofx::Log("pyplugin.ofx: Could not find PyOFX_SetUseGIL symbol");
       }
       dlclose(pyofxModule);
     }

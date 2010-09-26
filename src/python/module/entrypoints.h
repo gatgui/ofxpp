@@ -60,6 +60,7 @@ extern int PyOFX_GetInterpFuncIndex(OfxInterpFunc func);
 
 
 #define PyOFX_AcquireGIL \
+PyOFX_Lock();\
 PyGILState_STATE gstate = PyGILState_UNLOCKED;\
 if (PyOFX_UseGIL()) {\
   gstate = PyGILState_Ensure();\
@@ -68,7 +69,8 @@ if (PyOFX_UseGIL()) {\
 #define PyOFX_ReleaseGIL \
 if (PyOFX_UseGIL()) {\
   PyGILState_Release(gstate);\
-}
+}\
+PyOFX_UnLock();
 
 template <int IDX>
 std::string PyOFX_InterpFunc(ofx::ParameterSet &params,

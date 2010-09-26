@@ -23,11 +23,13 @@ USA.
 
 #include "common.h"
 #include <ofx/ofx.h>
+#include <gcore/threads.h>
 #include <sstream>
 
 extern "C"
 {
   static bool gPyOFXUseGIL = false;
+  static gcore::Mutex gLock(true);
   
   bool PyOFX_UseGIL()
   {
@@ -37,6 +39,16 @@ extern "C"
   void PyOFX_SetUseGIL(bool yes)
   {
     gPyOFXUseGIL = yes;
+  }
+  
+  void PyOFX_Lock()
+  {
+    gLock.lock();
+  }
+
+  void PyOFX_UnLock()
+  {
+    gLock.unlock();
   }
 }
 

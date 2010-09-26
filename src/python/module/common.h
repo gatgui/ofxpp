@@ -968,6 +968,16 @@ __declspec(dllexport)
 #endif
 void PyOFX_SetUseGIL(bool yes);
 
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+void PyOFX_Lock();
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+void PyOFX_UnLock();
+
 }
 
 #define CATCH(code, failed)\

@@ -25,6 +25,7 @@ import excons.tools
 from excons.tools import gl
 from excons.tools import openfx
 from excons.tools import python
+from excons.tools import threads
 
 ofxVersion = ARGUMENTS.get("ofxVersion", "1.1")
 ofxNewMacPackaging = (int(ARGUMENTS.get("ofxNewMacPackaging", "0")) != 0)
@@ -52,17 +53,18 @@ prjs = [
   { "name"   : "ofx",
     "alias"  : "pyofx",
     "type"   : "dynamicmodule",
-    "incdirs": ["src/python/module"],
+    "incdirs": ["src/python/module", "gcore/include"],
+    "defs"   : ["GCORE_STATIC"],
     "srcs"   : glob.glob("src/python/module/*.cpp"),
-    "libs"   : ["ofxpp"],
-    "custom" : [python.Require],
+    "libs"   : ["ofxpp", "gcore"],
+    "custom" : [python.Require, threads.Require],
     "prefix" : python.ModulePrefix(),
     "ext"    : python.ModuleExtension()
   },
   { "name"    : "pyplugin",
     "type"    : "dynamicmodule",
     "ext"     : ".ofx",
-    "defs"    : defines+["GCORE_STATIC"],
+    "defs"    : ["GCORE_STATIC"],
     "incdirs" : ["gcore/include"],
     "srcs"    : glob.glob("src/python/plugin/*.cpp"),
     "libs"    : ["ofxpp", "gcore"],

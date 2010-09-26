@@ -37,6 +37,7 @@ if str(Platform()) == "win32":
 
 ARGUMENTS["static"] = "1"
 SConscript("gcore/SConstruct")
+SConscript("pygl/SConstruct")
 
 # Add openfx version define
 
@@ -54,7 +55,6 @@ prjs = [
     "incdirs": ["src/python/module"],
     "srcs"   : glob.glob("src/python/module/*.cpp"),
     "libs"   : ["ofxpp"],
-    "deps"   : ["pygl"],
     "custom" : [python.Require],
     "prefix" : python.ModulePrefix(),
     "ext"    : python.ModuleExtension()

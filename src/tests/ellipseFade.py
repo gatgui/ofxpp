@@ -21,9 +21,8 @@ import ofx
 
 
 try:
-  import OpenGL
-  import OpenGL.GL
-  from OpenGL.GL import *
+  import pygl
+  from pygl import gl
   
   class Interact(ofx.Interact):
     # Host application
@@ -81,49 +80,52 @@ try:
       bw = 2.0 * pw
       bh = 2.0 * ph
       
+      # Don't forget that one, it is safe to call it several time
+      gl.Init()
+      
       # Center manipulator
       if self.centerSelected:
-        glColor3d(1.0, 0.0, 0.0)
+        gl.Color3d(1.0, 0.0, 0.0)
       else:
-        glColor3d(0.0, 1.0, 0.0)
-      glBegin(GL_QUADS)
-      glVertex2d(cecx-bw, cecy-bh)
-      glVertex2d(cecx+bw, cecy-bh)
-      glVertex2d(cecx+bw, cecy+bh)
-      glVertex2d(cecx-bw, cecy+bh)
-      glEnd()
+        gl.Color3d(0.0, 1.0, 0.0)
+      gl.Begin(gl.QUADS)
+      gl.Vertex2d(cecx-bw, cecy-bh)
+      gl.Vertex2d(cecx+bw, cecy-bh)
+      gl.Vertex2d(cecx+bw, cecy+bh)
+      gl.Vertex2d(cecx-bw, cecy+bh)
+      gl.End()
       
       # Width manipulator
       if self.widthSelected:
-        glColor3d(1.0, 0.0, 0.0)
+        gl.Color3d(1.0, 0.0, 0.0)
       else:
-        glColor3d(0.0, 1.0, 0.0)
-      glBegin(GL_QUADS)
-      glVertex2d(cecx+cew-bw, cecy-bh)
-      glVertex2d(cecx+cew+bw, cecy-bh)
-      glVertex2d(cecx+cew+bw, cecy+bh)
-      glVertex2d(cecx+cew-bw, cecy+bh)
-      glEnd()
-      glBegin(GL_LINES)
-      glVertex2d(cecx+bw, cecy)
-      glVertex2d(cecx+cew-bw, cecy)
-      glEnd()
+        gl.Color3d(0.0, 1.0, 0.0)
+      gl.Begin(gl.QUADS)
+      gl.Vertex2d(cecx+cew-bw, cecy-bh)
+      gl.Vertex2d(cecx+cew+bw, cecy-bh)
+      gl.Vertex2d(cecx+cew+bw, cecy+bh)
+      gl.Vertex2d(cecx+cew-bw, cecy+bh)
+      gl.End()
+      gl.Begin(gl.LINES)
+      gl.Vertex2d(cecx+bw, cecy)
+      gl.Vertex2d(cecx+cew-bw, cecy)
+      gl.End()
       
       # Height manipulator
       if self.heightSelected:
-        glColor3d(1.0, 0.0, 0.0)
+        gl.Color3d(1.0, 0.0, 0.0)
       else:
-        glColor3d(0.0, 1.0, 0.0)
-      glBegin(GL_QUADS)
-      glVertex2d(cecx-bw, cecy+ceh-bh)
-      glVertex2d(cecx+bw, cecy+ceh-bh)
-      glVertex2d(cecx+bw, cecy+ceh+bh)
-      glVertex2d(cecx-bw, cecy+ceh+bh)
-      glEnd()
-      glBegin(GL_LINES)
-      glVertex2d(cecx, cecy+bh)
-      glVertex2d(cecx, cecy+ceh-bh)
-      glEnd()
+        gl.Color3d(0.0, 1.0, 0.0)
+      gl.Begin(gl.QUADS)
+      gl.Vertex2d(cecx-bw, cecy+ceh-bh)
+      gl.Vertex2d(cecx+bw, cecy+ceh-bh)
+      gl.Vertex2d(cecx+bw, cecy+ceh+bh)
+      gl.Vertex2d(cecx-bw, cecy+ceh+bh)
+      gl.End()
+      gl.Begin(gl.LINES)
+      gl.Vertex2d(cecx, cecy+bh)
+      gl.Vertex2d(cecx, cecy+ceh-bh)
+      gl.End()
       
       return ofx.StatOK
     

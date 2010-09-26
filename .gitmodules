@@ -4,3 +4,6 @@
 [submodule "gcore"]
 	path = gcore
 	url = git://github.com/gatgui/gcore.git
+[submodule "pygl"]
+	path = pygl
+	url = git://github.com/gatgui/pygl

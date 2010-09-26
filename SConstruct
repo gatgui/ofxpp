@@ -54,6 +54,7 @@ prjs = [
     "incdirs": ["src/python/module"],
     "srcs"   : glob.glob("src/python/module/*.cpp"),
     "libs"   : ["ofxpp"],
+    "deps"   : ["pygl"],
     "custom" : [python.Require],
     "prefix" : python.ModulePrefix(),
     "ext"    : python.ModuleExtension()

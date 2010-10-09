@@ -316,8 +316,12 @@ ImageEffect::RenderArgs::RenderArgs(ImageEffectHost *host, PropertySet &inArgs)
   inArgs.getInts(kOfxImageEffectPropRenderWindow, 4, &(renderWindow.x1));
 #ifdef OFX_API_1_2
   if (host->checkAPIVersion(1, 2)) {
-    sequentialRender = (inArgs.getInt(kOfxImageEffectPropSequentialRenderStatus, 0) != 0);
-    interactiveRender = (inArgs.getInt(kOfxImageEffectPropInteractiveRenderStatus, 0) != 0);
+    // Specification Mismatch
+    // -> Nuke 6.1, supposed to support OpenFX API 1.2 does not set those
+    //sequentialRender = (inArgs.getInt(kOfxImageEffectPropSequentialRenderStatus, 0) != 0);
+    //interactiveRender = (inArgs.getInt(kOfxImageEffectPropInteractiveRenderStatus, 0) != 0);
+    sequentialRender = false;
+    interactiveRender = false;
   } else {
     sequentialRender = false;
     interactiveRender = false;
@@ -391,8 +395,12 @@ ImageEffect::SequenceArgs::SequenceArgs(ImageEffectHost *host, PropertySet &inAr
   interactive = (inArgs.getInt(kOfxPropIsInteractive, 0) == 1);
 #ifdef OFX_API_1_2
   if (host->checkAPIVersion(1, 2)) {
-    sequentialRender = (inArgs.getInt(kOfxImageEffectPropSequentialRenderStatus, 0) != 0);
-    interactiveRender = (inArgs.getInt(kOfxImageEffectPropInteractiveRenderStatus, 0) != 0);
+    // Specification Mismatch
+    // -> Nuke 6.1, supposed to support OpenFX API 1.2 does not set those
+    //sequentialRender = (inArgs.getInt(kOfxImageEffectPropSequentialRenderStatus, 0) != 0);
+    //interactiveRender = (inArgs.getInt(kOfxImageEffectPropInteractiveRenderStatus, 0) != 0);
+    sequentialRender = false;
+    interactiveRender = false;
   } else {
     sequentialRender = false;
     interactiveRender = false;

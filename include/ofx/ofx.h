@@ -50,8 +50,7 @@ USA.
  *  
  *  and flags:\n
  *  - ofxVersion={ver} (1.1 by default)
- *  - PythonFrameworkPath={path_to_framework_directory} (OSX only)
- *  - PythonFramework={python_framework_name} (OSX only, defaults to "Python")
+ *  - with-python={path_to_python_directory} (windows and OSX only)
  *  - x64=0|1
  *  - x86=0|1
  *  - debug=0|1

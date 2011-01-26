@@ -21,11 +21,11 @@ USA.
 
 */
 
+#include <Python.h>
 #include <ofx/ofx.h>
 #include <ofx/plugin.h>
 #include <gcore/path.h>
 #include <gcore/env.h>
-#include <Python.h>
 #include <sstream>
 
 typedef struct

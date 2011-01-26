@@ -10,6 +10,7 @@
 #include <cstdarg>
 #include <ctime>
 #include <cmath>
+#include <cstring>
 #include <string>
 #include <sstream>
 #include <iostream>

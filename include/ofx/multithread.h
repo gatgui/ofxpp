@@ -42,7 +42,7 @@ namespace ofx {
   class Host;
   
   //! Mutex type.
-  typedef const OfxMutexHandle Mutex;
+  typedef OfxMutexHandle Mutex;
   
   //! %Thread function prototype.
   typedef OfxThreadFunctionV1 ThreadFunction;

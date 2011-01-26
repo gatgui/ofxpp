@@ -33,6 +33,7 @@ USA.
 #include <ofx/exception.h>
 #include <ofx/ofx.h>
 #include <cstdarg>
+#include <cstdio>
 
 namespace ofx {
   

@@ -121,7 +121,7 @@ class PathLister
   public:
     
     PathLister()
-      : mPyOFX(NULL), mInitialized(false)
+      : mPyOFX(NULL), mInitialized(false), mPyOFXPathSet(false)
     {
     }
     
@@ -284,6 +284,82 @@ class PathLister
       ofx::Log("pyplugin: Invalid plugin index: %d", i);
       
       return 0;
+    }
+    
+    bool searchPyOFX(const gcore::Path &p)
+    {
+#ifdef _WIN32
+      if (p.basename() == "ofx.pyd")
+      {
+        mPyOFXPath = p;
+        mPyOFXPathSet = true;
+        return false;
+      }
+      // continue search
+      return true;
+#else
+      if (p.basename() == "ofx.so")
+      {
+        mPyOFXPath = p;
+        mPyOFXPathSet = true;
+        return false;
+      }
+      return true;
+#endif
+    }
+    
+    const gcore::Path& getPyOFXPath()
+    {
+      if (!mPyOFXPathSet)
+      {
+        PyObject *modname = PyString_FromString("sys");
+        PyObject *mod = PyImport_Import(modname);
+        Py_DECREF(modname);
+        
+        if (mod)
+        {
+          PyObject *path = PyObject_GetAttrString(mod, "path");
+          
+          if (path)
+          {
+            Py_ssize_t sz = PyList_Size(path);
+            
+            for (Py_ssize_t i=0; i<sz; ++i)
+            {
+              PyObject *item = PyList_GetItem(path, i);
+              char *n = PyString_AsString(item);
+              
+              gcore::Path p(n);
+              
+              gcore::Path::EachFunc func;
+              gcore::Bind(this, METHOD(PathLister, searchPyOFX), func);
+              
+              p.each(func, false);
+              
+              if (mPyOFXPathSet)
+              {
+                break;
+              }
+            }
+            
+            Py_DECREF(path);
+          }
+          else
+          {
+            //LogPythonError();
+            PyErr_Clear();
+          }
+          
+          Py_DECREF(mod);
+        }
+        else
+        {
+          //LogPythonError();
+          PyErr_Clear();
+        }
+      }
+            
+      return mPyOFXPath;;
     }
     
   protected:
@@ -453,6 +529,8 @@ class PathLister
     gcore::List<Entry> mPluginEntries;
     PyObject *mPyOFX;
     bool mInitialized;
+    gcore::Path mPyOFXPath;
+    bool mPyOFXPathSet;
 };
 
 // ---
@@ -519,7 +597,9 @@ bool EnsureInitializedPython()
       FreeLibrary(pyofxModule);
     }
 #else
-    void *pyofxModule = dlopen(0, RTLD_LAZY|RTLD_GLOBAL);
+    gcore::Path pyofxPath = gPathLister.getPyOFXPath();
+    ofx::Log("pyplugin.ofx: pyOFX found \"%s\"", pyofxPath.fullname().c_str());
+    void *pyofxModule = dlopen(pyofxPath.fullname().c_str(), RTLD_LAZY|RTLD_GLOBAL);
     if (!pyofxModule)
     {
       ofx::Log("pyplugin.ofx: Could not load ofx.so symbols");

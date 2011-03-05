@@ -801,7 +801,7 @@ class PyInteractDescriptor : public ofx::InteractDescriptor
     PyInteractDescriptor();
     PyInteractDescriptor(ofx::ImageEffectHost *h, OfxInteractHandle hdl) throw(ofx::Exception);
     PyInteractDescriptor(const PyInteractDescriptor &rhs);
-    ~PyInteractDescriptor();
+    virtual ~PyInteractDescriptor();
     
     PyInteractDescriptor& operator=(const PyInteractDescriptor &rhs);
     
@@ -836,7 +836,7 @@ class PyInteract : public ofx::Interact
     
     PyInteract();
     PyInteract(ofx::ImageEffectHost *h, OfxInteractHandle hdl) throw(ofx::Exception);
-    ~PyInteract();
+    virtual ~PyInteract();
     
     virtual OfxStatus draw(ofx::Interact::DrawArgs &args);
     virtual OfxStatus penMotion(ofx::Interact::PenArgs &args);

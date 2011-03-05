@@ -46,7 +46,7 @@ namespace ofx {
       InteractDescriptor();
       InteractDescriptor(ImageEffectHost *h, OfxInteractHandle hdl) throw(Exception);
       InteractDescriptor(const InteractDescriptor &rhs);
-      ~InteractDescriptor();
+      virtual ~InteractDescriptor();
       
       InteractDescriptor& operator=(const InteractDescriptor &rhs);
       
@@ -130,7 +130,7 @@ namespace ofx {
       
       Interact();
       Interact(ImageEffectHost *h, OfxInteractHandle hdl) throw(Exception);
-      ~Interact();
+      virtual ~Interact();
       
       // suite
       

@@ -1,9 +1,9 @@
 [submodule "excons"]
 	path = excons
-	url = git://github.com/gatgui/excons.git
+	url = http://github.com/gatgui/excons.git
 [submodule "gcore"]
 	path = gcore
-	url = git://github.com/gatgui/gcore.git
+	url = http://github.com/gatgui/gcore.git
 [submodule "pygl"]
 	path = pygl
-	url = git://github.com/gatgui/pygl
+	url = http://github.com/gatgui/pygl

@@ -51,7 +51,7 @@ Contains the core OFX architectural struct and function definitions. For more de
 #if defined(WIN32) || defined(WIN64)
 	#define OfxExport extern __declspec(dllexport)
 #else
-	#define OfxExport extern
+	#define OfxExport extern __attribute__ ((visibility ("default")))
 #endif
 
 /** @brief Blind data structure to manipulate sets of properties through */

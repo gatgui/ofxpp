@@ -727,7 +727,13 @@ static PyMethodDef PyOFX_Methods[] =
   {NULL, NULL, NULL, NULL}
 };
 
-PyMODINIT_FUNC initofx(void)
+extern "C"
+#ifdef _WIN32
+__declspec(dllexport)
+#else
+__attribute__ ((visibility ("default")))
+#endif
+void initofx(void)
 {
   PyObject *mod = Py_InitModule("ofx", PyOFX_Methods);
   

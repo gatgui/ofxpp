@@ -960,21 +960,29 @@ extern "C"
 
 #ifdef _WIN32
 __declspec(dllexport)
+#else
+__attribute__ ((visibility ("default")))
 #endif
 bool PyOFX_UseGIL();
 
 #ifdef _WIN32
 __declspec(dllexport)
+#else
+__attribute__ ((visibility ("default")))
 #endif
 void PyOFX_SetUseGIL(bool yes);
 
 #ifdef _WIN32
 __declspec(dllexport)
+#else
+__attribute__ ((visibility ("default")))
 #endif
 void PyOFX_Lock();
 
 #ifdef _WIN32
 __declspec(dllexport)
+#else
+__attribute__ ((visibility ("default")))
 #endif
 void PyOFX_UnLock();
 

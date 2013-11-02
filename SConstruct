@@ -57,8 +57,8 @@ prjs = [
     "defs"   : ["GCORE_STATIC"],
     "srcs"   : glob.glob("src/python/module/*.cpp"),
     "libs"   : ["ofxpp", "gcore"],
-    "custom" : [python.Require, threads.Require],
-    "prefix" : python.ModulePrefix(),
+    "custom" : [python.SoftRequire, threads.Require],
+    "prefix" : python.ModulePrefix() + "/" + python.Version(),
     "ext"    : python.ModuleExtension()
   },
   { "name"    : "pyplugin",
@@ -69,7 +69,7 @@ prjs = [
     "srcs"    : glob.glob("src/python/plugin/*.cpp"),
     "libs"    : ["ofxpp", "gcore"],
     "deps"    : ["pyofx"],
-    "custom"  : [python.Require],
+    "custom"  : [python.SoftRequire],
     "post"    : openfx.MakeBundle
   },
   { "name"    : "ellipseFade",

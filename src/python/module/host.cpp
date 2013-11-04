@@ -1082,6 +1082,43 @@ PyObject* PyOFXImageEffectHost_GetSupportsParametricAnimation(PyObject *self, vo
 
 #endif
 
+#ifdef OFX_API_1_3
+
+PyObject* PyOFXImageEffectHost_GetSupportsOpenGLRender(PyObject *self, void*)
+{
+  PyOFXHost *phost = (PyOFXHost*)self;
+  
+  if (!phost->host)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  ofx::ImageEffectHost *host = (ofx::ImageEffectHost*) phost->host;
+  
+  bool failed = false;
+  
+  bool rv = false;
+  
+  CATCH({rv = host->supportsOpenGLRender();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  if (rv)
+  {
+    Py_RETURN_TRUE;
+  }
+  else
+  {
+    Py_RETURN_FALSE;
+  }
+}
+
+#endif
+
 static PyGetSetDef PyOFXImageEffectHost_GetSeters[] =
 {
   {(char*)"name", PyOFXImageEffectHost_GetName, NULL, NULL, NULL},
@@ -1106,6 +1143,9 @@ static PyGetSetDef PyOFXImageEffectHost_GetSeters[] =
 #ifdef OFX_API_1_2
   {(char*)"sequentialRender", PyOFXImageEffectHost_GetSequentialRender, NULL, NULL, NULL},
   {(char*)"supportsParametricAnimation", PyOFXImageEffectHost_GetSupportsParametricAnimation, NULL, NULL, NULL},
+#endif
+#ifdef OFX_API_1_3
+  {(char*)"supportsOpenGLRender", PyOFXImageEffectHost_GetSupportsOpenGLRender, NULL, NULL, NULL},
 #endif
   {NULL, NULL, NULL, NULL, NULL}
 };
@@ -1287,6 +1327,38 @@ PyObject* PyOFXImageEffectHost_SupportedPixelDepth(PyObject *self, PyObject *arg
   return PyInt_FromLong(rv);
 }
 
+#ifdef OFX_API_1_3
+
+PyObject* PyOFXImageEffectHost_FlushOpenGLResources(PyObject *self, PyObject *args)
+{
+  PyOFXHost *phost = (PyOFXHost*)self;
+  
+  if (!phost->host)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  ofx::ImageEffectHost *host = (ofx::ImageEffectHost*) phost->host;
+  
+  bool failed = false;
+  
+  bool rv = 0;
+  
+  CATCH({rv = host->flushOpenGLResources();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  PyObject *prv = (rv ? Py_True : Py_False);
+  Py_INCREF(prv);
+  return prv;
+}
+
+#endif
+
 static PyMethodDef PyOFXImageEffectHost_Methods[] =
 {
   {"supportedComponentsCount", PyOFXImageEffectHost_SupportedComponentsCount, METH_VARARGS, NULL},
@@ -1295,6 +1367,9 @@ static PyMethodDef PyOFXImageEffectHost_Methods[] =
   {"supportedContext", PyOFXImageEffectHost_SupportedContext, METH_VARARGS, NULL},
   {"supportedPixelDepthsCount", PyOFXImageEffectHost_SupportedPixelDepthsCount, METH_VARARGS, NULL},
   {"supportedPixelDepth", PyOFXImageEffectHost_SupportedPixelDepth, METH_VARARGS, NULL},
+#ifdef OFX_API_1_3
+  {"flushOpenGLResources", PyOFXImageEffectHost_FlushOpenGLResources, METH_VARARGS, NULL},
+#endif
   {NULL, NULL, NULL, NULL}
 };
 

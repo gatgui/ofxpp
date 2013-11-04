@@ -749,6 +749,9 @@ void initofx(void)
   PyModule_AddIntConstant(mod, "BitDepthByte", ofx::BitDepthByte);
   PyModule_AddIntConstant(mod, "BitDepthShort", ofx::BitDepthShort);
   PyModule_AddIntConstant(mod, "BitDepthFloat", ofx::BitDepthFloat);
+#ifdef OFX_API_1_3
+  PyModule_AddIntConstant(mod, "BitDepthHalf", ofx::BitDepthHalf);
+#endif
   
   PyModule_AddIntConstant(mod, "ImageComponentNone", ofx::ImageComponentNone);
 #ifdef OFX_API_1_2
@@ -891,6 +894,10 @@ void initofx(void)
   PyModule_AddIntConstant(mod, "ActionEndInstanceChanged", ofx::ActionEndInstanceChanged);
   PyModule_AddIntConstant(mod, "ActionPurgeCaches", ofx::ActionPurgeCaches);
   PyModule_AddIntConstant(mod, "ActionSyncPrivateData", ofx::ActionSyncPrivateData);
+#ifdef OFX_API_1_3
+  PyModule_AddIntConstant(mod, "ActionOpenGLContextAttached", ofx::ActionOpenGLContextAttached);
+  PyModule_AddIntConstant(mod, "ActionOpenGLContextDetached", ofx::ActionOpenGLContextAttached);
+#endif
   
   PyModule_AddIntConstant(mod, "SequentialRenderNotNeeded", ofx::SequentialRenderNotNeeded);
   PyModule_AddIntConstant(mod, "SequentialRenderRequired", ofx::SequentialRenderRequired);

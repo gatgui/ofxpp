@@ -1329,7 +1329,7 @@ PyObject* PyOFXClip_LoadTexture(PyObject *self, PyObject *args)
     return NULL;
   }
   
-  PyObject *ptex = PyObject_CallObject((PyObject*) &PyOFXImageType, NULL);
+  PyObject *ptex = PyObject_CallObject((PyObject*) &PyOFXTextureType, NULL);
   *(((PyOFXTexture*)ptex)->tex) = tex;
   return ptex;
 }

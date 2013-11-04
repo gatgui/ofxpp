@@ -1089,6 +1089,23 @@ OfxStatus PyImageEffect::render(ofx::ImageEffect::RenderArgs &args)
       PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(aname);
 #endif
+
+#ifdef OFX_API_1_3
+      oarg = (args.glEnabled ? Py_True : Py_False);
+      aname = PyString_FromString("glEnabled");
+      PyObject_SetAttr(oargs, aname, oarg);
+      Py_DECREF(aname);
+      
+      oarg = PyInt_FromLong(args.glTextureIndex);
+      aname = PyString_FromString("glTextureIndex");
+      PyObject_SetAttr(oargs, aname, oarg);
+      Py_DECREF(aname);
+      
+      oarg = PyInt_FromLong(args.glTextureTarget);
+      aname = PyString_FromString("glTextureTarget");
+      PyObject_SetAttr(oargs, aname, oarg);
+      Py_DECREF(aname);
+#endif
       
       PyObject *pyargs = Py_BuildValue("(O)", oargs);
       
@@ -1175,7 +1192,24 @@ OfxStatus PyImageEffect::beginSequenceRender(ofx::ImageEffect::BeginSequenceArgs
       PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(aname);
 #endif
+
+#ifdef OFX_API_1_3
+      oarg = (args.glEnabled ? Py_True : Py_False);
+      aname = PyString_FromString("glEnabled");
+      PyObject_SetAttr(oargs, aname, oarg);
+      Py_DECREF(aname);
       
+      oarg = PyInt_FromLong(args.glTextureIndex);
+      aname = PyString_FromString("glTextureIndex");
+      PyObject_SetAttr(oargs, aname, oarg);
+      Py_DECREF(aname);
+      
+      oarg = PyInt_FromLong(args.glTextureTarget);
+      aname = PyString_FromString("glTextureTarget");
+      PyObject_SetAttr(oargs, aname, oarg);
+      Py_DECREF(aname);
+#endif
+
       oarg = PyTuple_New(2);
       PyTuple_SetItem(oarg, 0, PyFloat_FromDouble(args.range.min));
       PyTuple_SetItem(oarg, 1, PyFloat_FromDouble(args.range.max));
@@ -1272,6 +1306,23 @@ OfxStatus PyImageEffect::endSequenceRender(ofx::ImageEffect::EndSequenceArgs &ar
       
       oarg = (args.interactiveRender ? Py_True : Py_False);
       aname = PyString_FromString("interactiveRender");
+      PyObject_SetAttr(oargs, aname, oarg);
+      Py_DECREF(aname);
+#endif
+      
+#ifdef OFX_API_1_3
+      oarg = (args.glEnabled ? Py_True : Py_False);
+      aname = PyString_FromString("glEnabled");
+      PyObject_SetAttr(oargs, aname, oarg);
+      Py_DECREF(aname);
+      
+      oarg = PyInt_FromLong(args.glTextureIndex);
+      aname = PyString_FromString("glTextureIndex");
+      PyObject_SetAttr(oargs, aname, oarg);
+      Py_DECREF(aname);
+      
+      oarg = PyInt_FromLong(args.glTextureTarget);
+      aname = PyString_FromString("glTextureTarget");
       PyObject_SetAttr(oargs, aname, oarg);
       Py_DECREF(aname);
 #endif
@@ -1535,6 +1586,108 @@ OfxStatus PyImageEffect::getTimeDomain(ofx::ImageEffect::GetTimeDomainArgs &args
   
   return ofx::ImageEffect::getTimeDomain(args);
 }
+
+#ifdef OFX_API_1_3
+
+OfxStatus PyImageEffect::openGLContextAttached()
+{
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "openGLContextAttached");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *rv = PyObject_CallObject(meth, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        LogPythonError();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyImageEffect::openGLContextAttached: Invalid return value type");
+        }
+      }
+      
+      Py_XDECREF(rv);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
+  return ofx::ImageEffect::openGLContextAttached();
+}
+
+OfxStatus PyImageEffect::openGLContextDetached()
+{
+  if (mSelf != 0)
+  {
+    PyObject *meth = PyObject_GetAttrString(mSelf, "openGLContextDetached");
+    
+    if (meth)
+    {
+      OfxStatus stat = kOfxStatFailed;
+      
+      PyObject *rv = PyObject_CallObject(meth, NULL);
+      
+      PyObject *err = PyErr_Occurred();
+      
+      if (err)
+      {
+        if (PyErr_ExceptionMatches((PyObject*)&PyOFXExceptionType))
+        {
+          PyOFXException *pexc = (PyOFXException*) err;
+          stat = (OfxStatus) PyInt_AsLong(pexc->status);
+        }
+        LogPythonError();
+      }
+      else
+      {
+        if (PyInt_Check(rv))
+        {
+          stat = (OfxStatus) PyInt_AsLong(rv);
+        }
+        else
+        {
+          ofx::Log("PyImageEffect::openGLContextDetached: Invalid return value type");
+        }
+      }
+      
+      Py_XDECREF(rv);
+      Py_DECREF(meth);
+      
+      return stat;
+    }
+    else
+    {
+      PyErr_Clear();
+    }
+  }
+  
+  return ofx::ImageEffect::openGLContextDetached();
+}
+
+#endif
 
 // ---
 
@@ -2760,6 +2913,116 @@ int PyOFXImageEffectDescriptor_SetOverlayInteract(PyObject *self, PyObject *val,
   return 0;
 }
 
+#ifdef OFX_API_1_3
+
+PyObject* PyOFXImageEffectDescriptor_GetSupportsOpenGLRender(PyObject *self, void*)
+{
+  PyOFXImageEffectDescriptor *pdesc = (PyOFXImageEffectDescriptor*)self;
+  
+  if (!pdesc->desc)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  bool failed = false;
+  
+  bool rv = false;
+  
+  CATCH({rv = pdesc->desc->supportsOpenGLRender();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  if (rv)
+  {
+    Py_RETURN_TRUE;
+  }
+  else
+  {
+    Py_RETURN_FALSE;
+  }
+}
+
+int PyOFXImageEffectDescriptor_SetSupportsOpenGLRender(PyObject *self, PyObject *val, void*)
+{
+  PyOFXImageEffectDescriptor *pdesc = (PyOFXImageEffectDescriptor*)self;
+  
+  if (!pdesc->desc)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return -1;
+  }
+  
+  bool failed = false;
+  
+  CATCH({pdesc->desc->supportsOpenGLRender(val == Py_True);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
+  
+  return 0;
+}
+
+PyObject* PyOFXImageEffectDescriptor_GetNeedsOpenGLRender(PyObject *self, void*)
+{
+  PyOFXImageEffectDescriptor *pdesc = (PyOFXImageEffectDescriptor*)self;
+  
+  if (!pdesc->desc)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  bool failed = false;
+  
+  bool rv = false;
+  
+  CATCH({rv = pdesc->desc->needsOpenGLRender();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  if (rv)
+  {
+    Py_RETURN_TRUE;
+  }
+  else
+  {
+    Py_RETURN_FALSE;
+  }
+}
+
+int PyOFXImageEffectDescriptor_SetNeedsOpenGLRender(PyObject *self, PyObject *val, void*)
+{
+  PyOFXImageEffectDescriptor *pdesc = (PyOFXImageEffectDescriptor*)self;
+  
+  if (!pdesc->desc)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return -1;
+  }
+  
+  bool failed = false;
+  
+  CATCH({pdesc->desc->needsOpenGLRender(val == Py_True);}, failed);
+  
+  if (failed)
+  {
+    return -1;
+  }
+  
+  return 0;
+}
+
+#endif
+
 static PyGetSetDef PyOFXImageEffectDescriptor_GetSeters[] =
 {
   {(char*)"handle", PyOFXImageEffectDescriptor_GetHandle, NULL, NULL, NULL},
@@ -2787,6 +3050,10 @@ static PyGetSetDef PyOFXImageEffectDescriptor_GetSeters[] =
   {(char*)"versionLabel", PyOFXImageEffectDescriptor_GetVersionLabel, PyOFXImageEffectDescriptor_SetVersionLabel, NULL, NULL},
   {(char*)"majorVersion", PyOFXImageEffectDescriptor_GetMajorVersion, NULL, NULL, NULL},
   {(char*)"minorVersion", PyOFXImageEffectDescriptor_GetMinorVersion, NULL, NULL, NULL},
+#endif
+#ifdef OFX_API_1_3
+  {(char*)"supportsMultipleClipDepths", PyOFXImageEffectDescriptor_GetSupportsOpenGLRender, PyOFXImageEffectDescriptor_SetSupportsOpenGLRender, NULL, NULL},
+  {(char*)"supportsMultipleClipDepths", PyOFXImageEffectDescriptor_GetNeedsOpenGLRender, PyOFXImageEffectDescriptor_SetNeedsOpenGLRender, NULL, NULL},
 #endif
   {NULL, NULL, NULL, NULL, NULL}
 };
@@ -3179,6 +3446,104 @@ PyObject* PyOFXImageEffectDescriptor_Version(PyObject *self, PyObject *args)
 
 #endif
 
+#ifdef OFX_API_1_3
+
+PyObject* PyOFXImageEffectDescriptor_OpenGLPixelDepthsCount(PyObject *self, PyObject *)
+{
+  PyOFXImageEffectDescriptor *pdesc = (PyOFXImageEffectDescriptor*)self;
+  
+  if (!pdesc->desc)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  bool failed = false;
+  
+  int rv = 0;
+  
+  CATCH({rv = pdesc->desc->openGLPixelDepthsCount();}, failed);
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  return PyInt_FromLong(rv);
+}
+
+
+PyObject* PyOFXImageEffectDescriptor_OpenGLPixelDepth(PyObject *self, PyObject *args)
+{
+  PyOFXImageEffectDescriptor *pdesc = (PyOFXImageEffectDescriptor*)self;
+  
+  if (!pdesc->desc)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  Py_ssize_t nargs = PyTuple_Size(args);
+  
+  if (nargs < 1 || nargs > 2)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "At least 1 argument, at most 2");
+    return NULL;
+  }
+  
+  if (!PyInt_Check(PyTuple_GetItem(args, 0)))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected an integer for first argument");
+    return NULL;
+  }
+  
+  int idx = PyInt_AsLong(PyTuple_GetItem(args, 0));
+  
+  PyObject *ppd = 0;
+  
+  if (nargs == 2)
+  {
+    ppd = PyTuple_GetItem(args, 1);
+  }
+  
+  bool failed = false;
+  
+  if (ppd != 0)
+  {
+    if (!PyInt_Check(ppd))
+    {
+      PyErr_SetString(PyExc_TypeError, "Expected an integer");
+      return NULL;
+    }
+    
+    int pd = PyInt_AsLong(ppd);
+    
+    CATCH({pdesc->desc->openGLPixelDepth(idx, ofx::BitDepth(pd));}, failed);
+    
+    if (failed)
+    {
+      return NULL;
+    }
+    
+    Py_RETURN_NONE;
+  }
+  else
+  {
+    int rv = 0;
+    
+    CATCH({rv = int(pdesc->desc->openGLPixelDepth(idx));}, failed);
+    
+    if (failed)
+    {
+      return NULL;
+    }
+    
+    return PyInt_FromLong(rv);
+  }
+}
+
+#endif
+
 static PyMethodDef PyOFXImageEffectDescriptor_Methods[] =
 {
   {"defineClip", PyOFXImageEffectDescriptor_DefineClip, METH_VARARGS, NULL},
@@ -3190,6 +3555,10 @@ static PyMethodDef PyOFXImageEffectDescriptor_Methods[] =
   {"clipPreferencesSlaveParam", PyOFXImageEffectDescriptor_ClipPreferencesSlaveParam, METH_VARARGS, NULL},
 #ifdef OFX_API_1_2
   {"version", PyOFXImageEffectDescriptor_Version, METH_VARARGS, NULL},
+#endif
+#ifdef OFX_API_1_3
+  {"openGLPixelDepthsCount", PyOFXImageEffectDescriptor_OpenGLPixelDepthsCount, METH_VARARGS, NULL},
+  {"openGLPixelDepth", PyOFXImageEffectDescriptor_OpenGLPixelDepth, METH_VARARGS, NULL},
 #endif
   {NULL, NULL, NULL, NULL}
 };

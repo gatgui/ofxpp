@@ -582,6 +582,10 @@ extern PyTypeObject PyOFXMemoryErrorType;
 extern PyTypeObject PyOFXBadHandleErrorType;
 extern PyTypeObject PyOFXBadIndexErrorType;
 extern PyTypeObject PyOFXValueErrorType;
+#ifdef OFX_API_1_3
+extern PyTypeObject PyOFXGLOutOfMemoryType;
+extern PyTypeObject PyOFXGLRenderFailedType;
+#endif
 extern PyTypeObject PyOFXHostType;
 extern PyTypeObject PyOFXImageEffectHostType;
 extern PyTypeObject PyOFXMessageSuiteType;
@@ -786,6 +790,10 @@ class PyImageEffect : public ofx::ImageEffect
     virtual OfxStatus endSequenceRender(ofx::ImageEffect::EndSequenceArgs &args);
     virtual OfxStatus getClipPreferences(ofx::ImageEffect::GetClipPrefArgs &args);
     virtual OfxStatus getTimeDomain(ofx::ImageEffect::GetTimeDomainArgs &args);
+#ifdef OFX_API_1_3
+    virtual OfxStatus openGLContextAttached();
+    virtual OfxStatus openGLContextDetached();
+#endif
     
     inline void self(PyObject *self)
     {

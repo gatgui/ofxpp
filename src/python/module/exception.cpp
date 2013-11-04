@@ -35,6 +35,10 @@ PyTypeObject PyOFXMemoryErrorType;
 PyTypeObject PyOFXBadHandleErrorType;
 PyTypeObject PyOFXBadIndexErrorType;
 PyTypeObject PyOFXValueErrorType;
+#ifdef OFX_API_1_3
+PyTypeObject PyOFXGLOutOfMemoryType;
+PyTypeObject PyOFXGLRenderFailedType;
+#endif
 
 // ---
 
@@ -279,6 +283,40 @@ static int PyOFXValueError_Init(PyObject *self, PyObject *args, PyObject *kwargs
   return rv;
 }
 
+#ifdef OFX_API_1_3
+
+static int PyOFXGLOutOfMemory_Init(PyObject *self, PyObject *args, PyObject *kwargs)
+{
+  PyObject *newArgs = PyTuple_New(PyTuple_Size(args)+1);
+  PyTuple_SetItem(newArgs, 0, PyInt_FromLong(kOfxStatGLOutOfMemory));
+  for (Py_ssize_t i=0; i<PyTuple_Size(args); ++i)
+  {
+    PyObject *item = PyTuple_GetItem(args, i);
+    Py_INCREF(item);
+    PyTuple_SetItem(newArgs, i+1, item);
+  }
+  int rv = PyOFXExceptionType.tp_init(self, newArgs, kwargs);
+  Py_DECREF(newArgs);
+  return rv;
+}
+
+static int PyOFXGLRenderFailed_Init(PyObject *self, PyObject *args, PyObject *kwargs)
+{
+  PyObject *newArgs = PyTuple_New(PyTuple_Size(args)+1);
+  PyTuple_SetItem(newArgs, 0, PyInt_FromLong(kOfxStatGLRenderFailed));
+  for (Py_ssize_t i=0; i<PyTuple_Size(args); ++i)
+  {
+    PyObject *item = PyTuple_GetItem(args, i);
+    Py_INCREF(item);
+    PyTuple_SetItem(newArgs, i+1, item);
+  }
+  int rv = PyOFXExceptionType.tp_init(self, newArgs, kwargs);
+  Py_DECREF(newArgs);
+  return rv;
+}
+
+#endif
+
 // ---
 
 bool PyOFX_InitException(PyObject *mod)
@@ -394,6 +432,26 @@ bool PyOFX_InitException(PyObject *mod)
     return false;
   }
   
+#ifdef OFX_API_1_3
+  INIT_TYPE(PyOFXGLOutOfMemoryType, "ofx.GLOutOfMemory", PyOFXException);
+  PyOFXGLOutOfMemoryType.tp_base = &PyOFXExceptionType;
+  PyOFXGLOutOfMemoryType.tp_flags = Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE;
+  PyOFXGLOutOfMemoryType.tp_init = PyOFXGLOutOfMemory_Init;
+  if (PyType_Ready(&PyOFXGLOutOfMemoryType) < 0)
+  {
+    return false;
+  }
+  
+  INIT_TYPE(PyOFXGLRenderFailedType, "ofx.GLRenderFailed", PyOFXException);
+  PyOFXGLRenderFailedType.tp_base = &PyOFXExceptionType;
+  PyOFXGLRenderFailedType.tp_flags = Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE;
+  PyOFXGLRenderFailedType.tp_init = PyOFXGLRenderFailed_Init;
+  if (PyType_Ready(&PyOFXGLRenderFailedType) < 0)
+  {
+    return false;
+  }
+#endif
+  
   Py_INCREF(&PyOFXExceptionType);
   Py_INCREF(&PyOFXFailedErrorType);
   Py_INCREF(&PyOFXFatalErrorType);
@@ -406,6 +464,10 @@ bool PyOFX_InitException(PyObject *mod)
   Py_INCREF(&PyOFXBadHandleErrorType);
   Py_INCREF(&PyOFXBadIndexErrorType);
   Py_INCREF(&PyOFXValueErrorType);
+#ifdef OFX_API_1_3
+  Py_INCREF(&PyOFXGLOutOfMemoryType);
+  Py_INCREF(&PyOFXGLRenderFailedType);
+#endif
   
   PyModule_AddObject(mod, "Exception", (PyObject*)&PyOFXExceptionType);
   PyModule_AddObject(mod, "FailedError", (PyObject*)&PyOFXFailedErrorType);
@@ -419,6 +481,10 @@ bool PyOFX_InitException(PyObject *mod)
   PyModule_AddObject(mod, "BadHandleError", (PyObject*)&PyOFXBadHandleErrorType);
   PyModule_AddObject(mod, "BadIndexError", (PyObject*)&PyOFXBadIndexErrorType);
   PyModule_AddObject(mod, "ValueError", (PyObject*)&PyOFXValueErrorType);
+#ifdef OFX_API_1_3
+  PyModule_AddObject(mod, "GLOutOfMemory", (PyObject*)&PyOFXGLOutOfMemoryType);
+  PyModule_AddObject(mod, "GLRenderFailed", (PyObject*)&PyOFXGLRenderFailedType);
+#endif
   
   return true;
 }

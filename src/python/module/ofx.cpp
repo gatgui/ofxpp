@@ -814,6 +814,9 @@ void initofx(void)
   PyModule_AddIntConstant(mod, "StringParamFilePath", ofx::StringParamFilePath);
   PyModule_AddIntConstant(mod, "StringParamDirectoryPath", ofx::StringParamDirectoryPath);
   PyModule_AddIntConstant(mod, "StringParamLabel", ofx::StringParamLabel);
+#ifdef OFX_API_1_3
+  PyModule_AddIntConstant(mod, "StringParamRichText", ofx::StringParamRichText);
+#endif
   
   PyModule_AddIntConstant(mod, "DoubleParamPlain", ofx::DoubleParamPlain);
   PyModule_AddIntConstant(mod, "DoubleParamAngle", ofx::DoubleParamAngle);

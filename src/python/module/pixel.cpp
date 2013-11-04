@@ -28,6 +28,10 @@ PyTypeObject PyOFXRGBAColourBType;
 PyTypeObject PyOFXRGBAColourSType;
 PyTypeObject PyOFXRGBAColourFType;
 PyTypeObject PyOFXRGBAColourDType;
+PyTypeObject PyOFXRGBColourBType;
+PyTypeObject PyOFXRGBColourSType;
+PyTypeObject PyOFXRGBColourFType;
+PyTypeObject PyOFXRGBColourDType;
 PyTypeObject PyOFXYUVAColourBType;
 PyTypeObject PyOFXYUVAColourSType;
 PyTypeObject PyOFXYUVAColourFType;
@@ -1023,15 +1027,6 @@ static PyGetSetDef PyOFXYUVAColourD_GetSeters[] =
 
 // ---
 
-#ifdef OFX_API_1_2
-
-PyTypeObject PyOFXRGBColourBType;
-PyTypeObject PyOFXRGBColourSType;
-PyTypeObject PyOFXRGBColourFType;
-PyTypeObject PyOFXRGBColourDType;
-
-// ---
-
 PyObject* PyOFXRGBColourB_New(PyTypeObject *t, PyObject *, PyObject *)
 {
   return t->tp_alloc(t, 0);
@@ -1442,8 +1437,6 @@ static PyGetSetDef PyOFXRGBColourD_GetSeters[] =
   {NULL, NULL, NULL, NULL, NULL}
 };
 
-#endif
-
 // ---
 
 PyTypeObject PyOFXColourAddressType;
@@ -1456,11 +1449,9 @@ PyTypeObject PyOFXRGBAColourFAddressType;
 PyTypeObject PyOFXYUVAColourBAddressType;
 PyTypeObject PyOFXYUVAColourSAddressType;
 PyTypeObject PyOFXYUVAColourFAddressType;
-#ifdef OFX_API_1_2
 PyTypeObject PyOFXRGBColourBAddressType;
 PyTypeObject PyOFXRGBColourSAddressType;
 PyTypeObject PyOFXRGBColourFAddressType;
-#endif
 
 // ---
 
@@ -2464,8 +2455,6 @@ static PyGetSetDef PyOFXYUVAColourFAddress_GetSeters[] =
 
 // ---
 
-#ifdef OFX_API_1_2
-
 int PyOFXRGBColourBAddress_Init(PyObject *, PyObject *, PyObject *)
 {
   return 0;
@@ -2761,8 +2750,6 @@ static PyGetSetDef PyOFXRGBColourFAddress_GetSeters[] =
   {NULL, NULL, NULL, NULL, NULL}
 };
 
-#endif
-
 // ---
 
 bool PyOFX_InitPixel(PyObject *mod)
@@ -2955,8 +2942,6 @@ bool PyOFX_InitPixel(PyObject *mod)
   {
     return false;
   }
-
-#ifdef OFX_API_1_2
   
   INIT_TYPE(PyOFXRGBColourBType, "ofx.RGBColourB", PyOFXRGBColourB);
   PyOFXRGBColourBType.tp_flags = Py_TPFLAGS_DEFAULT;
@@ -3052,8 +3037,6 @@ bool PyOFX_InitPixel(PyObject *mod)
   
   Py_INCREF(&PyOFXRGBColourFAddressType);
   PyModule_AddObject(mod, "RGBColourFAddress", (PyObject*)&PyOFXRGBColourFAddressType);
-  
-#endif
   
   Py_INCREF(&PyOFXColourAddressType);
   PyModule_AddObject(mod, "ColourAddress", (PyObject*)&PyOFXColourAddressType);

@@ -49,7 +49,7 @@ PyObject* PyOFXRGBParameterDescriptor_GetDefault(PyObject *self, void*)
   
   bool failed = false;
   
-  ofx::RGBAColour<double> rv = {0, 0, 0, 1};
+  ofx::RGBColour<double> rv = {0, 0, 0};
   
   CATCH({rv = desc->defaultValue();}, failed);
   
@@ -58,8 +58,8 @@ PyObject* PyOFXRGBParameterDescriptor_GetDefault(PyObject *self, void*)
     return NULL;
   }
   
-  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
-  ((PyOFXRGBAColourD*)prv)->colour = rv;
+  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBColourDType, NULL);
+  ((PyOFXRGBColourD*)prv)->colour = rv;
   return prv;
 }
 
@@ -73,9 +73,9 @@ int PyOFXRGBParameterDescriptor_SetDefault(PyObject *self, PyObject *val, void*)
     return -1;
   }
   
-  if (!PyObject_TypeCheck(val, &PyOFXRGBAColourDType))
+  if (!PyObject_TypeCheck(val, &PyOFXRGBColourDType))
   {
-    PyErr_SetString(PyExc_TypeError, "Expected a ofx.RGBAColourD object");
+    PyErr_SetString(PyExc_TypeError, "Expected a ofx.RGBColourD object");
     return NULL;
   }
   
@@ -83,7 +83,7 @@ int PyOFXRGBParameterDescriptor_SetDefault(PyObject *self, PyObject *val, void*)
   
   bool failed = false;
   
-  CATCH({desc->defaultValue(((PyOFXRGBAColourD*)val)->colour);}, failed);
+  CATCH({desc->defaultValue(((PyOFXRGBColourD*)val)->colour);}, failed);
   
   if (failed)
   {
@@ -122,7 +122,7 @@ PyObject* PyOFXRGBParameter_GetDefault(PyObject *self, void*)
   
   bool failed = false;
   
-  ofx::RGBAColour<double> rv = {0, 0, 0, 1};
+  ofx::RGBColour<double> rv = {0, 0, 0};
   
   CATCH({rv = param->defaultValue();}, failed);
   
@@ -131,8 +131,8 @@ PyObject* PyOFXRGBParameter_GetDefault(PyObject *self, void*)
     return NULL;
   }
   
-  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
-  ((PyOFXRGBAColourD*)prv)->colour = rv;
+  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBColourDType, NULL);
+  ((PyOFXRGBColourD*)prv)->colour = rv;
   return prv;
 }
 
@@ -156,7 +156,7 @@ PyObject* PyOFXRGBParameter_GetValue(PyObject *self, PyObject *)
   
   bool failed = false;
   
-  ofx::RGBAColour<double> rv = {0, 0, 0, 1};
+  ofx::RGBColour<double> rv = {0, 0, 0};
   
   CATCH({rv = param->getValue();}, failed);
   
@@ -165,8 +165,8 @@ PyObject* PyOFXRGBParameter_GetValue(PyObject *self, PyObject *)
     return false;
   }
   
-  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
-  ((PyOFXRGBAColourD*)prv)->colour = rv;
+  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBColourDType, NULL);
+  ((PyOFXRGBColourD*)prv)->colour = rv;
   return prv;
 }
 
@@ -191,7 +191,7 @@ PyObject* PyOFXRGBParameter_GetValueAtTime(PyObject *self, PyObject *args)
   
   bool failed = false;
   
-  ofx::RGBAColour<double> rv = {0, 0, 0, 1};
+  ofx::RGBColour<double> rv = {0, 0, 0};
   
   CATCH({rv = param->getValueAtTime(t);}, failed);
   
@@ -200,8 +200,8 @@ PyObject* PyOFXRGBParameter_GetValueAtTime(PyObject *self, PyObject *args)
     return false;
   }
   
-  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
-  ((PyOFXRGBAColourD*)prv)->colour = rv;
+  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBColourDType, NULL);
+  ((PyOFXRGBColourD*)prv)->colour = rv;
   return prv;
 }
 
@@ -222,9 +222,9 @@ PyObject* PyOFXRGBParameter_SetValue(PyObject *self, PyObject *args)
     return NULL;
   }
   
-  if (!PyObject_TypeCheck(val, &PyOFXRGBAColourDType))
+  if (!PyObject_TypeCheck(val, &PyOFXRGBColourDType))
   {
-    PyErr_SetString(PyExc_TypeError, "Expected a ofx.RGBAColourD object");
+    PyErr_SetString(PyExc_TypeError, "Expected a ofx.RGBColourD object");
     return NULL;
   }
   
@@ -232,7 +232,7 @@ PyObject* PyOFXRGBParameter_SetValue(PyObject *self, PyObject *args)
   
   bool failed = false;
   
-  CATCH({param->setValue(((PyOFXRGBAColourD*)val)->colour);}, failed);
+  CATCH({param->setValue(((PyOFXRGBColourD*)val)->colour);}, failed);
   
   if (failed)
   {
@@ -260,9 +260,9 @@ PyObject* PyOFXRGBParameter_SetValueAtTime(PyObject *self, PyObject *args)
     return NULL;
   }
   
-  if (!PyObject_TypeCheck(val, &PyOFXRGBAColourDType))
+  if (!PyObject_TypeCheck(val, &PyOFXRGBColourDType))
   {
-    PyErr_SetString(PyExc_TypeError, "Expected a ofx.RGBAColourD object");
+    PyErr_SetString(PyExc_TypeError, "Expected a ofx.RGBColourD object");
     return NULL;
   }
   
@@ -270,7 +270,7 @@ PyObject* PyOFXRGBParameter_SetValueAtTime(PyObject *self, PyObject *args)
   
   bool failed = false;
   
-  CATCH({param->setValueAtTime(t, ((PyOFXRGBAColourD*)val)->colour);}, failed);
+  CATCH({param->setValueAtTime(t, ((PyOFXRGBColourD*)val)->colour);}, failed);
   
   if (failed)
   {
@@ -301,7 +301,7 @@ PyObject* PyOFXRGBParameter_GetIntegral(PyObject *self, PyObject *args)
   
   bool failed = false;
   
-  ofx::RGBAColour<double> rv = {0, 0, 0, 1};
+  ofx::RGBColour<double> rv = {0, 0, 0};
   
   CATCH({rv = param->getIntegral(t0, t1);}, failed);
   
@@ -310,8 +310,8 @@ PyObject* PyOFXRGBParameter_GetIntegral(PyObject *self, PyObject *args)
     return false;
   }
   
-  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
-  ((PyOFXRGBAColourD*)prv)->colour = rv;
+  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBColourDType, NULL);
+  ((PyOFXRGBColourD*)prv)->colour = rv;
   return prv;
 }
 
@@ -336,7 +336,7 @@ PyObject* PyOFXRGBParameter_GetDerivative(PyObject *self, PyObject *args)
   
   bool failed = false;
   
-  ofx::RGBAColour<double> rv = {0, 0, 0, 1};
+  ofx::RGBColour<double> rv = {0, 0, 0};
   
   CATCH({rv = param->getDerivative(t);}, failed);
   
@@ -345,8 +345,8 @@ PyObject* PyOFXRGBParameter_GetDerivative(PyObject *self, PyObject *args)
     return false;
   }
   
-  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBAColourDType, NULL);
-  ((PyOFXRGBAColourD*)prv)->colour = rv;
+  PyObject *prv = PyObject_CallObject((PyObject*)&PyOFXRGBColourDType, NULL);
+  ((PyOFXRGBColourD*)prv)->colour = rv;
   return prv;
 }
 

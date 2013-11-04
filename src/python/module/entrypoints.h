@@ -509,6 +509,38 @@ OfxStatus PyOFX_Main(const char *action,
       }
       break;
     }
+#ifdef OFX_API_1_3
+    case ofx::ActionOpenGLContextAttached:
+    {
+      ofx::DebugLog("OFX Image Effect Plugin: OpenGL context attached");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        rv = kOfxStatErrUnknown;
+      }
+      else
+      {
+        rv = effect->openGLContextAttached();
+      }
+      break;
+    }
+    case ofx::ActionOpenGLContextDetached:
+    {
+      ofx::DebugLog("OFX Image Effect Plugin: OpenGL context detached");
+      PyImageEffect *effect = plugin->getEffect(hEffect);
+      if (!effect)
+      {
+        ofx::Log("*** Invalid effect");
+        rv = kOfxStatErrUnknown;
+      }
+      else
+      {
+        rv = effect->openGLContextDetached();
+      }
+      break;
+    }
+#endif
     default:
       break;
     }

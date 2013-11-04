@@ -430,8 +430,6 @@ typedef struct
   ofx::RGBAColourD colour;
 } PyOFXRGBAColourD;
 
-#ifdef OFX_API_1_2
-
 typedef struct
 {
   PyObject_HEAD
@@ -455,8 +453,6 @@ typedef struct
   PyObject_HEAD
   ofx::RGBColourD colour;
 } PyOFXRGBColourD;
-
-#endif
 
 typedef struct
 {

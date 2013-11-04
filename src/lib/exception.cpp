@@ -21,12 +21,12 @@ USA.
 
 */
 
+#include <ofx/exception.h>
+#include <sstream>
 #ifdef OFX_API_1_3
 #include <ofxImageEffect.h>
 #include <ofxOpenGLRender.h>
 #endif
-#include <ofx/exception.h>
-#include <sstream>
 
 namespace ofx {
 
@@ -171,9 +171,6 @@ ValueError::~ValueError() throw() {
 // ---
 
 #ifdef OFX_API_1_3
-
-#define kOfxStatGLOutOfMemory  ((int) 1001)
-#define kOfxStatGLRenderFailed ((int) 1002)
 
 GLOutOfMemory::GLOutOfMemory(const std::string &msg)
   : Exception(kOfxStatGLOutOfMemory, msg, "GLOutOfMemory") {

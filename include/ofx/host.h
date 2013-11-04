@@ -36,6 +36,9 @@ USA.
 #endif
 #include <ofxInteract.h>
 #include <ofxImageEffect.h>
+#ifdef OFX_API_1_3
+#include <ofxOpenGLRender.h>
+#endif
 #include <ofx/ofx.h>
 #include <ofx/exception.h>
 #include <ofx/property.h>
@@ -236,6 +239,19 @@ namespace ofx {
       
 #endif
       
+#ifdef OFX_API_1_3
+      
+      //! Check if host supports OpenGL render in image effects.
+      bool supportsOpenGLRender();
+      
+      //! Get opengl render functions suite
+      inline OfxImageEffectOpenGLRenderSuiteV1* openGLRenderSuite() {return mOpenGLRenderSuite;}
+      
+      //! Flush OpenGL resources
+      bool flushOpenGLResources();
+      
+#endif
+      
       // parameter properties
       
       //! Check if host supports custom parameter animation.
@@ -266,6 +282,9 @@ namespace ofx {
       
       OfxInteractSuiteV1 *mInteractSuite;
       OfxImageEffectSuiteV1 *mImageEffectSuite;
+#ifdef OFX_API_1_3
+      OfxImageEffectOpenGLRenderSuiteV1 *mOpenGLRenderSuite;
+#endif
   };
 }
 

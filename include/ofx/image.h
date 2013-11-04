@@ -29,6 +29,9 @@ USA.
 #define __ofx_image_h__
 
 #include <ofxImageEffect.h>
+#ifdef OFX_API_1_3
+#include <ofxOpenGLRender.h>
+#endif
 #include <ofx/ofx.h>
 #include <ofx/exception.h>
 #include <ofx/property.h>
@@ -37,25 +40,19 @@ namespace ofx {
   
   class ImageEffectHost;
   
-  //! %Image class.
-  class Image {
+  // create a base Image class (deriver both Image and Texture from it)
+  class ImageBase {
     public:
-      
-      Image();
-      Image(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception);
-      Image(const Image &rhs);
-      ~Image();
-      
-      Image& operator=(const Image &rhs);
+      ImageBase();
+      ImageBase(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception);
+      ImageBase(const ImageBase &rhs);
+      ~ImageBase();
+    
+      ImageBase& operator=(const ImageBase &rhs);
       
       //! Get property handle.
       inline OfxPropertySetHandle handle() {
         return mProps.handle();
-      }
-      
-      //! Get image data raw pointer.
-      inline void* data() {
-        return mData;
       }
       
       //! Get pixel depth.
@@ -85,7 +82,7 @@ namespace ofx {
       }
       
       //! Get region of definition.
-      const Rect<int>& regionOfDefinition() const {
+      inline const Rect<int>& regionOfDefinition() const {
         return mRoD;
       }
       
@@ -124,6 +121,42 @@ namespace ofx {
         return mBounds;
       }
       
+    protected:
+      
+      OfxImageEffectSuiteV1 *mSuite;
+      PropertySet mProps;
+      BitDepth mBitDepth;
+      ImageComponent mComponents;
+      ImagePreMult mPreMult;
+      double mRenderScaleX;
+      double mRenderScaleY;
+      double mPixelAspectRatio;
+      Rect<int> mRoD;
+      ImageField mField;
+      std::string mUID;
+      int mCompBytes;
+      int mNumComps;
+      int mPixelBytes;
+      int mRowBytes;
+      Rect<int> mBounds;
+  };
+  
+  //! %Image class.
+  class Image : public ImageBase {
+    public:
+      
+      Image();
+      Image(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception);
+      Image(const Image &rhs);
+      ~Image();
+      
+      Image& operator=(const Image &rhs);
+      
+      //! Get image data raw pointer.
+      inline void* data() {
+        return mData;
+      }
+      
       //! Get pixel raw address.
       inline void* pixelAddress(int x, int y) {
         if (x < mBounds.x1 || x >= mBounds.x2 || y < mBounds.y1 || y >= mBounds.y2) {
@@ -146,24 +179,38 @@ namespace ofx {
       
     protected:
       
-      PropertySet mProps;
-      OfxImageEffectSuiteV1 *mSuite;
-      BitDepth mBitDepth;
-      ImageComponent mComponents;
-      ImagePreMult mPreMult;
-      double mRenderScaleX;
-      double mRenderScaleY;
-      double mPixelAspectRatio;
-      Rect<int> mRoD;
-      ImageField mField;
-      std::string mUID;
-      int mCompBytes;
-      int mNumComps;
-      int mPixelBytes;
-      int mRowBytes;
-      Rect<int> mBounds;
       void *mData;
   };
+  
+#ifdef OFX_API_1_3
+  
+  //! %Texture class.
+  class Texture : public ImageBase {
+    public:
+      Texture();
+      Texture(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception);
+      Texture(const Texture &rhs);
+      virtual ~Texture();
+      
+      Texture& operator=(const Texture &rhs);
+      
+      //! Get OpenGL texture id (cast to GLuint)
+      inline int index() {return mIndex;}
+      
+      //! Get OpenGL texture target (cast to GLenum)
+      inline int target() {return mTarget;}
+      
+      //! Release OpenGL texture
+      void release() throw(Exception);
+    
+    protected:
+      
+      int mIndex;
+      int mTarget;
+      OfxImageEffectOpenGLRenderSuiteV1 *mGLSuite;
+  };
+  
+#endif
 }
 
 #endif

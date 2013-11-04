@@ -35,7 +35,11 @@ namespace ofx {
 
 Host::Host(OfxHost *host) throw(Exception)
   : PropertySet(), mHost(host), mTimeLine(0), mProgress(0), mMessage(0),
-    mMemory(0), mMultiThread(0), mPropSuite(0), mParamSuite(0) {
+    mMemory(0), mMultiThread(0), mPropSuite(0), mParamSuite(0)
+#ifdef OFX_API_1_2
+    , mParametricParamSuite(0)
+#endif
+{
   if (host == 0) {
     throw BadHandleError("Host");
   }
@@ -162,7 +166,11 @@ void* Host::OSHandle() {
 // ---
 
 ImageEffectHost::ImageEffectHost(OfxHost *h)
-  : Host(h), mInteractSuite(0), mImageEffectSuite(0) {
+  : Host(h), mInteractSuite(0), mImageEffectSuite(0)
+#ifdef OFX_API_1_3
+  , mOpenGLRenderSuite(0)
+#endif
+{
 }
 
 ImageEffectHost::~ImageEffectHost() {
@@ -178,6 +186,16 @@ void ImageEffectHost::init() throw(Exception) {
   if (!mImageEffectSuite) {
     throw MissingHostFeatureError("Image effect suite");
   }
+#ifdef OFX_API_1_3
+  if (checkAPIVersion(1, 3)) {
+    mOpenGLRenderSuite = fetchSuite<OfxImageEffectOpenGLRenderSuiteV1>(kOfxOpenGLRenderSuite, 1);
+    if (supportsOpenGLRender() && !mOpenGLRenderSuite) {
+      throw MissingHostFeatureError("OpenGL render suite");
+    }
+  } else {
+    mOpenGLRenderSuite = 0;
+  }
+#endif
 }
 
 std::string ImageEffectHost::name() {
@@ -289,6 +307,27 @@ SequentialRender ImageEffectHost::sequentialRender() {
 
 bool ImageEffectHost::supportsParametricAnimation() {
   return (getInt(kOfxParamHostPropSupportsParametricAnimation, 0) == 1);
+}
+
+#endif
+
+#ifdef OFX_API_1_3
+
+bool ImageEffectHost::supportsOpenGLRender() {
+  // returns: "true" or "false"
+  if (checkAPIVersion(1, 3)) {
+    return (getString(kOfxImageEffectPropOpenGLRenderSupported, 0) == "true" && mOpenGLRenderSuite != 0);
+  } else {
+    return false;
+  }
+}
+
+bool ImageEffectHost::flushOpenGLResources() {
+  if (mOpenGLRenderSuite) {
+    return (mOpenGLRenderSuite->flushResources() == kOfxStatOK);
+  } else {
+    return false;
+  }
 }
 
 #endif

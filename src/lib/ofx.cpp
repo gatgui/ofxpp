@@ -34,6 +34,9 @@ USA.
 #ifdef OFX_API_1_2
 #include <ofxParametricParam.h>
 #endif
+#ifdef OFX_API_1_3
+#include <ofxOpenGLRender.h>
+#endif
 #include <ctime>
 #include <iostream>
 #include <cstdio>
@@ -52,6 +55,9 @@ BEGIN_ENUM_MAP(BitDepth)
   ADD_ENUM_MAPPING(BitDepth, Byte)
   ADD_ENUM_MAPPING(BitDepth, Short)
   ADD_ENUM_MAPPING(BitDepth, Float)
+#ifdef OFX_API_1_3
+  ADD_ENUM_MAPPING(BitDepth, Half)
+#endif
 END_ENUM_MAP(BitDepth)
 
 BEGIN_ENUM_MAP(Type)
@@ -147,6 +153,9 @@ BEGIN_ENUM_MAP(StringParamMode)
   ADD_ENUM_MAPPING_CUSTOM(StringParamMode, StringParamFilePath, kOfxParamStringIsFilePath)
   ADD_ENUM_MAPPING_CUSTOM(StringParamMode, StringParamDirectoryPath, kOfxParamStringIsDirectoryPath)
   ADD_ENUM_MAPPING_CUSTOM(StringParamMode, StringParamLabel, kOfxParamStringIsLabel)
+#ifdef OFX_API_1_3
+  ADD_ENUM_MAPPING_CUSTOM(StringParamMode, StringParamRichText, kOfxParamStringIsRichTextFormat)
+#endif
 END_ENUM_MAP(StringParamMode)
 
 BEGIN_ENUM_MAP(DoubleParamType)
@@ -210,6 +219,10 @@ BEGIN_ENUM_MAP(Action)
   ADD_ENUM_MAPPING_CUSTOM(Action, ActionInteractKeyRepeat, kOfxInteractActionKeyRepeat)
   ADD_ENUM_MAPPING_CUSTOM(Action, ActionInteractGainFocus, kOfxInteractActionGainFocus)
   ADD_ENUM_MAPPING_CUSTOM(Action, ActionInteractLoseFocus, kOfxInteractActionLoseFocus)
+#ifdef OFX_API_1_3
+  ADD_ENUM_MAPPING_CUSTOM(Action, ActionOpenGLContextAttached, kOfxActionOpenGLContextAttached)
+  ADD_ENUM_MAPPING_CUSTOM(Action, ActionOpenGLContextDetached, kOfxActionOpenGLContextDetached)
+#endif
 END_ENUM_MAP(Action)
 
 BEGIN_ENUM_MAP(ChangeReason)

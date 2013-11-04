@@ -245,6 +245,20 @@ namespace ofx {
       void description(const std::string &vl);
 #endif
       
+#ifdef OFX_API_1_3
+      
+      bool supportsOpenGLRender(); 
+      void supportsOpenGLRender(bool v);
+      
+      bool needsOpenGLRender();
+      void needsOpenGLRender(bool v);
+      
+      int openGLPixelDepthsCount();
+      void openGLPixelDepth(int i, BitDepth bd);
+      BitDepth openGLPixelDepth(int i);
+      
+#endif
+      
       // Image effect actions
       
       /** Descrbe the effect.
@@ -303,6 +317,11 @@ namespace ofx {
         bool sequentialRender; //!< Whether the effect is currently being rendered in strict frame order on a single instance (OFX >= 1.2).
         bool interactiveRender; //!< If the render is in response to a user modifying the effect in an interactive session (OFX >= 1.2).
 #endif
+#ifdef OFX_API_1_3
+        bool glEnabled;
+        int glTextureIndex;
+        int glTextureTarget;
+#endif
         
         RenderArgs(ImageEffectHost *host, PropertySet &props);
       };
@@ -343,6 +362,11 @@ namespace ofx {
 #ifdef OFX_API_1_2
         bool sequentialRender; //!< Whether the effect is currently being rendered in strict frame order on a single instance (OFX >= 1.2).
         bool interactiveRender; //!< If the render is in response to a user modifying the effect in an interactive session (OFX >= 1.2).
+#endif
+#ifdef OFX_API_1_3
+        bool glEnabled;
+        int glTextureIndex;
+        int glTextureTarget;
 #endif
         
         SequenceArgs(ImageEffectHost *host, PropertySet &props);
@@ -572,6 +596,20 @@ namespace ofx {
        *  \return kOfxStatOK if action was overriden, kOfxStatReplyDefault otherwise.
        */
       virtual OfxStatus getTimeDomain(GetTimeDomainArgs &args);
+      
+#ifdef OFX_API_1_3
+      
+      /** OpenGL context attached action.
+       *
+       */
+      virtual OfxStatus openGLContextAttached();
+      
+      /** OpenGL context to be detached action.
+       *
+       */
+      virtual OfxStatus openGLContextDetached();
+      
+#endif
     
     protected:
       

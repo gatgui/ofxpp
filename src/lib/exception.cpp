@@ -21,6 +21,10 @@ USA.
 
 */
 
+#ifdef OFX_API_1_3
+#include <ofxImageEffect.h>
+#include <ofxOpenGLRender.h>
+#endif
 #include <ofx/exception.h>
 #include <sstream>
 
@@ -53,9 +57,9 @@ static std::string InvalidStatusString(int i) {
   return oss.str();
 }
 
-Exception::Exception(OfxStatus s, const std::string &msg)
+Exception::Exception(OfxStatus s, const std::string &msg, const char *statusString)
   : std::runtime_error(std::string("OFX Exception [") +
-                       ((s>=0 && s<=STAT_MAX) ? gStatString[s] : InvalidStatusString(s)) +
+                       ((s>=0 && s<=STAT_MAX) ? gStatString[s] : (statusString ? statusString : InvalidStatusString(s))) +
                        std::string("] ") +
                        msg),
     mStat(s) {
@@ -163,5 +167,30 @@ ValueError::ValueError(const std::string &msg)
 
 ValueError::~ValueError() throw() {
 }
+
+// ---
+
+#ifdef OFX_API_1_3
+
+#define kOfxStatGLOutOfMemory  ((int) 1001)
+#define kOfxStatGLRenderFailed ((int) 1002)
+
+GLOutOfMemory::GLOutOfMemory(const std::string &msg)
+  : Exception(kOfxStatGLOutOfMemory, msg, "GLOutOfMemory") {
+}
+
+GLOutOfMemory::~GLOutOfMemory() throw() {
+}
+
+// ---
+
+GLRenderFailed::GLRenderFailed(const std::string &msg)
+  : Exception(kOfxStatGLRenderFailed, msg, "GLRenderFailed") {
+}
+
+GLRenderFailed::~GLRenderFailed() throw() {
+}
+
+#endif
 
 }

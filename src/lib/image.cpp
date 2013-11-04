@@ -27,7 +27,7 @@ USA.
 
 namespace ofx {
 
-Image::Image()
+ImageBase::ImageBase()
   : mSuite(0)
   , mBitDepth(BitDepthNone)
   , mComponents(ImageComponentNone)
@@ -38,14 +38,13 @@ Image::Image()
   , mField(ImageFieldNone)
   , mUID("")
   , mPixelBytes(0)
-  , mRowBytes(0)
-  , mData(0) {
+  , mRowBytes(0) {
 }
 
-Image::Image(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception)
+ImageBase::ImageBase(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception)
   : mProps(h, hdl) {
   if (!h) {
-    throw BadHandleError("ofx::Image::Image: invalid host");
+    throw BadHandleError("ofx::ImageBase::ImageBase: invalid host");
   }
 
   mSuite = h->imageEffectSuite();
@@ -66,7 +65,6 @@ Image::Image(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception)
   mProps.getInts(kOfxImagePropRegionOfDefinition, 4, &(mRoD.x1));
   mField = StringToImageField(mProps.getString(kOfxImagePropField, 0));
   mUID = mProps.getString(kOfxImagePropUniqueIdentifier, 0);
-  mData = mProps.getPointer(kOfxImagePropData, 0);
   mRowBytes = mProps.getInt(kOfxImagePropRowBytes, 0);
   mProps.getInts(kOfxImagePropBounds, 4, &(mBounds.x1));
 
@@ -75,9 +73,9 @@ Image::Image(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception)
   mPixelBytes = mNumComps * mCompBytes;
 }
 
-Image::Image(const Image &rhs)
-  : mProps(rhs.mProps)
-  , mSuite(rhs.mSuite)
+ImageBase::ImageBase(const ImageBase &rhs)
+  : mSuite(rhs.mSuite)
+  , mProps(rhs.mProps)
   , mBitDepth(rhs.mBitDepth)
   , mComponents(rhs.mComponents)
   , mPreMult(rhs.mPreMult)
@@ -94,27 +92,55 @@ Image::Image(const Image &rhs)
   , mBounds(rhs.mBounds) {
 }
 
+ImageBase::~ImageBase() {
+}
+
+ImageBase& ImageBase::operator=(const ImageBase &rhs) {
+  if (this != &rhs) {
+    mProps = rhs.mProps;
+    mSuite = rhs.mSuite;
+    mCompBytes = rhs.mCompBytes;
+    mNumComps = rhs.mNumComps;
+    mPixelBytes = rhs.mPixelBytes;
+    mRowBytes = rhs.mRowBytes;
+    mBounds = rhs.mBounds;
+    mBitDepth = rhs.mBitDepth;
+    mComponents = rhs.mComponents;
+    mPreMult = rhs.mPreMult;
+    mRenderScaleX = rhs.mRenderScaleX;
+    mRenderScaleY = rhs.mRenderScaleY;
+    mPixelAspectRatio = rhs.mPixelAspectRatio;
+    mRoD = rhs.mRoD;
+    mField = rhs.mField;
+    mUID = rhs.mUID;
+  }
+  return *this;
+}
+
+// ---
+
+Image::Image()
+  : ImageBase(), mData(0) {
+}
+
+Image::Image(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception)
+  : ImageBase(h, hdl), mData(0) {
+  
+  mData = mProps.getPointer(kOfxImagePropData, 0);
+}
+
+Image::Image(const Image &rhs)
+  : ImageBase(rhs), mData(rhs.mData) {
+}
+
 Image::~Image() {
 }
 
 Image& Image::operator=(const Image &rhs) {
-  mProps = rhs.mProps;
-  mSuite = rhs.mSuite;
-  mCompBytes = rhs.mCompBytes;
-  mNumComps = rhs.mNumComps;
-  mPixelBytes = rhs.mPixelBytes;
-  mRowBytes = rhs.mRowBytes;
-  mBounds = rhs.mBounds;
-  mData = rhs.mData;
-  mBitDepth = rhs.mBitDepth;
-  mComponents = rhs.mComponents;
-  mPreMult = rhs.mPreMult;
-  mRenderScaleX = rhs.mRenderScaleX;
-  mRenderScaleY = rhs.mRenderScaleY;
-  mPixelAspectRatio = rhs.mPixelAspectRatio;
-  mRoD = rhs.mRoD;
-  mField = rhs.mField;
-  mUID = rhs.mUID;
+  if (this != &rhs) {
+    ImageBase::operator=(rhs);
+    mData = rhs.mData;
+  }
   return *this;
 }
 
@@ -129,5 +155,52 @@ void Image::release() throw(Exception) {
   mPixelBytes = 0;
   mRowBytes = 0;
 }
+
+// ---
+
+#ifdef OFX_API_1_3
+
+Texture::Texture()
+  : ImageBase(), mIndex(-1), mTarget(-1), mGLSuite(0) {
+}
+
+Texture::Texture(ImageEffectHost *h, OfxPropertySetHandle hdl) throw(Exception)
+  : ImageBase(h, hdl), mGLSuite(0) {
+  
+  mIndex = mProps.getInt(kOfxImageEffectPropOpenGLTextureIndex, 0);
+  mTarget = mProps.getInt(kOfxImageEffectPropOpenGLTextureTarget, 0);
+  
+  mGLSuite = h->openGLRenderSuite();
+}
+
+Texture::Texture(const Texture &rhs)
+  : ImageBase(rhs), mIndex(rhs.mIndex), mTarget(rhs.mTarget), mGLSuite(rhs.mGLSuite) {
+}
+
+Texture::~Texture() {
+}
+
+Texture& Texture::operator=(const Texture &rhs) {
+  if (this != &rhs) {
+    ImageBase::operator=(rhs);
+    mIndex = rhs.mIndex;
+    mTarget = rhs.mTarget;
+    mGLSuite = rhs.mGLSuite;
+  }
+  return *this;
+}
+
+void Texture::release() throw(Exception) {
+  if (mGLSuite) {
+    OfxStatus stat = mGLSuite->clipFreeTexture(mProps.handle());
+    if (stat != kOfxStatOK) {
+      throw Exception(stat, "ofx::Texture::release");
+    }
+    mIndex = -1;
+    mTarget = -1;
+  }
+}
+
+#endif
 
 }

@@ -45,9 +45,9 @@ namespace ofx {
       // properties
       
       //! Get default value.
-      RGBAColour<double> defaultValue();
+      RGBColour<double> defaultValue();
       //! Set default value.
-      void defaultValue(const RGBAColour<double> &v);
+      void defaultValue(const RGBColour<double> &v);
   };
   
   //! RGB colour parameter instance class.
@@ -63,23 +63,23 @@ namespace ofx {
       // properties
       
       //! Get default value.
-      RGBAColour<double> defaultValue();
+      RGBColour<double> defaultValue();
       
       // suite
       
       //! Get current value.
-      RGBAColour<double> getValue() throw(Exception);
+      RGBColour<double> getValue() throw(Exception);
       //! Get value at given time.
-      RGBAColour<double> getValueAtTime(Time t) throw(Exception);
+      RGBColour<double> getValueAtTime(Time t) throw(Exception);
       //! Get value derivative at given time.
-      RGBAColour<double> getDerivative(Time t) throw(Exception);
+      RGBColour<double> getDerivative(Time t) throw(Exception);
       //! Get value integral for given range.
-      RGBAColour<double> getIntegral(Time t0, Time t1) throw(Exception);
+      RGBColour<double> getIntegral(Time t0, Time t1) throw(Exception);
       
       //! Set current value.
-      void setValue(const RGBAColour<double> &v) throw(Exception);
+      void setValue(const RGBColour<double> &v) throw(Exception);
       //! Set value at given time.
-      void setValueAtTime(Time t, const RGBAColour<double> &v) throw(Exception);
+      void setValueAtTime(Time t, const RGBColour<double> &v) throw(Exception);
   };
   
 }

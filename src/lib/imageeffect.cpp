@@ -268,6 +268,38 @@ void ImageEffectDescriptor::description(const std::string &d) {
 
 #endif
 
+#ifdef OFX_API_1_3
+      
+bool ImageEffectDescriptor::supportsOpenGLRender() {
+  return (mProps.getString(kOfxImageEffectPropOpenGLRenderSupported, 0) != "false");
+}
+
+void ImageEffectDescriptor::supportsOpenGLRender(bool v) {
+  mProps.setString(kOfxImageEffectPropOpenGLRenderSupported, 0, (v ? "true" : "false"));
+}
+
+bool ImageEffectDescriptor::needsOpenGLRender() {
+  return (mProps.getString(kOfxImageEffectPropOpenGLRenderSupported, 0) == "needed");
+}
+
+void ImageEffectDescriptor::needsOpenGLRender(bool v) {
+  mProps.setString(kOfxImageEffectPropOpenGLRenderSupported, 0, (v ? "needed" : "false"));
+}
+
+int ImageEffectDescriptor::openGLPixelDepthsCount() {
+  return mProps.size(kOfxOpenGLPropPixelDepth);
+}
+
+void ImageEffectDescriptor::openGLPixelDepth(int i, BitDepth bd) {
+  mProps.setString(kOfxOpenGLPropPixelDepth, i, BitDepthToString(bd));
+}
+
+BitDepth ImageEffectDescriptor::openGLPixelDepth(int i) {
+  return StringToBitDepth(mProps.getString(kOfxOpenGLPropPixelDepth, i));
+}
+
+#endif
+
 OfxStatus ImageEffectDescriptor::describe() {
   return kOfxStatFailed;
 }
@@ -325,6 +357,17 @@ ImageEffect::RenderArgs::RenderArgs(ImageEffectHost *host, PropertySet &inArgs)
   } else {
     sequentialRender = false;
     interactiveRender = false;
+  }
+#endif
+#ifdef OFX_API_1_3
+  if (host->checkAPIVersion(1, 3)) {
+    glEnabled = (inArgs.getInt(kOfxImageEffectPropOpenGLEnabled, 0) == 1);
+    glTextureIndex = inArgs.getInt(kOfxImageEffectPropOpenGLTextureIndex, 0);
+    glTextureTarget = inArgs.getInt(kOfxImageEffectPropOpenGLTextureTarget, 0);
+  } else {
+    glEnabled = false;
+    glTextureIndex = -1;
+    glTextureTarget = -1;
   }
 #endif
 }
@@ -404,6 +447,17 @@ ImageEffect::SequenceArgs::SequenceArgs(ImageEffectHost *host, PropertySet &inAr
   } else {
     sequentialRender = false;
     interactiveRender = false;
+  }
+#endif
+#ifdef OFX_API_1_3
+  if (host->checkAPIVersion(1, 3)) {
+    glEnabled = (inArgs.getInt(kOfxImageEffectPropOpenGLEnabled, 0) == 1);
+    glTextureIndex = inArgs.getInt(kOfxImageEffectPropOpenGLTextureIndex, 0);
+    glTextureTarget = inArgs.getInt(kOfxImageEffectPropOpenGLTextureTarget, 0);
+  } else {
+    glEnabled = false;
+    glTextureIndex = -1;
+    glTextureTarget = -1;
   }
 #endif
 }
@@ -740,6 +794,14 @@ OfxStatus ImageEffect::getClipPreferences(ImageEffect::GetClipPrefArgs &) {
 }
 
 OfxStatus ImageEffect::getTimeDomain(ImageEffect::GetTimeDomainArgs &) {
+  return kOfxStatReplyDefault;
+}
+
+OfxStatus ImageEffect::openGLContextAttached() {
+  return kOfxStatReplyDefault;
+}
+
+OfxStatus ImageEffect::openGLContextDetached() {
   return kOfxStatReplyDefault;
 }
 

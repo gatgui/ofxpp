@@ -342,6 +342,26 @@ namespace ofx {
             }
             return stat;
           }
+#ifdef OFX_API_1_3
+          case ActionOpenGLContextAttached: {
+            DebugLog("OFX Image Effect Plugin: OpenGL Context Attached");
+            Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
+            return effect->openGLContextAttached();
+          }
+          case ActionOpenGLContextDetached: {
+            DebugLog("OFX Image Effect Plugin: OpenGL Context Detached");
+            Effect *effect = plugin->getEffect(hEffect);
+            if (!effect) {
+              Log("*** Invalid effect");
+              return kOfxStatErrUnknown;
+            }
+            return effect->openGLContextDetached();
+          }
+#endif
           default:
             return kOfxStatReplyDefault;
           }

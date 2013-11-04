@@ -29,6 +29,9 @@ USA.
 #define __ofx_clip_h__
 
 #include <ofxImageEffect.h>
+#ifdef OFX_API_1_3
+#include <ofxOpenGLRender.h>
+#endif
 #include <ofx/ofx.h>
 #include <ofx/image.h>
 
@@ -139,6 +142,9 @@ namespace ofx {
       //! Get clip region of definition at given time.
       Rect<double> getRegionOfDefinition(Time t) throw(Exception);
       
+#ifdef OFX_API_1_3
+      Texture loadTexture(Time t, const char *format=0, const Rect<double> *region=0) throw(Exception);
+#endif
       // properties
       
       //! Get clip name.

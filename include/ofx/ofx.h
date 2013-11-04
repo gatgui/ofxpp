@@ -486,6 +486,9 @@ namespace ofx {
     BitDepthByte, //!< 8 bits integer.
     BitDepthShort, //!< 16 bits integer.
     BitDepthFloat, //!< 32 bits float.
+#ifdef OFX_API_1_3
+    BitDepthHalf, //!< 16 bits float.
+#endif
     MaxBitDepth
   };
   
@@ -591,6 +594,9 @@ namespace ofx {
     StringParamFilePath, //!< %Parameter value should be interpreted as a file path.
     StringParamDirectoryPath, //!< %Parameter value should be interpreted as a directory path.
     StringParamLabel, //!< %Parameter value should be interpreted as a label.
+#ifdef OFX_API_1_3
+    StringParamRichText, //!< %Parameter value should be interpreted as rich text.
+#endif
     MaxStringParamMode
   };
   
@@ -660,6 +666,10 @@ namespace ofx {
     ActionInteractKeyRepeat, //!< Key repeat action.
     ActionInteractGainFocus, //!< Gain focus action.
     ActionInteractLoseFocus, //!< Lose focus action.
+#ifdef OFX_API_1_3
+    ActionOpenGLContextAttached, //!< OpenGL context attached action.
+    ActionOpenGLContextDetached, //!< OpenGL context detach action.
+#endif
     MaxAction
   };
   
@@ -758,7 +768,6 @@ namespace ofx {
   typedef RGBAColour<float> RGBAColourF; //!< Float depth RGBA colour.
   typedef RGBAColour<double> RGBAColourD; //!< Double depth RGBA colour.
   
-#ifdef OFX_API_1_2
   //! Generic RGB colour type. (OFX >= 1.2)
   template <typename T>
   struct RGBColour {
@@ -771,7 +780,6 @@ namespace ofx {
   typedef RGBColour<unsigned short> RGBColourS; //!< Short depth RGB colour. (OFX >= 1.2)
   typedef RGBColour<float> RGBColourF; //!< Float depth RGB colour. (OFX >= 1.2)
   typedef RGBColour<double> RGBColourD; //!< Double depth RGB colour. (OFX >= 1.2)
-#endif
   
   //! Generic YUVA colour type.
   template <typename T>

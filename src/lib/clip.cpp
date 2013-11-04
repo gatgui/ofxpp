@@ -297,5 +297,28 @@ Rect<double> Clip::getRegionOfDefinition(Time t) throw(Exception) {
   return rv;
 }
 
+#ifdef OFX_API_1_3
+
+Texture Clip::loadTexture(Time t, const char *format, const Rect<double> *region) throw(Exception) {
+  if (!mHost->supportsOpenGLRender()) {
+    throw MissingHostFeatureError("OpenGL render suite");
+  }
+  OfxRectD r;
+  if (region) {
+    r.x1 = region->x1;
+    r.x2 = region->x2;
+    r.y1 = region->y1;
+    r.y2 = region->y2;
+  }
+  OfxPropertySetHandle hTex;
+  OfxStatus stat = mHost->openGLRenderSuite()->clipLoadTexture(mHandle, t, format, (region ? &r : 0), &hTex);
+  if (stat != kOfxStatOK) {
+    throw Exception(stat, "ofx::Clip::loadTexture");
+  }
+  return Texture(mHost, hTex);
+}
+
+#endif
+
 }
 

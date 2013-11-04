@@ -46,14 +46,13 @@ RGBParameterDescriptor& RGBParameterDescriptor::operator=(const RGBParameterDesc
   return *this;
 }
 
-RGBAColour<double> RGBParameterDescriptor::defaultValue() {
-  RGBAColour<double> rv;
+RGBColour<double> RGBParameterDescriptor::defaultValue() {
+  RGBColour<double> rv;
   getDoubles(kOfxParamPropDefault, 3, &(rv.r));
-  rv.a = 1.0;
   return rv;
 }
 
-void RGBParameterDescriptor::defaultValue(const RGBAColour<double> &v) {
+void RGBParameterDescriptor::defaultValue(const RGBColour<double> &v) {
   setDoubles(kOfxParamPropDefault, 3, (double*)&(v.r));
 }
 
@@ -79,16 +78,14 @@ RGBParameter& RGBParameter::operator=(const RGBParameter &rhs) {
   return *this;
 }
 
-RGBAColour<double> RGBParameter::defaultValue() {
-  RGBAColour<double> rv;
+RGBColour<double> RGBParameter::defaultValue() {
+  RGBColour<double> rv;
   mProps.getDoubles(kOfxParamPropDefault, 3, &(rv.r));
-  rv.a = 1.0;
   return rv;
 }
 
-RGBAColour<double> RGBParameter::getValue() throw(Exception) {
-  RGBAColour<double> v;
-  v.a = 1.0;
+RGBColour<double> RGBParameter::getValue() throw(Exception) {
+  RGBColour<double> v;
   OfxStatus stat = mSuite->paramGetValue(mHandle, &(v.r), &(v.g), &(v.b));
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::RGBParameter::getValue");
@@ -96,9 +93,8 @@ RGBAColour<double> RGBParameter::getValue() throw(Exception) {
   return v;
 }
 
-RGBAColour<double> RGBParameter::getValueAtTime(Time t) throw(Exception) {
-  RGBAColour<double> v;
-  v.a = 1.0;
+RGBColour<double> RGBParameter::getValueAtTime(Time t) throw(Exception) {
+  RGBColour<double> v;
   OfxStatus stat = mSuite->paramGetValueAtTime(mHandle, t, &(v.r), &(v.g), &(v.b));
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::RGBParameter::getValueAtTime");
@@ -106,9 +102,8 @@ RGBAColour<double> RGBParameter::getValueAtTime(Time t) throw(Exception) {
   return v;
 }
 
-RGBAColour<double> RGBParameter::getDerivative(Time t) throw(Exception) {
-  RGBAColour<double> v;
-  v.a = 1.0;
+RGBColour<double> RGBParameter::getDerivative(Time t) throw(Exception) {
+  RGBColour<double> v;
   OfxStatus stat = mSuite->paramGetDerivative(mHandle, t, &(v.r), &(v.g), &(v.b));
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::RGBParameter::getDerivative");
@@ -116,9 +111,8 @@ RGBAColour<double> RGBParameter::getDerivative(Time t) throw(Exception) {
   return v;
 }
 
-RGBAColour<double> RGBParameter::getIntegral(Time t0, Time t1) throw(Exception) {
-  RGBAColour<double> v;
-  v.a = 1.0;
+RGBColour<double> RGBParameter::getIntegral(Time t0, Time t1) throw(Exception) {
+  RGBColour<double> v;
   OfxStatus stat = mSuite->paramGetIntegral(mHandle, t0, t1, &(v.r), &(v.g), &(v.b));
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::RGBParameter::getIntegral");
@@ -126,14 +120,14 @@ RGBAColour<double> RGBParameter::getIntegral(Time t0, Time t1) throw(Exception) 
   return v;
 }
 
-void RGBParameter::setValue(const RGBAColour<double> &v) throw(Exception) {
+void RGBParameter::setValue(const RGBColour<double> &v) throw(Exception) {
   OfxStatus stat = mSuite->paramSetValue(mHandle, v.r, v.g, v.b);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::RGBParameter::setValue");
   }
 }
 
-void RGBParameter::setValueAtTime(Time t, const RGBAColour<double> &v) throw(Exception) {
+void RGBParameter::setValueAtTime(Time t, const RGBColour<double> &v) throw(Exception) {
   OfxStatus stat = mSuite->paramSetValueAtTime(mHandle, t, v.r, v.g, v.b);
   if (stat != kOfxStatOK) {
     throw Exception(stat, "ofx::RGBParameter::setValueAtTime");

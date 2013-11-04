@@ -27,7 +27,7 @@ from excons.tools import openfx
 from excons.tools import python
 from excons.tools import threads
 
-ofxVersion = ARGUMENTS.get("ofxVersion", "1.1")
+ofxVersion = ARGUMENTS.get("ofxVersion", "1.3")
 ofxNewMacPackaging = (int(ARGUMENTS.get("ofxNewMacPackaging", "0")) != 0)
 
 defines = []

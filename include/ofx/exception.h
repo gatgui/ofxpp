@@ -39,7 +39,7 @@ namespace ofx {
   class Exception : public std::runtime_error {
     public:
       
-      explicit Exception(OfxStatus s, const std::string &msg="");
+      explicit Exception(OfxStatus s, const std::string &msg="", const char *statusString=0);
       
       virtual ~Exception() throw();
       
@@ -129,6 +129,22 @@ namespace ofx {
       explicit ValueError(const std::string &msg="");
       virtual ~ValueError() throw();
   };
+  
+#ifdef OFX_API_1_3
+  
+  class GLOutOfMemory : public Exception {
+    public:
+      explicit GLOutOfMemory(const std::string &msg="");
+      virtual ~GLOutOfMemory() throw();
+  };
+  
+  class GLRenderFailed : public Exception {
+    public:
+      explicit GLRenderFailed(const std::string &msg="");
+      virtual ~GLRenderFailed() throw();
+  };
+
+#endif
   
 }
 

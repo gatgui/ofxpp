@@ -1258,10 +1258,91 @@ PyObject* PyOFXClip_GetRegionOfDefinition(PyObject *self, PyObject *args)
   return prv;
 }
 
+#ifdef OFX_API_1_3
+
+PyObject* PyOFXClip_LoadTexture(PyObject *self, PyObject *args)
+{
+  PyOFXClip *pclip = (PyOFXClip*) self;
+  
+  if (!pclip->clip)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Unbound object");
+    return NULL;
+  }
+  
+  Py_ssize_t nargs = PyTuple_Size(args);
+  if (nargs < 1 || nargs > 3)
+  {
+    PyErr_SetString(PyExc_RuntimeError, "At least 1 argument, at most 3");
+    return NULL;
+  }
+  
+  if (!PyFloat_Check(PyTuple_GetItem(args, 0)))
+  {
+    PyErr_SetString(PyExc_TypeError, "Expected a float for first argument");
+    return NULL;
+  }
+  
+  double t = PyFloat_AsDouble(PyTuple_GetItem(args, 0));
+  const char *fmt = 0;
+  PyObject *pregion = 0;
+  
+  if (nargs >= 2)
+  {
+    PyObject *item = PyTuple_GetItem(args, 1);
+    if (item != Py_None)
+    {
+      if (!PyString_Check(item))
+      {
+        PyErr_SetString(PyExc_TypeError, "Expected a string as second argument");
+        return NULL;
+      }
+      fmt = PyString_AsString(item);
+    }
+  }
+  
+  if (nargs == 3)
+  {
+    pregion = PyTuple_GetItem(args, 2);
+    if (!PyObject_TypeCheck(pregion, &PyOFXRectDType))
+    {
+      PyErr_SetString(PyExc_TypeError, "Expected a ofx.RectD object as third argument");
+      return NULL;
+    }
+  }
+  
+  bool failed = false;
+  
+  ofx::Texture tex;
+  
+  if (pregion)
+  {
+    CATCH({tex = pclip->clip->loadTexture(t, fmt, &(((PyOFXRectD*)pregion)->rect));}, failed);
+  }
+  else
+  {
+    CATCH({tex = pclip->clip->loadTexture(t, fmt);}, failed);
+  }
+  
+  if (failed)
+  {
+    return NULL;
+  }
+  
+  PyObject *ptex = PyObject_CallObject((PyObject*) &PyOFXImageType, NULL);
+  *(((PyOFXTexture*)ptex)->tex) = tex;
+  return ptex;
+}
+
+#endif
+
 static PyMethodDef PyOFXClip_Methods[] =
 {
   {"getImage", PyOFXClip_GetImage, METH_VARARGS, NULL},
   {"getRegionOfDefinition", PyOFXClip_GetRegionOfDefinition, METH_VARARGS, NULL},
+#ifdef OFX_API_1_3
+  {"loadTexture", PyOFXClip_LoadTexture, METH_VARARGS, NULL},
+#endif
   {NULL, NULL, NULL, NULL}
 };
 

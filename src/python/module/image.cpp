@@ -23,7 +23,11 @@ USA.
 
 #include "common.h"
 
+PyTypeObject PyOFXImageBaseType;
 PyTypeObject PyOFXImageType;
+#ifdef OFX_API_1_3
+PyTypeObject PyOFXTextureType;
+#endif
 
 // ---
 

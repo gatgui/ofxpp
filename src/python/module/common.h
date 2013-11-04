@@ -308,8 +308,24 @@ typedef struct
 typedef struct
 {
   PyObject_HEAD
+  ofx::ImageBase *imgbase;
+} PyOFXImageBase;
+
+typedef struct
+{
+  PyOFXImageBase base;
   ofx::Image *img;
 } PyOFXImage;
+
+#ifdef OFX_API_1_3
+
+typedef struct
+{
+  PyOFXImageBase base;
+  ofx::Texture *tex;
+} PyOFXTexture;
+
+#endif
 
 typedef struct
 {
@@ -617,7 +633,11 @@ extern PyTypeObject PyOFXGroupParameterType;
 extern PyTypeObject PyOFXPushButtonParameterType;
 extern PyTypeObject PyOFXParameterSetType;
 extern PyTypeObject PyOFXParameterSetDescriptorType;
+extern PyTypeObject PyOFXImageBaseType;
 extern PyTypeObject PyOFXImageType;
+#ifdef OFX_API_1_3
+extern PyTypeObject PyOFXTextureType;
+#endif
 extern PyTypeObject PyOFXClipDescriptorType;
 extern PyTypeObject PyOFXClipType;
 extern PyTypeObject PyOFXImageEffectDescriptorType;

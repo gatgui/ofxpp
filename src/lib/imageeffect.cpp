@@ -797,6 +797,8 @@ OfxStatus ImageEffect::getTimeDomain(ImageEffect::GetTimeDomainArgs &) {
   return kOfxStatReplyDefault;
 }
 
+#ifdef OFX_API_1_3
+
 OfxStatus ImageEffect::openGLContextAttached() {
   return kOfxStatReplyDefault;
 }
@@ -804,5 +806,7 @@ OfxStatus ImageEffect::openGLContextAttached() {
 OfxStatus ImageEffect::openGLContextDetached() {
   return kOfxStatReplyDefault;
 }
+
+#endif
 
 }

@@ -920,6 +920,7 @@ void initofx(void)
   PyModule_AddIntConstant(mod, "StatErrBadHandle", kOfxStatErrBadHandle);
   PyModule_AddIntConstant(mod, "StatErrBadIndex", kOfxStatErrBadIndex);
   PyModule_AddIntConstant(mod, "StatErrValue", kOfxStatErrValue);
+  PyModule_AddIntConstant(mod, "StatErrImageFormat", kOfxStatErrImageFormat);
   PyModule_AddIntConstant(mod, "StatReplyYes", kOfxStatReplyYes);
   PyModule_AddIntConstant(mod, "StatReplyNo", kOfxStatReplyNo);
   PyModule_AddIntConstant(mod, "StatReplyDefault", kOfxStatReplyDefault);

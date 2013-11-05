@@ -41,8 +41,8 @@ namespace ofx {
   class Host;
   class ImageEffectHost;
   
-  //! %Image effect input clip preferences.
-  struct InputClipPreferences {
+  //! %Image effect input/output clip preferences.
+  struct ClipPreferences {
     ImageComponent components; //!< %Image pixel components.
     BitDepth bitDepth; //!< Pixel component depth.
     double pixelAspectRatio; //!< Pixel aspect ratio.
@@ -387,13 +387,14 @@ namespace ofx {
       
       //! ActionImageEffectGetClipPreferences action arguments.
       struct GetClipPrefArgs {
+        ImageEffectHost *host;
         OutputClipPreferences outPref; //!< [out] Output clip preferences.
-        std::map<std::string, InputClipPreferences> inPrefs; //!< [out] Preferences for each of the input clips.
+        std::map<std::string, ClipPreferences> prefs; //!< [out] Preferences for each of the input/output clips.
         
         GetClipPrefArgs(ImageEffectHost *host);
         void setOutputs(PropertySet &out);
-        //! Set an input clip preferences.
-        void setInputPref(const std::string &name, const InputClipPreferences &prefs);
+        //! Set named clip preferences.
+        void setPref(const std::string &name, const ClipPreferences &pref);
       };
       
       //! ActionImageEffectGetTimeDomain action arguments.

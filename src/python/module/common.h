@@ -351,7 +351,7 @@ typedef struct
   PyObject *components;
   PyObject *bitDepth;
   PyObject *pixelAspectRatio;
-} PyOFXInputClipPreferences;
+} PyOFXClipPreferences;
 
 typedef struct
 {
@@ -582,6 +582,7 @@ extern PyTypeObject PyOFXMemoryErrorType;
 extern PyTypeObject PyOFXBadHandleErrorType;
 extern PyTypeObject PyOFXBadIndexErrorType;
 extern PyTypeObject PyOFXValueErrorType;
+extern PyTypeObject PyOFXImageFormatErrorType;
 #ifdef OFX_API_1_3
 extern PyTypeObject PyOFXGLOutOfMemoryType;
 extern PyTypeObject PyOFXGLRenderFailedType;
@@ -646,7 +647,7 @@ extern PyTypeObject PyOFXClipDescriptorType;
 extern PyTypeObject PyOFXClipType;
 extern PyTypeObject PyOFXImageEffectDescriptorType;
 extern PyTypeObject PyOFXImageEffectType;
-extern PyTypeObject PyOFXInputClipPreferencesType;
+extern PyTypeObject PyOFXClipPreferencesType;
 extern PyTypeObject PyOFXOutputClipPreferencesType;
 extern PyTypeObject PyOFXInteractDescriptorType;
 extern PyTypeObject PyOFXInteractType;
@@ -1049,6 +1050,8 @@ void PyOFX_UnLock();
     PyErr_SetString((PyObject*)&PyOFXBadIndexErrorType, e.what());\
   } catch (ofx::BadHandleError &e) {\
     PyErr_SetString((PyObject*)&PyOFXBadHandleErrorType, e.what());\
+  } catch (ofx::ImageFormatError &e) {\
+    PyErr_SetString((PyObject*)&PyOFXImageFormatErrorType, e.what());\
   CATCH_EXTRAS(failed)\
   } catch (std::exception &e) {\
     PyErr_SetString(PyExc_RuntimeError, e.what());\

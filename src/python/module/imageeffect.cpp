@@ -26,7 +26,7 @@ USA.
 
 PyTypeObject PyOFXImageEffectDescriptorType;
 PyTypeObject PyOFXImageEffectType;
-PyTypeObject PyOFXInputClipPreferencesType;
+PyTypeObject PyOFXClipPreferencesType;
 PyTypeObject PyOFXOutputClipPreferencesType;
 
 // ---
@@ -1437,23 +1437,23 @@ OfxStatus PyImageEffect::getClipPreferences(ofx::ImageEffect::GetClipPrefArgs &a
               stat = kOfxStatFailed;
             }
             
-            PyObject *iprefs = PyObject_GetAttrString(oargs, "inPrefs");
+            PyObject *iprefs = PyObject_GetAttrString(oargs, "prefs");
             
             if (stat == kOfxStatOK && iprefs && PyDict_Check(iprefs))
             {
               Py_ssize_t i = 0;
               PyObject *clipName, *ipref;
               char *name;
-              ofx::InputClipPreferences pref;
+              ofx::ClipPreferences pref;
               
               while (PyDict_Next(iprefs, &i, &clipName, &ipref))
               {
-                if (!PyString_Check(clipName) || !PyObject_TypeCheck(ipref, &PyOFXInputClipPreferencesType))
+                if (!PyString_Check(clipName) || !PyObject_TypeCheck(ipref, &PyOFXClipPreferencesType))
                 {
                   continue;
                 }
                 
-                PyOFXInputClipPreferences *ppref = (PyOFXInputClipPreferences*)ipref;
+                PyOFXClipPreferences *ppref = (PyOFXClipPreferences*)ipref;
                 
                 name = PyString_AsString(clipName);
                 
@@ -1461,7 +1461,7 @@ OfxStatus PyImageEffect::getClipPreferences(ofx::ImageEffect::GetClipPrefArgs &a
                 pref.bitDepth = ofx::BitDepth(PyInt_AsLong(ppref->bitDepth));
                 pref.pixelAspectRatio = PyFloat_AsDouble(ppref->pixelAspectRatio);
                 
-                args.inPrefs[name] = pref;
+                args.prefs[name] = pref;
               }
             }
             else
@@ -1691,9 +1691,9 @@ OfxStatus PyImageEffect::openGLContextDetached()
 
 // ---
 
-int PyOFXInputClipPreferences_Init(PyObject *self, PyObject *, PyObject *)
+int PyOFXClipPreferences_Init(PyObject *self, PyObject *, PyObject *)
 {
-  PyOFXInputClipPreferences *ppref = (PyOFXInputClipPreferences*) self;
+  PyOFXClipPreferences *ppref = (PyOFXClipPreferences*) self;
   
   ppref->components = PyInt_FromLong(ofx::ImageComponentRGBA);
   ppref->bitDepth = PyInt_FromLong(ofx::BitDepthFloat);
@@ -1702,11 +1702,11 @@ int PyOFXInputClipPreferences_Init(PyObject *self, PyObject *, PyObject *)
   return 0;
 }
 
-static PyMemberDef PyOFXInputClipPreferences_Members[] =
+static PyMemberDef PyOFXClipPreferences_Members[] =
 {
-  {(char*)"components", T_OBJECT_EX, offsetof(PyOFXInputClipPreferences, components), 0, NULL},
-  {(char*)"bitDepth", T_OBJECT_EX, offsetof(PyOFXInputClipPreferences, bitDepth), 0, NULL},
-  {(char*)"pixelAspectRatio", T_OBJECT_EX, offsetof(PyOFXInputClipPreferences, pixelAspectRatio), 0, NULL},
+  {(char*)"components", T_OBJECT_EX, offsetof(PyOFXClipPreferences, components), 0, NULL},
+  {(char*)"bitDepth", T_OBJECT_EX, offsetof(PyOFXClipPreferences, bitDepth), 0, NULL},
+  {(char*)"pixelAspectRatio", T_OBJECT_EX, offsetof(PyOFXClipPreferences, pixelAspectRatio), 0, NULL},
   {NULL, 0, 0, 0, NULL}
 };
 
@@ -4457,10 +4457,10 @@ bool PyOFX_InitImageEffect(PyObject *mod)
   PyOFXImageEffectType.tp_getset = PyOFXImageEffect_GetSeters;
   PyOFXImageEffectType.tp_methods = PyOFXImageEffect_Methods;
   
-  INIT_TYPE(PyOFXInputClipPreferencesType, "ofx.InputClipPreferences", PyOFXInputClipPreferences);
-  PyOFXInputClipPreferencesType.tp_flags = Py_TPFLAGS_DEFAULT;
-  PyOFXInputClipPreferencesType.tp_members = PyOFXInputClipPreferences_Members;
-  PyOFXInputClipPreferencesType.tp_init = PyOFXInputClipPreferences_Init;
+  INIT_TYPE(PyOFXClipPreferencesType, "ofx.ClipPreferences", PyOFXClipPreferences);
+  PyOFXClipPreferencesType.tp_flags = Py_TPFLAGS_DEFAULT;
+  PyOFXClipPreferencesType.tp_members = PyOFXClipPreferences_Members;
+  PyOFXClipPreferencesType.tp_init = PyOFXClipPreferences_Init;
   
   INIT_TYPE(PyOFXOutputClipPreferencesType, "ofx.OutputClipPreferences", PyOFXOutputClipPreferences);
   PyOFXOutputClipPreferencesType.tp_flags = Py_TPFLAGS_DEFAULT;
@@ -4477,7 +4477,7 @@ bool PyOFX_InitImageEffect(PyObject *mod)
     return false;
   }
   
-  if (PyType_Ready(&PyOFXInputClipPreferencesType) < 0)
+  if (PyType_Ready(&PyOFXClipPreferencesType) < 0)
   {
     return false;
   }
@@ -4493,8 +4493,8 @@ bool PyOFX_InitImageEffect(PyObject *mod)
   Py_INCREF(&PyOFXImageEffectType);
   PyModule_AddObject(mod, "ImageEffect", (PyObject*)&PyOFXImageEffectType);
   
-  Py_INCREF(&PyOFXInputClipPreferencesType);
-  PyModule_AddObject(mod, "InputClipPreferences", (PyObject*)&PyOFXInputClipPreferencesType);
+  Py_INCREF(&PyOFXClipPreferencesType);
+  PyModule_AddObject(mod, "ClipPreferences", (PyObject*)&PyOFXClipPreferencesType);
   
   Py_INCREF(&PyOFXOutputClipPreferencesType);
   PyModule_AddObject(mod, "OutputClipPreferences", (PyObject*)&PyOFXOutputClipPreferencesType);

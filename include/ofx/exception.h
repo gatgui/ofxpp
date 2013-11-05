@@ -129,6 +129,13 @@ namespace ofx {
       explicit ValueError(const std::string &msg="");
       virtual ~ValueError() throw();
   };
+
+  //! Image format exception
+  class ImageFormatError : public Exception {
+    public:
+      explicit ImageFormatError(const std::string &msg="");
+      virtual ~ImageFormatError() throw();
+  };
   
 #ifdef OFX_API_1_3
   

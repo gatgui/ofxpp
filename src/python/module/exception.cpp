@@ -35,6 +35,7 @@ PyTypeObject PyOFXMemoryErrorType;
 PyTypeObject PyOFXBadHandleErrorType;
 PyTypeObject PyOFXBadIndexErrorType;
 PyTypeObject PyOFXValueErrorType;
+PyTypeObject PyOFXImageFormatErrorType;
 #ifdef OFX_API_1_3
 PyTypeObject PyOFXGLOutOfMemoryType;
 PyTypeObject PyOFXGLRenderFailedType;
@@ -283,6 +284,25 @@ static int PyOFXValueError_Init(PyObject *self, PyObject *args, PyObject *kwargs
   return rv;
 }
 
+// ---
+
+static int PyOFXImageFormatError_Init(PyObject *self, PyObject *args, PyObject *kwargs)
+{
+  PyObject *newArgs = PyTuple_New(PyTuple_Size(args)+1);
+  PyTuple_SetItem(newArgs, 0, PyInt_FromLong(kOfxStatErrImageFormat));
+  for (Py_ssize_t i=0; i<PyTuple_Size(args); ++i)
+  {
+    PyObject *item = PyTuple_GetItem(args, i);
+    Py_INCREF(item);
+    PyTuple_SetItem(newArgs, i+1, item);
+  }
+  int rv = PyOFXExceptionType.tp_init(self, newArgs, kwargs);
+  Py_DECREF(newArgs);
+  return rv;
+}
+
+// ---
+
 #ifdef OFX_API_1_3
 
 static int PyOFXGLOutOfMemory_Init(PyObject *self, PyObject *args, PyObject *kwargs)
@@ -431,6 +451,15 @@ bool PyOFX_InitException(PyObject *mod)
   {
     return false;
   }
+
+  INIT_TYPE(PyOFXImageFormatErrorType, "ofx.ImageFormatError", PyOFXException);
+  PyOFXImageFormatErrorType.tp_base = &PyOFXExceptionType;
+  PyOFXImageFormatErrorType.tp_flags = Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE;
+  PyOFXImageFormatErrorType.tp_init = PyOFXImageFormatError_Init;
+  if (PyType_Ready(&PyOFXImageFormatErrorType) < 0)
+  {
+    return false;
+  }
   
 #ifdef OFX_API_1_3
   INIT_TYPE(PyOFXGLOutOfMemoryType, "ofx.GLOutOfMemory", PyOFXException);
@@ -464,6 +493,7 @@ bool PyOFX_InitException(PyObject *mod)
   Py_INCREF(&PyOFXBadHandleErrorType);
   Py_INCREF(&PyOFXBadIndexErrorType);
   Py_INCREF(&PyOFXValueErrorType);
+  Py_INCREF(&PyOFXImageFormatErrorType);
 #ifdef OFX_API_1_3
   Py_INCREF(&PyOFXGLOutOfMemoryType);
   Py_INCREF(&PyOFXGLRenderFailedType);
@@ -481,6 +511,7 @@ bool PyOFX_InitException(PyObject *mod)
   PyModule_AddObject(mod, "BadHandleError", (PyObject*)&PyOFXBadHandleErrorType);
   PyModule_AddObject(mod, "BadIndexError", (PyObject*)&PyOFXBadIndexErrorType);
   PyModule_AddObject(mod, "ValueError", (PyObject*)&PyOFXValueErrorType);
+  PyModule_AddObject(mod, "ImageFormatError", (PyObject*)&PyOFXImageFormatErrorType);
 #ifdef OFX_API_1_3
   PyModule_AddObject(mod, "GLOutOfMemory", (PyObject*)&PyOFXGLOutOfMemoryType);
   PyModule_AddObject(mod, "GLRenderFailed", (PyObject*)&PyOFXGLRenderFailedType);

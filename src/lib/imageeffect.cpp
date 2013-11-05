@@ -473,7 +473,8 @@ ImageEffect::BeginSequenceArgs::BeginSequenceArgs(ImageEffectHost *host, Propert
 
 // ---
 
-ImageEffect::GetClipPrefArgs::GetClipPrefArgs(ImageEffectHost *) {
+ImageEffect::GetClipPrefArgs::GetClipPrefArgs(ImageEffectHost *h)
+  : host(h) {
 }
 
 void ImageEffect::GetClipPrefArgs::setOutputs(PropertySet &outArgs) {
@@ -481,15 +482,22 @@ void ImageEffect::GetClipPrefArgs::setOutputs(PropertySet &outArgs) {
   static std::string depthBase = "OfxImageClipPropDepth_";
   static std::string parBase = "OfxImageClipPropPAR_";
   
-  std::map<std::string, InputClipPreferences>::iterator it = inPrefs.begin();
-  while (it != inPrefs.end()) {
+  bool multiDepth = (host ? host->supportsMultipleClipDepths() : false);
+  bool multiPAR = (host ? host->supportsMultipleClipPARs() : false);
+
+  std::map<std::string, ClipPreferences>::iterator it = prefs.begin();
+  while (it != prefs.end()) {
     std::string name;
     name = compBase + it->first;
     outArgs.setString(name.c_str(), 0, ImageComponentToString(it->second.components));
-    name = depthBase + it->first;
-    outArgs.setString(name.c_str(), 0, BitDepthToString(it->second.bitDepth));
-    name = parBase + it->first;
-    outArgs.setDouble(name.c_str(), 0, it->second.pixelAspectRatio);
+    if (multiDepth) {
+      name = depthBase + it->first;
+      outArgs.setString(name.c_str(), 0, BitDepthToString(it->second.bitDepth));
+    }
+    if (multiPAR) {
+      name = parBase + it->first;
+      outArgs.setDouble(name.c_str(), 0, it->second.pixelAspectRatio);
+    }
     ++it;
   }
   outArgs.setDouble(kOfxImageEffectPropFrameRate, 0, outPref.frameRate);
@@ -499,8 +507,8 @@ void ImageEffect::GetClipPrefArgs::setOutputs(PropertySet &outArgs) {
   outArgs.setInt(kOfxImageEffectFrameVarying, 0, (outPref.frameVarying ? 1 : 0));
 }
 
-void ImageEffect::GetClipPrefArgs::setInputPref(const std::string &name, const InputClipPreferences &prefs) {
-  inPrefs[name] = prefs;
+void ImageEffect::GetClipPrefArgs::setPref(const std::string &name, const ClipPreferences &pref) {
+  prefs[name] = pref;
 }
 
 // ---

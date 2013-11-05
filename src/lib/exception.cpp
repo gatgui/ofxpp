@@ -170,6 +170,15 @@ ValueError::~ValueError() throw() {
 
 // ---
 
+ImageFormatError::ImageFormatError(const std::string &msg)
+  : Exception(kOfxStatErrImageFormat, msg, "ImageFormatError") {
+}
+
+ImageFormatError::~ImageFormatError() throw() {
+}
+
+// ---
+
 #ifdef OFX_API_1_3
 
 GLOutOfMemory::GLOutOfMemory(const std::string &msg)

@@ -923,6 +923,10 @@ void initofx(void)
   PyModule_AddIntConstant(mod, "StatReplyYes", kOfxStatReplyYes);
   PyModule_AddIntConstant(mod, "StatReplyNo", kOfxStatReplyNo);
   PyModule_AddIntConstant(mod, "StatReplyDefault", kOfxStatReplyDefault);
+#ifdef OFX_API_1_3
+  PyModule_AddIntConstant(mod, "StatGLOutOfMemory", kOfxStatGLOutOfMemory);
+  PyModule_AddIntConstant(mod, "StatGLRenderFailed", kOfxStatGLRenderFailed);
+#endif
   
   PyModule_AddStringConstant(mod, "PageSkipRow", kOfxParamPageSkipRow);
   PyModule_AddStringConstant(mod, "PageSkipColumn", kOfxParamPageSkipColumn);
@@ -941,6 +945,7 @@ void initofx(void)
   PyOFXActionArgumentsType.tp_getattro = PyOFXActionArguments_GetAttr; //PyObject_GenericGetAttr;
   if (PyType_Ready(&PyOFXActionArgumentsType) < 0)
   {
+    std::cerr << "Failed to intiialize ofx.ActionArguments class" << std::endl;
     Py_DECREF(mod);
     return;
   }
@@ -953,6 +958,7 @@ void initofx(void)
   PyOFXRectIType.tp_getset = PyOFXRectI_GetSeters;
   if (PyType_Ready(&PyOFXRectIType) < 0)
   {
+    std::cerr << "Failed to intiialize ofx.RectI class" << std::endl;
     Py_DECREF(mod);
     return;
   }
@@ -965,6 +971,7 @@ void initofx(void)
   PyOFXRectDType.tp_getset = PyOFXRectD_GetSeters;
   if (PyType_Ready(&PyOFXRectDType) < 0)
   {
+    std::cerr << "Failed to intiialize ofx.RectD class" << std::endl;
     Py_DECREF(mod);
     return;
   }
@@ -977,6 +984,7 @@ void initofx(void)
   PyOFXRangeIType.tp_getset = PyOFXRangeI_GetSeters;
   if (PyType_Ready(&PyOFXRangeIType) < 0)
   {
+    std::cerr << "Failed to intiialize ofx.RangeI class" << std::endl;
     Py_DECREF(mod);
     return;
   }
@@ -989,6 +997,7 @@ void initofx(void)
   PyOFXRangeDType.tp_getset = PyOFXRangeD_GetSeters;
   if (PyType_Ready(&PyOFXRangeDType) < 0)
   {
+    std::cerr << "Failed to intiialize ofx.RangeD class" << std::endl;
     Py_DECREF(mod);
     return;
   }
@@ -1013,102 +1022,119 @@ void initofx(void)
   
   if (!PyOFX_InitException(mod))
   {
+    std::cerr << "Failed to intiialize exception classes" << std::endl;
     Py_DECREF(mod);
     return;
   }
   
   if (!PyOFX_InitHandle(mod))
   {
+    std::cerr << "Failed to intiialize handle classes" << std::endl;
     Py_DECREF(mod);
     return;
   }
   
   if (!PyOFX_InitPixel(mod))
   {
+    std::cerr << "Failed to intiialize pixel classes" << std::endl;
     Py_DECREF(mod);
     return;
   }
   
   if (!PyOFX_InitMessage(mod))
   {
+    std::cerr << "Failed to intiialize message classes" << std::endl;
     Py_DECREF(mod);
     return;
   }
   
   if (!PyOFX_InitMemory(mod))
   {
+    std::cerr << "Failed to intiialize memory classes" << std::endl;
     Py_DECREF(mod);
     return;
   }
   
   if (!PyOFX_InitProgress(mod))
   {
+    std::cerr << "Failed to intiialize progress classes" << std::endl;
     Py_DECREF(mod);
     return;
   }
   
   if (!PyOFX_InitTimeLine(mod))
   {
+    std::cerr << "Failed to intiialize timeline classes" << std::endl;
     Py_DECREF(mod);
     return;
   }
   
   if (!PyOFX_InitProperty(mod))
   {
+    std::cerr << "Failed to intiialize property classes" << std::endl;
     Py_DECREF(mod);
     return;
   }
   
   if (!PyOFX_InitParameter(mod))
   {
+    std::cerr << "Failed to intiialize parameter classes" << std::endl;
     Py_DECREF(mod);
     return;
   }
   
   if (!PyOFX_InitParameterSet(mod))
   {
+    std::cerr << "Failed to intiialize parameterset classes" << std::endl;
     Py_DECREF(mod);
     return;
   }
   
   if (!PyOFX_InitHost(mod))
   {
+    std::cerr << "Failed to intiialize host classes" << std::endl;
     Py_DECREF(mod);
     return;
   }
   
   if (!PyOFX_InitImage(mod))
   {
+    std::cerr << "Failed to intiialize image classes" << std::endl;
     Py_DECREF(mod);
     return;
   }
   
   if (!PyOFX_InitClip(mod))
   {
+    std::cerr << "Failed to intiialize clip classes" << std::endl;
     Py_DECREF(mod);
     return;
   }
   
   if (!PyOFX_InitInteract(mod))
   {
+    std::cerr << "Failed to intiialize interact classes" << std::endl;
     Py_DECREF(mod);
     return;
   }
   
   if (!PyOFX_InitImageEffect(mod))
   {
+    std::cerr << "Failed to intiialize imageeffect classes" << std::endl;
     Py_DECREF(mod);
     return;
   }
   
   if (!PyOFX_InitPlugin(mod))
   {
+    std::cerr << "Failed to intiialize plugin classes" << std::endl;
     Py_DECREF(mod);
     return;
   }
   
   if (!PyOFX_InitTest(mod))
   {
+    std::cerr << "Failed to intiialize test classes" << std::endl;
     Py_DECREF(mod);
     return;
   }

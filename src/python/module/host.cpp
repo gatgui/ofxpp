@@ -1329,7 +1329,7 @@ PyObject* PyOFXImageEffectHost_SupportedPixelDepth(PyObject *self, PyObject *arg
 
 #ifdef OFX_API_1_3
 
-PyObject* PyOFXImageEffectHost_FlushOpenGLResources(PyObject *self, PyObject *args)
+PyObject* PyOFXImageEffectHost_FlushOpenGLResources(PyObject *self, PyObject *)
 {
   PyOFXHost *phost = (PyOFXHost*)self;
   

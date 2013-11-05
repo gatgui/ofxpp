@@ -47,8 +47,13 @@ namespace ofx {
 
 int MajorVersion = OFX_VERSION_MAJOR;
 int MinorVersion = OFX_VERSION_MINOR;
+#if OFX_VERSION_MAJOR == 1 && OFX_VERSION_MINOR == 2
 int PatchVersion = 1;
 const char *Version = OFX_VERSION_STR ".1";
+#else
+int PatchVersion = 0;
+const char *Version = OFX_VERSION_STR ".0";
+#endif
 
 BEGIN_ENUM_MAP(BitDepth)
   ADD_ENUM_MAPPING(BitDepth, None)

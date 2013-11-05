@@ -84,6 +84,8 @@ OfxStatus PyImageEffectDescriptor::describe()
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -137,6 +139,8 @@ OfxStatus PyImageEffectDescriptor::describeInContext(ofx::ImageEffectContext ctx
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -205,6 +209,8 @@ OfxStatus PyImageEffect::beginInstanceChanged(ofx::ChangeReason reason)
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -256,6 +262,8 @@ OfxStatus PyImageEffect::endInstanceChanged(ofx::ChangeReason reason)
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -348,6 +356,8 @@ OfxStatus PyImageEffect::instanceChanged(ofx::ImageEffect::InstanceChangedArgs &
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -399,6 +409,8 @@ OfxStatus PyImageEffect::purgeCaches()
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -448,6 +460,8 @@ OfxStatus PyImageEffect::syncPrivateData()
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -497,6 +511,8 @@ OfxStatus PyImageEffect::beginInstanceEdit()
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -546,6 +562,8 @@ OfxStatus PyImageEffect::endInstanceEdit()
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -625,6 +643,8 @@ OfxStatus PyImageEffect::getRegionOfDefinition(ofx::ImageEffect::GetRoDArgs &arg
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -729,6 +749,8 @@ OfxStatus PyImageEffect::getRegionsOfInterest(ofx::ImageEffect::GetRoIArgs &args
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -826,6 +848,8 @@ OfxStatus PyImageEffect::getFramesNeeded(ofx::ImageEffect::GetFramesNeededArgs &
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -976,6 +1000,8 @@ OfxStatus PyImageEffect::isIdentity(ofx::ImageEffect::IsIdentityArgs &args)
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -1121,6 +1147,8 @@ OfxStatus PyImageEffect::render(ofx::ImageEffect::RenderArgs &args)
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -1238,6 +1266,8 @@ OfxStatus PyImageEffect::beginSequenceRender(ofx::ImageEffect::BeginSequenceArgs
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -1341,6 +1371,8 @@ OfxStatus PyImageEffect::endSequenceRender(ofx::ImageEffect::EndSequenceArgs &ar
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -1410,6 +1442,8 @@ OfxStatus PyImageEffect::getClipPreferences(ofx::ImageEffect::GetClipPrefArgs &a
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -1533,6 +1567,8 @@ OfxStatus PyImageEffect::getTimeDomain(ofx::ImageEffect::GetTimeDomainArgs &args
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -1611,6 +1647,8 @@ OfxStatus PyImageEffect::openGLContextAttached()
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {
@@ -1660,6 +1698,8 @@ OfxStatus PyImageEffect::openGLContextDetached()
           stat = (OfxStatus) PyInt_AsLong(pexc->status);
         }
         LogPythonError();
+
+        PyErr_Clear();
       }
       else
       {

@@ -417,7 +417,7 @@ static PyMethodDef PyOFXHost_Methods[] =
 #ifdef OFX_API_1_2
   {"version", PyOFXHost_Version, METH_VARARGS, NULL},
 #endif
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---
@@ -1370,7 +1370,7 @@ static PyMethodDef PyOFXImageEffectHost_Methods[] =
 #ifdef OFX_API_1_3
   {"flushOpenGLResources", PyOFXImageEffectHost_FlushOpenGLResources, METH_VARARGS, NULL},
 #endif
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---

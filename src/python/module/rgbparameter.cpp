@@ -76,7 +76,7 @@ int PyOFXRGBParameterDescriptor_SetDefault(PyObject *self, PyObject *val, void*)
   if (!PyObject_TypeCheck(val, &PyOFXRGBColourDType))
   {
     PyErr_SetString(PyExc_TypeError, "Expected a ofx.RGBColourD object");
-    return NULL;
+    return 0;
   }
   
   ofx::RGBParameterDescriptor *desc = (ofx::RGBParameterDescriptor*) pdesc->desc;
@@ -358,7 +358,7 @@ static PyMethodDef PyOFXRGBParameter_Methods[] =
   {"getValueAtTime", PyOFXRGBParameter_GetValueAtTime, METH_VARARGS, NULL},
   {"getIntegral", PyOFXRGBParameter_GetIntegral, METH_VARARGS, NULL},
   {"getDerivative", PyOFXRGBParameter_GetDerivative, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---

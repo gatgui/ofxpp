@@ -76,7 +76,7 @@ int PyOFXRGBAParameterDescriptor_SetDefault(PyObject *self, PyObject *val, void*
   if (!PyObject_TypeCheck(val, &PyOFXRGBAColourDType))
   {
     PyErr_SetString(PyExc_TypeError, "Expected a ofx.RGBAColourD object");
-    return NULL;
+    return 0;
   }
   
   ofx::RGBAParameterDescriptor *desc = (ofx::RGBAParameterDescriptor*) pdesc->desc;
@@ -358,7 +358,7 @@ static PyMethodDef PyOFXRGBAParameter_Methods[] =
   {"getValueAtTime", PyOFXRGBAParameter_GetValueAtTime, METH_VARARGS, NULL},
   {"getIntegral", PyOFXRGBAParameter_GetIntegral, METH_VARARGS, NULL},
   {"getDerivative", PyOFXRGBAParameter_GetDerivative, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---

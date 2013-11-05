@@ -858,7 +858,7 @@ static PyMethodDef PyOFXParameterSetDescriptor_Methods[] =
 #ifdef OFX_API_1_2
   {"defineParametricParam", PyOFXParameterSetDescriptor_DefineParametricParam, METH_VARARGS, NULL},
 #endif
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---
@@ -1779,7 +1779,7 @@ static PyMethodDef PyOFXParameterSet_Methods[] =
 #ifdef OFX_API_1_2
   {"getParametricParam", PyOFXParameterSet_GetParametricParam, METH_VARARGS, NULL},
 #endif
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---

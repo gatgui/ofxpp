@@ -41,7 +41,7 @@ static PyObject* PyOFXTest_Exception(PyObject *, PyObject *)
 static PyMethodDef PyOFX_TestMethods[] =
 {
   {"exception", PyOFXTest_Exception, METH_VARARGS, 0},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 bool PyOFX_InitTest(PyObject *mod)

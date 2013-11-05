@@ -1559,7 +1559,7 @@ static PyMethodDef PyOFXColourAddress_Methods[] =
   {"next", PyOFXColourAddress_Next, METH_VARARGS, NULL},
   {"prev", PyOFXColourAddress_Prev, METH_VARARGS, NULL},
   {"goto", PyOFXColourAddress_Goto, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---

@@ -125,7 +125,7 @@ static PyMethodDef PyOFXMemorySuite_Methods[] =
 {
   {"alloc", PyOFXMemorySuite_Alloc, METH_VARARGS, 0},
   {"free", PyOFXMemorySuite_Free, METH_VARARGS, 0},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 bool PyOFX_InitMemory(PyObject *mod)

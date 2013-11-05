@@ -380,7 +380,7 @@ static PyMethodDef PyOFXCustomParameter_Methods[] =
   {"getValue", PyOFXCustomParameter_GetValue, METH_VARARGS, NULL},
   {"setValueAtTime", PyOFXCustomParameter_SetValueAtTime, METH_VARARGS, NULL},
   {"getValueAtTime", PyOFXCustomParameter_GetValueAtTime, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---

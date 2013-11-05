@@ -145,7 +145,7 @@ static PyMethodDef PyOFXProgressSuite_Methods[] =
   {"start", PyOFXProgressSuite_Start, METH_VARARGS, 0},
   {"update", PyOFXProgressSuite_Update, METH_VARARGS, 0},
   {"end", PyOFXProgressSuite_End, METH_VARARGS, 0},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 bool PyOFX_InitProgress(PyObject *mod)

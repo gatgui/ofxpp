@@ -1667,7 +1667,7 @@ static PyMethodDef PyOFXInteract_Methods[] =
   {"redraw", PyOFXInteract_Redraw, METH_VARARGS, NULL},
   {"slaveToParamCount", PyOFXInteract_SlaveToParamCount, METH_VARARGS, NULL},
   {"slaveToParam", PyOFXInteract_SlaveToParam, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---

@@ -134,7 +134,7 @@ static PyMethodDef PyOFXPageParameterDescriptor_Methods[] =
 {
   {"childCount", PyOFXPageParameterDescriptor_ChildCount, METH_VARARGS, NULL},
   {"child", PyOFXPageParameterDescriptor_Child, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---
@@ -209,7 +209,7 @@ static PyMethodDef PyOFXPageParameter_Methods[] =
 {
   {"childCount", PyOFXPageParameter_ChildCount, METH_VARARGS, NULL},
   {"child", PyOFXPageParameter_Child, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---

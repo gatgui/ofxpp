@@ -3050,7 +3050,7 @@ static PyMethodDef PyOFXValueParameter_Methods[] =
   {"deleteKey", PyOFXValueParameter_DeleteKey, METH_VARARGS, NULL},
   {"deleteAllKeys", PyOFXValueParameter_DeleteAllKeys, METH_VARARGS, NULL},
   {"copy", PyOFXValueParameter_Copy, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---

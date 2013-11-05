@@ -1258,7 +1258,7 @@ static PyMethodDef PyOFXDoubleParameter_Methods[] =
   {"getValueAtTime", PyOFXDoubleParameter_GetValueAtTime, METH_VARARGS, NULL},
   {"getDerivative", PyOFXDoubleParameter_GetDerivative, METH_VARARGS, NULL},
   {"getIntegral", PyOFXDoubleParameter_GetIntegral, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---

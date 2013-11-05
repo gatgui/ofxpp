@@ -288,7 +288,7 @@ static PyMethodDef PyOFXBooleanParameter_Methods[] =
   {"getValue", PyOFXBooleanParameter_GetValue, METH_VARARGS, NULL},
   {"setValueAtTime", PyOFXBooleanParameter_SetValueAtTime, METH_VARARGS, NULL},
   {"getValueAtTime", PyOFXBooleanParameter_GetValueAtTime, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---

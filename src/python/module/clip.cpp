@@ -637,7 +637,7 @@ static PyMethodDef PyOFXClipDescriptor_Methods[] =
 {
   {"supportedComponentsCount", PyOFXClipDescriptor_SupportedComponentsCount, METH_VARARGS, NULL},
   {"supportedComponent", PyOFXClipDescriptor_SupportedComponent, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---
@@ -1343,7 +1343,7 @@ static PyMethodDef PyOFXClip_Methods[] =
 #ifdef OFX_API_1_3
   {"loadTexture", PyOFXClip_LoadTexture, METH_VARARGS, NULL},
 #endif
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---

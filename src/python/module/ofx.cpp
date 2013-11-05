@@ -724,7 +724,7 @@ static PyMethodDef PyOFX_Methods[] =
   {"CanonicalToNormalisedCoords", PyOFX_CanonicalToNormalisedCoords, METH_VARARGS, 0},
   {"Log", PyOFX_Log, METH_VARARGS, 0},
   {"DebugLog", PyOFX_DebugLog, METH_VARARGS, 0},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 extern "C"

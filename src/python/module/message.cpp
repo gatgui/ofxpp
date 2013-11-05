@@ -163,7 +163,7 @@ static PyMethodDef PyOFXMessageSuite_Methods[] =
   {"setPersistentMessage", PyOFXMessageSuite_SetPersistentMessage, METH_VARARGS, 0},
   {"clearPersistentMessage", PyOFXMessageSuite_ClearPersistentMessage, METH_VARARGS, 0},
 #endif
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 bool PyOFX_InitMessage(PyObject *mod)

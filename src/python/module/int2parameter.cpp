@@ -443,7 +443,7 @@ PyObject* PyOFXInt2ParameterDescriptor_DimensionLabel(PyObject *self, PyObject *
 static PyMethodDef PyOFXInt2ParameterDescriptor_Methods[] =
 {
   {"dimensionLabel", PyOFXInt2ParameterDescriptor_DimensionLabel, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---
@@ -1011,7 +1011,7 @@ static PyMethodDef PyOFXInt2Parameter_Methods[] =
   {"getValueAtTime", PyOFXInt2Parameter_GetValueAtTime, METH_VARARGS, NULL},
   {"getDerivative", PyOFXInt2Parameter_GetDerivative, METH_VARARGS, NULL},
   {"getIntegral", PyOFXInt2Parameter_GetIntegral, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---

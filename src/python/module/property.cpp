@@ -779,7 +779,7 @@ static PyMethodDef PyOFXPropertySet_Methods[] =
   {"getInts", PyOFXPropertySet_GetInts, METH_VARARGS, 0},
   {"reset", PyOFXPropertySet_Reset, METH_VARARGS, 0},
   {"size", PyOFXPropertySet_Size, METH_VARARGS, 0},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 bool PyOFX_InitProperty(PyObject *mod)

@@ -607,7 +607,7 @@ PyObject* PyOFXDouble3ParameterDescriptor_DimensionLabel(PyObject *self, PyObjec
 static PyMethodDef PyOFXDouble3ParameterDescriptor_Methods[] =
 {
   {"dimensionLabel", PyOFXDouble3ParameterDescriptor_DimensionLabel, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---
@@ -1314,7 +1314,7 @@ static PyMethodDef PyOFXDouble3Parameter_Methods[] =
   {"getValueAtTime", PyOFXDouble3Parameter_GetValueAtTime, METH_VARARGS, NULL},
   {"getDerivative", PyOFXDouble3Parameter_GetDerivative, METH_VARARGS, NULL},
   {"getIntegral", PyOFXDouble3Parameter_GetIntegral, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---

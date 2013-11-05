@@ -1707,7 +1707,7 @@ static PyMemberDef PyOFXInputClipPreferences_Members[] =
   {(char*)"components", T_OBJECT_EX, offsetof(PyOFXInputClipPreferences, components), 0, NULL},
   {(char*)"bitDepth", T_OBJECT_EX, offsetof(PyOFXInputClipPreferences, bitDepth), 0, NULL},
   {(char*)"pixelAspectRatio", T_OBJECT_EX, offsetof(PyOFXInputClipPreferences, pixelAspectRatio), 0, NULL},
-  {NULL, NULL, NULL, NULL, NULL}
+  {NULL, 0, 0, 0, NULL}
 };
 
 // ---
@@ -1735,7 +1735,7 @@ static PyMemberDef PyOFXOutputClipPreferences_Members[] =
   {(char*)"preMult", T_OBJECT_EX, offsetof(PyOFXOutputClipPreferences, preMult), 0, NULL},
   {(char*)"continuousSamples", T_OBJECT_EX, offsetof(PyOFXOutputClipPreferences, continuousSamples), 0, NULL},
   {(char*)"frameVarying", T_OBJECT_EX, offsetof(PyOFXOutputClipPreferences, frameVarying), 0, NULL},
-  {NULL, NULL, NULL, NULL, NULL}
+  {NULL, 0, 0, 0, NULL}
 };
 
 // ---
@@ -3560,7 +3560,7 @@ static PyMethodDef PyOFXImageEffectDescriptor_Methods[] =
   {"openGLPixelDepthsCount", PyOFXImageEffectDescriptor_OpenGLPixelDepthsCount, METH_VARARGS, NULL},
   {"openGLPixelDepth", PyOFXImageEffectDescriptor_OpenGLPixelDepth, METH_VARARGS, NULL},
 #endif
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---
@@ -4434,7 +4434,7 @@ static PyMethodDef PyOFXImageEffect_Methods[] =
   {"lock", PyOFXImageEffect_Lock, METH_VARARGS, NULL},
   {"unlock", PyOFXImageEffect_Unlock, METH_VARARGS, NULL},
   {"free", PyOFXImageEffect_Free, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---

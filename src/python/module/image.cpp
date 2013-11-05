@@ -480,7 +480,7 @@ static PyMethodDef PyOFXImage_Methods[] =
 {
   {"release", PyOFXImage_Release, METH_VARARGS, NULL},
   {"pixelAddress", PyOFXImage_PixelAddress, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---
@@ -573,7 +573,7 @@ PyObject* PyOFXTexture_Release(PyObject *self, PyObject *)
 static PyMethodDef PyOFXTexture_Methods[] =
 {
   {"release", PyOFXTexture_Release, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 #endif

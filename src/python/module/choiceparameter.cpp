@@ -190,7 +190,7 @@ static PyMethodDef PyOFXChoiceParameterDescriptor_Methods[] =
 {
   {"choiceOption", PyOFXChoiceParameterDescriptor_ChoiceOption, METH_VARARGS, NULL},
   {"choiceOptionCount", PyOFXChoiceParameterDescriptor_ChoiceOptionCount, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---
@@ -459,7 +459,7 @@ static PyMethodDef PyOFXChoiceParameter_Methods[] =
   {"getValueAtTime", PyOFXChoiceParameter_GetValueAtTime, METH_VARARGS, NULL},
   {"choiceOptionCount", PyOFXChoiceParameter_ChoiceOptionCount, METH_VARARGS, NULL},
   {"choiceOption", PyOFXChoiceParameter_ChoiceOption, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---

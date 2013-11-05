@@ -146,7 +146,7 @@ static PyMethodDef PyOFXTimeLineSuite_Methods[] =
   {"getTime", PyOFXTimeLineSuite_GetTime, METH_VARARGS, 0},
   {"gotoTime", PyOFXTimeLineSuite_GotoTime, METH_VARARGS, 0},
   {"getTimeBounds", PyOFXTimeLineSuite_GetTimeBounds, METH_VARARGS, 0},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 bool PyOFX_InitTimeLine(PyObject *mod)

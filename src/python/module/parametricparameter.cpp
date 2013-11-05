@@ -624,7 +624,7 @@ static PyMethodDef PyOFXParametricParameterDescriptor_Methods[] =
   {"addControlPoint", PyOFXParametricParameterDescriptor_AddControlPoint, METH_VARARGS, NULL},
   {"deleteControlPoint", PyOFXParametricParameterDescriptor_DeleteControlPoint, METH_VARARGS, NULL},
   {"deleteAllControlPoints", PyOFXParametricParameterDescriptor_DeleteAllControlPoints, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---
@@ -1067,7 +1067,7 @@ static PyMethodDef PyOFXParametricParameter_Methods[] =
   {"deleteControlPoint", PyOFXParametricParameter_DeleteControlPoint, METH_VARARGS, NULL},
   {"deleteAllControlPoints", PyOFXParametricParameter_DeleteAllControlPoints, METH_VARARGS, NULL},
   {"eval", PyOFXParametricParameter_Eval, METH_VARARGS, NULL},
-  {NULL, NULL, NULL, NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 // ---

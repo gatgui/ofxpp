@@ -45,11 +45,6 @@ int PyOFXImageBase_Init(PyObject *, PyObject *, PyObject *)
 
 void PyOFXImageBase_Delete(PyObject *self)
 {
-  PyOFXImageBase *pimg = (PyOFXImageBase*)self;
-  if (pimg->imgbase)
-  {
-    delete pimg->imgbase;
-  }
   self->ob_type->tp_free(self);
 }
 
@@ -279,7 +274,6 @@ static PyGetSetDef PyOFXImageBase_GetSeters[] =
 
 // ---
 
-/*
 PyObject* PyOFXImage_New(PyTypeObject *t, PyObject *, PyObject *)
 {
   PyObject *self = t->tp_alloc(t, 0);
@@ -288,14 +282,12 @@ PyObject* PyOFXImage_New(PyTypeObject *t, PyObject *, PyObject *)
   pimg->base.imgbase = pimg->img;
   return self;
 }
-*/
 
 int PyOFXImage_Init(PyObject *, PyObject *, PyObject *)
 {
   return 0;
 }
 
-/*
 void PyOFXImage_Delete(PyObject *self)
 {
   PyOFXImage *pimg = (PyOFXImage*) self;
@@ -305,7 +297,6 @@ void PyOFXImage_Delete(PyObject *self)
   }
   self->ob_type->tp_free(self);
 }
-*/
 
 PyObject* PyOFXImage_GetData(PyObject *self, void*)
 {
@@ -487,7 +478,6 @@ static PyMethodDef PyOFXImage_Methods[] =
 
 #ifdef OFX_API_1_3
 
-/*
 PyObject* PyOFXTexture_New(PyTypeObject *t, PyObject *, PyObject *)
 {
   PyObject *self = t->tp_alloc(t, 0);
@@ -496,14 +486,12 @@ PyObject* PyOFXTexture_New(PyTypeObject *t, PyObject *, PyObject *)
   ptex->base.imgbase = ptex->tex;
   return self;
 }
-*/
 
 int PyOFXTexture_Init(PyObject *, PyObject *, PyObject *)
 {
   return 0;
 }
 
-/*
 void PyOFXTexture_Delete(PyObject *self)
 {
   PyOFXTexture *ptex = (PyOFXTexture*) self;
@@ -513,7 +501,6 @@ void PyOFXTexture_Delete(PyObject *self)
   }
   self->ob_type->tp_free(self);
 }
-*/
 
 PyObject* PyOFXTexture_GetIndex(PyObject *self, void*)
 {
@@ -597,17 +584,16 @@ bool PyOFX_InitImage(PyObject *mod)
   Py_INCREF(&PyOFXImageBaseType);
   PyModule_AddObject(mod, "ImageBase", (PyObject*)&PyOFXImageBaseType);
   
-  
   INIT_TYPE(PyOFXImageType, "ofx.Image", PyOFXImage);
   PyOFXImageType.tp_flags = Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE;
   PyOFXImageType.tp_base = &PyOFXImageBaseType;
-  //PyOFXImageType.tp_new = PyOFXImage_New;
+  PyOFXImageType.tp_new = PyOFXImage_New;
+  PyOFXImageType.tp_dealloc = PyOFXImage_Delete;
   PyOFXImageType.tp_init = PyOFXImage_Init;
-  //PyOFXImageType.tp_dealloc = PyOFXImage_Delete;
   PyOFXImageType.tp_getset = PyOFXImage_GetSeters;
   PyOFXImageType.tp_methods = PyOFXImage_Methods;
   
-  if (PyType_Ready(&PyOFXImageBaseType) < 0)
+  if (PyType_Ready(&PyOFXImageType) < 0)
   {
     return false;
   }
@@ -620,9 +606,9 @@ bool PyOFX_InitImage(PyObject *mod)
   INIT_TYPE(PyOFXTextureType, "ofx.Texture", PyOFXTexture);
   PyOFXTextureType.tp_flags = Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE;
   PyOFXTextureType.tp_base = &PyOFXImageBaseType;
-  //PyOFXTextureType.tp_new = PyOFXTexture_New;
+  PyOFXTextureType.tp_new = PyOFXTexture_New;
   PyOFXTextureType.tp_init = PyOFXTexture_Init;
-  //PyOFXTextureType.tp_dealloc = PyOFXTexture_Delete;
+  PyOFXTextureType.tp_dealloc = PyOFXTexture_Delete;
   PyOFXTextureType.tp_getset = PyOFXTexture_GetSeters;
   PyOFXTextureType.tp_methods = PyOFXTexture_Methods;
   

@@ -47,6 +47,7 @@ static PyMethodDef PyOFX_TestMethods[] =
 bool PyOFX_InitTest(PyObject *mod)
 {
   PyObject *tmod = Py_InitModule("ofx.tests", PyOFX_TestMethods);
+  Py_INCREF(tmod);
   PyModule_AddObject(mod, "tests", tmod);
   return true;
 }

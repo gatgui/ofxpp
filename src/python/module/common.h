@@ -1012,6 +1012,16 @@ void PyOFX_UnLock();
 
 }
 
+#ifdef OFX_API_1_3
+#define CATCH_EXTRAS(failed)\
+  } catch (ofx::GLOutOfMemory &e) {\
+    PyErr_SetString((PyObject*)&PyOFXGLOutOfMemoryType, e.what());\
+  } catch (ofx::GLRenderFailed &e) {\
+    PyErr_SetString((PyObject*)&PyOFXGLRenderFailedType, e.what());
+#else
+#define CATCH_EXTRAS(failed)
+#endif
+
 #define CATCH(code, failed)\
   failed = true;\
   try {\
@@ -1039,6 +1049,7 @@ void PyOFX_UnLock();
     PyErr_SetString((PyObject*)&PyOFXBadIndexErrorType, e.what());\
   } catch (ofx::BadHandleError &e) {\
     PyErr_SetString((PyObject*)&PyOFXBadHandleErrorType, e.what());\
+  CATCH_EXTRAS(failed)\
   } catch (std::exception &e) {\
     PyErr_SetString(PyExc_RuntimeError, e.what());\
   } catch (...) {\
